@@ -1,0 +1,24 @@
+Third-party code
+================
+
+These files in Workspace/ are adapted from AxiomMath/CFSG
+(https://github.com/AxiomMath/CFSG), commit 69cb972f587a3ecc035e092253167ff2e303c962:
+
+  Workspace/BochertCommutator.lean
+      from CFSG/ThirdParty/OddOrder/Isaacs/PermutationGroups/CycleCommutators.lean
+  Workspace/BochertIndex.lean
+      from CFSG/ThirdParty/OddOrder/Isaacs/PermutationGroups/Bochert.lean
+  Workspace/AltAutJohnsonGraph.lean
+  Workspace/AltAutThreeCycle.lean
+  Workspace/AltAutJohnsonGraphAction.lean
+  Workspace/AltAutJohnsonGraphIso.lean
+  Workspace/AltAutThreeCyclesPreserved.lean
+  Workspace/AltAutConjugation.lean
+      from the files of the same names, without the prefix "AltAut", in
+      CFSG/Permutation/AlternatingAutomorphism/
+
+They are licensed under the Apache License 2.0. The full text is in
+licenses/CFSG-Apache-2.0.txt. The copyright notices of the source files are kept
+(Yawara Ishida, 2026). Each file was modified for this project and says so in its
+header. licenses/AltAut-provenance.json records the SHA-256 of each original AltAut
+source file.

@@ -1,0 +1,38 @@
+{
+  "JohnsonGraph": {
+    "source": "CFSG/Permutation/AlternatingAutomorphism/JohnsonGraph.lean",
+    "commit": "69cb972f587a3ecc035e092253167ff2e303c962",
+    "original_sha256": "ada9b0d9dac314dd43ebf86d4b8d8b0683c0737dcbcbad7f099d5455c20a4dbe",
+    "bytes": 4121
+  },
+  "ThreeCycle": {
+    "source": "CFSG/Permutation/AlternatingAutomorphism/ThreeCycle.lean",
+    "commit": "69cb972f587a3ecc035e092253167ff2e303c962",
+    "original_sha256": "872a23a11788d6016832e36f5bcc20c8f4d5a6fb62a7074ec772eb2bfd28d17b",
+    "bytes": 4981
+  },
+  "JohnsonGraphAction": {
+    "source": "CFSG/Permutation/AlternatingAutomorphism/JohnsonGraphAction.lean",
+    "commit": "69cb972f587a3ecc035e092253167ff2e303c962",
+    "original_sha256": "11fb2e1be2faffc138f8079b861530ba7fec3b98430fb6804ba50e2a52d5c3bb",
+    "bytes": 4985
+  },
+  "JohnsonGraphIso": {
+    "source": "CFSG/Permutation/AlternatingAutomorphism/JohnsonGraphIso.lean",
+    "commit": "69cb972f587a3ecc035e092253167ff2e303c962",
+    "original_sha256": "6722be7547bca05b5b53a51f02ca77dde501f3700ec6b44fe8b79b829bc20a9e",
+    "bytes": 8516
+  },
+  "ThreeCyclesPreserved": {
+    "source": "CFSG/Permutation/AlternatingAutomorphism/ThreeCyclesPreserved.lean",
+    "commit": "69cb972f587a3ecc035e092253167ff2e303c962",
+    "original_sha256": "982bdf9cbdd1cfa912fca9aff50f2b6989fd7e304ac7dc4092a02d5453e28c19",
+    "bytes": 5683
+  },
+  "Conjugation": {
+    "source": "CFSG/Permutation/AlternatingAutomorphism/Conjugation.lean",
+    "commit": "69cb972f587a3ecc035e092253167ff2e303c962",
+    "original_sha256": "bed06f0ffa151b8fd7296a9b3a416cfe3b0a201423c6627fc2eb51cacc60250f",
+    "bytes": 2478
+  }
+}

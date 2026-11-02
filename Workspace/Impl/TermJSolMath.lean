@@ -1,0 +1,146 @@
+import Workspace.Impl.LinIntSolverCost
+import Workspace.Impl.LinSolve
+import Mathlib.Algebra.Group.Subgroup.Finsupp
+
+/-!
+# Zero-sum equations over a presented abelian group (mathematics)
+
+The group is `Z^t / (row span of M)` with `M` a nonsingular `t × t` integer matrix. The local
+stabilizer images are the rows of `B : Matrix (Fin G) (Fin t) ℤ`. We stack `M` above `B`:
+`tmJSolStack M B` has the rows of `M` first, then the rows of `B`. A row vector `z` on the
+stacked matrix splits as `z = (y, c)` with `y` on the rows of `M` and `c` on the rows of `B`.
+
+* `tmJSolStack_vecMul`: `z ᵥ* [M; B] = y ᵥ* M + c ᵥ* B`.
+* `tmJSolStack_rank`: the stacked matrix has full column rank (it uses `M.det ≠ 0`).
+* `tmJSol_kernel_iff`: from a Hermite transform `U * [M; B] = H`, the last `G` coordinates of
+  the last `G` rows of `U` span the coefficient kernel `{c | ∃ y, c ᵥ* B + y ᵥ* M = 0}`.
+-/
+
+namespace GI.Impl
+open _root_.Matrix
+open GI.Cited (IsHermiteForm FullRankInst)
+
+/-- `M` stacked above `B`. -/
+def tmJSolStack {t G : ℕ} (M : Matrix (Fin t) (Fin t) ℤ) (B : Matrix (Fin G) (Fin t) ℤ) :
+    Matrix (Fin (t + G)) (Fin t) ℤ :=
+  Matrix.of (Fin.append M B)
+
+/-- A row vector on the stacked matrix gives `y ᵥ* M + c ᵥ* B`, with `y` its first `t` entries and
+`c` its last `G` entries. -/
+theorem tmJSolStack_vecMul {t G : ℕ} (M : Matrix (Fin t) (Fin t) ℤ)
+    (B : Matrix (Fin G) (Fin t) ℤ) (z : Fin (t + G) → ℤ) :
+    z ᵥ* tmJSolStack M B =
+      (fun i => z (Fin.castAdd G i)) ᵥ* M + (fun k => z (Fin.natAdd t k)) ᵥ* B := by
+  funext j
+  simp [vecMul, dotProduct, Fin.sum_univ_add, tmJSolStack]
+
+/-- The stacked matrix has full column rank, because its top block `M` is nonsingular. -/
+theorem tmJSolStack_rank {t G : ℕ} (M : Matrix (Fin t) (Fin t) ℤ)
+    (B : Matrix (Fin G) (Fin t) ℤ) (hM : M.det ≠ 0) :
+    Function.Injective (tmJSolStack M B).mulVec := by
+  intro v w hvw
+  have htop : M *ᵥ (v - w) = 0 := by
+    funext i
+    have h := congrFun hvw (Fin.castAdd G i)
+    simp only [mulVec, dotProduct, tmJSolStack, Matrix.of_apply, Fin.append_left] at h
+    simp only [mulVec, dotProduct, Pi.sub_apply, mul_sub, Finset.sum_sub_distrib, h,
+      sub_self, Pi.zero_apply]
+  exact sub_eq_zero.mp (Matrix.eq_zero_of_mulVec_eq_zero hM htop)
+
+/-- The stacked matrix as an input of the Hermite task (it needs `0 < t`). -/
+def tmJSolInst {t G : ℕ} (ht : 0 < t) (M : Matrix (Fin t) (Fin t) ℤ)
+    (B : Matrix (Fin G) (Fin t) ℤ) (hM : M.det ≠ 0) : FullRankInst :=
+  ⟨t + G, t, ht, Nat.le_add_right t G, tmJSolStack M B, tmJSolStack_rank M B hM⟩
+
+/-- The kernel generators: the last `G` coordinates of the last `G` rows of `U`. -/
+def tmJSolKer {t G : ℕ} (U : Matrix (Fin (t + G)) (Fin (t + G)) ℤ) : Matrix (Fin G) (Fin G) ℤ :=
+  fun k j => U (Fin.natAdd t k) (Fin.natAdd t j)
+
+/-- The last `G` coordinates of `w ᵥ* U`, when `w` vanishes on the first `t` coordinates. -/
+theorem tmJSolKer_vecMul {t G : ℕ} (U : Matrix (Fin (t + G)) (Fin (t + G)) ℤ)
+    (w : Fin (t + G) → ℤ) (hw : ∀ i : Fin t, w (Fin.castAdd G i) = 0) (j : Fin G) :
+    (w ᵥ* U) (Fin.natAdd t j) = ((fun k => w (Fin.natAdd t k)) ᵥ* tmJSolKer U) j := by
+  simp [vecMul, dotProduct, Fin.sum_univ_add, hw, tmJSolKer]
+
+/-- **The coefficient kernel.** If `U * [M; B] = H` with `U` unimodular and `H` Hermite, then
+`c` has some `y` with `c ᵥ* B + y ᵥ* M = 0` exactly when `c` is an integer combination of the
+rows of `tmJSolKer U`. -/
+theorem tmJSol_kernel_iff {t G : ℕ} (M : Matrix (Fin t) (Fin t) ℤ)
+    (B : Matrix (Fin G) (Fin t) ℤ) (U : Matrix (Fin (t + G)) (Fin (t + G)) ℤ)
+    (H : Matrix (Fin (t + G)) (Fin t) ℤ) (hU : IsUnit U.det) (h : U * tmJSolStack M B = H)
+    (hH : IsHermiteForm H) (c : Fin G → ℤ) :
+    (∃ y : Fin t → ℤ, c ᵥ* B + y ᵥ* M = 0) ↔ ∃ x : Fin G → ℤ, x ᵥ* tmJSolKer U = c := by
+  have hcr : t ≤ t + G := Nat.le_add_right t G
+  have hcast (i : Fin t) : Fin.castLE hcr i = Fin.castAdd G i := Fin.ext rfl
+  constructor
+  · rintro ⟨y, hy⟩
+    let z : Fin (t + G) → ℤ := Fin.append y c
+    have hz : z ᵥ* tmJSolStack M B = 0 := by
+      rw [tmJSolStack_vecMul]
+      simpa [z, add_comm] using hy
+    obtain ⟨w, hzw, hw⟩ := (linHermiteKernel_iff hcr _ H U hU h hH z).mp hz
+    have hw' (i : Fin t) : w (Fin.castAdd G i) = 0 := by rw [← hcast]; exact hw i
+    refine ⟨fun k => w (Fin.natAdd t k), funext fun j => ?_⟩
+    rw [← tmJSolKer_vecMul U w hw' j, ← hzw]
+    simp [z]
+  · rintro ⟨x, rfl⟩
+    let w : Fin (t + G) → ℤ := Fin.append 0 x
+    have hw (i : Fin t) : w (Fin.castLE hcr i) = 0 := by rw [hcast]; simp [w]
+    have hz := (linHermiteKernel_iff hcr _ H U hU h hH (w ᵥ* U)).mpr ⟨w, rfl, hw⟩
+    refine ⟨fun i => (w ᵥ* U) (Fin.castAdd G i), ?_⟩
+    rw [tmJSolStack_vecMul] at hz
+    have hc : (fun k => (w ᵥ* U) (Fin.natAdd t k)) = x ᵥ* tmJSolKer U := by
+      funext j
+      rw [tmJSolKer_vecMul U w (fun i => by simp [w]) j]
+      simp [w]
+    rw [hc] at hz
+    rw [add_comm]
+    exact hz
+
+/-- The same kernel, as the subgroup generated by the rows of `tmJSolKer U`. -/
+theorem tmJSol_kernel_closure {t G : ℕ} (M : Matrix (Fin t) (Fin t) ℤ)
+    (B : Matrix (Fin G) (Fin t) ℤ) (U : Matrix (Fin (t + G)) (Fin (t + G)) ℤ)
+    (H : Matrix (Fin (t + G)) (Fin t) ℤ) (hU : IsUnit U.det) (h : U * tmJSolStack M B = H)
+    (hH : IsHermiteForm H) (c : Fin G → ℤ) :
+    c ∈ AddSubgroup.closure (Set.range (tmJSolKer U)) ↔
+      ∃ y : Fin t → ℤ, c ᵥ* B + y ᵥ* M = 0 := by
+  rw [tmJSol_kernel_iff M B U H hU h hH c, AddSubgroup.mem_closure_range_iff_of_fintype]
+  constructor
+  · rintro ⟨x, rfl⟩
+    refine ⟨x, funext fun j => ?_⟩
+    simp [vecMul, dotProduct, Finset.sum_apply, mul_comm]
+  · rintro ⟨x, rfl⟩
+    refine ⟨x, funext fun j => ?_⟩
+    simp [vecMul, dotProduct, Finset.sum_apply, mul_comm]
+
+/-- The solve equation on the stacked matrix: `z ᵥ* [M; B] = -s` exactly when its two parts
+solve `s + c ᵥ* B + y ᵥ* M = 0`. -/
+theorem tmJSol_solve_iff {t G : ℕ} (M : Matrix (Fin t) (Fin t) ℤ)
+    (B : Matrix (Fin G) (Fin t) ℤ) (s : Fin t → ℤ) (z : Fin (t + G) → ℤ) :
+    z ᵥ* tmJSolStack M B = (fun i => -1 * s i) ↔
+      s + (fun k => z (Fin.natAdd t k)) ᵥ* B + (fun i => z (Fin.castAdd G i)) ᵥ* M = 0 := by
+  rw [tmJSolStack_vecMul]
+  constructor
+  · intro h
+    rw [add_assoc, add_comm ((fun k => z (Fin.natAdd t k)) ᵥ* B), h]
+    funext i; simp
+  · intro h
+    funext i
+    have := congrFun h i
+    simp only [Pi.add_apply, Pi.zero_apply] at this
+    simp only [Pi.add_apply]
+    linarith
+
+/-- Every solution `(c, y)` of the zero-sum equation gives a solution on the stacked matrix. -/
+theorem tmJSol_solve_exists {t G : ℕ} (M : Matrix (Fin t) (Fin t) ℤ)
+    (B : Matrix (Fin G) (Fin t) ℤ) (s : Fin t → ℤ) :
+    (∃ (c : Fin G → ℤ) (y : Fin t → ℤ), s + c ᵥ* B + y ᵥ* M = 0) ↔
+      ∃ z : Fin (t + G) → ℤ, z ᵥ* tmJSolStack M B = (fun i => -1 * s i) := by
+  constructor
+  · rintro ⟨c, y, h⟩
+    refine ⟨Fin.append y c, (tmJSol_solve_iff M B s _).mpr ?_⟩
+    simpa using h
+  · rintro ⟨z, hz⟩
+    exact ⟨_, _, (tmJSol_solve_iff M B s z).mp hz⟩
+
+end GI.Impl

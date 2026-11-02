@@ -1,0 +1,21 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "theorem_names": ["main_theorem"],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice",
+    "GI.Axioms.transitiveAffected",
+    "GI.Axioms.marotiPrimitive",
+    "GI.Axioms.sixTransitiveContainsAlt",
+    "GI.Axioms.gmpOutBound",
+    "GI.Axioms.gmpTransitiveNonabelian",
+    "GI.Axioms.simpleValuationDegree",
+    "GI.Axioms.chiefSeriesAlgo",
+    "GI.Axioms.quotientCentralizer",
+    "GI.Axioms.sylowAlgo",
+    "GI.Axioms.sylowConjugate"
+  ],
+  "enable_nanoda": false
+}
