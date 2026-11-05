@@ -8,12 +8,16 @@ sum, which starts below `n * n`. A label that no round changes is constant along
 generator, so it is constant on orbits; and every label is a point of the orbit of its point.
 So the final label of `x` is the least point of the orbit of `x` (`orbitLabels_spec`).
 -/
-import Mathlib.GroupTheory.Perm.Basic
-import Mathlib.GroupTheory.GroupAction.Basic
-import Mathlib.Algebra.Group.Subgroup.Lattice
-import Mathlib.GroupTheory.OrderOfElement
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Fintype.Fin
+module
+
+public import Mathlib.GroupTheory.Perm.Basic
+public import Mathlib.GroupTheory.GroupAction.Basic
+public import Mathlib.Algebra.Group.Subgroup.Lattice
+public import Mathlib.GroupTheory.OrderOfElement
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Data.Fintype.Fin
+
+@[expose] public section
 
 namespace GI.Lang
 

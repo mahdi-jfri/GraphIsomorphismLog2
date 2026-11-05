@@ -12,7 +12,11 @@ steps of the recursion (`Workspace/Impl/`).
 The cost bounds are stated with one number `B` that bounds the entries and the length of the
 lists (or with the weight of the argument for `gatherFuns`).
 -/
-import Workspace.Lang.Lib.Tabulate
+module
+
+public import Workspace.Lang.Lib.Tabulate
+
+@[expose] public section
 
 namespace GI.Lang
 

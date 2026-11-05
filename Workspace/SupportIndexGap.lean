@@ -1,6 +1,10 @@
-import Workspace.BochertExponential
-import Workspace.AlternatingImprimitiveDegree
-import Workspace.AlternatingSimple
+module
+
+public import Workspace.BochertExponential
+public import Workspace.AlternatingImprimitiveDegree
+public import Workspace.AlternatingSimple
+
+@[expose] public section
 
 /-!
 # Index facts for Lemma A.24

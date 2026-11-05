@@ -1,7 +1,11 @@
-import Workspace.Impl.GenCase
-import Workspace.Impl.GenCosetsMath
-import Workspace.Impl.PolyBd
-import Workspace.Lang.Lib.OrbitT
+module
+
+public import Workspace.Impl.GenCase
+public import Workspace.Impl.GenCosetsMath
+public import Workspace.Impl.PolyBd
+public import Workspace.Lang.Lib.OrbitT
+
+@[expose] public section
 
 /-!
 # Bounds for the general dispatcher that depend only on the number of points

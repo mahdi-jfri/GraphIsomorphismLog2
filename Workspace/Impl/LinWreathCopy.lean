@@ -1,5 +1,9 @@
-import Workspace.Impl.LinWreathPermData
-import Workspace.Lang.Lib.LinIntTail
+module
+
+public import Workspace.Impl.LinWreathPermData
+public import Workspace.Lang.Lib.LinIntTail
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang Equiv

@@ -1,5 +1,9 @@
-import Mathlib.GroupTheory.GroupAction.Primitive
-import Mathlib.Algebra.Group.Action.End
+module
+
+public import Mathlib.GroupTheory.GroupAction.Primitive
+public import Mathlib.Algebra.Group.Action.End
+
+@[expose] public section
 
 namespace GI.PhysicalTransport
 

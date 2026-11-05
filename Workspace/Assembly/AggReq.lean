@@ -1,5 +1,9 @@
-import Workspace.Assembly.GenReq
-import Workspace.Impl.AggSpecReq
+module
+
+public import Workspace.Assembly.GenReq
+public import Workspace.Impl.AggSpecReq
+
+@[expose] public section
 
 /-!
 # Stage 2 up to the row step and the four phases of the aggregation round
@@ -72,7 +76,8 @@ theorem final_modulo_agg (hst : PointwiseStab) (hm : Membership) (hpre : Preimag
     exact mul_le_mul e2 e1 (by positivity) (by positivity)
 
 /-- **`final_modulo_agg` with more primitives** `ext` after `gsExtra`. -/
-theorem final_modulo_agg_ext (hst : PointwiseStab) (hm : Membership) (hpre : Preimage)
+theorem final_modulo_agg_ext
+    (hst : PointwiseStab) (hm : Membership) (hpre : Preimage)
     (hfac : NormalizedFactor) (hmb : MinimalBlocks) (hO : GroupOrder) (hC : CameronRecognition)
     (ext : List Prim) (row : List Expr) (Wr : Node P₀ → ℝ) (H : AsHand) (X : ℕ → ℕ) (rd cr cm it : Expr)
     (rest : List Expr) (hrowl : row.length ≤ asmSlot)

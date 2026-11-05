@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.LinIntDot
+module
+
+public import Workspace.Lang.Lib.LinIntDot
+
+@[expose] public section
 
 namespace GI.Lang
 open GI.Cited (Val encInt encIntMatrix)

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgO
+module
+
+public import Workspace.Impl.AggItemCiCfgO
+
+@[expose] public section
 
 /-!
 # The configuration query: the overcoset program, its spec
@@ -97,7 +101,7 @@ theorem itcq_res1_st {rest : List Val} {a0 a1 w : Val} {eσ eE : Expr} {σ : Per
     (by omega)
   have m := StDC.mk2 hσ hE hl0 h4
   have s := StDC.snoc (StDC.nil (env := .list [a0, a1, w] :: rest) (P := P) h4) m
-    (vs := []) (by simpa using hl1)
+    (vs := []) (by simpa [lcOv] using hl1)
   have r := StDC.mk2 (StDC.nat 0 (by omega)) (StDC.mk3 (StDC.nil h4) s A2 hin h4) hr h4
   unfold itcqRes1
   exact r.mono (by omega) (by omega)

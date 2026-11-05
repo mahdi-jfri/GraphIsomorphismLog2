@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabPOGen
-import Workspace.Impl.TermGlueLabPEx
+module
+
+public import Workspace.Impl.TermGlueLabPOGen
+public import Workspace.Impl.TermGlueLabPEx
+
+@[expose] public section
 
 /-!
 # Step 5 with the orientation coordinate, and its adapter to step 6

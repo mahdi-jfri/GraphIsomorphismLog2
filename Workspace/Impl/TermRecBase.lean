@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecRep
+module
+
+public import Workspace.Impl.TermRecRep
+
+@[expose] public section
 
 /-!
 # T5, the case `ℓ = 0` of the recursion (item 4)
@@ -59,7 +63,7 @@ theorem tmRi_base_iso {G : Type} [Group G] {Ω : Type} [RAct G Ω] {H N : Subgro
 theorem tmRi_cnt_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hmem : Membership}
     (hP : TmRiAt P b jsci jder jmem gObj hsci hder hmem) {gs : List (Perm (Fin n))}
-    (hsol : IsSolvable (gens gs)) (hgl : gs.length ≤ n ^ 2) {C : ℕ} {L : List (TmRiO n)}
+    {C : ℕ} {L : List (TmRiO n)} (hsol : TmRiListNorm (gens gs) L) (hgl : gs.length ≤ n ^ 2)
     (hok : TmRiOK C L) {Xs Ys : List (TmRiO n)} (hXs : ∀ o ∈ Xs, o ∈ L) (hYs : ∀ o ∈ Ys, o ∈ L)
     {x : Val} (hx : x ∈ L.map tmGlObjVal) {E : ℕ}
     (hE : (Val.list [.list [encGroup gs, tmGlObjsVal Xs, tmGlObjsVal Ys], x]).wt ≤ E) :
@@ -188,8 +192,7 @@ theorem tmRi_base_spec {P : Program} {b jsci jder jmem gObj : ℕ}
   rw [ha] at hW ⊢
   have hok' : TmRiOK (2 * M) (X ++ Y) := fun o ho =>
     ⟨(hok o ho).1, by have := (hok o ho).2.1; omega, (hok o ho).2.2⟩
-  have hsol1 : IsSolvable (gens ([] : List (Perm (Fin n)))) := by
-    rw [tmRi_gens_nil]; infer_instance
+  have hsol1 : TmRiListNorm (gens ([] : List (Perm (Fin n)))) (X ++ Y) := TmRiListNorm.bot (X ++ Y)
   -- weights
   have hHw : (encGroup σH).wt < (Val.list vs).wt := wt_le_wt_list (by simp [hvs])
   have hXw : (Val.list Xv).wt < (Val.list vs).wt := wt_le_wt_list (by simp [hvs])

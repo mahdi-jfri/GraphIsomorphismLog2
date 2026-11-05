@@ -1,5 +1,9 @@
-import Workspace.RadicalSocleQuotient
-import Mathlib.GroupTheory.Commutator.Basic
+module
+
+public import Workspace.RadicalSocleQuotient
+public import Mathlib.GroupTheory.Commutator.Basic
+
+@[expose] public section
 
 namespace GI.RadicalSocle
 
@@ -73,12 +77,12 @@ theorem minimalNormal_characteristic_subgroup {N : Subgroup G} (hN : MinimalNorm
     exact he
 
 theorem minimalNormal_not_solvable
-    (radicalFree : ∀ N : Subgroup G, N.Normal → IsSolvable N → N = ⊥)
-    {N : Subgroup G} (hN : MinimalNormal N) : ¬ IsSolvable N :=
+    (radicalFree : ∀ N : Subgroup G, N.Normal → Group.IsSolvable N → N = ⊥)
+    {N : Subgroup G} (hN : MinimalNormal N) : ¬ Group.IsSolvable N :=
   fun hs => hN.2.1 (radicalFree N hN.1 hs)
 
 theorem minimalNormal_nonabelian
-    (radicalFree : ∀ N : Subgroup G, N.Normal → IsSolvable N → N = ⊥)
+    (radicalFree : ∀ N : Subgroup G, N.Normal → Group.IsSolvable N → N = ⊥)
     {N : Subgroup G} (hN : MinimalNormal N) : ∃ x y : N, x * y ≠ y * x := by
   classical
   by_contra hn
@@ -86,7 +90,7 @@ theorem minimalNormal_nonabelian
   exact minimalNormal_not_solvable radicalFree hN (isSolvable_of_comm hn)
 
 theorem minimalNormal_center_eq_bot
-    (radicalFree : ∀ N : Subgroup G, N.Normal → IsSolvable N → N = ⊥)
+    (radicalFree : ∀ N : Subgroup G, N.Normal → Group.IsSolvable N → N = ⊥)
     {N : Subgroup G} (hN : MinimalNormal N) : Subgroup.center N = ⊥ := by
   rcases minimalNormal_characteristic_subgroup hN (Subgroup.center N) with hb | ht
   · exact hb
@@ -100,7 +104,7 @@ instance solvableRadical_characteristic [Finite G] : (solvableRadical G).Charact
   let R := solvableRadical G
   haveI : (R.map e.toMonoidHom).Normal :=
     (inferInstance : R.Normal).map e.toMonoidHom e.surjective
-  haveI : IsSolvable (R.map e.toMonoidHom) :=
+  haveI : Group.IsSolvable (R.map e.toMonoidHom) :=
     solvable_of_surjective (e.toMonoidHom.subgroupMap_surjective R)
   exact le_solvableRadical (R.map e.toMonoidHom)
 

@@ -1,9 +1,13 @@
-import Workspace.Impl.GenNormAlt
-import Workspace.Impl.GenNormOrbit
-import Workspace.Impl.GenNormCosets
-import Workspace.Impl.GenNormGlue
-import Workspace.Impl.GenNormLabelBuild
-import Workspace.Impl.GenNormParentList
+module
+
+public import Workspace.Impl.GenNormAlt
+public import Workspace.Impl.GenNormOrbit
+public import Workspace.Impl.GenNormCosets
+public import Workspace.Impl.GenNormGlue
+public import Workspace.Impl.GenNormLabelBuild
+public import Workspace.Impl.GenNormParentList
+
+@[expose] public section
 
 /-!
 # The installed normalization modules

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecProgDer
+module
+
+public import Workspace.Impl.TermRecProgDer
+
+@[expose] public section
 
 /-!
 # T5, the pieces of a transporter by the image of one point, and the shift of a list
@@ -208,5 +212,98 @@ theorem tmRi_mapShift_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     unfold tmRiMapShC
     omega
 
+theorem tmRiStab_sh {τ : Perm (Fin n)} {o : TmRiO n} {g : Perm (Fin n)}
+    (hg : g ∈ tmRiStab (tmRiSh τ o)) : τ * g * τ⁻¹ ∈ tmRiStab o := by
+  rw [mem_tmRiStab_iff] at hg ⊢
+  have h1 : tmRiObj (tmRiSh τ o) = tmRiObj o ↼ τ := by simp [tmRiSh, tmRi_obj_act]
+  rw [h1, act_act] at hg
+  have h2 := congrArg (· ↼ τ⁻¹) hg
+  simpa [act_act] using h2
+
+theorem tmRiStab_norm_sh {H A : Subgroup (Perm (Fin n))}
+    (hHA : GI.Multicoset.Normalizes H A) {τ : Perm (Fin n)} (hτ : τ ∈ H) {o : TmRiO n}
+    (ho : GI.Lang.Normalizes (tmRiStab o) A) : GI.Lang.Normalizes (tmRiStab (tmRiSh τ o)) A := by
+  intro k hk a ha
+  have hk' : τ * k * τ⁻¹ ∈ tmRiStab o := tmRiStab_sh hk
+  have ha1 : τ * a * τ⁻¹ ∈ A := hHA τ hτ a ha
+  have ha2 : (τ * k * τ⁻¹) * (τ * a * τ⁻¹) * (τ * k * τ⁻¹)⁻¹ ∈ A := ho _ hk' _ ha1
+  have ha3 : τ⁻¹ * ((τ * k * τ⁻¹) * (τ * a * τ⁻¹) * (τ * k * τ⁻¹)⁻¹) * τ⁻¹⁻¹ ∈ A :=
+    hHA τ⁻¹ (H.inv_mem hτ) _ ha2
+  have heq : τ⁻¹ * ((τ * k * τ⁻¹) * (τ * a * τ⁻¹) * (τ * k * τ⁻¹)⁻¹) * τ⁻¹⁻¹ = k * a * k⁻¹ := by
+    group
+  rwa [heq] at ha3
+
+theorem TmRiListNorm.map_sh {H A : Subgroup (Perm (Fin n))}
+    (hHA : GI.Multicoset.Normalizes H A) {τ : Perm (Fin n)} (hτ : τ ∈ H) {Z : List (TmRiO n)}
+    (hZ : TmRiListNorm A Z) : TmRiListNorm A (Z.map (tmRiSh τ)) := by
+  intro o ho
+  obtain ⟨o₀, ho₀, rfl⟩ := List.mem_map.1 ho
+  exact tmRiStab_norm_sh hHA hτ (hZ o₀ ho₀)
+
+theorem TmRiListIn.map_sh {H : Subgroup (Perm (Fin n))} {τ : Perm (Fin n)} (hτ : τ ∈ H)
+    {Z : List (TmRiO n)} (hZ : TmRiListIn H Z) : TmRiListIn H (Z.map (tmRiSh τ)) := by
+  intro o ho
+  obtain ⟨o₀, ho₀, rfl⟩ := List.mem_map.1 ho
+  exact tmRiStab_le_of_sameOrb (hZ o₀ ho₀) hτ (by simp [tmRiSh, tmRi_obj_act])
+
+theorem tmRi_forall₂_mem {α β : Type} {Q : α → β → Prop} :
+    ∀ {l₁ : List α} {l₂ : List β}, List.Forall₂ Q l₁ l₂ →
+      (∀ q ∈ l₂, ∃ a ∈ l₁, Q a q) ∧ ∀ a ∈ l₁, ∃ q ∈ l₂, Q a q
+  | [], [], _ => ⟨fun _ h => absurd h List.not_mem_nil, fun _ h => absurd h List.not_mem_nil⟩
+  | a :: l₁, q :: l₂, List.Forall₂.cons h hs => by
+    obtain ⟨h1, h2⟩ := tmRi_forall₂_mem hs
+    refine ⟨fun q' hq' => ?_, fun a' ha' => ?_⟩
+    · rcases List.mem_cons.1 hq' with rfl | hq'
+      · exact ⟨a, List.mem_cons_self .., h⟩
+      · obtain ⟨a', ha', h'⟩ := h1 q' hq'; exact ⟨a', List.mem_cons_of_mem _ ha', h'⟩
+    · rcases List.mem_cons.1 ha' with rfl | ha'
+      · exact ⟨q, List.mem_cons_self .., h⟩
+      · obtain ⟨q', hq', h'⟩ := h2 a' ha'; exact ⟨q', List.mem_cons_of_mem _ hq', h'⟩
+
+/-- **The map with uniform bounds.** -/
+theorem tmRi_mapU {P : Program} {b f : ℕ} (h : P.HasAt b (mapFuns b f)) {c : Val}
+    {xs : List Val} {R : Val → Val → Prop} {Wx K : ℕ}
+    (hf : ∀ x ∈ xs, FunAll P f (.list [c, x]) (fun w cost => R x w ∧ w.wt ≤ Wx ∧ cost ≤ K)) :
+    FunAll P b (.list [c, .list xs]) (fun w cost => ∃ ws, w = .list ws ∧ List.Forall₂ R xs ws ∧
+      w.wt ≤ xs.length * (2 * Wx + 1) + 4 ∧
+      cost ≤ xs.length * K +
+        mapK * (xs.length + 1) * ((Val.list [c, .list xs]).wt + xs.length * (2 * Wx + 1) + 5)) := by
+  refine (map_spec h (R := fun x w => R x w ∧ w.wt ≤ Wx) (B := fun _ => K) fun x hx =>
+    (hf x hx).mono fun w cw hw => ⟨⟨hw.1, hw.2.1⟩, hw.2.2⟩).mono fun w cw ⟨ws, hw, hR, hc⟩ => ?_
+  have hlen : ws.length = xs.length := hR.length_eq.symm
+  have hwt : w.wt ≤ xs.length * (2 * Wx + 1) + 4 := by
+    rw [hw]
+    have := tmRi_wt_list_le ws (c := Wx) fun v hv => by
+      obtain ⟨x, -, hxv⟩ := (tmRi_forall₂_mem hR).1 v hv
+      exact hxv.2
+    rwa [hlen] at this
+  refine ⟨ws, hw, hR.imp fun _ _ h => h.1, hwt, ?_⟩
+  have h1 := tmRi_sum_const xs (fun _ => K) (K := K) fun _ _ => le_rfl
+  have h2 : mapK * (xs.length + 1) * ((Val.list [c, .list xs]).wt + w.wt + 1) ≤
+      mapK * (xs.length + 1) * ((Val.list [c, .list xs]).wt + xs.length * (2 * Wx + 1) + 5) :=
+    Nat.mul_le_mul_left _ (by omega)
+  omega
+
+/-- The list of objects in the pieces. -/
+def tmRiFlat (Ps : List (List (TmRiO n))) : List (TmRiO n) := Ps.flatten
+
+theorem TmRecObjOK.sub {M : ℕ} {Z Z' : List (TmRiO n)} (h : TmRecObjOK M Z)
+    (hs : ∀ o ∈ Z', o ∈ Z) : TmRecObjOK M Z' := fun o ho =>
+  ⟨(h o (hs o ho)).1, (h o (hs o ho)).2.1, fun o' ho' => (h o (hs o ho)).2.2 o' (hs o' ho')⟩
+
+/-- What the table needs of each piece. -/
+def TmRiPc (σA σN : List (Perm (Fin n))) (M : ℕ) (S : List (TmRiO n)) : Prop :=
+  S ≠ [] ∧ S.length ≤ M ∧ (∀ s ∈ tmGlMs S, ∀ s' ∈ tmGlMs S, SameOrb (gens σA) s s') ∧
+    Fixes (gens σN) (tmGlMs S)
+
+/-- The encoded table: row `S`, entry `T`, is `Iso_H(S, T)` as a coset. -/
+def TmRiTab (H : Subgroup (Perm (Fin n))) (Ps : List (List (TmRiO n))) (tab : List Val) : Prop :=
+  List.Forall₂ (fun SV row => ∃ S ∈ Ps, SV = tmGlObjsVal S ∧ ∃ us, row = .list us ∧
+    List.Forall₂ (fun TV u => ∃ T ∈ Ps, TV = tmGlObjsVal T ∧ CosetC n u (Iso H (tmGlMs S)
+      (tmGlMs T))) (Ps.map tmGlObjsVal) us) (Ps.map tmGlObjsVal) tab
+
+theorem tmRi_obj_mem {S : List (TmRiO n)} {o : TmRiO n} (h : o ∈ S) : tmRiObj o ∈ tmGlMs S := by
+  simp only [tmGlMs, Multiset.mem_coe, List.mem_map]
+  exact ⟨o, h, rfl⟩
 
 end GI.Impl

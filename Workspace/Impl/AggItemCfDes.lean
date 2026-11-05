@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCfBin
+module
+
+public import Workspace.Impl.AggItemCfBin
+
+@[expose] public section
 
 /-!
 # Case 3: the objects of a branch

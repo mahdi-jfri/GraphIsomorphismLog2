@@ -1,5 +1,9 @@
-import Workspace.Cited.AlgoPermGroups
-import Mathlib.GroupTheory.OrderOfElement
+module
+
+public import Workspace.Cited.AlgoPermGroups
+public import Mathlib.GroupTheory.OrderOfElement
+
+@[expose] public section
 
 /-!
 # A minimal block system, the mathematics
@@ -96,10 +100,12 @@ theorem mblkMerge_le {lab : Fin n → Fin n} (h : MRepr lab) (u v : Fin n) :
       Finset.univ.filter fun x => lab x = x := by
     rw [Finset.ssubset_iff_of_subset]
     · refine ⟨lab v, by simp [h v], ?_⟩
-      simp only [Finset.mem_filter, Finset.mem_univ, true_and, mblkMerge, h v, if_pos]
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+      simp only [mblkMerge, h v, if_pos]
       exact huv
     · intro x hx
-      simp only [Finset.mem_filter, Finset.mem_univ, true_and, mblkMerge] at hx ⊢
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hx ⊢
+      simp only [mblkMerge] at hx
       by_cases hxv : lab x = lab v
       · rw [if_pos hxv] at hx
         exact absurd (by rw [← hxv, ← hx, h u]) huv

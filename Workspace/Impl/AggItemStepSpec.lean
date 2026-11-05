@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemStr
-import Workspace.Impl.AggItemUpd
-import Workspace.Impl.AggItemRun
+module
+
+public import Workspace.Impl.AggItemStr
+public import Workspace.Impl.AggItemUpd
+public import Workspace.Impl.AggItemRun
+
+@[expose] public section
 
 /-!
 # The item programs of the three cases: their contracts
@@ -179,7 +183,8 @@ theorem itSBase_upd {e : Ω ≃ Fin k} {c : C → ℕ} {K : ItSCtx k S L} (hK : 
   ⟨it_upd_mem hK.sub hK.mem hK.cl J' _ _ _ hv sj rp, rfl, rfl, hJ', itSrc_congr K.Ag₀ hJ'⟩
 
 /-- The base set is not empty. -/
-theorem itSBase_nonempty {e : Ω ≃ Fin k} {c : C → ℕ} {K : ItSCtx k S L} (hK : K.OK e c) :
+theorem itSBase_nonempty
+    {e : Ω ≃ Fin k} {c : C → ℕ} {K : ItSCtx k S L} (hK : K.OK e c) :
     (itSBase K).Nonempty :=
   ⟨_, itSBase_upd hK rfl (HalvingChoice.default S L.toGiantLabels) SojChoice.default
     K.Ag₀.rep⟩

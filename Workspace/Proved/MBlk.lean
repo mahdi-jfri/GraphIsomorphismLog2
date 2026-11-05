@@ -1,4 +1,8 @@
-import Workspace.Impl.MBlkMain
+module
+
+public import Workspace.Impl.MBlkMain
+
+@[expose] public section
 
 /-!
 # A minimal block system in polynomial time

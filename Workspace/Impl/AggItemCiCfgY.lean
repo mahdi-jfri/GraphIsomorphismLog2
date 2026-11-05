@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgX
+module
+
+public import Workspace.Impl.AggItemCiCfgX
+
+@[expose] public section
 
 /-!
 # The configuration query: the values the step program computes

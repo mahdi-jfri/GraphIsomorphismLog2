@@ -1,6 +1,10 @@
-import Workspace.Impl.LinWitnessLayout
-import Workspace.Impl.LinAssign
-import Workspace.Lang.Prims.Ops
+module
+
+public import Workspace.Impl.LinWitnessLayout
+public import Workspace.Impl.LinAssign
+public import Workspace.Lang.Prims.Ops
+
+@[expose] public section
 
 /-! Coordinates of a known group element: constructive membership, followed
 by evaluation of its SLP in the integer unit-vector assignments. -/

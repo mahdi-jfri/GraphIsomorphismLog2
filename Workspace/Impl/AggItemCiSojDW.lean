@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojQD
-import Workspace.Impl.AggItemCiSojPW
+module
+
+public import Workspace.Impl.AggItemCiSojQD
+public import Workspace.Impl.AggItemCiSojPW
+
+@[expose] public section
 
 /-! # The inherited-domain map with all table and index bounds discharged -/
 
@@ -27,7 +31,7 @@ theorem itcs_dom_prog {Pg : Program} {mp f : ℕ}
     FunDet Pg mp (.list [itcsDomCtx e rep,natList (List.range k)])
       (encFun fun i=>if e.symm i∈rep.Δ then 1 else 0) (itcsDomC k L.q) := by
   have hd:=wt_encFun_le (fun i:Fin k=>if e.symm i∈S.dom then 1 else 0)
-    (B:=1) (by intro i; dsimp only; split_ifs <;> omega)
+    (B:=1) (by intro i; split_ifs <;> omega)
   have hcell:=wt_encFun_le (fun i:Fin k=>rcCellCode (rep.cell (e.symm i)))
     (fun i=>itcs_cell_code_le (rep.cell (e.symm i)))
   have hcell' : (encFun fun i:Fin k=>rcCellCode (rep.cell (e.symm i))).wt≤10*(k*(L.q*L.q+10))+4 := by

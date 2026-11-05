@@ -1,6 +1,10 @@
-import Workspace.Proved.PalfyField
-import Workspace.Proved.PalfyIndep
-import Workspace.Proved.PalfyNum
+module
+
+public import Workspace.Proved.PalfyField
+public import Workspace.Proved.PalfyIndep
+public import Workspace.Proved.PalfyNum
+
+@[expose] public section
 
 /-!
 # The hard case: every abelian normal subgroup is scalar
@@ -64,7 +68,7 @@ theorem palfy_comm_prod {G : Type*} [Group G] {n m n' m' : G} (h1 : Commute m n)
     _ = (n' * n * n'⁻¹ * n⁻¹) * (m' * m * m'⁻¹ * m⁻¹) := by group
 
 /-- A solvable subgroup equal to its commutator subgroup is trivial. -/
-theorem palfy_perfect_bot {G : Type*} [Group G] (M : Subgroup G) [IsSolvable M]
+theorem palfy_perfect_bot {G : Type*} [Group G] (M : Subgroup G) [Group.IsSolvable M]
     (h : ⁅M, M⁆ = M) : M = ⊥ := by
   have htop : ⁅(⊤ : Subgroup M), (⊤ : Subgroup M)⁆ = ⊤ := by
     apply Subgroup.map_injective M.subtype_injective
@@ -74,7 +78,7 @@ theorem palfy_perfect_bot {G : Type*} [Group G] (M : Subgroup G) [IsSolvable M]
     induction n with
     | zero => rfl
     | succ n ih => rw [derivedSeries_succ, ih, htop]
-  obtain ⟨n, hn⟩ := IsSolvable.solvable (G := M)
+  obtain ⟨n, hn⟩ := Group.IsSolvable.solvable (G := M)
   rw [hall n] at hn
   rw [eq_bot_iff]
   intro x hx
@@ -95,7 +99,7 @@ theorem palfySc_conj {x : (Module.End K V)ˣ} (hx : palfySc (x : Module.End K V)
   rw [Units.val_mul, Units.val_mul, ← palfySc_comm hx, mul_assoc, Units.mul_inv, mul_one]
 
 /-- **Step 1.** -/
-theorem palfy_cent_scalar [Finite V] {H N : Subgroup (Module.End K V)ˣ} [IsSolvable H]
+theorem palfy_cent_scalar [Finite V] {H N : Subgroup (Module.End K V)ˣ} [Group.IsSolvable H]
     (hab : palfyAbSc H) (hN : palfyGood H N)
     (hmax : ∀ N', palfyGood H N' → ¬ N < N') :
     ∀ c ∈ palfyCent H N, palfySc ((c : (Module.End K V)ˣ) : Module.End K V) := by
@@ -109,7 +113,7 @@ theorem palfy_cent_scalar [Finite V] {H N : Subgroup (Module.End K V)ˣ} [IsSolv
   have hMcomN : ∀ m ∈ M, ∀ n ∈ N, m * n = n * m := by
     intro m hm n hn
     exact (Subgroup.mem_centralizer_iff.mp (Subgroup.mem_inf.mp (hMC hm)).2 n hn).symm
-  haveI : IsSolvable M := solvable_of_solvable_injective (Subgroup.inclusion_injective hMH.1)
+  haveI : Group.IsSolvable M := solvable_of_solvable_injective (Subgroup.inclusion_injective hMH.1)
   -- (a) commutators of `M` are scalar
   have hMcomm : ∀ x ∈ M, ∀ y ∈ M,
       palfySc ((y * x * y⁻¹ * x⁻¹ : (Module.End K V)ˣ) : Module.End K V) := by
@@ -221,7 +225,7 @@ theorem palfy_cent_scalar [Finite V] {H N : Subgroup (Module.End K V)ˣ} [IsSolv
 
 /-- **The hard case.** -/
 theorem palfy_hard [Finite K] [Finite V] [Nontrivial V] {H : Subgroup (Module.End K V)ˣ}
-    [IsSolvable H] (hab : palfyAbSc H) :
+    [Group.IsSolvable H] (hab : palfyAbSc H) :
     24 * Nat.card K ^ 6 * Nat.card H ^ 3 ≤ Nat.card V ^ 69 := by
   classical
   haveI : Module.Finite K V := Module.Finite.of_finite

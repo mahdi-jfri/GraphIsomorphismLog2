@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJProgTab
+module
+
+public import Workspace.Impl.TermJProgTab
+
+@[expose] public section
 
 /-!
 # The lifted transpositions of two different rows (program)

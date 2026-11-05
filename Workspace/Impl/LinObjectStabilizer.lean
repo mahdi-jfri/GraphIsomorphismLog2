@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectAdjoinSpec
-import Workspace.Impl.LinObjectKernelSpec
+module
+
+public import Workspace.Impl.LinObjectAdjoinSpec
+public import Workspace.Impl.LinObjectKernelSpec
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

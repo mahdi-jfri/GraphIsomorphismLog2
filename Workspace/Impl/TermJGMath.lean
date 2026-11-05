@@ -1,5 +1,9 @@
-import Workspace.Impl.TermCosetRel
-import Workspace.Impl.TermJGroup
+module
+
+public import Workspace.Impl.TermCosetRel
+public import Workspace.Impl.TermJGroup
+
+@[expose] public section
 
 /-!
 # Generators of `G|_dom` on the pair numbering

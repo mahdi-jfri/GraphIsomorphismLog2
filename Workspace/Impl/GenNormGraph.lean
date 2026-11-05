@@ -1,9 +1,13 @@
-import Workspace.Impl.GenNormRecover
-import Workspace.Impl.GenNormChoice
-import Workspace.Impl.AggMTProg
-import Workspace.Impl.AggPre
-import Workspace.Impl.AggKerRed
-import Workspace.Impl.LabelLift
+module
+
+public import Workspace.Impl.GenNormRecover
+public import Workspace.Impl.GenNormChoice
+public import Workspace.Impl.AggMTProg
+public import Workspace.Impl.AggPre
+public import Workspace.Impl.AggKerRed
+public import Workspace.Impl.LabelLift
+
+@[expose] public section
 
 /-!
 # The normalized graph group

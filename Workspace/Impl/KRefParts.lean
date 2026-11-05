@@ -1,4 +1,8 @@
-import Workspace.Impl.KRefNb
+module
+
+public import Workspace.Impl.KRefNb
+
+@[expose] public section
 
 /-!
 # The small modules of a round
@@ -192,7 +196,7 @@ theorem kref_foldl_rank (q : ℕ) (L : List ℕ) (a : ℕ) :
     simp only [List.map_cons, List.foldl_cons, krefN_nat]
     rw [ih]
     simp only [krefRank, List.countP_cons]
-    split_ifs with h1 h2 <;> simp_all <;> omega
+    by_cases h : y < q <;> simp [h, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
 
 /-- **Rank.** On `[L, q]`, the number `krefRank L q`. -/
 theorem kref_rank {P : Program} {b : ℕ} (h : P.HasAt b (krefRankFuns b)) {L : List ℕ} {q Y : ℕ}

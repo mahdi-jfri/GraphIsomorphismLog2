@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiDisp
-import Workspace.Impl.AggItemCiTest
+module
+
+public import Workspace.Impl.AggItemCiDisp
+public import Workspace.Impl.AggItemCiTest
+
+@[expose] public section
 
 /-!
 # The pair part split by the exact test

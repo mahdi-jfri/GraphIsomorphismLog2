@@ -1,6 +1,10 @@
-import Workspace.Impl.TermGlueLabNS5OK
-import Workspace.Impl.TermGlueLabNMF
-import Workspace.Impl.TermGlueLabNMLin
+module
+
+public import Workspace.Impl.TermGlueLabNS5OK
+public import Workspace.Impl.TermGlueLabNMF
+public import Workspace.Impl.TermGlueLabNMLin
+
+@[expose] public section
 
 /-!
 # The label driver: the step-5 module

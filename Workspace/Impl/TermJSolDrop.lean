@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJSolMath
+module
+
+public import Workspace.Impl.TermJSolMath
+
+@[expose] public section
 
 /-!
 # Dropping a prefix of a list (program)

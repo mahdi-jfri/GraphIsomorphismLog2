@@ -1,5 +1,9 @@
-import Workspace.PrimitiveCoordinateFibers
-import Workspace.UniformFiberCoordinates
+module
+
+public import Workspace.PrimitiveCoordinateFibers
+public import Workspace.UniformFiberCoordinates
+
+@[expose] public section
 
 namespace GI.PrimitiveCartesian
 
@@ -53,7 +57,3 @@ theorem primitive_uniform_degree
   rfl
 
 end GI.PrimitiveCartesian
-
-#print axioms GI.PrimitiveCartesian.primitiveUniformCoordinates
-#print axioms GI.PrimitiveCartesian.primitiveUniformCoordinates_fibers
-#print axioms GI.PrimitiveCartesian.primitive_uniform_degree

@@ -1,4 +1,8 @@
-import Workspace.Impl.VsPBasic
+module
+
+public import Workspace.Impl.VsPBasic
+
+@[expose] public section
 
 /-!
 # The context of step 4, and tests on permutations

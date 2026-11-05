@@ -8,7 +8,11 @@ Two common loop shapes with ready-made rules.
   register `f` to 0 when a test fails. The memory does not change, and at the end the flag is
   unchanged if every test passed and 0 otherwise.
 -/
-import Workspace.Machine.Layout
+module
+
+public import Workspace.Machine.Layout
+
+@[expose] public section
 
 namespace GI.Machine
 

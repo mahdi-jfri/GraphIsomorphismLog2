@@ -1,4 +1,8 @@
-import Workspace.Impl.LinAffineResidual
+module
+
+public import Workspace.Impl.LinAffineResidual
+
+@[expose] public section
 
 /-! Translate the target point to zero before processing its characteristic
 primary components. The cover and its multiplication convention do not change. -/

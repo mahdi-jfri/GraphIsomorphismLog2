@@ -1,6 +1,10 @@
-import Workspace.Impl.TermGlueLabPGens
-import Workspace.Impl.TermGlueLabPInv
-import Workspace.Impl.TermGlueLabPE
+module
+
+public import Workspace.Impl.TermGlueLabPGens
+public import Workspace.Impl.TermGlueLabPInv
+public import Workspace.Impl.TermGlueLabPE
+
+@[expose] public section
 
 /-!
 # The coordinates of the label group: the setup program (step 5)

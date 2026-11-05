@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojQueryGlobal
-import Workspace.Impl.AggItemCiSojCertTables
-import Workspace.Impl.AggItemCiSojRectProg
+module
+
+public import Workspace.Impl.AggItemCiSojQueryGlobal
+public import Workspace.Impl.AggItemCiSojCertTables
+public import Workspace.Impl.AggItemCiSojRectProg
+
+@[expose] public section
 
 /-! # Installed bodies for the certified rectangle controller -/
 

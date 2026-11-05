@@ -1,5 +1,9 @@
-import Workspace.Impl.AggStructDes
-import Workspace.Impl.AggStructPat
+module
+
+public import Workspace.Impl.AggStructDes
+public import Workspace.Impl.AggStructPat
+
+@[expose] public section
 
 /-!
 # The Case 3 test on lists of numbers
@@ -512,11 +516,12 @@ theorem stDSrcIdx_eq {q κ ℓ : ℕ} (c : (Fin κ → Fin q) → ℕ) (hkl : κ
   unfold stSrc3
   rw [← hidx]
   by_cases hlt : stDSrcIdx (stDL c) q κ ℓ < q ^ ℓ
-  · rw [List.getD_eq_getElem _ _ (by rw [stTs_length]; exact hlt)]
+  · unfold stTs
+    rw [List.getD_eq_getElem _ _ (by simp [hlt])]
     have := stDDec_eq (q := q) (ℓ := ℓ) ⟨_, hlt⟩
     simp only at this
     rw [this]
-    simp [stTs]
+    simp only [List.getElem_map, List.getElem_finRange, Fin.cast_mk]
   · have hle : stDSrcIdx (stDL c) q κ ℓ ≤ q ^ ℓ := by
       unfold stDSrcIdx
       exact (List.findIdx_le_length).trans (by simp)

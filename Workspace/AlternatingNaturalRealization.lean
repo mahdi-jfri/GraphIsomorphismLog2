@@ -1,5 +1,9 @@
-import Workspace.AlternatingNonprimitiveStabilizer
-import Workspace.AlternatingPrimitiveStabilizer
+module
+
+public import Workspace.AlternatingNonprimitiveStabilizer
+public import Workspace.AlternatingPrimitiveStabilizer
+
+@[expose] public section
 
 namespace GI.BudgetInduction
 

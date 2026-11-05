@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojET
+module
+
+public import Workspace.Impl.AggItemCiSojET
+
+@[expose] public section
 
 /-!
 # Materializing one edge exchange

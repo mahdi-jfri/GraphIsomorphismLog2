@@ -1,7 +1,11 @@
-import Workspace.Lang.Lib.List
-import Workspace.Lang.Lib.Tabulate
-import Workspace.Lang.Prims.LinNormal
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Lang.Lib.List
+public import Workspace.Lang.Lib.Tabulate
+public import Workspace.Lang.Prims.LinNormal
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-! A uniform source-weight bound for maps on injectively encoded inputs. -/
 namespace GI.Impl

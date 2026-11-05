@@ -1,4 +1,8 @@
-import Workspace.Impl.LinMapEncoded
+module
+
+public import Workspace.Impl.LinMapEncoded
+
+@[expose] public section
 
 /-! Map deterministic computations over action records. Distinct cover elements
 may have the same record, so their encoding need not be injective. -/

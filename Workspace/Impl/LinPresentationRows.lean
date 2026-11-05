@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPresentationKernel
-import Workspace.Lang.Lib.LinIntVector
+module
+
+public import Workspace.Impl.LinPresentationKernel
+public import Workspace.Lang.Lib.LinIntVector
+
+@[expose] public section
 
 /-! Appending integer relation rows and its exact presentation meaning. -/
 namespace GI.Impl
@@ -14,11 +18,11 @@ theorem linRowStack_range {r s c : ℕ} (M : Matrix (Fin r) (Fin c) ℤ) (C : Ma
   constructor
   · rintro ⟨i, rfl⟩
     induction i using Fin.addCases with
-    | left i => exact Or.inl ⟨i, by simp [linRowStack]⟩
-    | right j => exact Or.inr ⟨j, by simp [linRowStack]⟩
+    | left i => exact Or.inl ⟨i, by simp [linRowStack, Fin.addCases]⟩
+    | right j => exact Or.inr ⟨j, by simp [linRowStack, Fin.addCases]⟩
   · rintro (⟨i, rfl⟩ | ⟨j, rfl⟩)
-    · exact ⟨i.castAdd s, by simp [linRowStack]⟩
-    · exact ⟨Fin.natAdd r j, by simp [linRowStack]⟩
+    · exact ⟨i.castAdd s, by simp [linRowStack, Fin.addCases]⟩
+    · exact ⟨Fin.natAdd r j, by simp [linRowStack, Fin.addCases]⟩
 
 theorem linRelations_stack {r s c : ℕ} (M : Matrix (Fin r) (Fin c) ℤ) (C : Matrix (Fin s) (Fin c) ℤ) :
     linRelations (linRowStack M C) = linRelations M ⊔ linRelations C := by

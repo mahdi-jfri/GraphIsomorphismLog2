@@ -1,4 +1,8 @@
-import Workspace.Impl.ScriptRun
+module
+
+public import Workspace.Impl.ScriptRun
+
+@[expose] public section
 
 /-!
 # Choices of an aggregation round from a record of the program's choices

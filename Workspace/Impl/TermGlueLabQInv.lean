@@ -1,5 +1,9 @@
-import Workspace.Cited.AlgoTerminal
-import Mathlib.LinearAlgebra.Matrix.Block
+module
+
+public import Workspace.Cited.AlgoTerminal
+public import Mathlib.LinearAlgebra.Matrix.Block
+
+@[expose] public section
 
 /-!
 # The inverse of a unimodular matrix from its Hermite form

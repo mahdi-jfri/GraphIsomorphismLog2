@@ -1,4 +1,8 @@
-import Workspace.Impl.LinCoordinatePrep
+module
+
+public import Workspace.Impl.LinCoordinatePrep
+
+@[expose] public section
 
 /-! A concrete self-contained layout for the deterministic cyclic-row preparation.
 Only GroupOrder is external, at a parameter primitive index. -/

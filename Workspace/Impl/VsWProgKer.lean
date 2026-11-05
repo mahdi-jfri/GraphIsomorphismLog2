@@ -1,6 +1,10 @@
-import Workspace.Impl.VsWDefs
-import Workspace.Impl.VsQTr
-import Workspace.Proved.VsWLinMath
+module
+
+public import Workspace.Impl.VsWDefs
+public import Workspace.Impl.VsQTr
+public import Workspace.Proved.VsWLinMath
+
+@[expose] public section
 
 /-!
 # The kernel program

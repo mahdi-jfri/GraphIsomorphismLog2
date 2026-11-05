@@ -1,8 +1,12 @@
-import Mathlib.Data.Nat.Log
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Order.Interval.Finset.Nat
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Ring
+module
+
+public import Mathlib.Data.Nat.Log
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Order.Interval.Finset.Nat
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.Ring
+
+@[expose] public section
 
 /-!
 # The numeric bound for primitive solvable groups

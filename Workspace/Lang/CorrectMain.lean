@@ -6,7 +6,11 @@ The main results are `EvalAll.spec` (any expression, in any context), `wp_funBod
 user function, run as a procedure) and `bnd_le` (the cost bound in the simple form
 `K * (cost + len hp + 2) ^ (D + 2)`).
 -/
-import Workspace.Lang.Correct
+module
+
+public import Workspace.Lang.Correct
+
+@[expose] public section
 
 namespace GI.Lang
 

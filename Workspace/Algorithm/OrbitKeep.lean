@@ -1,5 +1,9 @@
-import Workspace.Algorithm.State
-import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+module
+
+public import Workspace.Algorithm.State
+public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+
+@[expose] public section
 
 /-!
 # The row record of the first orbit-chain child

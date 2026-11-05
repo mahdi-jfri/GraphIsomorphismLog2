@@ -1,5 +1,9 @@
-import Workspace.Proved.VsMHardA
-import Workspace.Proved.Palfy
+module
+
+public import Workspace.Proved.VsMHardA
+public import Workspace.Proved.Palfy
+
+@[expose] public section
 
 /-!
 # The hard case, part B (Pálfy on `Ȳ`, the pieces, **M6**)
@@ -116,8 +120,8 @@ theorem VsMHard.ker_index [FiniteDimensional (ZMod p) V] [Nontrivial V]
       smul_one := fun g => map_one (σ g) }
   let ρ : H →* MulAut (Y ⧸ Yb) := MulDistribMulAction.toMulAut H (Y ⧸ Yb)
   have hρ : ∀ (g : H) (y : Y), ρ g (y : Y ⧸ Yb) = ((φ g y : Y) : Y ⧸ Yb) := fun g y => rfl
-  haveI : IsSolvable H := h.solv
-  haveI : IsSolvable ρ.range := solvable_of_surjective ρ.rangeRestrict_surjective
+  haveI : Group.IsSolvable H := h.solv
+  haveI : Group.IsSolvable ρ.range := solvable_of_surjective ρ.rangeRestrict_surjective
   haveI : Nontrivial (Y ⧸ Yb) := by
     obtain ⟨x, hx, y, hy, hxy⟩ := h.nab
     refine ⟨⟨((⟨x, hx⟩ : Y) : Y ⧸ Yb), 1, fun h1 => hxy ?_⟩⟩

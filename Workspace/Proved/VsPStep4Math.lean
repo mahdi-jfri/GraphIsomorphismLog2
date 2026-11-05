@@ -1,8 +1,12 @@
-import Workspace.Proved.VsPN2Math
-import Workspace.Proved.VsPOrbGlue
-import Workspace.Proved.VsPRadMath
-import Workspace.Proved.VsPEnumMath
-import Workspace.Proved.VsPDerMath
+module
+
+public import Workspace.Proved.VsPN2Math
+public import Workspace.Proved.VsPOrbGlue
+public import Workspace.Proved.VsPRadMath
+public import Workspace.Proved.VsPEnumMath
+public import Workspace.Proved.VsPDerMath
+
+@[expose] public section
 
 /-!
 # The hypotheses, the output, and the grow branches
@@ -18,6 +22,8 @@ namespace GI.Proved
 
 open GI.Impl GI.Cited GI.Lang Equiv
 open scoped commutatorElement
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 variable {I : VecStabInst} {s : VsQSt I} [Fact I.p.Prime]
 

@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemStepRun
-import Workspace.Impl.AggItemOKHand
-import Workspace.Impl.PolyBd
+module
+
+public import Workspace.Impl.AggItemStepRun
+public import Workspace.Impl.AggItemOKHand
+public import Workspace.Impl.PolyBd
+
+@[expose] public section
 
 /-!
 # `AsItemsOK` from the case contracts

@@ -1,6 +1,10 @@
-import Workspace.Lang.Prims.Other
-import Workspace.Cited.AlgoTerminal
-import Mathlib.Data.Nat.Size
+module
+
+public import Workspace.Lang.Prims.Other
+public import Workspace.Cited.AlgoTerminal
+public import Mathlib.Data.Nat.Size
+
+@[expose] public section
 
 /-! The A.20 normal-form tasks as hypothesis-dependent primitives.
 They use only the two tasks `HermiteFullRank` and `SmithNonsingular`.

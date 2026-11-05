@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimaryHeight
-import Workspace.Impl.LinAffineResidual
+module
+
+public import Workspace.Impl.LinPrimaryHeight
+public import Workspace.Impl.LinAffineResidual
+
+@[expose] public section
 
 /-! At the computed height the primary fiber is zero. A completed transporter
 is therefore a coset of the target stabilizer, as required before changing to

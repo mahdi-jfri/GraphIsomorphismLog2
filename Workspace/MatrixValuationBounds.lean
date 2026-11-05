@@ -1,4 +1,8 @@
-import Workspace.MatrixValuation
+module
+
+public import Workspace.MatrixValuation
+
+@[expose] public section
 
 namespace GI.MatrixValuation
 

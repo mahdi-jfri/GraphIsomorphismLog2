@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimeSeparation
-import Workspace.Impl.LinPrimeEval
+module
+
+public import Workspace.Impl.LinPrimeSeparation
+public import Workspace.Impl.LinPrimeEval
+
+@[expose] public section
 
 /-! The mixed-primary loop imposes the zero equation for bounded prime
 characteristics in increasing order. Each partial equation is characteristic. -/

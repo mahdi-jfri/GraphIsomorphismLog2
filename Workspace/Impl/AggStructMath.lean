@@ -1,4 +1,8 @@
-import Workspace.Algorithm.Aggregation
+module
+
+public import Workspace.Algorithm.Aggregation
+
+@[expose] public section
 
 /-!
 # The structure choices of an aggregation round, as a program makes them
@@ -15,7 +19,7 @@ program may fix them after those phases ran. This file gives the mathematics.
   a program computes from the comparison table. The numbers are at most `q^κ`, as the cited
   refinement task asks of its input.
 * `stSetJ`: a joint refinement function with one value replaced (`stSetJ_same`, `stSetJ_ne`).
-* `st_orbitalOut_good`: in Case 2b every source tuple whose first six entries are distinct
+* `st_orbitalOut_good`: in Case 2b every source tuple whose first eight entries are distinct
   points of the dominant orbit is good, for every refiner (the proof of `exists_orbitalOut_good`
   uses only this). So a program needs no transitivity degree to choose `src`.
 * `stSrcGood_*`: the condition `src_good` from the case of the round.
@@ -154,14 +158,14 @@ section Src
 
 variable {q : ℕ}
 
-/-- **Case 2b: a source tuple whose first six entries are distinct points of the dominant orbit
+/-- **Case 2b: a source tuple whose first eight entries are distinct points of the dominant orbit
 is good**, for every refiner with the clauses of one side of a joint refinement. The degree `d`
-of transitivity is at most `5`, so the anchors and the orbital pair use only these six entries
+of transitivity is at most `7`, so the anchors and the orbital pair use only these eight entries
 (`orbitalAt_good`). -/
-theorem st_orbitalOut_good (h6 : SixTransitiveContainsAlt) {H : Subgroup (Perm (Fin q))}
-    (hq : 16 ≤ q) {ℓ : ℕ} (hne : (domSet H).Nonempty) (hng : ¬ GiantOn H (domSet H))
-    (t : Fin ℓ → Fin q) (hinj : ∀ i j : Fin ℓ, i.val < 6 → j.val < 6 → t i = t j → i = j)
-    (hin : ∀ i : Fin ℓ, i.val < 6 → t i ∈ domSet H) (hℓ : 6 ≤ ℓ) {β : ℝ} (R : Refiner2 q)
+theorem st_orbitalOut_good {H : Subgroup (Perm (Fin q))}
+    (hq : 24 ≤ q) {ℓ : ℕ} (hne : (domSet H).Nonempty) (hng : ¬ GiantOn H (domSet H))
+    (t : Fin ℓ → Fin q) (hinj : ∀ i j : Fin ℓ, i.val < 8 → j.val < 8 → t i = t j → i = j)
+    (hin : ∀ i : Fin ℓ, i.val < 8 → t i ∈ domSet H) (hℓ : 8 ≤ ℓ) {β : ℝ} (R : Refiner2 q)
     (hR : SideOK R) : (orbitalOut R H t).Good β := by
   classical
   set Φ := domSet H with hΦdef
@@ -169,7 +173,7 @@ theorem st_orbitalOut_good (h6 : SixTransitiveContainsAlt) {H : Subgroup (Perm (
   have hpres : ∀ h ∈ H, ∀ a ∈ Φ, h a ∈ Φ := fun h hh a ha => apply_mem_domSet hh ha
   set d := transDeg H Φ with hddef
   obtain ⟨htr, -⟩ := transDeg_spec H Φ
-  have hd5 : d ≤ 5 := transDeg_le_five h6 hpres (by omega) hng
+  have hd7 : d ≤ 7 := transDeg_le_seven hpres (by omega) hng
   have hd1 : 1 ≤ d := by
     refine le_transDeg (by omega) (transOn_one_of_orbit fun a ha b hb => ?_)
     have hb' : b ∈ lorb H a := by rw [← domSet_eq_lorb ha]; exact hb
@@ -178,21 +182,21 @@ theorem st_orbitalOut_good (h6 : SixTransitiveContainsAlt) {H : Subgroup (Perm (
     have := le_transDeg (by omega) h
     omega
   unfold orbitalOut
-  exact orbitalAt_good hR hq (by omega) hd1 hd5 hdom htr hntr
+  exact orbitalAt_good hR hq (by omega) hd1 hd7 hdom htr hntr
     (fun i j hi hj e => hinj i j (by omega) (by omega) e) (fun i hi => hin i (by omega))
 
-/-- **The source tuple of Case 2b as a program computes it**: the six smallest points of the
+/-- **The source tuple of Case 2b as a program computes it**: the eight smallest points of the
 dominant orbit `Φ`, then the smallest point again. -/
-noncomputable def stSrc2b (Φ : Finset (Fin q)) (hΦ : 6 ≤ Φ.card) {ℓ : ℕ} : Fin ℓ → Fin q :=
-  fun i => if h : i.val < 6 then Φ.orderEmbOfFin rfl ⟨i.val, by omega⟩
+noncomputable def stSrc2b (Φ : Finset (Fin q)) (hΦ : 8 ≤ Φ.card) {ℓ : ℕ} : Fin ℓ → Fin q :=
+  fun i => if h : i.val < 8 then Φ.orderEmbOfFin rfl ⟨i.val, by omega⟩
     else Φ.orderEmbOfFin rfl ⟨0, by omega⟩
 
-theorem stSrc2b_inj (Φ : Finset (Fin q)) (hΦ : 6 ≤ Φ.card) {ℓ : ℕ} (i j : Fin ℓ)
-    (hi : i.val < 6) (hj : j.val < 6) (e : stSrc2b Φ hΦ i = stSrc2b Φ hΦ j) : i = j := by
+theorem stSrc2b_inj (Φ : Finset (Fin q)) (hΦ : 8 ≤ Φ.card) {ℓ : ℕ} (i j : Fin ℓ)
+    (hi : i.val < 8) (hj : j.val < 8) (e : stSrc2b Φ hΦ i = stSrc2b Φ hΦ j) : i = j := by
   simp only [stSrc2b, dif_pos hi, dif_pos hj] at e
   exact Fin.ext (Fin.mk.inj_iff.1 ((Φ.orderEmbOfFin rfl).injective e))
 
-theorem stSrc2b_mem (Φ : Finset (Fin q)) (hΦ : 6 ≤ Φ.card) {ℓ : ℕ} (i : Fin ℓ) :
+theorem stSrc2b_mem (Φ : Finset (Fin q)) (hΦ : 8 ≤ Φ.card) {ℓ : ℕ} (i : Fin ℓ) :
     stSrc2b Φ hΦ i ∈ Φ := by
   unfold stSrc2b
   split_ifs <;> exact Finset.orderEmbOfFin_mem _ _ _
@@ -222,12 +226,12 @@ theorem stSrcGood_other {ℓ : ℕ} (src : Fin ℓ → Fin L.q)
     StSrcGood fin S L πd J κ nm β src := by
   rintro (h' | h') <;> rcases h with h | h <;> rw [h] at h' <;> cases h'
 
-/-- **Case 2b**: the first six entries of `src` are distinct points of the dominant orbit. -/
-theorem stSrcGood_twoB (h6 : SixTransitiveContainsAlt) (hq : 16 ≤ L.q) {ℓ : ℕ} (hℓ : 6 ≤ ℓ)
+/-- **Case 2b**: the first eight entries of `src` are distinct points of the dominant orbit. -/
+theorem stSrcGood_twoB (hq : 24 ≤ L.q) {ℓ : ℕ} (hℓ : 8 ≤ ℓ)
     (src : Fin ℓ → Fin L.q)
     (hc : aggCase (structX fin S L πd J κ nm src).grp = .twoB)
-    (hinj : ∀ i j : Fin ℓ, i.val < 6 → j.val < 6 → src i = src j → i = j)
-    (hin : ∀ i : Fin ℓ, i.val < 6 → src i ∈ domSet (structX fin S L πd J κ nm src).grp) :
+    (hinj : ∀ i j : Fin ℓ, i.val < 8 → j.val < 8 → src i = src j → i = j)
+    (hin : ∀ i : Fin ℓ, i.val < 8 → src i ∈ domSet (structX fin S L πd J κ nm src).grp) :
     StSrcGood fin S L πd J κ nm β src := by
   intro _ Y
   set H := (structX fin S L πd J κ nm src).grp
@@ -242,26 +246,26 @@ theorem stSrcGood_twoB (h6 : SixTransitiveContainsAlt) (hq : 16 ≤ L.q) {ℓ : 
     split_ifs at hc with h
     exact h
   rw [outPair_twoB J Y hc]
-  exact st_orbitalOut_good h6 hq hne hng _ hinj hin hℓ _ (J.left_ok _ _ _)
+  exact st_orbitalOut_good hq hne hng _ hinj hin hℓ _ (J.left_ok _ _ _)
 
-/-- **Case 2b with the computed tuple** `stSrc2b`: the dominant orbit has more than `q/2 ≥ 8`
+/-- **Case 2b with the computed tuple** `stSrc2b`: the dominant orbit has more than `q/2 ≥ 12`
 points. -/
-theorem stSrcGood_twoB' (h6 : SixTransitiveContainsAlt) (hq : 16 ≤ L.q) {ℓ : ℕ} (hℓ : 6 ≤ ℓ)
+theorem stSrcGood_twoB' (hq : 24 ≤ L.q) {ℓ : ℕ} (hℓ : 8 ≤ ℓ)
     (hc : aggCase (haveI := fin
        letI : Fintype S.dom := Fintype.ofFinite _
        letI : DecidableEq S.dom := Classical.decEq _
        idealGrp S πd κ (dstr S S.x)) = .twoB)
-    (hΦ : 6 ≤ (domSet (haveI := fin
+    (hΦ : 8 ≤ (domSet (haveI := fin
        letI : Fintype S.dom := Fintype.ofFinite _
        letI : DecidableEq S.dom := Classical.decEq _
        idealGrp S πd κ (dstr S S.x))).card) :
     StSrcGood fin S L πd J κ nm β (stSrc2b (ℓ := ℓ) _ hΦ) :=
-  stSrcGood_twoB fin S L πd J κ nm h6 hq hℓ _ hc (stSrc2b_inj _ hΦ) fun i _ => stSrc2b_mem _ hΦ i
+  stSrcGood_twoB fin S L πd J κ nm hq hℓ _ hc (stSrc2b_inj _ hΦ) fun i _ => stSrc2b_mem _ hΦ i
 
-/-- In Case 2b the dominant orbit has at least six points, since it has more than `q/2` points
-and `q ≥ 16`. -/
-theorem st_domSet_six {H : Subgroup (Perm (Fin q))} (hq : 16 ≤ q) (hc : aggCase H = .twoB) :
-    6 ≤ (domSet H).card := by
+/-- In Case 2b the dominant orbit has at least eight points, since it has more than `q/2` points
+and `q ≥ 24`. -/
+theorem st_domSet_eight {H : Subgroup (Perm (Fin q))} (hq : 24 ≤ q) (hc : aggCase H = .twoB) :
+    8 ≤ (domSet H).card := by
   have hne : (domSet H).Nonempty := by
     unfold aggCase at hc
     by_contra h

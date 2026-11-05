@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojSpec
-import Workspace.Impl.AggItemCiSojWt
+module
+
+public import Workspace.Impl.AggItemCiSojSpec
+public import Workspace.Impl.AggItemCiSojWt
+
+@[expose] public section
 
 /-! # Returning a finished first-rectangle item with its empty kept value -/
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinMapEncoded
-import Workspace.Lang.Prims.Graph
+module
+
+public import Workspace.Impl.LinMapEncoded
+public import Workspace.Lang.Prims.Graph
+
+@[expose] public section
 
 /-! Build the disjoint union of two permutation tables. -/
 namespace GI.Impl
@@ -85,7 +89,7 @@ theorem linSumPerm_spec {P : Program} {b n : ℕ} (hp : P.HasAt b (linSumPermFun
   have hm' := hm.mono (linMapBudget_mono wm le_rfl)
   have wy : (Val.list ys).wt ≤ 10 * (W + 1) ^ 2 := by
     have hh := wt_encFun_le (fun i : Fin n => n + (c i : ℕ))
-      (B := 2 * n) (fun i => by have := (c i).isLt; dsimp only; omega)
+      (B := 2 * n) (fun i => by have := (c i).isLt; omega)
     change (Val.list ys).wt ≤ _ at hh
     have hpow : (n + 1) ^ 2 ≤ (W + 1) ^ 2 := Nat.pow_le_pow_left (by omega) 2
     nlinarith

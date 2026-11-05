@@ -5,7 +5,11 @@ Copying a block of memory.
 number of cells in register 2, and copies the cells forward, using register 3 as the counter.
 `wp_copy` gives its effect and cost.
 -/
-import Workspace.Machine.Layout
+module
+
+public import Workspace.Machine.Layout
+
+@[expose] public section
 
 namespace GI.Machine
 

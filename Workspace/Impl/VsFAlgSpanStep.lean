@@ -1,5 +1,9 @@
-import Workspace.Impl.VsFAlgSpan
-import Workspace.Impl.VsFAFlat
+module
+
+public import Workspace.Impl.VsFAlgSpan
+public import Workspace.Impl.VsFAFlat
+
+@[expose] public section
 
 /-!
 # One insertion of the algebra basis program

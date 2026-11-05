@@ -1,5 +1,9 @@
-import Workspace.JohnsonAnchored
-import Workspace.SmallDegreeBudget
+module
+
+public import Workspace.JohnsonAnchored
+public import Workspace.SmallDegreeBudget
+
+@[expose] public section
 
 namespace GI.Johnson
 

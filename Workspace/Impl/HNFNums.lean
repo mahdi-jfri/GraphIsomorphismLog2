@@ -1,5 +1,9 @@
-import Workspace.Impl.HNFAbs
-import Workspace.Lang.Lib.NatList
+module
+
+public import Workspace.Impl.HNFAbs
+public import Workspace.Lang.Lib.NatList
+
+@[expose] public section
 
 /-!
 # Powers and the complement of the chosen rows, as programs

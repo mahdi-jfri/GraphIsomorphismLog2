@@ -1,4 +1,8 @@
-import Workspace.Impl.SSSmall
+module
+
+public import Workspace.Impl.SSSmall
+
+@[expose] public section
 
 /-!
 # Insertion as a program
@@ -379,6 +383,6 @@ theorem ssInsertF_spec {P : Program} {f sift chain setb app comp inv : ℕ}
   have := ss_ins_cost hsc le_rfl hCA hlocw le_rfl hl3 hSA3 hT'w le_rfl hl4
     ((st_wt_list2 hPw hlocw).trans (by omega)) hP'w
   rw [hic, hWdef]
-  simpa only [Nat.zero_add, Nat.add_zero, Nat.add_assoc] using this
+  simpa only [Nat.zero_add, Nat.add_zero, Nat.add_assoc, hT', ssEncTab] using this
 
 end GI.Impl

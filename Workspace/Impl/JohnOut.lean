@@ -1,4 +1,8 @@
-import Workspace.Impl.JohnFold
+module
+
+public import Workspace.Impl.JohnFold
+
+@[expose] public section
 
 /-!
 # The output

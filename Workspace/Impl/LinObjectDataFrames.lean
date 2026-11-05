@@ -1,6 +1,10 @@
-import Workspace.Impl.LinObjectDataQuotient
-import Workspace.Impl.LinObjectPresentedFrame
-import Workspace.Impl.LinObjectReindexPresentation
+module
+
+public import Workspace.Impl.LinObjectDataQuotient
+public import Workspace.Impl.LinObjectPresentedFrame
+public import Workspace.Impl.LinObjectReindexPresentation
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset

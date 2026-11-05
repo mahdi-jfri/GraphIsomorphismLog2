@@ -1,4 +1,8 @@
-import Workspace.Impl.GenNormArgs
+module
+
+public import Workspace.Impl.GenNormArgs
+
+@[expose] public section
 
 /-! # The uniform bound covers each preparation call -/
 namespace GI.Impl

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojQuery
-import Workspace.Impl.AggItemCiCfgS
+module
+
+public import Workspace.Impl.AggItemCiSojQuery
+public import Workspace.Impl.AggItemCiCfgS
+
+@[expose] public section
 
 /-!
 # Reading matrix bits through the representation's cell codes

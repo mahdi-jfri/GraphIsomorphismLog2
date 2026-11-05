@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojAskProg
-import Workspace.Impl.AggItemCiSojFrame
+module
+
+public import Workspace.Impl.AggItemCiSojAskProg
+public import Workspace.Impl.AggItemCiSojFrame
+
+@[expose] public section
 
 /-! # The initial-request byte program produces the retained semantic frame -/
 
@@ -43,7 +47,7 @@ theorem itcs_ask_frame {Pg : Program} {f data colors Cd Cq : ℕ}
       (encPerm (1:Perm (Fin L.q))) side xt yt G D LC (F.query 1) (.list []) xc yc none hx hy hd (hq 1)
       (fun t ht => by cases ht)
     simpa only [rcRepVal,ht,Option.toList_none,Option.map_none,itcsQFrame.payload,itcsQFrame.pending,
-      itcsTwists,List.map_nil,List.map_cons,Option.toList_none,fix,G,D,LC,cells] using hh
+      itcsTwists,List.map_nil,List.map_cons,Option.toList_none,OneMemClass.coe_one,fix,G,D,LC,cells] using hh
   | some t =>
     have hqt (t' : Val) (he : some (encPerm t.val.val)=some t') :
         FunDet Pg colors (.list [sv,G,D,xt,yt,v,.nat L.q,cells,encPerm F.a₀.val,t']) (F.query t) Cq := by
@@ -54,6 +58,6 @@ theorem itcs_ask_frame {Pg : Program} {f data colors Cd Cq : ℕ}
       (encPerm (1:Perm (Fin L.q))) side xt yt G D LC (F.query 1) (F.query t) xc yc
       (some (encPerm t.val.val)) hx hy hd (hq 1) hqt
     simpa only [rcRepVal,ht,Option.toList_some,Option.map_some,itcsQFrame.payload,itcsQFrame.pending,
-      itcsTwists,List.map_nil,List.map_cons,fix,G,D,LC,cells] using hh
+      itcsTwists,List.map_nil,List.map_cons,OneMemClass.coe_one,fix,G,D,LC,cells] using hh
 
 end GI.Impl

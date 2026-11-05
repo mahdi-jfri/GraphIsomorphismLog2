@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgM
+module
+
+public import Workspace.Impl.AggItemCiCfgM
+
+@[expose] public section
 
 /-!
 # The configuration query: the outer color classes

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinMapEncoded
+module
+
+public import Workspace.Impl.LinMapEncoded
+
+@[expose] public section
 
 /-! A uniform map bound for cited subroutines whose output generators
 need not be uniquely chosen. The relation is indexed by the source data. -/

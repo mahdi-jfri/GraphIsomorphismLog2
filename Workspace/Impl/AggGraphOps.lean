@@ -1,5 +1,9 @@
-import Workspace.Impl.AggPairs
-import Workspace.Lang.Prims.Ops
+module
+
+public import Workspace.Impl.AggPairs
+public import Workspace.Lang.Prims.Ops
+
+@[expose] public section
 
 /-!
 # Cited calls on graph groups

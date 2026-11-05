@@ -1,5 +1,9 @@
-import Workspace.Impl.LinDenseMul
-import Workspace.Impl.LinFiniteHomogeneous
+module
+
+public import Workspace.Impl.LinDenseMul
+public import Workspace.Impl.LinFiniteHomogeneous
+
+@[expose] public section
 
 /-! Multiply full affine matrices and reduce every target-coordinate row. -/
 namespace GI.Impl

@@ -1,5 +1,9 @@
-import Workspace.Impl.VsHPsP
-import Workspace.Proved.VsQA2
+module
+
+public import Workspace.Impl.VsHPsP
+public import Workspace.Proved.VsQA2
+
+@[expose] public section
 
 /-!
 # The algebra basis of the A-loop

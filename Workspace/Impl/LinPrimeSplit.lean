@@ -1,6 +1,10 @@
-import Workspace.Impl.LinFiniteProjection
-import Workspace.Impl.LinPrimaryMatrixAlgebra
-import Mathlib.Data.Nat.GCD.BigOperators
+module
+
+public import Workspace.Impl.LinFiniteProjection
+public import Workspace.Impl.LinPrimaryMatrixAlgebra
+public import Mathlib.Data.Nat.GCD.BigOperators
+
+@[expose] public section
 
 /-! The kernel of a primary coordinate projection consists exactly of the
 elements killed by an integer coprime to p. It is therefore preserved by

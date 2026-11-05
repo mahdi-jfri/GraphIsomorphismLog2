@@ -1,4 +1,8 @@
-import Workspace.Proved.SNFAlt
+module
+
+public import Workspace.Proved.SNFAlt
+
+@[expose] public section
 
 /-!
 # A `2 × 2` block inside the identity (Smith form)

@@ -1,4 +1,8 @@
-import Workspace.Algorithm.RowLevels
+module
+
+public import Workspace.Algorithm.RowLevels
+
+@[expose] public section
 
 /-!
 # Exposing the row interval: the column step from a row form
@@ -436,11 +440,13 @@ noncomputable def columnStep (hint : 2 ≤ Nat.card (Quotient (MulAction.orbitRe
         linarith
     tower_mono := P.localTower_mono
     tower_ratio := fun j hj => by
-      show (F.expLoc (F.baseB hne))[j].ratio = _
+      have hj' : j < (F.expLoc (F.baseB hne)).length := hj
+      show ((F.expLoc (F.baseB hne))[j]'hj').ratio =
+        (localTower F.e F.i0 (F.expLoc (F.baseB hne)) (F.baseB hne) j).relIndex
+          (localTower F.e F.i0 (F.expLoc (F.baseB hne)) (F.baseB hne) (j + 1))
       rw [F.expLoc_ratio]
       unfold expRatio
-      rw [localTower_congr _ _ _ (F.lvl_expLoc (F.baseB hne)).symm]
-      rfl }
+      rw [localTower_congr _ _ _ (F.lvl_expLoc (F.baseB hne)).symm] }
 
 end RowForm
 

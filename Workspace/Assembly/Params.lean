@@ -1,8 +1,12 @@
-import Workspace.Paper.MainTheoremRoots
-import Workspace.Paper.RunningTimeParameters
-import Workspace.Paper.RunningTimeBaseSize
-import Workspace.Algorithm.SupplyBuild
-import Workspace.Algorithm.RowSupply
+module
+
+public import Workspace.Paper.MainTheoremRoots
+public import Workspace.Paper.RunningTimeParameters
+public import Workspace.Paper.RunningTimeBaseSize
+public import Workspace.Algorithm.SupplyBuild
+public import Workspace.Algorithm.RowSupply
+
+@[expose] public section
 
 /-!
 # The paper's parameters, fixed once
@@ -73,7 +77,7 @@ theorem baseN₀_spec : ∀ N : ℕ, baseN₀ ≤ N →
       (N : ℝ) < ((⌊(N : ℝ) ^ (2 / 5 : ℝ)⌋₊).choose 3 : ℝ) ∧
       (N : ℝ) ^ (1 - 2 / 5 : ℝ) < ((⌊(N : ℝ) ^ (2 / 5 : ℝ)⌋₊).choose 2 : ℝ) ∧
       (2064 : ℝ) < (N : ℝ) ^ (2 / 5 : ℝ) ∧
-      (∃ k : ℕ, Odd k ∧ 8 < k ∧ 2 + Real.logb 2 N < k ∧
+      (∃ k : ℕ, Odd k ∧ 63 < k ∧ 12 * Real.logb 2 N < k ∧
         (2 * k - 1 : ℝ) ≤ (N : ℝ) ^ (2 / 5 : ℝ)) ∧
       6 ≤ (N : ℝ) ^ (9 / 10 : ℝ) ∧ ⌈(N : ℝ) ^ (9 / 10 : ℝ)⌉₊ < N ∧
       2 ≤ (N : ℝ) ^ (9 / 10 * cc₀.D - 36001 : ℝ) := by
@@ -119,11 +123,10 @@ theorem P₀_enumeratesBounded : P₀.EnumeratesBounded := by
     push_cast
     linarith
   have h1 : Nat.factorial 2064 ≤ 2 ^ 24768 := by
-    have := Nat.factorial_le_pow 2064
-    have h2 : (2064 : ℕ) ^ 2064 ≤ 4096 ^ 2064 := Nat.pow_le_pow_left (by norm_num) _
-    have h3 : (4096 : ℕ) ^ 2064 = 2 ^ 24768 := by
-      rw [show (4096 : ℕ) = 2 ^ 12 by norm_num, ← pow_mul]
-    exact this.trans (h2.trans h3.le)
+    have h2 : (2064 : ℕ) ≤ 2 ^ 12 := by norm_num
+    have h3 : (2 ^ 12) ^ 2064 = 2 ^ 24768 := by
+      rw [← pow_mul]
+    exact (Nat.factorial_le_pow 2064).trans ((Nat.pow_le_pow_left h2 2064).trans h3.le)
   exact h1.trans (Nat.pow_le_pow_right (by norm_num) hb)
 
 /-- The exponent of the integer small test at `P₀`: `⌊36000 log 2⌋ = 24953`, since
@@ -170,9 +173,9 @@ theorem P₀_a_succ : P₀.a + 1 ≤ cc₀.a := by
   rw [cc₀_spec.1]; norm_num [P₀]
 
 /-- **The row threshold holds at `P₀`**. It follows from the third base-size condition
-`2064 < N^{2/5}` of Section 7.5 (`baseN₀_spec`): put `t = N^{2/5}` and `u = √t > 16`. Then
-`log₂ N = (5/2) log t / log 2 ≤ 5 u / log 2`, since `log t ≤ 2√t`, and
-`2 (2 + log₂ N) + 3 ≤ 7 + 10 u / log 2 ≤ 7 + 15 u ≤ u² = t`. -/
+`2064 < N^{2/5}` of Section 7.5 (`baseN₀_spec`): put `t = N^{2/5} > 2064`. Since
+`log(t / 512) ≤ t / 512 - 1` and `512 = 2^9`, `log₂ N = (5/2) log t / log 2` is bounded by a
+linear function of `t` with small slope, so `2 max(63, 12 log₂ N) + 3 ≤ t`. -/
 theorem P₀_rowThreshold : P₀.RowThreshold := by
   intro N hN
   have hN' : baseN₀ ≤ N := (le_max_left _ _).trans (le_of_lt (by simpa [P₀] using hN))
@@ -185,32 +188,26 @@ theorem P₀_rowThreshold : P₀.RowThreshold := by
   have ht0 : 0 < t := Real.rpow_pos_of_pos hNpos _
   -- `log t = (2/5) log N`.
   have hlogt : Real.log t = 2 / 5 * Real.log N := Real.log_rpow hNpos _
-  -- `log t ≤ 2 √t`.
-  have hlog_le : Real.log t ≤ 2 * Real.sqrt t := by
-    have := Real.log_le_rpow_div ht0.le (show (0 : ℝ) < 1 / 2 by norm_num)
-    rw [← Real.sqrt_eq_rpow] at this
+  -- `log(t / 512) ≤ t / 512 - 1`, so `log t ≤ t / 512 - 1 + 9 log 2`.
+  have hlog_div : Real.log (t / 512) = Real.log t - 9 * Real.log 2 := by
+    have h512 : (512 : ℝ) = (2 : ℝ) ^ (9 : ℕ) := by norm_num
+    rw [Real.log_div ht0.ne' (by norm_num), h512, Real.log_pow, Nat.cast_ofNat]
+  have hlog_le : Real.log t ≤ t / 512 - 1 + 9 * Real.log 2 := by
+    have := Real.log_le_sub_one_of_pos (show 0 < t / 512 by linarith)
     linarith
-  set u := Real.sqrt t with hu
-  have hu2 : u ^ 2 = t := Real.sq_sqrt ht0.le
-  have hu16 : 16 < u := by
-    rw [hu, show (16 : ℝ) = Real.sqrt 256 by
-      rw [show (256 : ℝ) = 16 ^ 2 by norm_num, Real.sqrt_sq (by norm_num)]]
-    exact Real.sqrt_lt_sqrt (by norm_num) (by linarith)
   have hl2 : 0.69 < Real.log 2 := by have := Real.log_two_gt_d9; linarith
   have hlogb : Real.logb 2 N = 5 / 2 * Real.log t / Real.log 2 := by
     rw [Real.logb, hlogt]; ring
-  have hb : Real.logb 2 N ≤ 5 * u / Real.log 2 := by
+  have hb : Real.logb 2 N ≤ (5 / 2 * (t / 512 - 1) + 45 / 2 * Real.log 2) / Real.log 2 := by
     rw [hlogb, div_le_div_iff_of_pos_right (by linarith)]
     linarith
-  have hb' : Real.logb 2 N ≤ 15 / 2 * u := by
+  have hb' : Real.logb 2 N ≤ t / 100 + 45 / 2 := by
     refine hb.trans ?_
     rw [div_le_iff₀ (by linarith)]
     nlinarith
-  rcases le_total 8 (2 + Real.logb 2 N) with h | h
-  · rw [max_eq_right h]
-    nlinarith
-  · rw [max_eq_left h]
-    nlinarith
+  have hmax : max 63 (12 * Real.logb 2 N) ≤ (t - 3) / 2 :=
+    max_le (by linarith) (by linarith)
+  linarith
 
 /-- **Every parameter hypothesis** of `GI.Paper.thm_main_graph_stage1'`, `GI.Paper.run_exists`,
 `GI.Paper.run_exists_giant`, `GI.Paper.thm_main_graph_stage1_giant` and (with `RowThreshold`)
@@ -221,8 +218,7 @@ theorem P₀_hyps : P₀.Terminating ∧ 128 ≤ P₀.a ∧ 64 ≤ P₀.κ ∧ C
   ⟨P₀_terminating, P₀_a, P₀_κ, P₀_compat, P₀_αγ, P₀_aboveBase, P₀_a_succ, P₀_γ,
     P₀_enumeratesBounded, P₀_rowThreshold⟩
 
-/-- **Theorem 1.1 at stage 1, at the paper's parameters, for every run.** Assume the cited
-results `AutCardLeSq` and `SimpleValuationDegree` (the inputs of Theorem A.9), and the work
+/-- **Theorem 1.1 at stage 1, at the paper's parameters, for every run.** Assume the work
 bounds `NodeBound' w cw` with `0 ≤ cw`. Then there is a constant `C'` such that for all graphs
 `X, Y` on `n` vertices, every run `r` of `Solve` on the pair state of Algorithm 1 with answer `A`
 gives exactly the isomorphisms from `X` to `Y` (empty exactly when there is none, and
@@ -230,8 +226,7 @@ gives exactly the isomorphisms from `X` to `Y` (empty exactly when there is none
 
 Compared with `GI.Paper.thm_main_graph_stage1'`: the parameters are fixed to `P₀`, and the
 existence of a run is left out, so neither `Supply` nor Maróti's theorem is needed. -/
-theorem thm_main_graph_stage1'' (hAut : GI.Cited.AutCardLeSq)
-    (hLie : GI.Cited.SimpleValuationDegree) {w : Node P₀ → ℝ} {cw : ℝ} (hw : NodeBound' w cw)
+theorem thm_main_graph_stage1'' {w : Node P₀ → ℝ} {cw : ℝ} (hw : NodeBound' w cw)
     (hcw : 0 ≤ cw) :
     ∃ C' : ℝ, ∀ (n : ℕ) (X Y : SimpleGraph (Fin n)) [DecidableRel X.Adj] [DecidableRel Y.Adj]
       {A : Set (Perm (Fin n × Fin n))} (r : Run P₀ .solve (graphState X Y) none A),
@@ -241,7 +236,7 @@ theorem thm_main_graph_stage1'' (hAut : GI.Cited.AutCardLeSq)
           (σ.toEquiv : Perm (Fin n)) • (GI.Statement.autGroup X : Set (Perm (Fin n)))) ∧
         r.total w ≤ Real.exp (C' * Real.log ((n : ℝ) + 2) ^ 2) := by
   obtain ⟨hP, ha128, hκ, hc, hαγ, hbase, ha, -⟩ := P₀_hyps
-  obtain ⟨cσ, hcσ, hok⟩ := Run.rootsOK_all hAut hLie hκ
+  obtain ⟨cσ, hcσ, hok⟩ := Run.rootsOK_all hκ
   have h5 : (5 : ℝ) ≤ P₀.a := by linarith
   obtain ⟨C', h⟩ := main_recurrence_solved hP hc hαγ hbase hcσ (hw.toNodeBound h5) hcw
     (by linarith) ha

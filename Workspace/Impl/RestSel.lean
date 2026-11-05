@@ -1,4 +1,8 @@
-import Workspace.Impl.Weights
+module
+
+public import Workspace.Impl.Weights
+
+@[expose] public section
 
 /-!
 # The rest of the selector of `Continue`

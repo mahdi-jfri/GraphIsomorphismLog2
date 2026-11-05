@@ -1,6 +1,10 @@
-import Mathlib.Algebra.Group.Subgroup.Basic
-import Mathlib.Algebra.Group.Subgroup.Finite
-import Mathlib.Algebra.Group.Pi.Lemmas
+module
+
+public import Mathlib.Algebra.Group.Subgroup.Basic
+public import Mathlib.Algebra.Group.Subgroup.Finite
+public import Mathlib.Algebra.Group.Pi.Lemmas
+
+@[expose] public section
 
 namespace GI.PrimitiveCartesian
 
@@ -24,7 +28,7 @@ theorem projectionEnvelope_ne_top (K : Subgroup (∀ i, S i)) (i : I)
   have hx : Pi.mulSingle i s ∈ projectionEnvelope K := by
     rw [ht]
     exact Subgroup.mem_top _
-  simpa only [Pi.mulSingle_eq_same] using hx i (Set.mem_univ i)
+  simpa only [Pi.mulSingle_eq_same, Subgroup.mem_carrier] using hx i (Set.mem_univ i)
 
 /-- An actual automorphism that permutes coordinate fibers and preserves
 the original subgroup also preserves the product of its coordinate images.
@@ -45,8 +49,3 @@ theorem projectionEnvelope_map_eq [Finite (∀ i, S i)]
   · exact le_of_eq (Nat.card_congr (e.subgroupMap (projectionEnvelope K)).toEquiv)
 
 end GI.PrimitiveCartesian
-
-#print axioms GI.PrimitiveCartesian.projectionEnvelope
-#print axioms GI.PrimitiveCartesian.le_projectionEnvelope
-#print axioms GI.PrimitiveCartesian.projectionEnvelope_ne_top
-#print axioms GI.PrimitiveCartesian.projectionEnvelope_map_eq

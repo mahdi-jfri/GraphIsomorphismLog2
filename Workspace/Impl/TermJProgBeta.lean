@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJProgTab
-import Workspace.Impl.TermJVecList
+module
+
+public import Workspace.Impl.TermJProgTab
+public import Workspace.Impl.TermJVecList
+
+@[expose] public section
 
 /-!
 # The coordinate vectors of the local generators (program)

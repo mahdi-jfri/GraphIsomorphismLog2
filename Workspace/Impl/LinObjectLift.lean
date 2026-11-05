@@ -1,8 +1,12 @@
-import Workspace.Impl.LinObjectQuotientBuild
-import Workspace.Impl.LinObjectLiftMath
-import Workspace.Impl.LinRowSystem
-import Workspace.Impl.LinSlice
-import Workspace.Impl.LinPermWord
+module
+
+public import Workspace.Impl.LinObjectQuotientBuild
+public import Workspace.Impl.LinObjectLiftMath
+public import Workspace.Impl.LinRowSystem
+public import Workspace.Impl.LinSlice
+public import Workspace.Impl.LinPermWord
+
+@[expose] public section
 
 /-! Solve the common-translation equation and lift its final coefficient
 block to an actual element of `A`. -/

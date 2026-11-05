@@ -1,8 +1,12 @@
-import Workspace.OrbitBudget
-import Workspace.OrbitLocalization
-import Workspace.BlockPartition
-import Workspace.CartesianHereditary
-import Workspace.JohnsonBound
+module
+
+public import Workspace.OrbitBudget
+public import Workspace.OrbitLocalization
+public import Workspace.BlockPartition
+public import Workspace.CartesianHereditary
+public import Workspace.JohnsonBound
+
+@[expose] public section
 
 /-!
 # Paper, Appendix A, Section "A hereditary budget": Definition A.2 to Lemma A.7

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepS3
+module
+
+public import Workspace.Impl.AggRectRepS3
+
+@[expose] public section
 
 /-!
 # The label action read from the table

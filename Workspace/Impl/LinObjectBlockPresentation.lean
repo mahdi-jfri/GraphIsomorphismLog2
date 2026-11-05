@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectBlock
-import Workspace.Impl.LinPresentationRows
+module
+
+public import Workspace.Impl.LinObjectBlock
+public import Workspace.Impl.LinPresentationRows
+
+@[expose] public section
 
 /-! Flatten the product presentation in the exact column order used by
 the matrix assembler, and append the common-translation rows. -/
@@ -67,7 +71,7 @@ theorem linObjectRowStack_injective {r s d : ℕ}
   apply hM
   ext i
   have hi := congrFun hxy (i.castAdd s)
-  simpa [Matrix.mulVec, dotProduct, linRowStack] using hi
+  simpa [Matrix.mulVec, dotProduct, linRowStack, Fin.addCases] using hi
 
 theorem linObjectQuotientMatrix_injective {p r d : ℕ}
     (M : Fin p → Matrix (Fin r) (Fin d) ℤ)

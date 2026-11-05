@@ -1,4 +1,8 @@
-import Workspace.Impl.VsPS3P
+module
+
+public import Workspace.Impl.VsPS3P
+
+@[expose] public section
 
 /-!
 # From `N₀` to `N₂`
@@ -15,6 +19,8 @@ namespace GI.Impl
 open GI.Lang GI.Cited GI.Proved Equiv
 open GI.Machine (BinOp)
 open scoped commutatorElement
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 variable {I : VecStabInst}
 
@@ -125,7 +131,7 @@ theorem vsPS2_spec [Fact I.p.Prime] {P : Program} {hn : NormalClosure} {f : ℕ}
   have hx2rS : vsPRho hs (x2 ^ r) ∈ vsMScal (vsPBar hs (gens as)) :=
     (hib _ (pow_mem hx2g r)).1 hx2r
   have hx2S : vsPRho hs x2 ∉ vsMScal (vsPBar hs (gens as)) := fun h' => by
-    rw [← hib x2 hx2g] at h'; rw [h'] at hx2b; exact Bool.noConfusion hx2b
+    have h'' := (hib x2 hx2g).2 h'; rw [h''] at hx2b; exact Bool.noConfusion hx2b
   -- the program
   set G0 := encGroup ns0
   set vs := [C, A, G0]

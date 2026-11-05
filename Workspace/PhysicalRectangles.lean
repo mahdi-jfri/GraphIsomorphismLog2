@@ -1,6 +1,10 @@
-import Workspace.RectangleOrbits
-import Workspace.KernelQuotientFacts
-import Mathlib.Tactic.Ring
+module
+
+public import Workspace.RectangleOrbits
+public import Workspace.KernelQuotientFacts
+public import Mathlib.Tactic.Ring
+
+@[expose] public section
 
 namespace GI.Rectangle
 

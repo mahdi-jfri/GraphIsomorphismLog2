@@ -1,6 +1,10 @@
-import Workspace.Impl.TermJProgG
-import Workspace.Impl.TermJProgNq
-import Workspace.Impl.TermJPoly
+module
+
+public import Workspace.Impl.TermJProgG
+public import Workspace.Impl.TermJProgNq
+public import Workspace.Impl.TermJPoly
+
+@[expose] public section
 
 /-!
 # The groups `G|_dom` and `N^q` for the per-label program (program)

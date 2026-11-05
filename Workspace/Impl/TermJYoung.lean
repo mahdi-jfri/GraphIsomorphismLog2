@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJCoset
+module
+
+public import Workspace.Impl.TermJCoset
+
+@[expose] public section
 
 /-!
 # Generators of `Aut_{K ≀ Sym(q)}(X)` (the even-Young part of `Aut_J(x)`)

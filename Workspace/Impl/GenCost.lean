@@ -1,6 +1,10 @@
-import Workspace.Impl.GenEnum
-import Workspace.Impl.PolyBd
-import Workspace.Impl.Weights
+module
+
+public import Workspace.Impl.GenEnum
+public import Workspace.Impl.PolyBd
+public import Workspace.Impl.Weights
+
+@[expose] public section
 
 /-!
 # Polynomial bounds on the own costs of the general dispatcher

@@ -1,5 +1,9 @@
-import Workspace.Proved.HNFSquare
-import Workspace.Proved.HNFBlock
+module
+
+public import Workspace.Proved.HNFSquare
+public import Workspace.Proved.HNFBlock
+
+@[expose] public section
 
 /-!
 # The Hermite form with transform of a matrix of full column rank

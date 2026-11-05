@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryLoop
+module
+
+public import Workspace.Impl.LinPrimaryLoop
+
+@[expose] public section
 
 /-! Uniform sizes throughout the filtration. Every newly chosen cover element
 has canonical finite affine records, so repeated restrictions do not compound

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPOffR
+module
+
+public import Workspace.Impl.TermGlueLabPOffR
+
+@[expose] public section
 
 /-!
 # The transporters `t_a(h)` for one element `h`: all rows

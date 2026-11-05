@@ -1,6 +1,10 @@
-import Workspace.Impl.LinObjectQuotient
-import Mathlib.Data.Matrix.Block
-import Mathlib.LinearAlgebra.Matrix.Reindex
+module
+
+public import Workspace.Impl.LinObjectQuotient
+public import Mathlib.Data.Matrix.Block
+public import Mathlib.LinearAlgebra.Matrix.Reindex
+
+@[expose] public section
 
 /-! The local relation matrices occupy disjoint blocks. The column order
 is coordinate first, then piece, so it also covers the empty product. -/

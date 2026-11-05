@@ -1,5 +1,9 @@
-import Workspace.OrbitBudget
-import Workspace.Pullback
+module
+
+public import Workspace.OrbitBudget
+public import Workspace.Pullback
+
+@[expose] public section
 
 namespace GI.ImageTransport
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojPR
-import Workspace.Impl.AggItemCiSojWt
+module
+
+public import Workspace.Impl.AggItemCiSojPR
+public import Workspace.Impl.AggItemCiSojWt
+
+@[expose] public section
 
 /-! # Matching each canonical answer with its recorded target twist -/
 

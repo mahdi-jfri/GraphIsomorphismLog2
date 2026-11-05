@@ -1,4 +1,8 @@
-import Workspace.Impl.LinWreathChoiceGens
+module
+
+public import Workspace.Impl.LinWreathChoiceGens
+
+@[expose] public section
 
 /-! A vector transporter with the target stabilizer, for the next fiber of the
 paper's affine filtration. The two vector calls use one parameter primitive. -/
@@ -12,7 +16,7 @@ def linVectorTransportOut (I : VecStabInst) (w : Fin I.d → ZMod I.p) (out : Va
     ∃ (g : gens I.gs) (sv : Val), out = .list [encPerm g.val, sv] ∧
       (I.φ g).val.mulVec I.v = w ∧ GensVal I.n sv (vecStabSub (linVectorTarget I w))
 
-private def linVectorSource (i : ℕ) : Expr := .get (arg 0) (.nat i)
+def linVectorSource (i : ℕ) : Expr := .get (arg 0) (.nat i)
 
 def linVectorTransportF (stab choice j : ℕ) : Expr :=
   .letE (.call stab (.var 0))

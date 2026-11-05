@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepRow
+module
+
+public import Workspace.Impl.AggRectRepRow
+
+@[expose] public section
 
 /-!
 # The carrier case read by the program
@@ -198,12 +202,14 @@ theorem rcR_embed_apply (a : alternatingGroup (Fin L.q)) (j : Fin (rcRCarD e I h
       Perm (Fin (rcRCarD e I hlam f).m)) j =
       if h : (j : ℕ) < L.q then Fin.castLE (rcR_rec_spec I hlam f).2 ((a : Perm (Fin L.q)) ⟨j, h⟩)
       else j := by
-  split_ifs with h
-  · have e1 : j = (rcRCarD e I hlam f).d.rows ⟨j, h⟩ := Fin.ext rfl
+  by_cases h : (j : ℕ) < L.q
+  · refine Eq.trans ?_ (@dif_pos ((j : ℕ) < L.q) _ h (Fin (rcRCarD e I hlam f).m) _ _).symm
+    have e1 : j = (rcRCarD e I hlam f).d.rows ⟨j, h⟩ := Fin.ext rfl
     conv_lhs => rw [e1]
     rw [(rcRCarD e I hlam f).d.embedAlt_apply]
     rfl
-  · show (Equiv.Perm.viaFintypeEmbedding (a : Perm (Fin L.q)) (rcRCarD e I hlam f).d.rows) j = j
+  · refine Eq.trans ?_ (@dif_neg ((j : ℕ) < L.q) _ h (Fin (rcRCarD e I hlam f).m) _ _).symm
+    show (Equiv.Perm.viaFintypeEmbedding (a : Perm (Fin L.q)) (rcRCarD e I hlam f).d.rows) j = j
     refine Equiv.Perm.viaFintypeEmbedding_apply_notMem_range _ _ ?_
     rintro ⟨i, hi⟩
     exact h (by rw [← hi]; exact i.2)

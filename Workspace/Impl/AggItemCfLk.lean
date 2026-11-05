@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCfMath
-import Workspace.Impl.AggStructDC
+module
+
+public import Workspace.Impl.AggItemCfMath
+public import Workspace.Impl.AggStructDC
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3: the cache lookup
@@ -167,7 +171,7 @@ theorem itCfIdx_spec (cache : List (ItCfEnt q)) (c : (Fin 2 → Fin q) → ℕ) 
     refine ⟨h, ?_⟩
     have := List.findIdx_getElem (xs := cache) (p := fun a : ItCfEnt q => decide (a.1 = c))
       (w := h)
-    simpa using this
+    exact of_decide_eq_true this
   · right
     have hle : itCfIdx cache c ≤ cache.length := List.findIdx_le_length
     have heq : itCfIdx cache c = cache.length := by omega

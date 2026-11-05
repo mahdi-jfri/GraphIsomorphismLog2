@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHPsP
+module
+
+public import Workspace.Impl.VsHPsP
+
+@[expose] public section
 
 /-!
 # The pieces computed by the program, in the hard case
@@ -18,6 +22,7 @@ open GI.Lang GI.Cited GI.Proved Equiv
 variable {I : VecStabInst} {s : VsQSt I} [Fact I.p.Prime] {hs : VsQStOK s}
   {as : List (Perm (Fin I.n))} {Lb : List (List (List ℕ))} {ys : List (Perm (Fin I.n))} {r : ℕ}
 
+set_option backward.isDefEq.respectTransparency false in
 theorem VsHHyp.pieces (h : VsHHyp hs as Lb ys r) (hk : 1 ≤ (vsHK s Lb r ys).length) :
     let K := vsHK s Lb r ys
     let Ps := vsHPs s ((1 :: as) ++ K)

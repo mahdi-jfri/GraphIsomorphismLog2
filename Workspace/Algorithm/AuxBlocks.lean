@@ -1,6 +1,10 @@
-import Workspace.Algorithm.AggregationPlan
-import Workspace.Algorithm.Cases
-import Workspace.AlternatingSubsetTransitive
+module
+
+public import Workspace.Algorithm.AggregationPlan
+public import Workspace.Algorithm.Cases
+public import Workspace.AlternatingSubsetTransitive
+
+@[expose] public section
 
 /-!
 # The Johnson block map from the kernel-orbit map (Corollary A.25)
@@ -100,9 +104,9 @@ def SupportCases (α : ℝ) (N : ℕ) : Prop :=
 
 /-- Corollary A.25 gives the support classification for all large `N`
 (`large_giant_support_cases`). -/
-theorem supportCases_of_large (hcite : GI.Cited.TransitiveAffected) {α : ℝ} (hα : 1 / 3 < α) :
+theorem supportCases_of_large {α : ℝ} (hα : 1 / 3 < α) :
     ∃ N₁ : ℕ, ∀ N : ℕ, N₁ ≤ N → SupportCases α N :=
-  large_giant_support_cases hcite hα
+  large_giant_support_cases hα
 
 /-- **The support classification gives the Johnson block map** when `q > N^α`: every transitive
 state with `q > N^α` labels and at most `N` domain points has a Johnson block map with `h = 1`
@@ -146,12 +150,12 @@ theorem blocks_of_cases {α : ℝ} {Ω C : Type} {S : State Ω C} (L : GiantLabe
 /-- **Corollary A.25 gives the Johnson block map** when `q > N^α`: for all large `N`, every
 transitive state with `q > N^α` labels and at most `N` domain points has a Johnson block map with
 `h = 1` (natural labels) or `h = 2` (ordered or unordered pairs of labels). -/
-theorem exists_blocks (hcite : GI.Cited.TransitiveAffected) {α : ℝ} (hα : 1 / 3 < α) :
+theorem exists_blocks {α : ℝ} (hα : 1 / 3 < α) :
     ∃ N₁ : ℕ, ∀ {Ω C : Type} {S : State Ω C} (L : GiantLabels S) (fin : Finite Ω)
       (πd : S.domGroup →* alternatingGroup (Fin L.q)),
       (∀ g : S.G, πd ⟨S.domHom g, g, rfl⟩ = L.π g) → S.Transitive →
       N₁ ≤ S.N → S.size ≤ S.N → 4 ≤ L.q → (S.N : ℝ) ^ α < L.q → Nonempty (JohnsonBlocks S L) := by
-  obtain ⟨N₁, hN₁⟩ := supportCases_of_large hcite hα
+  obtain ⟨N₁, hN₁⟩ := supportCases_of_large hα
   exact ⟨N₁, fun L fin πd hπ htr hN hsize hq hlam =>
     blocks_of_cases L (hN₁ _ hN) fin πd hπ htr hsize hq hlam⟩
 

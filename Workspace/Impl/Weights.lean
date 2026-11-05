@@ -1,7 +1,11 @@
-import Workspace.Impl.Orbit
-import Workspace.Impl.Threshold
-import Workspace.Impl.ContSel
-import Workspace.Lang.Prims.Reduce
+module
+
+public import Workspace.Impl.Orbit
+public import Workspace.Impl.Threshold
+public import Workspace.Impl.ContSel
+public import Workspace.Lang.Prims.Reduce
+
+@[expose] public section
 
 /-!
 # Weights of canonical values and the work bound
@@ -974,7 +978,8 @@ theorem Rest.work_le_impl (R : Rest) {A D : ℕ}
 /-- **The trusted statement for the concrete interface**: from the step specifications
 (`Layout.OK`), the graph wrapper (b) and the polynomial bounds on the remaining steps
 (`Rest.Req`). -/
-theorem Rest.final (R : Rest) {Pg : Program} {L : Iface.Layout} (h : Iface.Layout.OK R.iface Pg L)
+theorem Rest.final
+    (R : Rest) {Pg : Program} {L : Iface.Layout} (h : Iface.Layout.OK R.iface Pg L)
     {fm : ℕ} (hb : GraphWrapper Pg fm L.F.solve) (hR : R.Req) :
     GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
   Iface.Layout.final R.iface Pg h hb (R.workReq hR)

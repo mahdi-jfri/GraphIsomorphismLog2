@@ -1,4 +1,8 @@
-import Workspace.Lang.Prims.LinNormal
+module
+
+public import Workspace.Lang.Prims.LinNormal
+
+@[expose] public section
 
 /-! Function-index specifications for the normal-form calls in A.20.
 Each program consists of one primitive call. The bounds include the input and output

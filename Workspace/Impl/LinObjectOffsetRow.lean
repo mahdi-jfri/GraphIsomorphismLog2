@@ -1,6 +1,10 @@
-import Workspace.Impl.LinListPick
-import Workspace.Impl.LinObjectConfigMath
-import Workspace.Impl.GenNormGlue
+module
+
+public import Workspace.Impl.LinListPick
+public import Workspace.Impl.LinObjectConfigMath
+public import Workspace.Impl.GenNormGlue
+
+@[expose] public section
 
 /-! Extract an offset permutation from a row of local transporter answers.
 The row certificate fixes its effect on the whole piece. -/

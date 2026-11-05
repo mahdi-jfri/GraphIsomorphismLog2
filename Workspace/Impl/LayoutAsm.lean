@@ -1,9 +1,13 @@
-import Workspace.Impl.Direct
-import Workspace.Impl.Floor
-import Workspace.Impl.RestSel
-import Workspace.Impl.GiantSel
-import Workspace.Impl.Cases
-import Workspace.Assembly.Wrapper
+module
+
+public import Workspace.Impl.Direct
+public import Workspace.Impl.Floor
+public import Workspace.Impl.RestSel
+public import Workspace.Impl.GiantSel
+public import Workspace.Impl.Cases
+public import Workspace.Assembly.Wrapper
+
+@[expose] public section
 
 /-!
 # The concrete program of stage 2

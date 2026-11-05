@@ -1,5 +1,9 @@
-import Workspace.Lang.Lib.LinIntParts
-import Workspace.Lang.Lib.Tabulate
+module
+
+public import Workspace.Lang.Lib.LinIntParts
+public import Workspace.Lang.Lib.Tabulate
+
+@[expose] public section
 
 /-! Public signed arithmetic on the cited encInt values. The wrappers decode both
 operands, run a proved natural-parts core, and encode the result. No cited arithmetic

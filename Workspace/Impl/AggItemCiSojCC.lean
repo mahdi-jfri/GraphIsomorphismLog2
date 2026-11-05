@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojPC
+module
+
+public import Workspace.Impl.AggItemCiSojPC
+
+@[expose] public section
 
 /-!
 # The two complete projected answer cosets cover the matrix transporter

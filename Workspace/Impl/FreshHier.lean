@@ -1,4 +1,8 @@
-import Workspace.Impl.FreshMath
+module
+
+public import Workspace.Impl.FreshMath
+
+@[expose] public section
 
 /-!
 # The hierarchy of a fresh phase, in `GI.Lang`

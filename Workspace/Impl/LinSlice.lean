@@ -1,6 +1,10 @@
-import Workspace.Lang.Lib.LinIntVector
-import Workspace.Lang.Lib.LinIntTake
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Lang.Lib.LinIntVector
+public import Workspace.Lang.Lib.LinIntTake
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-! Copy a bounded slice of an encoded list. This extracts the common
 translation coefficients from the last block of a Hermite solution. -/

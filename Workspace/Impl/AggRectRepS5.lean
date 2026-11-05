@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepS4
+module
+
+public import Workspace.Impl.AggRectRepS4
+
+@[expose] public section
 
 /-!
 # The pair steps of the representation program

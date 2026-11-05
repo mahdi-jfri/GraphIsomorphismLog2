@@ -1,5 +1,9 @@
-import Workspace.Impl.LinRecenterContext
-import Workspace.Impl.LinMapSource
+module
+
+public import Workspace.Impl.LinRecenterContext
+public import Workspace.Impl.LinMapSource
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

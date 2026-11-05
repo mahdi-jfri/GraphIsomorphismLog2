@@ -1,8 +1,12 @@
-import Workspace.Impl.AggItemC1
-import Workspace.Impl.GenProdSq
-import Workspace.Impl.AggStructDC
-import Workspace.Impl.AggCaseProg
-import Workspace.Impl.AggStructDesV
+module
+
+public import Workspace.Impl.AggItemC1
+public import Workspace.Impl.GenProdSq
+public import Workspace.Impl.AggStructDC
+public import Workspace.Impl.AggCaseProg
+public import Workspace.Impl.AggStructDesV
+
+@[expose] public section
 
 /-!
 # Case 1 as a program: the data of a labeling

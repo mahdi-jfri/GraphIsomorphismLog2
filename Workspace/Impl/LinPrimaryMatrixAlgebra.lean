@@ -1,4 +1,8 @@
-import Workspace.Impl.LinFiniteCoordinates
+module
+
+public import Workspace.Impl.LinFiniteCoordinates
+
+@[expose] public section
 
 /-! Reducing full finite-abelian matrices on a primary layer. The inactive
 coordinates will be given a trivial action, so the ambient dimension stays fixed. -/

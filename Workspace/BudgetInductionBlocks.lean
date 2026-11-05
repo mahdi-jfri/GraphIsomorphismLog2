@@ -1,6 +1,10 @@
-import Workspace.BudgetInductionBasic
-import Workspace.BlockPartition
-import Workspace.EqualFibers
+module
+
+public import Workspace.BudgetInductionBasic
+public import Workspace.BlockPartition
+public import Workspace.EqualFibers
+
+@[expose] public section
 
 namespace GI.BudgetInduction
 

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabRT
+module
+
+public import Workspace.Impl.TermGlueLabRT
+
+@[expose] public section
 
 /-!
 # Any blockwise lift of `τ` gives the same aligned label point

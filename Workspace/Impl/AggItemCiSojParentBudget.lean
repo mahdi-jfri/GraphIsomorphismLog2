@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojBudgetCtx
-import Workspace.Impl.AggItemCiSojLeafMono
-import Workspace.Impl.AggItemCiSojBudgetStart
+module
+
+public import Workspace.Impl.AggItemCiSojBudgetCtx
+public import Workspace.Impl.AggItemCiSojLeafMono
+public import Workspace.Impl.AggItemCiSojBudgetStart
+
+@[expose] public section
 
 /-! # Parent-call bounds for the first-rectangle start -/
 

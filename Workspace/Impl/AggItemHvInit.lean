@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemHvCase
+module
+
+public import Workspace.Impl.AggItemHvCase
+
+@[expose] public section
 
 /-!
 # Case 2a: the facts behind the init program

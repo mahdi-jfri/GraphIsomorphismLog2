@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojEdge
+module
+
+public import Workspace.Impl.AggItemCiSojEdge
+
+@[expose] public section
 
 /-!
 # The primitive-cut test as connectivity of the component tables

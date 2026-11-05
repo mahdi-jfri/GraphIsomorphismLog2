@@ -1,5 +1,9 @@
-import Workspace.Impl.LinWreathChoice
-import Workspace.Impl.GenNormGlue
+module
+
+public import Workspace.Impl.LinWreathChoice
+public import Workspace.Impl.GenNormGlue
+
+@[expose] public section
 
 /-! The primitive returns raw generators. Add their group header before
 scanning, without assuming a different output format for the cited task. -/

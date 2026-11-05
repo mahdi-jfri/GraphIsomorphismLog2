@@ -1,4 +1,8 @@
-import Workspace.Lang.Prims.Reduce
+module
+
+public import Workspace.Lang.Prims.Reduce
+
+@[expose] public section
 
 /-!
 # The mathematics of the normal closure loop
@@ -114,7 +118,7 @@ theorem nclGood_keepStep {L : List (Perm (Fin n))} (h : NclGood L) (x : Perm (Fi
     NclGood (keepStep L x) := card_foldl_keepStep [x] L h
 
 theorem nclGood_keepList (l : List (Perm (Fin n))) : NclGood (keepList l) :=
-  card_foldl_keepStep l [] (by simpa using Nat.card_pos)
+  card_foldl_keepStep l [] Nat.card_pos
 
 /-- **At most `n²` entries**: `2 ^ |L| ≤ |⟨L⟩| ≤ n! ≤ 2 ^ (n²)`. -/
 theorem NclGood.length_le {L : List (Perm (Fin n))} (h : NclGood L) : L.length ≤ n ^ 2 := by
@@ -276,7 +280,8 @@ theorem ncl_correct (gs hs : List (Perm (Fin n))) :
     exact (Subgroup.closure_le N).mpr (fun h hh => hhs h hh) this
   obtain ⟨gd, mN, p0, dn⟩ := nclLoop_facts (nclGens gs hs) (keepList hs) hA
     (nclGood_keepList hs) hN0 (n * n + 1)
-  set L := nclResult gs hs
+  unfold nclResult
+  set L := nclLoop (nclGens gs hs) (keepList hs) (n * n + 1)
   have hlen : L.length ≤ n ^ 2 := gd.length_le
   refine ⟨hlen, le_antisymm ((Subgroup.closure_le N).mpr fun y hy => mN y hy) ?_⟩
   -- every entry of `L` was processed

@@ -1,6 +1,10 @@
-import Workspace.PhysicalRectangles
-import Workspace.EmbeddedTransport
-import Workspace.EmbeddedBudget
+module
+
+public import Workspace.PhysicalRectangles
+public import Workspace.EmbeddedTransport
+public import Workspace.EmbeddedBudget
+
+@[expose] public section
 
 namespace GI.Rectangle
 

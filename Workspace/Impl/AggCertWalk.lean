@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCertPos
-import Workspace.Impl.AggCertLoop
+module
+
+public import Workspace.Impl.AggCertPos
+public import Workspace.Impl.AggCertLoop
+
+@[expose] public section
 
 /-!
 # The walk through the whole certificate phase

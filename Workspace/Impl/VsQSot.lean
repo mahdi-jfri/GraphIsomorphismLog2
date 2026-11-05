@@ -1,6 +1,10 @@
-import Workspace.Impl.VsQSotMath
-import Workspace.Impl.Lift
-import Workspace.Lang.Prims.Reduce
+module
+
+public import Workspace.Impl.VsQSotMath
+public import Workspace.Impl.Lift
+public import Workspace.Lang.Prims.Reduce
+
+@[expose] public section
 
 /-!
 # The small orbit transporter (SOT)

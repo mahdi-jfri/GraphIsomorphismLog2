@@ -1,6 +1,10 @@
-import Workspace.Impl.GenSpecNorm
-import Workspace.Impl.GenNormOps
-import Workspace.Impl.LayoutAsm
+module
+
+public import Workspace.Impl.GenSpecNorm
+public import Workspace.Impl.GenNormOps
+public import Workspace.Impl.LayoutAsm
+
+@[expose] public section
 
 /-!
 # The general dispatcher in the concrete program

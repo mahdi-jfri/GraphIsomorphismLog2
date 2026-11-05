@@ -1,4 +1,8 @@
-import Workspace.Impl.TermCosetTop
+module
+
+public import Workspace.Impl.TermCosetTop
+
+@[expose] public section
 
 /-!
 # The cost of the coset program is `expLogSq A N`
@@ -91,24 +95,71 @@ theorem tmCsPoly_objsK (p : Prim) : TmCsPoly fun X => tmCsObjsK p X := by
   unfold tmCsObjsK
   exact tmCsPoly_mul (tmCsPoly_mul (tmCsPoly_const _) (tmCsPoly_pow 3)) (tmCsPoly_objK p)
 
-theorem tmCsPoly_resQ (p : Prim) (Kr Dr Ks Ds : ℕ) :
-    TmCsPoly fun X => tmCsResQ p Kr Dr Ks Ds X := by
+theorem tmCsPoly_tmPrimC (p : Prim) : TmCsPoly fun B => tmPrimC p B :=
+  tmCsPoly_mono (fun B => le_of_eq (by unfold tmPrimC Prim.boundSize; rfl)) (tmCsPoly_boundSize p)
+
+theorem tmCsPoly_id : TmCsPoly fun X => X :=
+  tmCsPoly_mono (fun X => by simp) (tmCsPoly_pow 1)
+
+theorem tmCsPoly_tmRpPredC (hm : GI.Cited.Membership) : TmCsPoly fun Y => tmRpPredC hm Y := by
+  unfold tmRpPredC
+  refine tmCsPoly_add (tmCsPoly_mul (tmCsPoly_const (10 ^ 6)) tmCsPoly_id) ?_
+  exact tmCsPoly_comp (tmCsPoly_tmPrimC (membershipPrim hm)) (c := 21) (i := 1)
+    (fun X => by simp; omega)
+
+theorem tmCsPoly_outbOneK (p : Prim) (hm : GI.Cited.Membership) :
+    TmCsPoly fun X => outbOneK p hm X := by
+  unfold outbOneK tmRpRoundC tmRpTestC
+  have hY : TmCsPoly fun X : ℕ => 10 ^ 4 * (X + 1) ^ 6 :=
+    tmCsPoly_mul (tmCsPoly_const (10 ^ 4)) (tmCsPoly_pow 6)
+  have hL : TmCsPoly fun X : ℕ => 2 * (X + 1) :=
+    tmCsPoly_mono (fun X => by simp) (tmCsPoly_mul (tmCsPoly_const 2) (tmCsPoly_pow 1))
+  have hpred : TmCsPoly fun X : ℕ => tmRpPredC hm (10 ^ 4 * (X + 1) ^ 6) :=
+    tmCsPoly_comp (tmCsPoly_tmRpPredC hm) (c := 10 ^ 4 + 1) (i := 6) (fun X => tmCs_inner_le _ _ _)
+  have htest : TmCsPoly fun X : ℕ =>
+      2 * (X + 1) * tmRpPredC hm (10 ^ 4 * (X + 1) ^ 6) +
+        10 ^ 8 * (2 * (X + 1) * (2 * (X + 1)) * (10 ^ 4 * (X + 1) ^ 6)) :=
+    tmCsPoly_add (tmCsPoly_mul hL hpred)
+      (tmCsPoly_mul (tmCsPoly_const (10 ^ 8)) (tmCsPoly_mul (tmCsPoly_mul hL hL) hY))
+  have hround : TmCsPoly fun X : ℕ =>
+      10 ^ 4 * (X + 1) ^ 6 *
+        (2 * (X + 1) * tmRpPredC hm (10 ^ 4 * (X + 1) ^ 6) +
+          10 ^ 8 * (2 * (X + 1) * (2 * (X + 1)) * (10 ^ 4 * (X + 1) ^ 6))) +
+        10 ^ 7 * (10 ^ 4 * (X + 1) ^ 6 * (2 * (X + 1) * (10 ^ 4 * (X + 1) ^ 6))) :=
+    tmCsPoly_add (tmCsPoly_mul hY htest)
+      (tmCsPoly_mul (tmCsPoly_const (10 ^ 7)) (tmCsPoly_mul hY (tmCsPoly_mul hL hY)))
+  refine tmCsPoly_add (tmCsPoly_add (tmCsPoly_mul (tmCsPoly_const 10) (tmCsPoly_mul hL hround)) ?_)
+    (tmCsPoly_mul (tmCsPoly_const (10 ^ 22)) (tmCsPoly_pow 20))
+  exact tmCsPoly_comp (tmCsPoly_boundSize p) (c := 10 ^ 4 + 1) (i := 8)
+    (fun X => tmCs_inner_le _ _ _)
+
+theorem tmCsPoly_outbRebK (p : Prim) (hm : GI.Cited.Membership) :
+    TmCsPoly fun X => outbRebK p hm X := by
+  unfold outbRebK
+  exact tmCsPoly_add (tmCsPoly_mul (tmCsPoly_pow 2) (tmCsPoly_outbOneK p hm))
+    (tmCsPoly_mul (tmCsPoly_const (10 ^ 9)) (tmCsPoly_pow 12))
+
+theorem tmCsPoly_resQ (p : Prim) (hm : GI.Cited.Membership) (Kr Dr : ℕ) :
+    TmCsPoly fun X => tmCsResQ p hm Kr Dr X := by
   unfold tmCsResQ
-  refine tmCsPoly_mul (tmCsPoly_const _) (tmCsPoly_npow ?_ 2)
-  refine tmCsPoly_add (tmCsPoly_add (tmCsPoly_add (tmCsPoly_add ?_ (tmCsPoly_cpow _ _ _ _))
-    (tmCsPoly_cpow _ _ _ _)) ?_) (tmCsPoly_mul (tmCsPoly_const _) (tmCsPoly_pow 12))
-  · exact tmCsPoly_comp (tmCsPoly_objsK p) (c := 21) (i := 1) (fun X => by simp; omega)
+  refine tmCsPoly_mul (tmCsPoly_const (10 ^ 9)) (tmCsPoly_npow ?_ 2)
+  refine tmCsPoly_add (tmCsPoly_add (tmCsPoly_add (tmCsPoly_add ?_ (tmCsPoly_outbRebK p hm))
+    (tmCsPoly_cpow Kr (10 ^ 4) 6 Dr)) ?_)
+    (tmCsPoly_mul (tmCsPoly_const (10 ^ 12)) (tmCsPoly_pow 12))
+  · exact tmCsPoly_comp (tmCsPoly_objsK p) (c := 10 ^ 4 + 1) (i := 8)
+      (fun X => tmCs_inner_le _ _ _)
   · exact tmCsPoly_comp (tmCsPoly_boundSize p) (c := 10 ^ 4 + 1) (i := 6)
       (fun X => tmCs_inner_le _ _ _)
 
-theorem tmCsPoly_topQ (p : Prim) (Kr Dr Ks Ds Kl Dl Kj Dj : ℕ) :
-    TmCsPoly fun X => tmCsTopQ p Kr Dr Ks Ds Kl Dl Kj Dj X := by
+theorem tmCsPoly_topQ (p : Prim) (hm : GI.Cited.Membership) (Kr Dr Kl Dl Kj Dj : ℕ) :
+    TmCsPoly fun X => tmCsTopQ p hm Kr Dr Kl Dl Kj Dj X := by
   unfold tmCsTopQ
   refine tmCsPoly_add (tmCsPoly_add (tmCsPoly_add (tmCsPoly_add (tmCsPoly_add
-    (tmCsPoly_resQ p Kr Dr Ks Ds) (tmCsPoly_cpow _ _ _ _)) (tmCsPoly_cpow _ _ _ _)) ?_) ?_)
-    (tmCsPoly_mul (tmCsPoly_const _) (tmCsPoly_pow 6))
-  · unfold tmCsTabK; exact tmCsPoly_mul (tmCsPoly_const _) (tmCsPoly_pow 4)
-  · unfold tmCsRelK; exact tmCsPoly_mul (tmCsPoly_const _) (tmCsPoly_pow 9)
+    (tmCsPoly_resQ p hm Kr Dr) (tmCsPoly_cpow Kl (10 ^ 4) 6 Dl))
+    (tmCsPoly_cpow Kj (10 ^ 4) 6 Dj)) ?_) ?_)
+    (tmCsPoly_mul (tmCsPoly_const (10 ^ 7)) (tmCsPoly_pow 6))
+  · unfold tmCsTabK; exact tmCsPoly_mul (tmCsPoly_const (10 ^ 10)) (tmCsPoly_pow 4)
+  · unfold tmCsRelK; exact tmCsPoly_mul (tmCsPoly_const (10 ^ 12)) (tmCsPoly_pow 9)
 
 /-! ### Comparison with `expLogSq` -/
 
@@ -132,44 +183,79 @@ theorem tmCs_expLogSq_succ {c : ℝ} (hc : 0 ≤ c) (N : ℕ) :
   nlinarith
 
 /-- The constant of the polynomial part. -/
-noncomputable def tmCsPolK (p : Prim) (Kr Dr Ks Ds Kl Dl Kj Dj : ℕ) : ℕ :=
-  (tmCsPoly_topQ p Kr Dr Ks Ds Kl Dl Kj Dj).choose
+noncomputable def tmCsPolK (p : Prim) (hm : GI.Cited.Membership) (Kr Dr Kl Dl Kj Dj : ℕ) : ℕ :=
+  (tmCsPoly_topQ p hm Kr Dr Kl Dl Kj Dj).choose
 
 /-- The degree of the polynomial part. -/
-noncomputable def tmCsPolD (p : Prim) (Kr Dr Ks Ds Kl Dl Kj Dj : ℕ) : ℕ :=
-  (tmCsPoly_topQ p Kr Dr Ks Ds Kl Dl Kj Dj).choose_spec.choose
+noncomputable def tmCsPolD (p : Prim) (hm : GI.Cited.Membership) (Kr Dr Kl Dl Kj Dj : ℕ) : ℕ :=
+  (tmCsPoly_topQ p hm Kr Dr Kl Dl Kj Dj).choose_spec.choose
 
-theorem tmCs_topQ_le (p : Prim) (Kr Dr Ks Ds Kl Dl Kj Dj X : ℕ) :
-    tmCsTopQ p Kr Dr Ks Ds Kl Dl Kj Dj X ≤
-      tmCsPolK p Kr Dr Ks Ds Kl Dl Kj Dj * (X + 1) ^ tmCsPolD p Kr Dr Ks Ds Kl Dl Kj Dj :=
-  (tmCsPoly_topQ p Kr Dr Ks Ds Kl Dl Kj Dj).choose_spec.choose_spec X
+theorem tmCs_topQ_le (p : Prim) (hm : GI.Cited.Membership) (Kr Dr Kl Dl Kj Dj X : ℕ) :
+    tmCsTopQ p hm Kr Dr Kl Dl Kj Dj X ≤
+      tmCsPolK p hm Kr Dr Kl Dl Kj Dj * (X + 1) ^ tmCsPolD p hm Kr Dr Kl Dl Kj Dj :=
+  (tmCsPoly_topQ p hm Kr Dr Kl Dl Kj Dj).choose_spec.choose_spec X
 
 /-- The constant `A` of the coset program. -/
-noncomputable def tmCsA (p : Prim) (Kr Dr Ks Ds Kl Dl Kj Dj Kc Dc : ℕ) : ℝ :=
-  3 * (Real.log ((tmCsPolK p Kr Dr Ks Ds Kl Dl Kj Dj * (10 ^ 9) ^ tmCsPolD p Kr Dr Ks Ds Kl Dl Kj Dj
-      + 1 : ℕ) : ℝ) + 8 * tmCsPolD p Kr Dr Ks Ds Kl Dl Kj Dj) +
+noncomputable def tmCsA (p : Prim) (hm : GI.Cited.Membership) (Kr Dr Kl Dl Kj Dj Kc Dc : ℕ) : ℝ :=
+  (3 * (Real.log ((tmCsPolK p hm Kr Dr Kl Dl Kj Dj *
+      (2 * 10 ^ 9) ^ tmCsPolD p hm Kr Dr Kl Dl Kj Dj + 1 : ℕ) : ℝ) +
+    8 * tmCsPolD p hm Kr Dr Kl Dl Kj Dj) +
+    ((3 * tmCsPolD p hm Kr Dr Kl Dl Kj Dj : ℕ) : ℝ)) +
     (3 * Real.log 20 + 4 * (3 * (Real.log (max Kc 1 : ℕ) + Dc) + tmRecA 5)) + 3
 
 /-- **The cost bound.** -/
-theorem tmCs_cost_le (p : Prim) (Kr Dr Ks Ds Kl Dl Kj Dj Kc Dc : ℕ) {N X m q ℓ : ℕ}
-    (hX : X + 1 ≤ 10 ^ 9 * (N + 2) ^ 8) (hmq : m + q ≤ N + 1)
+theorem tmCs_cost_le (p : Prim) (hm : GI.Cited.Membership) (Kr Dr Kl Dl Kj Dj Kc Dc : ℕ) {N X m q ℓ : ℕ}
+    (hX : X + 1 ≤ 10 ^ 9 * (N + 2) ^ 8 + 100 * ⌈expLogSq 3 N⌉₊) (hmq : m + q ≤ N + 1)
     (hℓ : (ℓ : ℝ) ≤ 5 * Real.logb 3 m + 1) :
-    (tmCsTopQ p Kr Dr Ks Ds Kl Dl Kj Dj X : ℝ) +
+    (tmCsTopQ p hm Kr Dr Kl Dl Kj Dj X : ℝ) +
       20 * ((5 * ((q : ℝ) + 1) ^ 3 + 1) ^ ℓ * (Kc * (((m + q : ℕ) : ℝ) + 2) ^ Dc)) ≤
-      expLogSq (tmCsA p Kr Dr Ks Ds Kl Dl Kj Dj Kc Dc) N := by
-  set K := tmCsPolK p Kr Dr Ks Ds Kl Dl Kj Dj
-  set D := tmCsPolD p Kr Dr Ks Ds Kl Dl Kj Dj
+      expLogSq (tmCsA p hm Kr Dr Kl Dl Kj Dj Kc Dc) N := by
+  set K := tmCsPolK p hm Kr Dr Kl Dl Kj Dj
+  set D := tmCsPolD p hm Kr Dr Kl Dl Kj Dj
   -- the polynomial part
-  have h1 : tmCsTopQ p Kr Dr Ks Ds Kl Dl Kj Dj X ≤ (K * (10 ^ 9) ^ D + 1) * (N + 2) ^ (8 * D) := by
-    calc _ ≤ K * (X + 1) ^ D := tmCs_topQ_le p Kr Dr Ks Ds Kl Dl Kj Dj X
-      _ ≤ K * (10 ^ 9 * (N + 2) ^ 8) ^ D := Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hX D)
-      _ = K * (10 ^ 9) ^ D * (N + 2) ^ (8 * D) := by rw [mul_pow, ← pow_mul (N + 2)]; ring
-      _ ≤ _ := Nat.mul_le_mul_right _ (by omega)
-  have hA1 : (1 : ℝ) ≤ ((K * (10 ^ 9) ^ D + 1 : ℕ) : ℝ) := by exact_mod_cast (by omega)
+  have hE1 : (1 : ℝ) ≤ expLogSq 3 N := tm_one_le_expLogSq (by norm_num) N
+  have hXr : ((X + 1 : ℕ) : ℝ) ≤ (2 * 10 ^ 9 : ℝ) * ((N : ℝ) + 2) ^ 8 * expLogSq 3 N := by
+    have hceil : (⌈expLogSq 3 N⌉₊ : ℝ) ≤ expLogSq 3 N + 1 := (Nat.ceil_lt_add_one (by positivity)).le
+    have hN1 : (1 : ℝ) ≤ ((N : ℝ) + 2) ^ 8 := one_le_pow₀ (by linarith [N.cast_nonneg (α := ℝ)])
+    have hX' : ((X + 1 : ℕ) : ℝ) ≤ 10 ^ 9 * ((N : ℝ) + 2) ^ 8 + 100 * (⌈expLogSq 3 N⌉₊ : ℝ) := by
+      exact_mod_cast hX
+    nlinarith
+  have hXD : (((X + 1) ^ D : ℕ) : ℝ) ≤
+      (2 * 10 ^ 9 : ℝ) ^ D * ((N : ℝ) + 2) ^ (8 * D) * expLogSq ((3 : ℕ) * D) N := by
+    calc (((X + 1) ^ D : ℕ) : ℝ) = ((X + 1 : ℕ) : ℝ) ^ D := by push_cast; rfl
+      _ ≤ ((2 * 10 ^ 9 : ℝ) * ((N : ℝ) + 2) ^ 8 * expLogSq 3 N) ^ D :=
+          pow_le_pow_left₀ (by positivity) hXr D
+      _ = (2 * 10 ^ 9 : ℝ) ^ D * ((N : ℝ) + 2) ^ (8 * D) * (expLogSq 3 N) ^ D := by
+          rw [mul_pow, mul_pow, ← pow_mul]
+      _ = (2 * 10 ^ 9 : ℝ) ^ D * ((N : ℝ) + 2) ^ (8 * D) * expLogSq ((3 : ℕ) * D) N := by
+          rw [tm_expLogSq_pow 3 D N]; push_cast; ring_nf
+  have hA1 : (1 : ℝ) ≤ ((K * (2 * 10 ^ 9) ^ D + 1 : ℕ) : ℝ) := by exact_mod_cast (by omega)
   have h2 := pow_le_expLogSq hA1 (8 * D) N
-  have h1' : (tmCsTopQ p Kr Dr Ks Ds Kl Dl Kj Dj X : ℝ) ≤
-      ((K * (10 ^ 9) ^ D + 1 : ℕ) : ℝ) * ((N : ℝ) + 2) ^ (8 * D) := by
-    exact_mod_cast h1
+  have h1' : (tmCsTopQ p hm Kr Dr Kl Dl Kj Dj X : ℝ) ≤
+      expLogSq (3 * (Real.log ((K * (2 * 10 ^ 9) ^ D + 1 : ℕ) : ℝ) + (8 * D : ℕ)) +
+        ((3 * D : ℕ) : ℝ)) N := by
+    have h0 : (tmCsTopQ p hm Kr Dr Kl Dl Kj Dj X : ℝ) ≤ (K : ℝ) * (((X + 1) ^ D : ℕ) : ℝ) := by
+      exact_mod_cast tmCs_topQ_le p hm Kr Dr Kl Dl Kj Dj X
+    have hKle : (K : ℝ) * (2 * 10 ^ 9 : ℝ) ^ D ≤ ((K * (2 * 10 ^ 9) ^ D + 1 : ℕ) : ℝ) := by
+      exact_mod_cast Nat.le_succ _
+    calc (tmCsTopQ p hm Kr Dr Kl Dl Kj Dj X : ℝ)
+        ≤ (K : ℝ) * ((2 * 10 ^ 9 : ℝ) ^ D * ((N : ℝ) + 2) ^ (8 * D) *
+            expLogSq ((3 : ℕ) * D) N) :=
+          h0.trans (mul_le_mul_of_nonneg_left hXD (Nat.cast_nonneg _))
+      _ = ((K : ℝ) * (2 * 10 ^ 9 : ℝ) ^ D) * (((N : ℝ) + 2) ^ (8 * D) *
+            expLogSq ((3 : ℕ) * D) N) := by ring
+      _ ≤ ((K * (2 * 10 ^ 9) ^ D + 1 : ℕ) : ℝ) * (((N : ℝ) + 2) ^ (8 * D) *
+            expLogSq ((3 : ℕ) * D) N) :=
+          mul_le_mul_of_nonneg_right hKle
+            (mul_nonneg (pow_nonneg (by linarith [N.cast_nonneg (α := ℝ)]) _) (expLogSq_nonneg _ _))
+      _ = (((K * (2 * 10 ^ 9) ^ D + 1 : ℕ) : ℝ) * ((N : ℝ) + 2) ^ (8 * D)) *
+            expLogSq ((3 : ℕ) * D) N := by ring
+      _ ≤ expLogSq (3 * (Real.log ((K * (2 * 10 ^ 9) ^ D + 1 : ℕ) : ℝ) + (8 * D : ℕ))) N *
+            expLogSq ((3 : ℕ) * D) N :=
+          mul_le_mul_of_nonneg_right h2 (expLogSq_nonneg _ _)
+      _ = expLogSq (3 * (Real.log ((K * (2 * 10 ^ 9) ^ D + 1 : ℕ) : ℝ) + (8 * D : ℕ)) +
+            ((3 * D : ℕ) : ℝ)) N := by
+          rw [tmCs_expLogSq_mul]; push_cast; rfl
   -- the recursive part
   set c := 3 * (Real.log (max Kc 1 : ℕ) + Dc) + tmRecA 5 with hcdef
   have hc0 : 0 ≤ c := by
@@ -199,16 +285,17 @@ theorem tmCs_cost_le (p : Prim) (Kr Dr Ks Ds Kl Dl Kj Dj Kc Dc : ℕ) {N X m q �
       expLogSq (3 * Real.log 20 + 4 * c) N := by
     rw [← tmCs_expLogSq_mul]
     exact mul_le_mul h20 hRB hRB0 (by linarith)
-  have hA0 : 0 ≤ 3 * (Real.log ((K * (10 ^ 9) ^ D + 1 : ℕ) : ℝ) + (8 * D : ℕ)) := by
+  have hA0 : 0 ≤ 3 * (Real.log ((K * (2 * 10 ^ 9) ^ D + 1 : ℕ) : ℝ) + (8 * D : ℕ)) +
+      ((3 * D : ℕ) : ℝ) := by
     have := Real.log_nonneg hA1
     positivity
   have hB0 : 0 ≤ 3 * Real.log 20 + 4 * c := by
     have := Real.log_nonneg (show (1 : ℝ) ≤ 20 by norm_num)
     positivity
   have h4 := expLogSq_add_le hA0 hB0 N
-  have e : tmCsA p Kr Dr Ks Ds Kl Dl Kj Dj Kc Dc =
-      3 * (Real.log ((K * (10 ^ 9) ^ D + 1 : ℕ) : ℝ) + (8 * D : ℕ)) + (3 * Real.log 20 + 4 * c)
-        + 3 := by
+  have e : tmCsA p hm Kr Dr Kl Dl Kj Dj Kc Dc =
+      (3 * (Real.log ((K * (2 * 10 ^ 9) ^ D + 1 : ℕ) : ℝ) + (8 * D : ℕ)) +
+        ((3 * D : ℕ) : ℝ)) + (3 * Real.log 20 + 4 * c) + 3 := by
     unfold tmCsA; simp only [hcdef, K, D]; push_cast; ring
   rw [e]
   linarith
@@ -216,37 +303,44 @@ theorem tmCs_cost_le (p : Prim) (Kr Dr Ks Ds Kl Dl Kj Dj Kc Dc : ℕ) {N X m q �
 /-! ### `TermCosetSpec` -/
 
 /-- **T4–T6: the coset program meets `TermCosetSpec`**, given the residual pieces (the radical
-preimage, the solvable supplement, the A.20 recursion) and the two abelian computations of
+subgroup `R'`, the coset table rebasing, and the A.20 recursion) and the two abelian computations of
 Theorem A.23 (`TermGlueLabSpec`, `TermJSpec`) as hypotheses. -/
-theorem tm_termCosetSpec (hst : GI.Cited.PointwiseStab) (dixon : GI.Cited.DixonDerivedLength)
+theorem tm_termCosetSpec
+    (hst : GI.Cited.PointwiseStab) (hm_mem : GI.Cited.Membership)
+    (dixon : GI.Cited.DixonDerivedLength)
     {P : Program} {f res lab jj tab rel : ℕ}
-    {mkg rad sup objs msh sh ell rec comp app red jst rg ax px ay py mx fx my fy first inv : ℕ}
+    {mkg reb objs ell rec comp app red jst jm rg ax px ay py mx fx my fy first inv : ℕ}
     {dom rg' tb tbe inv' conj mp : ℕ}
-    (hA : TmCsTopAt P f res lab jj tab rel mkg rad sup objs msh sh ell rec comp app red jst rg ax
+    (hA : TmCsTopAt P hm_mem f res lab jj tab rel mkg reb objs ell rec comp app red jst jm rg ax
       px ay py mx fx my fy first inv dom rg' tb tbe inv' conj mp)
-    (hjst : P.prims[jst]? = some (pointwiseStabPrim hst)) {Kr Dr Ks Ds Kc Dc Kl Dl Kj Dj : ℕ}
-    (hrad : Iface.TermRadSpec P Kr Dr rad) (hsup : Iface.TermSupSpec P Ks Ds sup)
+    (hjst : P.prims[jst]? = some (pointwiseStabPrim hst)) (Kr Dr : ℕ) {Kc Dc Kl Dl Kj Dj : ℕ}
     (hrec : Iface.TermRecSpec P Kc Dc rec) (hlab : Iface.TermGlueLabSpec P Kl Dl lab)
     (hjj : Iface.TermJSpec P Kj Dj jj) :
-    Iface.TermCosetSpec P (tmCsA (pointwiseStabPrim hst) Kr Dr Ks Ds Kl Dl Kj Dj Kc Dc) f := by
+    Iface.TermCosetSpec P (tmCsA (pointwiseStabPrim hst) hm_mem Kr Dr Kl Dl Kj Dj Kc Dc) f := by
   intro Ω C _ S k e c hc sv lv L hsv hlv hq0 hgood hrow label hnat hq m h0 E hP σH σN σS hH hNg hSg
-    htr hlH hlN hlS hcard hsN hN hqα us vs hus hvs r hr
-  refine FunAll.mono (tmCs_top_spec hst dixon hA hjst hrad hsup hrec hlab hjj S k e c hc sv lv L hsv
+    htr hlH hlN hlS hcard hsN hN hqα us vs hus hvs R' hRH hNR hsolv hidx uR huR r hr
+  refine FunAll.mono (tmCs_top_spec hst hm_mem dixon hA hjst Kr Dr hrec hlab hjj S k e c hc sv lv L hsv
     hlv hq0 hgood hrow label hnat hq h0 E hP σH σN σS hH hNg hSg htr hlH hlN hlS hcard hsN hN hqα
-    us vs hus hvs r hr) ?_
+    us vs hus hvs R' hRH hNR hsolv hidx uR huR r hr) ?_
   rintro u cost ⟨hu, ℓ, hℓ, hcost⟩
-  refine ⟨hu, hcost.trans (tmCs_cost_le _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ hℓ)⟩
+  refine ⟨hu, hcost.trans (tmCs_cost_le _ _ _ _ _ _ _ _ _ _ ?_ ?_ hℓ)⟩
   · have hq1 : 0 < L.q := by omega
     have hV := tm_wtV_le hsv hlv E hq1 hlH hlN hlS hus hvs
     have hmN : m ≤ S.N := by
       have : m * L.q = S.size := by rw [← hcard, Fintype.card_fin]
       nlinarith
+    have hceil : ⌈expLogSq 3 m⌉₊ ≤ ⌈expLogSq 3 S.N⌉₊ :=
+      Nat.ceil_mono (expLogSq_mono_right (by norm_num) hmN)
+    obtain ⟨hsR, rfl, hlR, -⟩ := huR
+    have wuR := wt_list_encPerms_le_sq hlR
     have hr4 := wt_encPerm_le r
-    have ha := wt_list2_le (.list [.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
-      encFun (rowLab e L.con.blocks)], .list us, .list vs]) (encPerm r)
+    have ha := wt_list3_le (.list [.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
+      encFun (rowLab e L.con.blocks)], .list us, .list vs]) (encPerm r) (.list (hsR.map encPerm))
     have hY1 : 1 ≤ (S.N + 2) ^ 8 := Nat.one_le_pow _ _ (by omega)
     have hY2 : (m + 1) ^ 2 ≤ (S.N + 2) ^ 8 :=
       (Nat.pow_le_pow_left (by omega) 2).trans (Nat.pow_le_pow_right (by omega) (by omega))
+    have hY6 : (m + 1) ^ 6 ≤ (S.N + 2) ^ 8 :=
+      (Nat.pow_le_pow_left (by omega) 6).trans (Nat.pow_le_pow_right (by omega) (by omega))
     unfold tmVB at hV
     omega
   · have : m * L.q = S.size := by rw [← hcard, Fintype.card_fin]

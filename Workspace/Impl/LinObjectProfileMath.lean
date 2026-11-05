@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectCorrectedAut
-import Workspace.Impl.LinAffineCoset
+module
+
+public import Workspace.Impl.LinObjectCorrectedAut
+public import Workspace.Impl.LinAffineCoset
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Multicoset
@@ -11,7 +15,7 @@ theorem linObjectTargetCover (B : Subgroup G) (τ : G) : linSourceConjugate B τ
   constructor
   · rintro ⟨b,hb,rfl⟩
     change τ*(τ⁻¹*b*τ⁻¹⁻¹)*τ⁻¹ ∈ B
-    simpa only [inv_inv,mul_inv_cancel_left,mul_assoc,mul_inv_cancel,mul_one] using hb
+    simpa only [SetLike.mem_coe,inv_inv,mul_inv_cancel_left,mul_assoc,mul_inv_cancel,mul_one] using hb
   · intro hg
     refine ⟨τ*g*τ⁻¹,hg,?_⟩
     change τ⁻¹*(τ*g*τ⁻¹)*τ⁻¹⁻¹ = g

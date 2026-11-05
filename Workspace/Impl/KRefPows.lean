@@ -1,4 +1,8 @@
-import Workspace.Impl.KRefLib
+module
+
+public import Workspace.Impl.KRefLib
+
+@[expose] public section
 
 /-!
 # Powers and digits
@@ -106,7 +110,7 @@ theorem kref_pows {P : Program} {b : ℕ} (h : P.HasAt b (krefPowFuns b)) {m e Z
       show (natList (krefPowList m i)).wt ≤ 2 * (Z + 1)
       have := (wt_krefPowList_mono m hi).trans hw; omega)
     (by have := wt_nat_le m; omega) (by omega)
-  simpa using this
+  simpa [krefPowList, natList] using this
 
 
 /-! ### A map over a list of numbers with a context of two numbers -/

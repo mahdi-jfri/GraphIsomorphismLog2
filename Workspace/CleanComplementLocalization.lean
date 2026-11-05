@@ -1,7 +1,11 @@
-import Workspace.CleanComplementInputs
-import Workspace.SmallDegreeBudget
-import Workspace.AlternatingSimple
-import Workspace.Localization
+module
+
+public import Workspace.CleanComplementInputs
+public import Workspace.SmallDegreeBudget
+public import Workspace.AlternatingSimple
+public import Workspace.Localization
+
+@[expose] public section
 
 /-! Unconditional localization from the elementary linear degree obstruction.
 These bounds use k > f and do not establish the paper's logarithmic A.15 bound. -/

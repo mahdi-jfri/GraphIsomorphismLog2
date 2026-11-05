@@ -1,5 +1,9 @@
-import Workspace.Impl.MBlkMath
-import Workspace.Lang.Lib.Orbit
+module
+
+public import Workspace.Impl.MBlkMath
+public import Workspace.Lang.Lib.Orbit
+
+@[expose] public section
 
 /-!
 # Joining two classes, as a program

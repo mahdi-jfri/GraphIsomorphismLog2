@@ -1,5 +1,9 @@
-import Workspace.Impl.SCosSolve2
-import Workspace.Impl.SCosBig
+module
+
+public import Workspace.Impl.SCosSolve2
+public import Workspace.Impl.SCosBig
+
+@[expose] public section
 
 /-!
 # Solvable coset intersection, as a reduction

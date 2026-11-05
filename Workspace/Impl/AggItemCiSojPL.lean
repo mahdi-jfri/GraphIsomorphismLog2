@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojPW
+module
+
+public import Workspace.Impl.AggItemCiSojPW
+
+@[expose] public section
 
 /-! # The computed matrix colors are exactly the model's query colors -/
 

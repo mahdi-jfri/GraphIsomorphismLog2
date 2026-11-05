@@ -1,27 +1,31 @@
-import Workspace.Cited.GMP
-import Workspace.CompositionFactors
-import Workspace.SmallSimple
-import Workspace.SocleOuter
-import Workspace.RadicalSocleDecomposition
+module
+
+public import Workspace.CompositionFactors
+public import Workspace.SmallSimple
+public import Workspace.SocleOuter
+public import Workspace.RadicalSocleDecomposition
+public import Workspace.Schreier
+public import Workspace.Proved.SolvGMP
+public import Workspace.MulticosetRadical
+
+@[expose] public section
 
 /-!
-# Lemma A.21: `|Q/Rad(Q)| ≤ b(Q)²`
+# Lemma A.21 (`lem:radical-free-order`): solvable-quotient subgroup of index at most `b(Q)²`
 
-The proof follows the paper. For the radical-free quotient `Q₀` with socle
-`E = T₁ × ⋯ × T_t`:
+For `N ◁ H` in a finite group `G`, let `R = radicalPreimage H N`, `E_H = soclePreimage H R`,
+and `K*_H = radicalPreimage H E_H`. For the radical-free quotient `Q₀ = H/R` with socle
+`E = E_H/R = T₁ × ⋯ × T_t`:
 
 * `Q₀` acts faithfully on `E` by conjugation (`C_{Q₀}(E) = 1`);
 * the action on the simple factors has image `P ≤ Sym(t)`, with kernel `K`;
-* `K` maps to `∏ Out(T_i)` with kernel exactly `E`;
-* so `a(Q₀) ≤ a(E) · ∏ |Out(T_i)| · a(P) = ∏ |Out(T_i)| · a(P)`;
-* [GMP, Proposition 6.1] and [GMP, Lemma 7.7] with `|T_i| ≥ 34` give `a(Q₀) ≤ |E|`;
-* `|E| = b(E) ≤ b(Q₀) = b(Q)`, and `|Q₀| = a(Q₀) b(Q₀)`.
-
-The paper writes "since every `|T_i| ≥ 60`"; the computation only needs `|T_i| ≥ 34`
-(`GI.SmallSimple.thirtyfour_le_card`, proved without the classification).
-
-The cited results are stated for groups in `Type`; `outBound_univ`, `abelianFactors_univ`
-move them to any universe along isomorphisms.
+* `K` maps to `∏ Out(T_i)` with kernel `E`, so `K/E` is solvable by Schreier's conjecture
+  (`GI.schreier`) and `K/E ≤ Rad(Q₀/E)`;
+* [GMP, Proposition 6.1] (`GI.Proved.gmpAbelianFactors`) and `|T_i| ≥ 34`
+  (`GI.SmallSimple.thirtyfour_le_card`) give `a(P) ≤ |E|`, so `[H : K*_H] ≤ |P| ≤ b(H/N)` and
+  `[E_H : R] = |E| ≤ b(H/N)`;
+* for any solvable supplement `S₁ ≤ K*_H` of `E_H` in `K*_H` (or any `R ≤ R' ≤ K*_H` with
+  `R'/R` solvable and `R' E_H = K*_H`), `R'/N` is solvable and `[H : R'] ≤ b(H/N)²`.
 -/
 
 namespace GI.RadicalFreeOrder
@@ -30,41 +34,7 @@ open GI.Cited GI.Composition GI.RadicalSocle GI.SocleOuter
 
 universe u
 
-/-! ### Moving the cited bounds to any universe -/
-
-/-- The index of the inner automorphisms is an isomorphism invariant. -/
-theorem outIndex_congr {A B : Type*} [Group A] [Group B] (f : A ≃* B) :
-    (MulAut.conj : A →* MulAut A).range.index = (MulAut.conj : B →* MulAut B).range.index := by
-  have hconj : ∀ a : A, MulAut.congr f (MulAut.conj a) = MulAut.conj (f a) := by
-    intro a
-    ext y
-    simp [MulAut.congr_apply, MulAut.conj_apply]
-  have h : (MulAut.conj : A →* MulAut A).range =
-      (MulAut.conj : B →* MulAut B).range.comap (MulAut.congr f).toMonoidHom := by
-    ext x
-    simp only [MonoidHom.mem_range, Subgroup.mem_comap, MulEquiv.coe_toMonoidHom]
-    constructor
-    · rintro ⟨a, rfl⟩
-      exact ⟨f a, (hconj a).symm⟩
-    · rintro ⟨b, hb⟩
-      refine ⟨f.symm b, (MulAut.congr f).injective ?_⟩
-      rw [hconj, MulEquiv.apply_symm_apply, hb]
-  rw [h, Subgroup.index_comap_of_surjective _ (MulAut.congr f).surjective]
-
-/-- [GMP, Lemma 7.7] for a finite nonabelian simple group in any universe. -/
-theorem outBound_univ (hOut : GMPOutBound) (T : Type u) [Group T] [Finite T]
-    [IsSimpleGroup T] (hT : ∃ x y : T, x * y ≠ y * x) :
-    ((MulAut.conj : T →* MulAut T).range.index : ℝ) ≤ 2 * Real.sqrt (Nat.card T) := by
-  let f : Shrink.{0} T ≃* T := Shrink.mulEquiv
-  haveI : IsSimpleGroup (Shrink.{0} T) := f.isSimpleGroup
-  haveI : Finite (Shrink.{0} T) := Finite.of_equiv T f.symm.toEquiv
-  have hT' : ∃ x y : Shrink.{0} T, x * y ≠ y * x := by
-    obtain ⟨x, y, hxy⟩ := hT
-    refine ⟨f.symm x, f.symm y, fun h => hxy ?_⟩
-    have := congrArg f h
-    simpa using this
-  have h := hOut (Shrink.{0} T) inferInstance hT'
-  rwa [outIndex_congr f, Nat.card_congr f.toEquiv] at h
+/-! ### Moving [GMP, Proposition 6.1] to any universe -/
 
 /-- [GMP, Proposition 6.1] for a permutation group on any finite type with `t ≥ 1` points. -/
 theorem abelianFactors_univ (hAb : GMPAbelianFactors) {α : Type u} [Finite α]
@@ -184,23 +154,6 @@ theorem card_socle_le_bFac : Nat.card E ≤ bFac G := by
   rw [bFac_mul E, bFac_socle rf]
   exact Nat.le_mul_of_pos_right _ bFac_pos
 
-include rf in
-/-- `a(G) ≤ ∏ |Out(T_i)| · a(P)`. -/
-theorem aFac_le_outer_mul :
-    aFac G ≤ Nat.card (∀ N : MinimalNormals E, OuterAut N.val) *
-      aFac (factorAction (G := G)).range := by
-  have h1 := aFac_ker_range (factorAction (G := G))
-  have h2 := aFac_ker_range (kernelToOuter (G := G))
-  have h3 : aFac (kernelToOuter (G := G)).ker = 1 := by
-    rw [aFac_congr (MulEquiv.subgroupCongr (kernelToOuter_ker rf)),
-      ← aFac_congr (MonoidHom.ofInjective (f := socleToKernel (G := G))
-        (Subgroup.inclusion_injective _)), aFac_socle rf]
-  have h4 : aFac (kernelToOuter (G := G)).range ≤
-      Nat.card (∀ N : MinimalNormals E, OuterAut N.val) := by
-    exact aFac_le_card.trans (Subgroup.card_le_card_group _)
-  rw [h1, h2, h3, one_mul]
-  exact Nat.mul_le_mul_right _ h4
-
 theorem nontrivial_factors [Nontrivial G] : 1 ≤ Nat.card (MinimalNormals E) := by
   obtain ⟨M, hM, -⟩ := exists_minimal_normal_le (⊤ : Subgroup G) top_ne_bot
   have hE : socle G ≠ ⊥ := fun h => hM.2.1 (le_bot_iff.mp (h ▸ minimalNormal_le_socle hM))
@@ -209,100 +162,400 @@ theorem nontrivial_factors [Nontrivial G] : 1 ≤ Nat.card (MinimalNormals E) :=
   haveI : Nonempty (MinimalNormals E) := ⟨⟨N, hN⟩⟩
   exact Nat.one_le_iff_ne_zero.mpr Finite.card_pos.ne'
 
-/-- The numeric step: `o ≤ 2 √n`, `n ≥ 34` and `c³ = 24` give `o c ≤ n`. -/
-theorem factor_numeric {o n : ℝ} (ho : o ≤ 2 * Real.sqrt n) (hn : 34 ≤ n) :
-    o * (24 : ℝ) ^ ((1 : ℝ) / 3) ≤ n := by
-  set c : ℝ := (24 : ℝ) ^ ((1 : ℝ) / 3) with hc
-  have hc0 : 0 ≤ c := by positivity
-  have hc3 : c ^ 3 = 24 := by
-    rw [hc, ← Real.rpow_natCast, ← Real.rpow_mul (by norm_num)]
-    norm_num
-  have hc2 : c ^ 2 ≤ 8.5 := by
-    by_contra h
-    push Not at h
-    have : (8.5 : ℝ) ^ 3 < (c ^ 2) ^ 3 := by
-      apply pow_lt_pow_left₀ h (by norm_num) (by norm_num)
-    have h6 : (c ^ 2) ^ 3 = 576 := by rw [← pow_mul, show 2 * 3 = 3 * 2 by rfl, pow_mul, hc3]; norm_num
-    rw [h6] at this
-    norm_num at this
-  have hsq : Real.sqrt n ^ 2 = n := Real.sq_sqrt (by linarith)
-  have hs0 : 0 ≤ Real.sqrt n := Real.sqrt_nonneg n
-  -- `2 c √n ≤ n` because `(2c)² ≤ 34 ≤ n = √n²`
-  have h2c : 2 * c ≤ Real.sqrt n := by
-    apply Real.le_sqrt_of_sq_le
-    nlinarith
-  calc o * c ≤ 2 * Real.sqrt n * c := mul_le_mul_of_nonneg_right ho hc0
-    _ = Real.sqrt n * (2 * c) := by ring
-    _ ≤ Real.sqrt n * Real.sqrt n := mul_le_mul_of_nonneg_left h2c hs0
-    _ = n := by rw [← sq, hsq]
+/-- A finite direct product of solvable groups is solvable. -/
+theorem pi_isSolvable {I : Type*} [Finite I] {D : I → Type*} [∀ i, Group (D i)]
+    (hs : ∀ i, Group.IsSolvable (D i)) : Group.IsSolvable (∀ i, D i) := by
+  classical
+  letI := Fintype.ofFinite I
+  choose n hn using fun i => (hs i).solvable
+  refine ⟨⟨∑ i : I, n i, eq_bot_iff.mpr ?_⟩⟩
+  intro x hx
+  ext i
+  have hle : n i ≤ ∑ j : I, n j :=
+    Finset.single_le_sum (fun j _ => Nat.zero_le (n j)) (Finset.mem_univ i)
+  have h1 : Pi.evalMonoidHom D i x ∈
+      (derivedSeries (∀ j, D j) (∑ j : I, n j)).map (Pi.evalMonoidHom D i) := ⟨x, hx, rfl⟩
+  have h2 := (map_derivedSeries_le_derivedSeries (Pi.evalMonoidHom D i) (∑ j : I, n j)).trans
+    (derivedSeries_antitone (D i) hle)
+  rw [hn i] at h2
+  exact h2 h1
 
 include rf in
-/-- **`a(Q₀) ≤ |E|`**, from [GMP, Proposition 6.1] and [GMP, Lemma 7.7]. -/
-theorem aFac_le_card_socle (hAb : GMPAbelianFactors) (hOut : GMPOutBound) [Nontrivial G] :
-    aFac G ≤ Nat.card E := by
+/-- By Schreier's conjecture (`GI.schreier`), `∏ Out(T_i)` is solvable. -/
+theorem outer_product_solvable :
+    Group.IsSolvable (∀ N : MinimalNormals E, OuterAut N.val) := by
+  have := fun N : MinimalNormals E => socle_intrinsic_factor_simple N
+  exact pi_isSolvable fun N => GI.schreier N.val (socle_intrinsic_factor_nonabelian rf N)
+
+include rf in
+/-- The image `K/E` of the factor-action kernel `K` in `G/E` embeds into `∏ Out(T_i)`,
+so it is solvable by Schreier's conjecture. -/
+theorem factorAction_ker_quotient_solvable :
+    Group.IsSolvable (((factorAction (G := G)).ker).map (QuotientGroup.mk' E)) := by
+  set q := QuotientGroup.mk' E
+  set K := (factorAction (G := G)).ker
+  obtain ⟨n, hn⟩ := (outer_product_solvable rf).solvable
+  refine ⟨⟨n, eq_bot_iff.mpr ?_⟩⟩
+  rw [← map_derivedSeries_eq (q.subgroupMap_surjective K) n]
+  rintro _ ⟨x, hx, rfl⟩
+  apply Subtype.ext
+  exact (QuotientGroup.eq_one_iff (x : G)).mpr (by
+    have h1 : kernelToOuter (G := G) x ∈
+        (derivedSeries K n).map (kernelToOuter (G := G)) := ⟨x, hx, rfl⟩
+    have h2 := map_derivedSeries_le_derivedSeries (kernelToOuter (G := G)) n
+    rw [hn, le_bot_iff] at h2
+    have hker : x ∈ (kernelToOuter (G := G)).ker := by
+      rw [MonoidHom.mem_ker, ← Subgroup.mem_bot, ← h2]
+      exact h1
+    rw [kernelToOuter_ker rf] at hker
+    obtain ⟨ε, rfl⟩ := hker
+    exact ε.2)
+
+include rf in
+/-- Because `K ◁ G` and `K/E` is solvable, `K/E ≤ Rad(G/E)`. -/
+theorem factorAction_ker_le_radical :
+    ((factorAction (G := G)).ker).map (QuotientGroup.mk' E) ≤ solvableRadical (G ⧸ E) := by
+  have : (((factorAction (G := G)).ker).map (QuotientGroup.mk' E)).Normal :=
+    Subgroup.Normal.map inferInstance _ (QuotientGroup.mk'_surjective E)
+  have : Group.IsSolvable (((factorAction (G := G)).ker).map (QuotientGroup.mk' E)) :=
+    factorAction_ker_quotient_solvable rf
+  exact le_solvableRadical _
+
+include rf in
+/-- Since `K/E ≤ Rad(G/E)`, we have `[G/E : Rad(G/E)] ≤ [G : K] = |P|`. -/
+theorem index_radical_quotient_socle_le_factorAction :
+    (solvableRadical (G ⧸ E)).index ≤ Nat.card (factorAction (G := G)).range := by
+  set q := QuotientGroup.mk' E
+  set K := (factorAction (G := G)).ker
+  have hle := factorAction_ker_le_radical rf
+  have hmul := Subgroup.relIndex_mul_index hle
+  have hpos : 0 < (K.map q).relIndex (solvableRadical (G ⧸ E)) := Nat.card_pos
+  have h1 : (solvableRadical (G ⧸ E)).index ≤ (K.map q).index := by
+    rw [← hmul]
+    exact Nat.le_mul_of_pos_left _ hpos
+  have h2 : (K.map q).index = K.index := by
+    rw [← Subgroup.index_comap_of_surjective (K.map q) (QuotientGroup.mk'_surjective E),
+      Subgroup.comap_map_eq, QuotientGroup.ker_mk', sup_eq_left.mpr socle_le_factorAction_ker]
+  have h3 : K.index = Nat.card (factorAction (G := G)).range := by
+    rw [Subgroup.index]
+    exact Nat.card_congr (QuotientGroup.quotientKerEquivRange (factorAction (G := G))).toEquiv
+  omega
+
+include rf in
+/-- **`a(P) ≤ |E|`**: by [GMP, Proposition 6.1] (`GI.Proved.gmpAbelianFactors`),
+`a(P) ≤ 24^{(t-1)/3} ≤ 34^t ≤ ∏ |T_i| = |E|`. -/
+theorem aFac_factorAction_le_card_socle :
+    aFac (factorAction (G := G)).range ≤ Nat.card E := by
+  by_cases hG : Subsingleton G
+  · have := hG
+    have h1 : aFac (factorAction (G := G)).range ≤ Nat.card (factorAction (G := G)).range :=
+      aFac_le_card
+    rw [Nat.card_unique] at h1
+    exact h1.trans (Nat.one_le_iff_ne_zero.mpr (Nat.card_pos (α := E)).ne')
+  rw [not_subsingleton_iff_nontrivial] at hG
   letI := Fintype.ofFinite (MinimalNormals E)
-  haveI := fun N : MinimalNormals E => socle_intrinsic_factor_simple N
+  have := fun N : MinimalNormals E => socle_intrinsic_factor_simple N
   have ht := nontrivial_factors (G := G)
   set t := Nat.card (MinimalNormals E)
-  -- the cited bounds
-  have hP := abelianFactors_univ hAb ht (factorAction (G := G)).range
-  have hO : ∀ N : MinimalNormals E,
-      (Nat.card (OuterAut N.val) : ℝ) ≤ 2 * Real.sqrt (Nat.card N.val) := by
-    intro N
-    have h := outBound_univ hOut N.val (socle_intrinsic_factor_nonabelian rf N)
-    rwa [Subgroup.index] at h
+  have hP := abelianFactors_univ GI.Proved.gmpAbelianFactors ht (factorAction (G := G)).range
   have h34 : ∀ N : MinimalNormals E, (34 : ℝ) ≤ Nat.card N.val := by
     intro N
     exact_mod_cast GI.SmallSimple.thirtyfour_le_card (nonabelian_factor rf N)
-  -- `24^{(t-1)/3} ≤ c^t`
-  have hpow : (24 : ℝ) ^ (((t : ℝ) - 1) / 3) ≤ ((24 : ℝ) ^ ((1 : ℝ) / 3)) ^ t := by
-    rw [← Real.rpow_natCast, ← Real.rpow_mul (by norm_num)]
-    apply Real.rpow_le_rpow_of_exponent_le (by norm_num)
-    linarith
+  have hpow : (24 : ℝ) ^ (((t : ℝ) - 1) / 3) ≤ (34 : ℝ) ^ t := by
+    calc (24 : ℝ) ^ (((t : ℝ) - 1) / 3)
+        ≤ (24 : ℝ) ^ (t : ℝ) := by
+          apply Real.rpow_le_rpow_of_exponent_le (by norm_num)
+          have : (1 : ℝ) ≤ t := by exact_mod_cast ht
+          linarith
+      _ = (24 : ℝ) ^ t := Real.rpow_natCast 24 t
+      _ ≤ (34 : ℝ) ^ t := pow_le_pow_left₀ (by norm_num) (by norm_num) t
   have hE : (Nat.card E : ℝ) = ∏ N : MinimalNormals E, (Nat.card N.val : ℝ) := by
     rw [← Nat.card_congr (socleIntrinsicProductEquiv rf).toEquiv, Nat.card_pi]
     push_cast
     rfl
-  have hmain : (aFac G : ℝ) ≤ Nat.card E := by
-    calc (aFac G : ℝ)
-        ≤ (∏ N : MinimalNormals E, (Nat.card (OuterAut N.val) : ℝ)) *
-            aFac (factorAction (G := G)).range := by
-          have h := aFac_le_outer_mul rf (G := G)
-          rw [Nat.card_pi] at h
-          exact_mod_cast h
-      _ ≤ (∏ N : MinimalNormals E, (Nat.card (OuterAut N.val) : ℝ)) *
-            ((24 : ℝ) ^ ((1 : ℝ) / 3)) ^ t := by
-          apply mul_le_mul_of_nonneg_left (hP.trans hpow)
-          positivity
-      _ = ∏ N : MinimalNormals E,
-            ((Nat.card (OuterAut N.val) : ℝ) * (24 : ℝ) ^ ((1 : ℝ) / 3)) := by
-          rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ,
-            ← Nat.card_eq_fintype_card]
-      _ ≤ ∏ N : MinimalNormals E, (Nat.card N.val : ℝ) := by
-          apply Finset.prod_le_prod (fun N _ => by positivity)
-          exact fun N _ => factor_numeric (hO N) (h34 N)
+  have hmain : (aFac (factorAction (G := G)).range : ℝ) ≤ Nat.card E := by
+    calc (aFac (factorAction (G := G)).range : ℝ)
+        ≤ (34 : ℝ) ^ t := hP.trans hpow
+      _ = ∏ _ : MinimalNormals E, (34 : ℝ) := by
+          rw [Finset.prod_const, Finset.card_univ, ← Nat.card_eq_fintype_card]
+      _ ≤ ∏ N : MinimalNormals E, (Nat.card N.val : ℝ) :=
+          Finset.prod_le_prod₀ (fun _ _ => by norm_num) (fun N _ => h34 N)
       _ = Nat.card E := hE.symm
   exact_mod_cast hmain
 
 include rf in
-/-- **Lemma A.21 for a radical-free group:** `|G| ≤ b(G)²`. -/
-theorem card_le_bFac_sq (hAb : GMPAbelianFactors) (hOut : GMPOutBound) :
-    Nat.card G ≤ bFac G ^ 2 := by
-  by_cases hG : Subsingleton G
-  · rw [Nat.card_unique]
-    exact Nat.one_le_pow _ _ bFac_pos
-  rw [not_subsingleton_iff_nontrivial] at hG
-  rw [← aFac_mul_bFac, sq]
-  exact Nat.mul_le_mul_right _
-    ((aFac_le_card_socle rf hAb hOut).trans (card_socle_le_bFac rf))
+/-- **`|P| ≤ b(G)`**: `|P| = a(P) b(P) ≤ |E| b(P) ≤ b(K) b(P) = b(G)`. -/
+theorem card_factorAction_le_bFac :
+    Nat.card (factorAction (G := G)).range ≤ bFac G := by
+  set P := (factorAction (G := G)).range
+  set K := (factorAction (G := G)).ker
+  have h1 : Nat.card P = aFac P * bFac P := (aFac_mul_bFac (X := P)).symm
+  have h2 : aFac P ≤ Nat.card E := aFac_factorAction_le_card_socle rf
+  have h3 : Nat.card E ≤ bFac K := by
+    rw [bFac_ker_range (kernelToOuter (G := G)),
+      bFac_congr (MulEquiv.subgroupCongr (kernelToOuter_ker rf)),
+      ← bFac_congr (MonoidHom.ofInjective (f := socleToKernel (G := G))
+        (Subgroup.inclusion_injective _)), bFac_socle rf]
+    exact Nat.le_mul_of_pos_right _ bFac_pos
+  rw [h1, bFac_ker_range (factorAction (G := G))]
+  exact Nat.mul_le_mul_right _ (h2.trans h3)
+
+include rf in
+/-- **`[G/E : Rad(G/E)] ≤ b(G)`** for a radical-free finite group `G`. -/
+theorem index_radical_quotient_socle_le :
+    (solvableRadical (G ⧸ E)).index ≤ bFac G :=
+  (index_radical_quotient_socle_le_factorAction rf).trans (card_factorAction_le_bFac rf)
 
 end Structure
 
-/-- **Lemma A.21** (`lem:radical-free-order`): `|Q/Rad(Q)| ≤ b(Q)²`. -/
-theorem card_radical_quotient_le (hAb : GMPAbelianFactors) (hOut : GMPOutBound)
-    (Q : Type u) [Group Q] [Finite Q] :
-    Nat.card (Q ⧸ solvableRadical Q) ≤ bFac Q ^ 2 := by
-  have h := card_le_bFac_sq (radical_quotient_radicalFree (G := Q)) hAb hOut
-  rwa [bFac_mul (solvableRadical Q) (X := Q), bFac_of_solvable, one_mul]
+/-! ### Lemma A.21′: solvable-quotient subgroup of index at most `b(Q)²` -/
+
+export GI.Multicoset (
+  soclePreimage
+  radicalPreimage_le
+  le_radicalPreimage
+  radicalPreimage_subgroupOf
+  normal_radicalPreimage
+  normalizes_radicalPreimage
+  soclePreimage_le
+  le_soclePreimage
+  soclePreimage_subgroupOf
+  normal_soclePreimage
+  normalizes_soclePreimage
+  relDerived_mono_kernel
+  relDerived_add_le
+  relDerived_trans
+  sup_quotient_solvable
+  exists_solvable_supplement_radicalOuter
+  radicalSubgroup
+  radicalSubgroup_spec
+)
+
+section SolvablePreimage
+
+open Classical GI.Multicoset
+
+variable {G : Type u} [Group G]
+
+/-- In a finite group, `H.relIndex N * (H ⊔ N).index = H.index` when `N` is normal. -/
+theorem relIndex_mul_index_sup [Finite G] (H N : Subgroup G) [N.Normal] :
+    H.relIndex N * (H ⊔ N).index = H.index := by
+  have hpos : 0 < N.relIndex H := Nat.card_pos
+  apply Nat.eq_of_mul_eq_mul_right hpos
+  calc
+    (H.relIndex N * (H ⊔ N).index) * N.relIndex H =
+        H.relIndex N * (N.relIndex (H ⊔ N) * (H ⊔ N).index) := by
+      rw [Subgroup.relIndex_sup_right]
+      ac_rfl
+    _ = H.relIndex N * N.index := by rw [Subgroup.relIndex_mul_index le_sup_right]
+    _ = (H ⊓ N).index := by
+      rw [← Subgroup.inf_relIndex_right H N]
+      exact Subgroup.relIndex_mul_index inf_le_right
+    _ = N.relIndex H * H.index := by
+      rw [← Subgroup.inf_relIndex_left H N]
+      exact (Subgroup.relIndex_mul_index inf_le_left).symm
+    _ = H.index * N.relIndex H := Nat.mul_comm _ _
+
+/-- For any subgroup `S`, `(⊥ : Subgroup G).relIndex S = Nat.card S`. -/
+theorem bot_relIndex_eq_card (S : Subgroup G) : (⊥ : Subgroup G).relIndex S = Nat.card S := by
+  rw [Subgroup.relIndex, Subgroup.index]
+  have hbot : (⊥ : Subgroup G).subgroupOf S = ⊥ := by
+    ext x
+    simp
+  rw [hbot]
+  exact Nat.card_congr (QuotientGroup.quotientBot (G := S)).toEquiv
+
+/-- The index of the solvable radical is preserved under group isomorphism. -/
+theorem solvableRadical_index_congr {A B : Type*} [Group A] [Finite A] [Group B] [Finite B]
+    (e : A ≃* B) : (solvableRadical A).index = (solvableRadical B).index := by
+  have h : solvableRadical A = (solvableRadical B).comap e.toMonoidHom := by
+    apply le_antisymm
+    · rw [← Subgroup.map_le_iff_le_comap]
+      have : ((solvableRadical A).map e.toMonoidHom).Normal :=
+        Subgroup.Normal.map inferInstance _ e.surjective
+      have : Group.IsSolvable ((solvableRadical A).map e.toMonoidHom) :=
+        Group.isSolvable_of_surjective (e.toMonoidHom.subgroupMap_surjective _)
+      exact le_solvableRadical _
+    · have : ((solvableRadical B).comap e.toMonoidHom).Normal :=
+        Subgroup.Normal.comap inferInstance e.toMonoidHom
+      have heq : (solvableRadical B).comap e.toMonoidHom =
+          (solvableRadical B).map e.symm.toMonoidHom := by
+        ext x
+        simp only [Subgroup.mem_comap, Subgroup.mem_map, MulEquiv.coe_toMonoidHom]
+        exact ⟨fun hx => ⟨e x, hx, e.symm_apply_apply x⟩,
+          fun ⟨y, hy, hyx⟩ => by rw [← hyx, e.apply_symm_apply]; exact hy⟩
+      have : Group.IsSolvable ((solvableRadical B).comap e.toMonoidHom) := by
+        rw [heq]
+        exact Group.isSolvable_of_surjective (e.symm.toMonoidHom.subgroupMap_surjective _)
+      exact le_solvableRadical _
+  rw [h, Subgroup.index_comap_of_surjective _ e.surjective]
+
+/-- Third isomorphism theorem for a preimage `K` in `H` of `P ≤ H/M`. -/
+noncomputable def quotientPreimageEquiv {H M K : Subgroup G} [(M.subgroupOf H).Normal]
+    [(K.subgroupOf H).Normal] (P : Subgroup (H ⧸ M.subgroupOf H)) [P.Normal]
+    (hK : K.subgroupOf H = P.comap (QuotientGroup.mk' (M.subgroupOf H))) :
+    (H ⧸ K.subgroupOf H) ≃* ((H ⧸ M.subgroupOf H) ⧸ P) := by
+  let f : H →* (H ⧸ M.subgroupOf H) ⧸ P :=
+    (QuotientGroup.mk' P).comp (QuotientGroup.mk' (M.subgroupOf H))
+  have hf : Function.Surjective f :=
+    (QuotientGroup.mk'_surjective P).comp (QuotientGroup.mk'_surjective (M.subgroupOf H))
+  have hker : K.subgroupOf H = f.ker := by
+    ext x
+    rw [hK, Subgroup.mem_comap, MonoidHom.mem_ker, MonoidHom.comp_apply]
+    exact (QuotientGroup.eq_one_iff _).symm
+  exact (QuotientGroup.congr (K.subgroupOf H) f.ker (MulEquiv.refl H)
+    (by ext x; simp [hker])).trans (QuotientGroup.quotientKerEquivOfSurjective f hf)
+
+/-- `H/R ≅ (H/N) / Rad(H/N)` is radical-free. -/
+theorem radicalPreimage_quotient_radicalFree [Finite G] {H N : Subgroup G}
+    [(N.subgroupOf H).Normal] :
+    ∀ M : Subgroup (H ⧸ (radicalPreimage H N).subgroupOf H),
+      M.Normal → Group.IsSolvable M → M = ⊥ := by
+  intro M hM hsolv
+  let e := quotientPreimageEquiv (solvableRadical (H ⧸ N.subgroupOf H))
+    (radicalPreimage_subgroupOf (H := H) (N := N))
+  have hM' : (M.map e.toMonoidHom).Normal := Subgroup.Normal.map hM _ e.surjective
+  have hs' : Group.IsSolvable (M.map e.toMonoidHom) :=
+    Group.isSolvable_of_surjective (e.toMonoidHom.subgroupMap_surjective M)
+  have hbot := radical_quotient_radicalFree (M.map e.toMonoidHom) hM' hs'
+  rw [eq_bot_iff] at hbot ⊢
+  intro x hx
+  have hx' : e x ∈ M.map e.toMonoidHom := ⟨x, hx, rfl⟩
+  rw [Subgroup.mem_bot] at *
+  exact (MulEquiv.map_eq_one_iff e).mp (hbot hx')
+
+/-- `b(H/R) = b(H/N)`. -/
+theorem bFac_quotient_radicalPreimage [Finite G] {H N : Subgroup G} [(N.subgroupOf H).Normal] :
+    bFac (H ⧸ (radicalPreimage H N).subgroupOf H) = bFac (H ⧸ N.subgroupOf H) := by
+  let e := quotientPreimageEquiv (solvableRadical (H ⧸ N.subgroupOf H))
+    (radicalPreimage_subgroupOf (H := H) (N := N))
+  rw [bFac_congr e]
+  symm
+  rw [bFac_mul (solvableRadical (H ⧸ N.subgroupOf H)) (X := H ⧸ N.subgroupOf H),
+    bFac_of_solvable, one_mul]
+
+/-- `[E_H : R] = |soc(H/R)|`. -/
+theorem relIndex_soclePreimage_eq [Finite G] {H R : Subgroup G} [(R.subgroupOf H).Normal] :
+    ((R.subgroupOf H).relIndex ((soclePreimage H R).subgroupOf H)) =
+      Nat.card (socle (H ⧸ R.subgroupOf H)) := by
+  have hR : R.subgroupOf H =
+      (⊥ : Subgroup (H ⧸ R.subgroupOf H)).comap (QuotientGroup.mk' (R.subgroupOf H)) := by
+    rw [MonoidHom.comap_bot, QuotientGroup.ker_mk']
+  rw [soclePreimage_subgroupOf]
+  nth_rw 1 [hR]
+  rw [Subgroup.relIndex_comap,
+    Subgroup.map_comap_eq_self_of_surjective (QuotientGroup.mk'_surjective _),
+    bot_relIndex_eq_card]
+
+/-- `[E_H : R] ≤ b(H/N)`. -/
+theorem relIndex_soclePreimage_le [Finite G] {H N : Subgroup G} [(N.subgroupOf H).Normal] :
+    ((radicalPreimage H N).subgroupOf H).relIndex
+      ((soclePreimage H (radicalPreimage H N)).subgroupOf H) ≤
+      bFac (H ⧸ N.subgroupOf H) := by
+  rw [relIndex_soclePreimage_eq, ← bFac_quotient_radicalPreimage]
+  exact card_socle_le_bFac radicalPreimage_quotient_radicalFree
+
+/-- `[H : K*_H] ≤ b(H/N)`. -/
+theorem index_radicalOuter_le
+    [Finite G] {H N : Subgroup G} [(N.subgroupOf H).Normal] :
+    ((radicalPreimage H (soclePreimage H (radicalPreimage H N))).subgroupOf H).index ≤
+      bFac (H ⧸ N.subgroupOf H) := by
+  set R := radicalPreimage H N
+  set E_H := soclePreimage H R
+  rw [radicalPreimage_subgroupOf,
+    Subgroup.index_comap_of_surjective _ (QuotientGroup.mk'_surjective _)]
+  let e := quotientPreimageEquiv (socle (H ⧸ R.subgroupOf H))
+    (soclePreimage_subgroupOf (H := H) (R := R))
+  rw [solvableRadical_index_congr e, ← bFac_quotient_radicalPreimage]
+  exact index_radical_quotient_socle_le radicalPreimage_quotient_radicalFree
+
+/-- **Lemma A.21′ (quotient-supplement form)**: for any subgroup `R'` with `R ≤ R' ≤ K*_H`,
+`R'/R` solvable, and `R' ⊔ E_H = K*_H`, we have `N ≤ R' ≤ H`, `R'/N` is solvable, and
+`[H : R'] ≤ b(H/N)²`. -/
+theorem radical_free_order_of_quotient [Finite G] {H N : Subgroup G} (hNH : N ≤ H)
+    [(N.subgroupOf H).Normal] {R' : Subgroup G}
+    (hRR' : radicalPreimage H N ≤ R')
+    (hR'K : R' ≤ radicalPreimage H (soclePreimage H (radicalPreimage H N)))
+    (hsolvR : ∀ [((radicalPreimage H N).subgroupOf R').Normal],
+      Group.IsSolvable (R' ⧸ (radicalPreimage H N).subgroupOf R'))
+    (hsup : R' ⊔ soclePreimage H (radicalPreimage H N) =
+      radicalPreimage H (soclePreimage H (radicalPreimage H N))) :
+    N ≤ R' ∧ R' ≤ H ∧ (N.subgroupOf R').Normal ∧
+      (∃ ℓ, relDerived R' N ℓ ≤ N) ∧
+      (∀ [(N.subgroupOf R').Normal], Group.IsSolvable (R' ⧸ N.subgroupOf R')) ∧
+      (R'.subgroupOf H).index ≤ bFac (H ⧸ N.subgroupOf H) ^ 2 := by
+  set R := radicalPreimage H N
+  set E_H := soclePreimage H R
+  set K_H := radicalPreimage H E_H
+  have hn : Normalizes H N := normalizes_of_normal hNH
+  obtain ⟨hRH, hNR, ℓ₂, hℓ₂⟩ := radicalPreimage_spec hNH hn
+  have hKH : K_H ≤ H := radicalPreimage_le H E_H
+  have hR'H : R' ≤ H := hR'K.trans hKH
+  have hNR' : N ≤ R' := hNR.trans hRR'
+  have : (N.subgroupOf R').Normal := normal_of_normalizes (hn.mono hR'H)
+  have hnR : Normalizes H R := normalizes_of_normal hRH
+  have : (R.subgroupOf R').Normal := normal_of_normalizes (hnR.mono hR'H)
+  have := hsolvR
+  obtain ⟨ℓ₁, hℓ₁⟩ := exists_relDerived_of_isSolvable hRR'
+  have hrel : ∃ ℓ, relDerived R' N ℓ ≤ N := ⟨ℓ₁ + ℓ₂, relDerived_trans hNR hℓ₁ hℓ₂⟩
+  have hsolvN : ∀ [(N.subgroupOf R').Normal], Group.IsSolvable (R' ⧸ N.subgroupOf R') :=
+    fun [_] => isSolvable_quot_of_relDerived (relDerived_trans hNR hℓ₁ hℓ₂)
+  -- Index bound `[H : R'] ≤ b(H/N)²`
+  have hsup_sub : R'.subgroupOf H ⊔ E_H.subgroupOf H = K_H.subgroupOf H := by
+    apply Subgroup.map_injective H.subtype_injective
+    rw [Subgroup.map_sup, Subgroup.subgroupOf_map_subtype, Subgroup.subgroupOf_map_subtype,
+      Subgroup.subgroupOf_map_subtype, inf_of_le_left hR'H,
+      inf_of_le_left (soclePreimage_le H R), inf_of_le_left hKH, hsup]
+  have hidx_eq : (R'.subgroupOf H).index =
+      (R'.subgroupOf H).relIndex (E_H.subgroupOf H) * (K_H.subgroupOf H).index := by
+    rw [← relIndex_mul_index_sup (R'.subgroupOf H) (E_H.subgroupOf H), hsup_sub]
+  have hRR'_sub : R.subgroupOf H ≤ R'.subgroupOf H := Subgroup.subgroupOf_mono H hRR'
+  have hrel_le : (R'.subgroupOf H).relIndex (E_H.subgroupOf H) ≤ bFac (H ⧸ N.subgroupOf H) :=
+    (Subgroup.relIndex_le_of_le_left hRR'_sub Nat.card_pos.ne').trans relIndex_soclePreimage_le
+  have hK_le : (K_H.subgroupOf H).index ≤ bFac (H ⧸ N.subgroupOf H) := index_radicalOuter_le
+  have hidx : (R'.subgroupOf H).index ≤ bFac (H ⧸ N.subgroupOf H) ^ 2 := by
+    rw [hidx_eq, sq]
+    exact Nat.mul_le_mul hrel_le hK_le
+  exact ⟨hNR', hR'H, inferInstance, hrel, hsolvN, hidx⟩
+
+/-- **Lemma A.21′** (`lem:radical-free-order`): for `N ◁ H`, let `R = radicalPreimage H N`,
+`E_H = soclePreimage H R`, and `K*_H = radicalPreimage H E_H`. For any solvable subgroup
+`S₁ ≤ K*_H` with `S₁ ⊔ E_H = K*_H`, the subgroup `R' = S₁ ⊔ R` satisfies `N ≤ R' ≤ H`,
+`N ◁ R'`, `R'/N` is solvable, and `[H : R'] ≤ b(H/N)²`. -/
+theorem radical_free_order_of_supplement [Finite G] {H N : Subgroup G} (hNH : N ≤ H)
+    [(N.subgroupOf H).Normal] {S₁ : Subgroup G}
+    (hS₁ : S₁ ≤ radicalPreimage H (soclePreimage H (radicalPreimage H N)))
+    [Group.IsSolvable S₁]
+    (hsup : S₁ ⊔ soclePreimage H (radicalPreimage H N) =
+      radicalPreimage H (soclePreimage H (radicalPreimage H N))) :
+    let R := radicalPreimage H N
+    let R' := S₁ ⊔ R
+    N ≤ R' ∧ R' ≤ H ∧ (N.subgroupOf R').Normal ∧
+      (∃ ℓ, relDerived R' N ℓ ≤ N) ∧
+      (∀ [(N.subgroupOf R').Normal], Group.IsSolvable (R' ⧸ N.subgroupOf R')) ∧
+      (R'.subgroupOf H).index ≤ bFac (H ⧸ N.subgroupOf H) ^ 2 := by
+  set R := radicalPreimage H N
+  set E_H := soclePreimage H R
+  set K_H := radicalPreimage H E_H
+  set R' := S₁ ⊔ R
+  have hRE : R ≤ E_H := le_soclePreimage (radicalPreimage_le H N)
+  have hEK : E_H ≤ K_H := le_radicalPreimage (soclePreimage_le H R)
+  have hRR' : R ≤ R' := le_sup_right
+  have hR'K : R' ≤ K_H := sup_le hS₁ (hRE.trans hEK)
+  have hsup' : R' ⊔ E_H = K_H := by
+    rw [show R' ⊔ E_H = S₁ ⊔ (R ⊔ E_H) from sup_assoc _ _ _, sup_eq_right.mpr hRE, hsup]
+  exact radical_free_order_of_quotient hNH hRR' hR'K (fun [_] => sup_quotient_solvable) hsup'
+
+/-- The canonical subgroup `R' = radicalSubgroup H N` of Lemma A.21 has index at most
+`b(H/N)²` in `H`. -/
+theorem radicalSubgroup_index_le [Finite G] {H N : Subgroup G} (hNH : N ≤ H)
+    [hN : (N.subgroupOf H).Normal] :
+    ((radicalSubgroup H N).subgroupOf H).index ≤ bFac (H ⧸ N.subgroupOf H) ^ 2 := by
+  rw [radicalSubgroup, dif_pos hN]
+  obtain ⟨hS₁, hsolv, hsup⟩ :=
+    Classical.choose_spec (exists_solvable_supplement_radicalOuter (H := H) (N := N))
+  exact (radical_free_order_of_supplement hNH hS₁ hsup).2.2.2.2.2
+
+end SolvablePreimage
 
 end GI.RadicalFreeOrder

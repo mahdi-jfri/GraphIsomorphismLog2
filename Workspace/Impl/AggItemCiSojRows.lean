@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojPR
-import Workspace.Impl.AggKerRed
-import Workspace.Lang.Lib.SmallGroup
+module
+
+public import Workspace.Impl.AggItemCiSojPR
+public import Workspace.Impl.AggKerRed
+public import Workspace.Lang.Lib.SmallGroup
+
+@[expose] public section
 
 /-!
 # Keeping the nonempty projected answers
@@ -57,7 +61,11 @@ theorem itcs_rows_filter (rows : List (Option (Perm (Fin q) × List (Perm (Fin q
       rows.reduceOption.map (fun p=>itcsRowVal (some p)) := by
   induction rows with
   | nil => rfl
-  | cons r rs ih => cases r <;> simp [itcsRowVal,itcsRowQ,ih]
+  | cons r rs ih =>
+    cases r with
+    | none => simpa [itcsRowVal, itcsRowQ] using ih
+    | some p =>
+      rw [List.map_cons, List.reduceOption_cons_of_some, List.map_cons, ← ih]; rfl
 
 /-- The actual filter keeps exactly the nonempty projected rows. -/
 theorem itcs_row_filter {Pg : Program} {flt f : ℕ}

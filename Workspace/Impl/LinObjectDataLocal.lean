@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectDataMath
+module
+
+public import Workspace.Impl.LinObjectDataMath
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset

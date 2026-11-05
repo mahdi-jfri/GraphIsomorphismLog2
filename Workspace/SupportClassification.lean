@@ -1,4 +1,8 @@
-import Workspace.SupportLowIndex
+module
+
+public import Workspace.SupportLowIndex
+
+@[expose] public section
 
 /-!
 # The classification of Lemma A.24

@@ -1,6 +1,10 @@
-import Workspace.Cited.AlgoTerminal
-import Mathlib.LinearAlgebra.Span.Basic
-import Mathlib.Algebra.Order.Group.Int.Sum
+module
+
+public import Workspace.Cited.AlgoTerminal
+public import Mathlib.LinearAlgebra.Span.Basic
+public import Mathlib.Algebra.Order.Group.Int.Sum
+
+@[expose] public section
 
 /-!
 # Hermite form modulo a multiple of the determinant
@@ -421,10 +425,16 @@ theorem hnfModIter_zero_inv {m : ℤ} (hm : 0 < m) (M : Matrix (Fin n) (Fin n) �
       rw [hv']
       exact Submodule.sum_mem _ fun j _ => Submodule.smul_mem _ _ (hL j)
     have hspanM : hnfSpan ((List.finRange n).map M) = Submodule.span ℤ (Set.range M) := by
-      simp only [hnfSpan, List.mem_map, List.mem_finRange, true_and]
-      rfl
+      unfold hnfSpan
+      congr 1
+      ext v
+      change v ∈ (List.finRange n).map (fun i => M i) ↔ ∃ i, M i = v
+      simp only [List.mem_map, List.mem_finRange, true_and]
     have hinit : hnfModInit m M = ((List.finRange n).map M).map (fun r j => r j % m) := by
-      simp [hnfModInit, List.map_map]
+      change (List.finRange n).map (fun i j => M i j % m) =
+        ((List.finRange n).map (fun i => M i)).map (fun r j => r j % m)
+      rw [List.map_map]
+      rfl
     have hsub : ∀ h ∈ (List.finRange n).map M, (fun j => h j % m) - h ∈ hnfV n m 0 :=
       fun h _ => ⟨fun j hj => absurd hj (Nat.not_lt_zero _), fun j => by simp [Int.emod_def]⟩
     simp only [hnfModIter, List.nil_append]

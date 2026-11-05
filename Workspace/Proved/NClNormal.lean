@@ -1,6 +1,10 @@
-import Workspace.Impl.NClEntry
-import Workspace.Impl.CamCells
-import Workspace.Proved.SSMembership
+module
+
+public import Workspace.Impl.NClEntry
+public import Workspace.Impl.CamCells
+public import Workspace.Proved.SSMembership
+
+@[expose] public section
 
 /-!
 # The normal closure from membership
@@ -82,7 +86,7 @@ noncomputable def nclProgram (h : Membership) : Program := ⟨nclFuns 0 0, [memb
 theorem nclProgram_at (h : Membership) : NclAt (nclProgram h) 0 0 h := by
   refine nclAt_of ?_ rfl
   have hA := Program.hasAt_append [] (nclFuns 0 0) [] [membershipPrim h]
-  simpa using hA
+  simpa [nclProgram] using hA
 
 /-- **The normal closure from membership.** -/
 theorem normalClosure_of (h : Membership) : NormalClosure := by

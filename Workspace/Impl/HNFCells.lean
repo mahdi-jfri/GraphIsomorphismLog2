@@ -1,4 +1,8 @@
-import Workspace.Impl.HNFNums
+module
+
+public import Workspace.Impl.HNFNums
+
+@[expose] public section
 
 /-!
 # The cells of the big matrix and of the outputs

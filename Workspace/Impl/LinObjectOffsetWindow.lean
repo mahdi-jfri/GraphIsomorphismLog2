@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectOffsetRow
-import Workspace.Impl.LinSlice
+module
+
+public import Workspace.Impl.LinObjectOffsetRow
+public import Workspace.Impl.LinSlice
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,5 +1,9 @@
-import Workspace.RadicalSocleProduct
-import Mathlib.GroupTheory.Subgroup.Simple
+module
+
+public import Workspace.RadicalSocleProduct
+public import Mathlib.GroupTheory.Subgroup.Simple
+
+@[expose] public section
 
 namespace GI.RadicalSocle
 
@@ -61,10 +65,10 @@ theorem normal_subgroup_radical_eq_bot [Finite G]
     (N : Subgroup G) [N.Normal] : solvableRadical N = ⊥ := by
   let R := solvableRadical N
   haveI : (R.map N.subtype).Normal := inferInstance
-  haveI : IsSolvable (R.map N.subtype) :=
+  have hsolv : Group.IsSolvable (R.map N.subtype) :=
     solvable_of_surjective (N.subtype.subgroupMap_surjective R)
   exact (Subgroup.map_eq_bot_iff_of_injective R N.subtype_injective).mp
-    (radicalFree (R.map N.subtype) inferInstance inferInstance)
+    (radicalFree (R.map N.subtype) inferInstance hsolv)
 
 theorem normal_subgroup_radicalFree [Finite G]
     (radicalFree : ∀ N : Subgroup G, N.Normal → IsSolvable N → N = ⊥)
@@ -72,7 +76,7 @@ theorem normal_subgroup_radicalFree [Finite G]
     ∀ K : Subgroup N, K.Normal → IsSolvable K → K = ⊥ := by
   intro K hK hs
   letI := hK
-  letI := hs
+  letI : Group.IsSolvable K := hs
   apply le_bot_iff.mp
   have h := le_solvableRadical K
   rwa [normal_subgroup_radical_eq_bot radicalFree N] at h

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojFinalSome
-import Workspace.Impl.AggItemCiSojRowsSpec
+module
+
+public import Workspace.Impl.AggItemCiSojFinalSome
+public import Workspace.Impl.AggItemCiSojRowsSpec
+
+@[expose] public section
 
 /-! # The full proved canonical rectangle-answer finalizer contract -/
 

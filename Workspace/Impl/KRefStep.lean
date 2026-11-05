@@ -1,4 +1,8 @@
-import Workspace.Impl.KRefSig
+module
+
+public import Workspace.Impl.KRefSig
+
+@[expose] public section
 
 /-!
 # One round of the refinement

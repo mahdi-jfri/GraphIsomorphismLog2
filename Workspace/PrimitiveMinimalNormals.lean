@@ -1,5 +1,9 @@
-import Workspace.PrimitiveCentralizer
-import Workspace.RadicalSocleProduct
+module
+
+public import Workspace.PrimitiveCentralizer
+public import Workspace.RadicalSocleProduct
+
+@[expose] public section
 
 namespace GI.PrimitiveStructure
 
@@ -89,10 +93,3 @@ theorem socle_eq_sup_of_distinct_minimal_normals {M N : Subgroup G}
   · exact sup_le (minimalNormal_le_socle hM) (minimalNormal_le_socle hN)
 
 end GI.PrimitiveStructure
-
-#print axioms GI.PrimitiveStructure.distinct_minimal_normals_regular
-#print axioms GI.PrimitiveStructure.distinct_minimal_normals_centralizers
-#print axioms GI.PrimitiveStructure.minimalNormal_eq_one_of_pair
-#print axioms GI.PrimitiveStructure.distinct_minimal_normals_card_degree
-#print axioms GI.PrimitiveStructure.minimalNormal_card_le_two
-#print axioms GI.PrimitiveStructure.socle_eq_sup_of_distinct_minimal_normals

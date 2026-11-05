@@ -1,4 +1,8 @@
-import Workspace.Impl.VsWProgKer
+module
+
+public import Workspace.Impl.VsWProgKer
+
+@[expose] public section
 
 /-!
 # Echelon rows, bases and keys as programs

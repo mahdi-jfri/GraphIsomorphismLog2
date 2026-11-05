@@ -1,6 +1,10 @@
-import Workspace.Algorithm.SingleFactor
-import Workspace.Algorithm.LabelData
-import Workspace.Algorithm.CarrierKeep
+module
+
+public import Workspace.Algorithm.SingleFactor
+public import Workspace.Algorithm.LabelData
+public import Workspace.Algorithm.CarrierKeep
+
+@[expose] public section
 
 /-!
 # The labels of the single-factor normalization carry their constituent data

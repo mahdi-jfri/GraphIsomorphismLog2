@@ -11,11 +11,15 @@ call in `EvalAll` form. The work is the injectivity of the encodings: of integer
 (`ZMod.val_injective`), of colorings (through `finFunctionFinEquiv`), and, for vector
 stabilizers, that a homomorphism is determined by its values on generators (`hom_eq_of_gens`).
 -/
-import Workspace.Lang.Prims.Basic
-import Workspace.Cited.AlgoLinear
-import Workspace.Cited.AlgoDesign
-import Workspace.Cited.AlgoCameron
-import Mathlib.Data.Nat.Bitwise
+module
+
+public import Workspace.Lang.Prims.Basic
+public import Workspace.Cited.AlgoLinear
+public import Workspace.Cited.AlgoDesign
+public import Workspace.Cited.AlgoCameron
+public import Mathlib.Data.Nat.Bitwise
+
+@[expose] public section
 
 namespace GI.Lang
 
@@ -146,8 +150,8 @@ def vecStabEnc (I : VecStabInst) : Val :=
 
 /-- Two vector-stabilizer instances with the same value are equal. -/
 theorem vecStabEnc_injective {I J : VecStabInst} (h : vecStabEnc J = vecStabEnc I) : J = I := by
-  obtain ⟨n, gs, sol, p, hp, hpn, d, φ, v⟩ := I
-  obtain ⟨n', gs', sol', p', hp', hpn', d', φ', v'⟩ := J
+  obtain ⟨n, gs, p, hp, hpn, d, φ, sol, v⟩ := I
+  obtain ⟨n', gs', p', hp', hpn', d', φ', sol', v'⟩ := J
   simp only [vecStabEnc, Val.list.injEq, List.cons.injEq, Val.nat.injEq, and_true] at h
   obtain ⟨h1, rfl, h3, h4⟩ := h
   obtain rfl := encGroup_deg h1

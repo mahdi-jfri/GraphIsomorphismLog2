@@ -1,4 +1,8 @@
-import Workspace.BochertIndex
+module
+
+public import Workspace.BochertIndex
+
+@[expose] public section
 
 namespace GI.Bochert
 open Equiv Equiv.Perm MulAction

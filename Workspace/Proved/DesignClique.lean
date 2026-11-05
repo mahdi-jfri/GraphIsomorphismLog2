@@ -1,6 +1,10 @@
-import Workspace.Cited.DesignLemma
-import Workspace.Proved.DesignFisher
-import Workspace.Proved.DesignTuples
+module
+
+public import Workspace.Cited.DesignLemma
+public import Workspace.Proved.DesignFisher
+public import Workspace.Proved.DesignTuples
+
+@[expose] public section
 
 /-!
 # The large clique lemma
@@ -156,7 +160,9 @@ theorem designTwin (hℓ : ℓ + 1 < k) (x : Fin ℓ → Fin n) {z : Fin n}
     intro z' q e
     have := H.conf.2 _ _ e (designProj ℓ hℓ')
     simp only [designPad₂_proj] at this
-    simpa [hD, skel₁] using this
+    change z' ∈ univ.filter (fun z' => skel₁ c x z' = skel₁ c x z)
+    apply Finset.mem_filter.mpr
+    exact ⟨Finset.mem_univ _, this⟩
   set r := (univ.filter fun z' => skel₂ c x z' w = i).card with hr
   set l := (univ.filter fun z' => skel₂ c x z' w = i ∧ skel₂ c x z' w' = i).card with hl
   -- Every point of `C` is in `r` blocks.
@@ -164,7 +170,8 @@ theorem designTwin (hℓ : ℓ + 1 < k) (x : Fin ℓ → Fin n) {z : Fin n}
     intro q hq
     have e : c (padTuple x q) = c (padTuple x w) := designDom_eq H x hq hw
     have := designCount H.conf H.coh e ⟨ℓ, hℓ'⟩ ⟨ℓ, hℓ'⟩ id id i i
-    simpa only [Function.comp_id, and_self, designUpdate_pad] using this
+    simp only [Function.comp_id, and_self, designUpdate_pad] at this
+    exact this
   -- Every two distinct points of `C` are together in `l` blocks.
   have hww' : w ≠ w' := fun e => hne (by rw [hi, e])
   have hlq : ∀ q ∈ C, ∀ q' ∈ C, q ≠ q' →
@@ -173,7 +180,8 @@ theorem designTwin (hℓ : ℓ + 1 < k) (x : Fin ℓ → Fin n) {z : Fin n}
     have e : c (padTuple₂ x q q') = c (padTuple₂ x w w') :=
       designClique H hℓ hq hq' hw hw' hqq hww'
     have := designCount H.conf H.coh e ⟨ℓ + 1, hℓ⟩ ⟨ℓ, hℓ'⟩ (designSwapMap ℓ hℓ) id i i
-    simpa only [Function.comp_id, designUpdate_pad₂, designUpdate_pad₂_succ] using this
+    simp only [Function.comp_id, designUpdate_pad₂, designUpdate_pad₂_succ] at this
+    exact this
   -- The block of `z` contains `w` but not `w'`, so `l < r`.
   have hlr : l < r := by
     apply card_lt_card

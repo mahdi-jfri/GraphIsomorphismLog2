@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepOut
+module
+
+public import Workspace.Impl.AggRectRepOut
+
+@[expose] public section
 
 /-!
 # The orbit table of the base tuple

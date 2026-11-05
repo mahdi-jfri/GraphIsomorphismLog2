@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectGlueGrowth
-import Workspace.Impl.LinObjectGlueAction
+module
+
+public import Workspace.Impl.LinObjectGlueGrowth
+public import Workspace.Impl.LinObjectGlueAction
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -14,7 +18,8 @@ structure linObjectGlueProblem (n : ℕ) where
   Y : List (TmRiO n)
   bs : List (Equiv.Perm (Fin n))
   τ : Equiv.Perm (Fin n)
-  solvable : IsSolvable (gens hs)
+  solvable : ∀ [((gens ns).subgroupOf (gens hs)).Normal], IsSolvable ((gens hs) ⧸ (gens ns).subgroupOf (gens hs))
+  objsIn : TmRiListIn (gens hs) (X ++ Y)
   NA : gens ns ≤ gens as
   AH : gens as ≤ gens hs
   normalN : GI.Multicoset.Normalizes (gens hs) (gens ns)
@@ -51,13 +56,14 @@ theorem linObjectGlueProblem.cover_H : gens I.coverGenerators ≤ gens I.hs := b
   rw [I.cover_eq]
   exact (linObjectTargetCover_props (gens I.hs) (gens I.as) (gens I.bs) I.AH I.normalA I.AB I.BH I.τ I.τH).2
 
-theorem linObjectGlueProblem.solvable_A : IsSolvable (gens I.as) := by
-  letI : IsSolvable (gens I.hs) := I.solvable
-  exact solvable_of_solvable_injective (Subgroup.inclusion_injective I.AH)
+theorem linObjectGlueProblem.norm_X : TmRiListNorm (gens I.as) I.X :=
+  TmRiListIn.norm_of (fun o ho => I.objsIn o (List.mem_append_left _ ho)) I.normalA
 
-theorem linObjectGlueProblem.solvable_cover : IsSolvable (gens I.coverGenerators) := by
-  letI : IsSolvable (gens I.hs) := I.solvable
-  exact solvable_of_solvable_injective (Subgroup.inclusion_injective I.cover_H)
+theorem linObjectGlueProblem.norm_Y : TmRiListNorm (gens I.as) I.Y :=
+  TmRiListIn.norm_of (fun o ho => I.objsIn o (List.mem_append_right _ ho)) I.normalA
+
+theorem linObjectGlueProblem.norm_YX : TmRiListNorm (gens I.as) (I.Y ++ I.X) :=
+  I.norm_Y.append I.norm_X
 
 theorem linObjectGlueProblem.cover_conf : ∀ g ∈ gens I.coverGenerators,
     Conf (gens I.as) (tmGlMs I.Y) (tmGlMs I.Y ↼ g) := by
@@ -66,6 +72,17 @@ theorem linObjectGlueProblem.cover_conf : ∀ g ∈ gens I.coverGenerators,
   have hh := I.P3 (I.τ*g*I.τ⁻¹) hg
   have he : I.τ⁻¹*(I.τ*g*I.τ⁻¹)*I.τ = g := by group
   rwa [he] at hh
+
+open scoped IsMulCommutative in
+theorem linObjectGlueProblem.solvable_rep
+    [((gens I.ns).subgroupOf (gens I.as)).Normal]
+    [IsMulCommutative ((gens I.as) ⧸ (gens I.ns).subgroupOf (gens I.as))]
+    (F : linObjectGlueFrame I.as I.ns I.Y) :
+    IsSolvable (F.rep (gens I.coverGenerators) (I.normalA.mono I.cover_H) I.cover_conf
+      (QuotientGroup.mk'_surjective _) (linObjectCanonical_ker_local I.as I.ns I.Y I.fixY)).range :=
+  F.solvable_rep (gens I.coverGenerators) (I.normalA.mono I.cover_H) I.cover_conf
+    (QuotientGroup.mk'_surjective _) (linObjectCanonical_ker_local I.as I.ns I.Y I.fixY)
+    I.cover_H I.normalN I.solvable (I.normalN.mono I.AH) I.fixY
 
 theorem linObjectGlueProblem.source_conf : Conf (gens I.as) (tmGlMs I.Y) (tmGlMs I.X ↼ I.τ) := by
   simpa only [one_mul] using I.P2 1 (gens I.bs).one_mem

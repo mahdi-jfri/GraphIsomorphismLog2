@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectOffsetsSpec
+module
+
+public import Workspace.Impl.LinObjectOffsetsSpec
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Multicoset

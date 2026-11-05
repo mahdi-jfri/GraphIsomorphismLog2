@@ -20,9 +20,13 @@ small: `polyTimeAt_ofVal_of_lang` asks that the weight be polynomial in the numb
 `polyTimeAt_ofVal_of_lang_cells` asks that every cell be polynomial in the number of cells,
 which is the requirement on the tasks of `GI.Cited.Task.ofVal`.
 -/
-import Workspace.Lang.CorrectMain
-import Workspace.Lang.Lib.Basic
-import Workspace.Machine.Compose
+module
+
+public import Workspace.Lang.CorrectMain
+public import Workspace.Lang.Lib.Basic
+public import Workspace.Machine.Compose
+
+@[expose] public section
 
 namespace GI.Lang
 

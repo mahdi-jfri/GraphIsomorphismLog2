@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCfDDom
-import Workspace.Impl.AggStructDesPair
+module
+
+public import Workspace.Impl.AggItemCfDDom
+public import Workspace.Impl.AggStructDesPair
+
+@[expose] public section
 
 namespace GI.Impl
 

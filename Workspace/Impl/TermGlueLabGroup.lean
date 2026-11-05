@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabYoung
+module
+
+public import Workspace.Impl.TermGlueLabYoung
+
+@[expose] public section
 
 /-!
 # The groups of the label step of Theorem A.23

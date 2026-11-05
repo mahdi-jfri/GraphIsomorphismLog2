@@ -1,4 +1,8 @@
-import Workspace.Search
+module
+
+public import Workspace.Search
+
+@[expose] public section
 
 namespace GI
 

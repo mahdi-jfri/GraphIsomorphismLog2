@@ -1,5 +1,9 @@
-import Workspace.NormalTransposeColumns
-import Workspace.NormalTranspose
+module
+
+public import Workspace.NormalTransposeColumns
+public import Workspace.NormalTranspose
+
+@[expose] public section
 
 /-!
 # Lemma A.14: the interchange for the concrete clean product

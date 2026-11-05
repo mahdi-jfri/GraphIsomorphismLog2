@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosBigMath1
+module
+
+public import Workspace.Impl.SCosBigMath1
+
+@[expose] public section
 
 /-!
 # The mathematics of `bigF` (function 5), part 2
@@ -175,8 +179,9 @@ theorem scosBM_labAct_nint_iff {g : ScosPair n} (hg : g ∈ 𝒢) :
 /-- **`K` is a problem group**: solvable first coordinates, and `Φ` invariant. -/
 theorem scosBMKer_solvable
     (hsol : IsSolvable (𝒢.map (MonoidHom.fst (Perm (Fin n)) (Perm (Fin n))))) :
-    IsSolvable ((scosBMKer 𝒢 Φ lab).map (MonoidHom.fst (Perm (Fin n)) (Perm (Fin n)))) :=
-  solvable_of_solvable_injective
+    IsSolvable ((scosBMKer 𝒢 Φ lab).map (MonoidHom.fst (Perm (Fin n)) (Perm (Fin n)))) := by
+  haveI : Group.IsSolvable (𝒢.map (MonoidHom.fst (Perm (Fin n)) (Perm (Fin n)))) := hsol
+  exact solvable_of_solvable_injective
     (Subgroup.inclusion_injective (Subgroup.map_mono (scosBMKer_le 𝒢 Φ lab)))
 
 include hinv in

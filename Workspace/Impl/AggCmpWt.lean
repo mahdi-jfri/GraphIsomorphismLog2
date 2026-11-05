@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCmpRep
-import Workspace.Impl.AggCertWt
+module
+
+public import Workspace.Impl.AggCmpRep
+public import Workspace.Impl.AggCertWt
+
+@[expose] public section
 
 /-!
 # The weight of the program states of the comparison phase

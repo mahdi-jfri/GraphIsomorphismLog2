@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosNode2
+module
+
+public import Workspace.Impl.SCosNode2
+
+@[expose] public section
 
 /-!
 # The dispatcher, functions 0–3

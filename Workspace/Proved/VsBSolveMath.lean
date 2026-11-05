@@ -1,5 +1,9 @@
-import Workspace.Proved.VsWLinMath
-import Workspace.Impl.VStabLinInsert
+module
+
+public import Workspace.Proved.VsWLinMath
+public import Workspace.Impl.VStabLinInsert
+
+@[expose] public section
 
 /-!
 # Solving `∑ a_i v_i = u` by a kernel

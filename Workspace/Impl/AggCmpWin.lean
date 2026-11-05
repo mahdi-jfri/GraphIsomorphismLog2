@@ -1,5 +1,9 @@
-import Workspace.Impl.AggWinProg
-import Workspace.Impl.AggCmpCall
+module
+
+public import Workspace.Impl.AggWinProg
+public import Workspace.Impl.AggCmpCall
+
+@[expose] public section
 
 /-!
 # The colors of a comparison call, in `GI.Lang`

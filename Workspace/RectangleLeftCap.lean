@@ -1,5 +1,9 @@
-import Workspace.RectangleSides
-import Workspace.MatrixCaps
+module
+
+public import Workspace.RectangleSides
+public import Workspace.MatrixCaps
+
+@[expose] public section
 
 /-!
 # The left overcoset of a rectangle answer and its cap

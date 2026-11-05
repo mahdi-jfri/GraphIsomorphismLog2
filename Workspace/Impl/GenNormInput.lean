@@ -1,4 +1,8 @@
-import Workspace.Impl.GenNormStepCost
+module
+
+public import Workspace.Impl.GenNormStepCost
+
+@[expose] public section
 
 /-! # Polynomial weight of the normalization input produced by exposure and recognition -/
 namespace GI.Impl

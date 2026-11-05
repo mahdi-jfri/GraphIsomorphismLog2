@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCmpClProg
+module
+
+public import Workspace.Impl.AggCmpClProg
+
+@[expose] public section
 
 /-!
 # The call of a stage: the kernel and the increment

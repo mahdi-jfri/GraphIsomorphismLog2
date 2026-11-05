@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojSG
+module
+
+public import Workspace.Impl.AggItemCiSojSG
+
+@[expose] public section
 
 /-!
 # Building the whole component table
@@ -27,7 +31,7 @@ theorem itcs_gen_weight (X : PairCfg q) (v : ℕ) :
     (Val.list ((itcsSqEdges X v).map encPerm)).wt ≤ itcsGenW q := by
   have h := wt_list_map_le (List.finRange (q * q)) (fun t => encPerm (itcsSqEdge X v t))
     (W := 4 * (q + 1) ^ 2) (fun t _ => wt_encPerm_le _)
-  simpa only [itcsSqEdges, List.map_map, Function.comp_apply, List.length_finRange,
+  simpa only [itcsSqEdges, List.map_map, Function.comp_def, itcsGenW, List.length_finRange,
     show 2 * (4 * (q + 1) ^ 2) + 1 = 8 * (q + 1) ^ 2 + 1 by omega] using h
 
 /-- Cost of the map that materializes all exchanges. -/

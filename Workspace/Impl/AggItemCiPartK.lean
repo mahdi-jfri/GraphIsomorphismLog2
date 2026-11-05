@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiPart
-import Workspace.Impl.AggItemC1Top
+module
+
+public import Workspace.Impl.AggItemCiPart
+public import Workspace.Impl.AggItemC1Top
+
+@[expose] public section
 
 /-!
 # The colored-partition item as a program: positions and centers

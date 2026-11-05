@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabSOut
+module
+
+public import Workspace.Impl.TermGlueLabSOut
+
+@[expose] public section
 
 /-!
 # The answer of the label step is the label coset (step 6, the mathematics)
@@ -37,6 +41,20 @@ noncomputable abbrev tmGLSI (P : Params) (hnat : NaturalRows S L label) (hq : 5 
     (hqα : (S.N : ℝ) ^ P.α < L.q) : RowTerminal P S L :=
   (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P htr hcard hsN hN hqα
 
+/-- The row terminal of the label step with a given solvable-quotient subgroup `R'`. -/
+noncomputable abbrev tmGLSIWith (P : Params) (hnat : NaturalRows S L label) (hq : 5 ≤ L.q) {m : ℕ}
+    (h0 : 0 < m) (E : Fin m × Fin L.q ≃ S.dom) (hP : PureCoords S L label E)
+    (htr : MulAction.IsPretransitive (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nl
+      (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).B)
+    (hcard : Fintype.card (Fin m) * L.q = S.size) (hsN : S.size ≤ S.N) (hN : 0 < S.N)
+    (hqα : (S.N : ℝ) ^ P.α < L.q)
+    (R' : Subgroup (Perm (Fin m)))
+    (hRH : R' ≤ (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Hb)
+    (hNR : (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ≤ R')
+    (hsolv : ∃ ℓ, GI.Multicoset.relDerived R' (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ℓ ≤
+      (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb) : RowTerminal P S L :=
+  (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P htr hcard hsN hN hqα R' hRH hNR hsolv
+
 /-- The label transporter in a subgroup `Sg`: `{s ∈ Sg | F_s p_x = p_{y'}}`. -/
 def tmGLSTrans (I : RowTerminal P S L) (rep : Set (I.B → C) → (I.B → C)) (τ : Perm I.B)
     (Sg : Subgroup (Perm I.B)) : Set (Perm I.B) :=
@@ -44,20 +62,27 @@ def tmGLSTrans (I : RowTerminal P S L) (rep : Set (I.B → C) → (I.B → C)) (
     (tmGLPt I.Nb I.φ (rowTuple I.e S.x) rep (rowTuple I.e S.x)) =
     tmGLPt I.Nb I.φ (rowTuple I.e S.x) rep (tmGLAlign I τ)}
 
+set_option backward.isDefEq.respectTransparency false in
 /-- **The output is a canonical answer of the label coset.** -/
 theorem tmGLS_lab_ans (hnat : NaturalRows S L label) (hq : 5 ≤ L.q) {m : ℕ} (h0 : 0 < m)
     (E : Fin m × Fin L.q ≃ S.dom) (hP : PureCoords S L label E)
     (htr : MulAction.IsPretransitive (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nl
       (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).B)
     (hcard : Fintype.card (Fin m) * L.q = S.size) (hsN : S.size ≤ S.N) (hN : 0 < S.N)
-    (hqα : (S.N : ℝ) ^ P.α < L.q) {σN gs : List (Perm (Fin m))}
+    (hqα : (S.N : ℝ) ^ P.α < L.q)
+    {R' : Subgroup (Perm (Fin m))}
+    (hRH : R' ≤ (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Hb)
+    (hNR : (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ≤ R')
+    (hsolv : ∃ ℓ, GI.Multicoset.relDerived R' (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ℓ ≤
+      (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb)
+    {σN gs : List (Perm (Fin m))}
     (hσN : gens σN = (tmGLSI P hnat hq h0 E hP htr hcard hsN hN hqα).Nb) {r τ : Perm (Fin m)}
-    (hτ : τ ∈ tmGlRes (tmGLSI P hnat hq h0 E hP htr hcard hsN hN hqα) r)
+    (hτ : τ ∈ tmGlRes (tmGLSIWith P hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv) r)
     (hSN : gens gs ⊔ (tmGLSI P hnat hq h0 E hP htr hcard hsN hN hqα).Nb =
       Aut (tmGLSI P hnat hq h0 E hP htr hcard hsN hN hqα).Hb
         (types (tmGLSI P hnat hq h0 E hP htr hcard hsN hN hqα).Nb
           (rowTuple (tmGLSI P hnat hq h0 E hP htr hcard hsN hN hqα).e S.x)) ⊓
-        tmRad (tmGLSI P hnat hq h0 E hP htr hcard hsN hN hqα))
+        tmRad (tmGLSIWith P hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv))
     {rep : Set (Fin m → C) → (Fin m → C)}
     (hrep : TmGLRep (tmGLSI P hnat hq h0 E hP htr hcard hsN hN hqα).Nb
       (rowTuple (tmGLSI P hnat hq h0 E hP htr hcard hsN hN hqα).e S.x) rep)
@@ -65,12 +90,12 @@ theorem tmGLS_lab_ans (hnat : NaturalRows S L label) (hq : 5 ≤ L.q) {m : ℕ} 
     (hu : TmGLAffOut m u (tmGLSTrans (tmGLSI P hnat hq h0 E hP htr hcard hsN hN hqα) rep τ
       (gens gs)))
     (hw : TmGLSOutRes σN τ u w) :
-    AnsC (Equiv.refl (Fin m)) w (tmGlLab (tmGLSI P hnat hq h0 E hP htr hcard hsN hN hqα) r) := by
-  set I := tmGLSI P hnat hq h0 E hP htr hcard hsN hN hqα
+    AnsC (Equiv.refl (Fin m)) w (tmGlLab (tmGLSIWith P hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv) r) := by
+  set I := tmGLSIWith P hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv
   rcases hu with ⟨rfl, hT⟩ | ⟨t', L', rfl, hT⟩
   · -- no transporter
     rcases hw with ⟨-, rfl⟩ | ⟨t, L, hs, hu, -⟩
-    · exact Or.inl ⟨rfl, tmGL_lab_out_empty hrep hτ hSN hT⟩
+    · exact Or.inl ⟨rfl, tmGL_lab_out_empty (I := I) hrep hτ hSN hT⟩
     · cases hu
   · rcases hw with ⟨hu, -⟩ | ⟨t, L, hs, hu, rfl, hl, hg⟩
     · cases hu
@@ -80,7 +105,7 @@ theorem tmGLS_lab_ans (hnat : NaturalRows S L label) (hq : 5 ≤ L.q) {m : ℕ} 
       subst e1
       have e2 := encGroup_injective h2
       subst e2
-      have hlab := tmGL_lab_out hrep hτ hSN hT
+      have hlab := tmGL_lab_out (I := I) hrep hτ hSN hT
       refine Or.inr ⟨t' * τ, hs.map fun x => τ⁻¹ * x * τ, rfl, by simpa using hl, ?_⟩
       have hc : gens (hs.map fun x => τ⁻¹ * x * τ) =
           (gens hs).map (MulAut.conj τ⁻¹).toMonoidHom := by

@@ -1,8 +1,12 @@
-import Workspace.Impl.LinObjectBlock
-import Workspace.Impl.LinTabulate
-import Workspace.Lang.Lib.LinIntTests
-import Workspace.Lang.Lib.LinIntVector
-import Workspace.Impl.AggStructDC
+module
+
+public import Workspace.Impl.LinObjectBlock
+public import Workspace.Impl.LinTabulate
+public import Workspace.Lang.Lib.LinIntTests
+public import Workspace.Lang.Lib.LinIntVector
+public import Workspace.Impl.AggStructDC
+
+@[expose] public section
 
 /-! A dense block-matrix assembler. The two explicit coordinate lists in
 the input bound the dimensions even when there are no pieces or rows. -/

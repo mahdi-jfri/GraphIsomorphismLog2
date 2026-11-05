@@ -1,4 +1,8 @@
-import Workspace.Proved.VsBFldA
+module
+
+public import Workspace.Proved.VsBFldA
+
+@[expose] public section
 
 /-!
 # The translation chain of the field line

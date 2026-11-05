@@ -1,4 +1,8 @@
-import Workspace.Impl.SSRoundsProg
+module
+
+public import Workspace.Impl.SSRoundsProg
+
+@[expose] public section
 
 /-!
 # The core program

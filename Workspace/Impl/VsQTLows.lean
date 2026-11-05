@@ -1,5 +1,9 @@
-import Workspace.Impl.VsQTSot
-import Workspace.Lang.Lib.LinIntTake
+module
+
+public import Workspace.Impl.VsQTSot
+public import Workspace.Lang.Lib.LinIntTake
+
+@[expose] public section
 
 /-!
 # The lows of a split by a chain of partial sums

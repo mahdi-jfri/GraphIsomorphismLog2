@@ -1,6 +1,10 @@
-import Workspace.BudgetInductionBasic
-import Workspace.CartesianHereditary
-import Workspace.JohnsonBound
+module
+
+public import Workspace.BudgetInductionBasic
+public import Workspace.CartesianHereditary
+public import Workspace.JohnsonBound
+
+@[expose] public section
 
 namespace GI.BudgetInduction
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.RowA18
-import Workspace.Impl.RowKer
+module
+
+public import Workspace.Impl.RowA18
+public import Workspace.Impl.RowKer
+
+@[expose] public section
 
 /-!
 # From graph-form generators to the groups of Theorem A.18

@@ -1,9 +1,13 @@
-import Workspace.NormalTranspose
-import Workspace.NormalTransposeColumns
-import Workspace.CarrierInheritance
-import Workspace.NormalTransposeOrbits
-import Workspace.NormalTransposeConcrete
-import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+module
+
+public import Workspace.NormalTranspose
+public import Workspace.NormalTransposeColumns
+public import Workspace.CarrierInheritance
+public import Workspace.NormalTransposeOrbits
+public import Workspace.NormalTransposeConcrete
+public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+
+@[expose] public section
 
 /-!
 # Paper statements: Lemma A.14, the carrier inheritance, and Section 6

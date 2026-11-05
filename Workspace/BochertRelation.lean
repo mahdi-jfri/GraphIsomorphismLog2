@@ -1,7 +1,11 @@
-import Workspace.Compat
-import Workspace.BochertCommutator
-import Mathlib.GroupTheory.GroupAction.Primitive
-import Mathlib.GroupTheory.SpecificGroups.Alternating
+module
+
+public import Workspace.Compat
+public import Workspace.BochertCommutator
+public import Mathlib.GroupTheory.GroupAction.Primitive
+public import Mathlib.GroupTheory.SpecificGroups.Alternating
+
+@[expose] public section
 
 /-! Elementary support connectivity for three-cycles in a primitive permutation group.
 This proof uses only mathlib; it does not assume Jordan's theorem. -/

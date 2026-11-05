@@ -1,6 +1,10 @@
-import Workspace.Impl.LinIntSlpValid
-import Workspace.Impl.LinMembership
-import Workspace.Impl.LinIntPoly
+module
+
+public import Workspace.Impl.LinIntSlpValid
+public import Workspace.Impl.LinMembership
+public import Workspace.Impl.LinIntPoly
+
+@[expose] public section
 
 /-! Constructive membership followed by checked exponent-vector evaluation.
 This is the nondeterministic part of one cyclic relation row. -/

@@ -1,5 +1,9 @@
-import Workspace.JohnsonAction
-import Workspace.NaturalGiantCentralizer
+module
+
+public import Workspace.JohnsonAction
+public import Workspace.NaturalGiantCentralizer
+
+@[expose] public section
 
 namespace GI.Pairs
 

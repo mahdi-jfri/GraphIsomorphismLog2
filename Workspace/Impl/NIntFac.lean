@@ -1,5 +1,9 @@
-import Workspace.Impl.NIntLib
-import Workspace.Proved.NIntMath
+module
+
+public import Workspace.Impl.NIntLib
+public import Workspace.Proved.NIntMath
+
+@[expose] public section
 
 /-!
 # Factorization in a normalized product, as a program
@@ -51,7 +55,7 @@ section Layout
 variable (hc : ConstructiveMembership)
 
 theorem nintFac_hasAt : (nintFacProgram hc).HasAt 0 nintFacFuns := by
-  simpa using Program.hasAt_append [] nintFacFuns [] [linMembershipPrim hc]
+  simpa [nintFacProgram] using Program.hasAt_append [] nintFacFuns [] [linMembershipPrim hc]
 
 theorem nintFac_entry : (nintFacProgram hc).funs[0]? = some nintFacEntry := rfl
 
@@ -197,9 +201,8 @@ def nintFacMI : MemberInst := ⟨n, (1 :: gs) ++ (1 :: ns), x⟩
 
 theorem nintFac_memberInput :
     memberInput (nintFacMI gs ns x) = .list [.list [.nat n, .list ([(encPerm (1 : Perm (Fin n)))] ++ (((1 :: gs).map encPerm) ++ ((1 :: ns).map encPerm)))], encPerm x] := by
-  simp only [memberInput, nintFacMI, encGroup, encPerms, List.map_cons, List.map_append,
-    List.cons_append, List.nil_append]
-  rfl
+  dsimp [memberInput, nintFacMI, encGroup, encPerms]
+  simp
 
 /-- Step 3, the argument of the membership call. -/
 theorem nintFac_d3 {X : ℕ} (hX : (Val.list [encGroup gs, encGroup ns, encPerm x]).wt = X) (hw : NIntFacW gs ns x X) :

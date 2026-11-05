@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojLeft
-import Workspace.Impl.AggItemCiSojWt
+module
+
+public import Workspace.Impl.AggItemCiSojLeft
+public import Workspace.Impl.AggItemCiSojWt
+
+@[expose] public section
 
 /-!
 # Computing the even pointwise-fixing subgroup generators

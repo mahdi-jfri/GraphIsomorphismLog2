@@ -1,5 +1,9 @@
-import Workspace.Impl.ColLevel
-import Workspace.Impl.RowPure
+module
+
+public import Workspace.Impl.ColLevel
+public import Workspace.Impl.RowPure
+
+@[expose] public section
 
 /-!
 # What the column program must compute
@@ -141,8 +145,8 @@ theorem colChild_hierVal :
     · have hk' : k < S.hier.length := by omega
       refine (Col.colBlk_lab F hint htr hinv hne b₀ J hJl hlowJ hhighJ eΩ (labs k) hk'
         (hlabs k hk') c d).trans ?_
-      simp only [colAk, Nat.add_sub_cancel, Nat.succ_ne_zero, if_false, hr0]
-      exact Iff.rfl
+      simp only [colAk, Nat.add_sub_cancel, Nat.succ_ne_zero, if_false]
+      rw [hr0 c, hr0 d]
   have hbk : ∀ k c, colBk labs r0 k c = labs k (eΩ (F.e (c, F.i0))) := fun k c => by
     simp only [colBk, hr0]
     rfl
@@ -177,8 +181,8 @@ theorem colChild_hierVal :
   · refine Col.colUpper_val F hint htr hinv hne b₀ J hJl hlowJ hhighJ eΩ cf hcol ol hol (hkk k)
       (labs k) (hlabs k (hkk k)) (fun d => colMinv ol (colBk labs r0 k) d) fun d => ?_
     obtain ⟨o, ho, he⟩ := colMinv_exists ol (colBk labs r0 k) d
-    refine ⟨⟨o, by rw [← hbk, ← hbk]; exact ho, he⟩, fun o' h' => colMinv_le _ _ _ _ ?_⟩
-    rw [hbk, hbk]; exact h'
+    refine ⟨⟨o, (hbk k o).symm.trans (ho.trans (hbk k d)), he⟩, fun o' h' => colMinv_le _ _ _ _ ?_⟩
+    exact (hbk k o').trans (h'.trans (hbk k d).symm)
   · exact Col.colCols_val F hint htr hinv hne b₀ J hJl hlowJ hhighJ eΩ cf hcol ol hol
   · rw [Col.colUpper_eq I.toColumnPre k, (hrat k).1, (hrat k).2]
 

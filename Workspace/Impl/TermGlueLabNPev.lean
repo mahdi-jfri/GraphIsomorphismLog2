@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabPItem
-import Workspace.Impl.PolyBd
+module
+
+public import Workspace.Impl.TermGlueLabPItem
+public import Workspace.Impl.PolyBd
+
+@[expose] public section
 
 /-!
 # The label driver: arguments, stages and the cost recursion

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectEvalBound
+module
+
+public import Workspace.Impl.LinObjectEvalBound
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

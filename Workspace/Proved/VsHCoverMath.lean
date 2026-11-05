@@ -1,5 +1,9 @@
-import Workspace.Proved.VsPPairMath
-import Workspace.Impl.VsPEnum
+module
+
+public import Workspace.Proved.VsPPairMath
+public import Workspace.Impl.VsPEnum
+
+@[expose] public section
 
 /-!
 # The words cover `Ȳ` modulo `S`
@@ -108,6 +112,6 @@ theorem vsPEnum_W_mem {n r : ℕ} (B : List (Perm (Fin n))) :
         simp only [List.mem_flatMap, List.mem_map, List.mem_range]
         exact ⟨w, hw, c, hr c (by simp), rfl⟩
   intro e he hr
-  simpa using key B [1] 1 (by simp) e he hr
+  simpa [vsPEnum] using key B [1] 1 (by simp) e he hr
 
 end GI.Proved

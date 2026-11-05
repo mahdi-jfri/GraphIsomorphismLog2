@@ -1,4 +1,8 @@
-import Workspace.Impl.SSMember
+module
+
+public import Workspace.Impl.SSMember
+
+@[expose] public section
 
 /-!
 # Membership in polynomial time

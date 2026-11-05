@@ -1,6 +1,10 @@
-import Workspace.BudgetInductionAffineAlternative
-import Mathlib.Algebra.Module.ZMod
-import Mathlib.GroupTheory.GroupAction.ConjAct
+module
+
+public import Workspace.BudgetInductionAffineAlternative
+public import Mathlib.Algebra.Module.ZMod
+public import Mathlib.GroupTheory.GroupAction.ConjAct
+
+@[expose] public section
 
 namespace GI.AffineRecognition
 
@@ -9,7 +13,7 @@ open MatrixValuation BudgetInduction
 variable {G V : Type*} [Group G] [MulAction G V]
 variable (N : Subgroup G) [N.Normal] (a : V)
 variable (regular : Function.Bijective (fun n : N => n • a))
-variable {p d : ℕ} [Fact p.Prime]
+variable {p d : ℕ}
 variable (basis : N ≃* Multiplicative (Fin d → ZMod p))
 
 /-- Coordinates are obtained by inverting the actual regular orbit map. -/
@@ -18,15 +22,17 @@ noncomputable def orbitEquiv : N ≃ V := Equiv.ofBijective _ regular
 noncomputable def coordinates : V ≃ (Fin d → ZMod p) :=
   (orbitEquiv N a regular).symm.trans (basis.toEquiv.trans Multiplicative.toAdd)
 
-omit [N.Normal] [Fact p.Prime] in
+omit [N.Normal] in
 theorem coordinates_orbit (n : N) :
     coordinates N a regular basis (n • a) = (basis n).toAdd := by
   change (basis ((orbitEquiv N a regular).symm ((orbitEquiv N a regular) n))).toAdd = _
   rw [Equiv.symm_apply_apply]
 
-omit [N.Normal] [Fact p.Prime] in
+omit [N.Normal] in
 theorem coordinates_base : coordinates N a regular basis a = 0 := by
-  simpa only [one_smul, map_one] using coordinates_orbit N a regular basis 1
+  simpa only [one_smul, map_one, toAdd_one] using coordinates_orbit N a regular basis 1
+
+variable [Fact p.Prime]
 
 /-- Ambient conjugation on the actual regular normal subgroup, transported
 to the given additive coordinates. -/

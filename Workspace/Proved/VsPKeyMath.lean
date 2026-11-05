@@ -1,5 +1,9 @@
-import Workspace.Impl.VsPKey
-import Workspace.Proved.VsPGrowMath
+module
+
+public import Workspace.Impl.VsPKey
+public import Workspace.Proved.VsPGrowMath
+
+@[expose] public section
 
 /-!
 # What the key computes

@@ -1,5 +1,9 @@
-import Workspace.Proved.VsMFourier
-import Workspace.Proved.VsMBlocks
+module
+
+public import Workspace.Proved.VsMFourier
+public import Workspace.Proved.VsMBlocks
+
+@[expose] public section
 
 /-!
 # The pieces of `𝔽_p[A ∪ {t_i}]` for commuting `t_i` of order `r`
@@ -82,7 +86,8 @@ theorem VsMSplitHyp.gen_comm (h : VsMSplitHyp A r ζ t) :
 
 theorem VsMSplitHyp.comm (h : VsMSplitHyp A r ζ t) :
     ∀ x ∈ vsMAlgE A t, ∀ y ∈ vsMAlgE A t, Commute x y := by
-  haveI : IsMulCommutative (vsMAlgE A t) := Algebra.isMulCommutative_adjoin (ZMod p) h.gen_comm
+  haveI : IsMulCommutative (vsMAlgE A t) :=
+    Algebra.isMulCommutative_adjoin (ZMod p) (fun x hx y hy _ => h.gen_comm x hx y hy)
   intro x hx y hy
   have : (⟨x, hx⟩ : vsMAlgE A t) * ⟨y, hy⟩ = ⟨y, hy⟩ * ⟨x, hx⟩ := IsMulCommutative.is_comm.comm _ _
   exact congrArg Subtype.val this
@@ -188,7 +193,8 @@ def VsMIdemProp (A : Subgroup 𝔼ˣ) {r : ℕ} [NeZero r] (ζ : 𝔼ˣ) {k : �
 
 theorem VsMSplitHyp.idem [NeZero r] (h : VsMSplitHyp A r ζ t) :
     ∃ π : (Fin k → ZMod r) → 𝔼, VsMIdemProp A ζ t π := by
-  haveI : IsMulCommutative (vsMAlgE A t) := Algebra.isMulCommutative_adjoin (ZMod p) h.gen_comm
+  haveI : IsMulCommutative (vsMAlgE A t) :=
+    Algebra.isMulCommutative_adjoin (ZMod p) (fun x hx y hy _ => h.gen_comm x hx y hy)
   let ζR : vsMAlgE A t := ⟨ζ, h.ζ_mem⟩
   let tR : Fin k → vsMAlgE A t := fun i => ⟨t i, h.t_mem i⟩
   have hζR : ζR ^ r = 1 := Subtype.ext (by
@@ -246,7 +252,7 @@ theorem VsMSplitHyp.mem_P (h : VsMSplitHyp A r ζ t) (hπ : VsMIdemProp A ζ t �
       exact h.inj (sub_mem (pow_mem h.hζ.1 _) (pow_mem h.hζ.1 _)) hd w (by
         rw [LinearMap.sub_apply, ← h1, ← h2, sub_self])
     have := congrArg (fun f : 𝔼 => f v) hπ.2.1
-    simp only [LinearMap.coeFn_sum, Finset.sum_apply, Module.End.one_apply] at this
+    simp only [LinearMap.sum_apply, Module.End.one_apply] at this
     rw [Finset.sum_eq_single c (fun c' _ hc' => h0 c' hc') (fun h' => absurd (Finset.mem_univ c) h')]
       at this
     exact this
@@ -272,7 +278,7 @@ theorem VsMSplitHyp.exists_P (h : VsMSplitHyp A r ζ t) (hπ : VsMIdemProp A ζ 
   push Not at hall
   apply hv
   have := congrArg (fun f : 𝔼 => f v) hπ.2.1
-  simp only [LinearMap.coeFn_sum, Finset.sum_apply, Module.End.one_apply] at this
+  simp only [LinearMap.sum_apply, Module.End.one_apply] at this
   rw [← this]
   refine Finset.sum_eq_zero fun c _ => ?_
   have := h.π_mem_P hπ c v
@@ -501,7 +507,7 @@ theorem VsMSplitHyp.piece_eq (h : VsMSplitHyp A r ζ t) (hπ : VsMIdemProp A ζ 
   choose μ hμ using hμ
   have hsum : w = ∑ c, μ c • w := by
     have := congrArg (fun F : 𝔼 => F w) hπ.2.1
-    simp only [LinearMap.coeFn_sum, Finset.sum_apply, Module.End.one_apply] at this
+    simp only [LinearMap.sum_apply, Module.End.one_apply] at this
     calc w = ∑ c, π c w := this.symm
       _ = ∑ c, μ c • w := Finset.sum_congr rfl fun c _ => hμ c w hw
   obtain ⟨c, hc⟩ : ∃ c, μ c ≠ 0 := by

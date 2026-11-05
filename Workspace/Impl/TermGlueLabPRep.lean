@@ -1,7 +1,11 @@
-import Workspace.Impl.TermGlueLabPFind
-import Workspace.Impl.TermCosetFirst
-import Workspace.Impl.TermStep
-import Workspace.Impl.TermGlueLabTorsor
+module
+
+public import Workspace.Impl.TermGlueLabPFind
+public import Workspace.Impl.TermCosetFirst
+public import Workspace.Impl.TermStep
+public import Workspace.Impl.TermGlueLabTorsor
+
+@[expose] public section
 
 /-!
 # Representatives of the types and the labels of `x`

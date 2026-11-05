@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertFz
+module
+
+public import Workspace.Impl.AggCertFz
+
+@[expose] public section
 
 /-!
 # The graph forms of the certificate groups: the points outside the final window

@@ -1,4 +1,8 @@
-import Workspace.Algorithm.AggregationPlan
+module
+
+public import Workspace.Algorithm.AggregationPlan
+
+@[expose] public section
 
 /-!
 # Pair configurations on the labels and the configuration query
@@ -505,7 +509,7 @@ theorem cfgQuery_covers {X Y : PairCfg L.q} (hc : X.fiber.card = Y.fiber.card) :
   let p : Perm (Fin X.fiber.card) := Equiv.ofBijective f hfi.bijective_of_finite
   have hp : ∀ i, Y.emb hc.symm (p i) = (e : Perm (Fin L.q)) (X.emb rfl i) := hf
   have hpA : diagHom _ p ∈ (cfgQuery (P := P) X Y hc).T.answer := by
-    change diagHom _ p ∈ (pairState _ _ _).answer
+    change diagHom _ p ∈ (pairState (C' := ℕ) _ _ _).answer
     rw [mem_pairState_answer]
     intro i k
     simp only [pairCols]
@@ -576,7 +580,7 @@ theorem cfgItem_valid {δ : ℝ} (hβ : max (1 - δ) (1 / 2) < P.β) :
     subst hQ
     left
     refine ⟨rfl, ?_⟩
-    change ((pairState _ _ _).size : ℝ) ≤ _
+    change ((pairState (C' := ℕ) _ _ _).size : ℝ) ≤ _
     rw [pairState_size]
     exact sq_le_rpow (by simpa using Finset.card_le_univ X.fiber) hlam
   · -- soundness: two maps from `X` to `Y` differ by an automorphism of `X`

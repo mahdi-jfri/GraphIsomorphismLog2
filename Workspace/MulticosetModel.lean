@@ -1,9 +1,13 @@
-import Mathlib.Algebra.Group.Subgroup.Pointwise
-import Mathlib.Algebra.Group.Subgroup.ZPowers.Basic
-import Mathlib.Data.Multiset.Filter
-import Mathlib.Data.Multiset.MapFold
-import Mathlib.GroupTheory.Commutator.Basic
-import Mathlib.Tactic.Group
+module
+
+public import Mathlib.Algebra.Group.Subgroup.Pointwise
+public import Mathlib.Algebra.Group.Subgroup.ZPowers.Basic
+public import Mathlib.Data.Multiset.Filter
+public import Mathlib.Data.Multiset.MapFold
+public import Mathlib.GroupTheory.Commutator.Basic
+public import Mathlib.Tactic.Group
+
+@[expose] public section
 
 /-!
 # The implicit object model of Section A (`sec:quotient-algorithms`)

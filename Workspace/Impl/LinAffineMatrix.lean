@@ -1,6 +1,10 @@
-import Workspace.Impl.LinAffineRows
-import Workspace.Impl.LinIntPad
-import Mathlib.LinearAlgebra.Matrix.ToLin
+module
+
+public import Workspace.Impl.LinAffineRows
+public import Workspace.Impl.LinIntPad
+public import Mathlib.LinearAlgebra.Matrix.ToLin
+
+@[expose] public section
 
 /-! The explicit homogeneous matrix, with the scalar coordinate last. -/
 namespace GI.Impl

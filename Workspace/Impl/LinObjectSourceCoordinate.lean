@@ -1,7 +1,11 @@
-import Workspace.Impl.LinObjectSourceOffsetsSpec
-import Workspace.Impl.LinObjectPack5
-import Workspace.Impl.LinObjectFrameMath
-import Workspace.Impl.LinObjectEvalWeights
+module
+
+public import Workspace.Impl.LinObjectSourceOffsetsSpec
+public import Workspace.Impl.LinObjectPack5
+public import Workspace.Impl.LinObjectFrameMath
+public import Workspace.Impl.LinObjectEvalWeights
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,5 +1,9 @@
-import Workspace.Impl.VsWProgId
-import Workspace.Impl.VsFAlgSpanStep
+module
+
+public import Workspace.Impl.VsWProgId
+public import Workspace.Impl.VsFAlgSpanStep
+
+@[expose] public section
 
 /-!
 # The common kernel as a program

@@ -1,8 +1,12 @@
-import Workspace.Impl.AggCaseMath
-import Workspace.Impl.AggStructDC
-import Workspace.Impl.GenProdNum
-import Workspace.Lang.Prims.Ops
-import Workspace.Lang.Lib.Orbit
+module
+
+public import Workspace.Impl.AggCaseMath
+public import Workspace.Impl.AggStructDC
+public import Workspace.Impl.GenProdNum
+public import Workspace.Lang.Prims.Ops
+public import Workspace.Lang.Lib.Orbit
+
+@[expose] public section
 
 /-!
 # The case test of the items, as a program

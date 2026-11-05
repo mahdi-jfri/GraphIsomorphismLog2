@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPresentationExtend
+module
+
+public import Workspace.Impl.LinPresentationExtend
+
+@[expose] public section
 
 /-! The object-glue quotient `W/D`. Each component of `W` is the quotient
 of the abelian group `A/N` by a local stabilizer. The diagonal relations

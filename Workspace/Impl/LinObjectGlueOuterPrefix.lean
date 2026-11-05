@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectGlueOuterGrowth
+module
+
+public import Workspace.Impl.LinObjectGlueOuterGrowth
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

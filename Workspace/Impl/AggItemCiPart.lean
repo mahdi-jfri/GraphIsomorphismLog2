@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemC1Sch
+module
+
+public import Workspace.Impl.AggItemC1Sch
+
+@[expose] public section
 
 /-!
 # The overcoset item of a colored partition given by a coloring
@@ -203,7 +207,7 @@ variable {f}
 
 theorem itciC_f (a : Fin q) : f (itciC f a) = f a := by
   have := min'_mem (univ.filter fun y => f y = f a) ⟨a, by simp⟩
-  simpa using this
+  simpa [itciC] using this
 
 theorem itciC_le {a y : Fin q} (h : f a = f y) : itciC f a ≤ y :=
   min'_le _ _ (by simp [h])

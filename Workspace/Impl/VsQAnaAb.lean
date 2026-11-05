@@ -1,11 +1,15 @@
-import Workspace.Impl.VsQAnaBase
-import Workspace.Impl.VsFAlgSpanProg
-import Workspace.Impl.VsWProgId
-import Workspace.Impl.VsWProgNil
-import Workspace.Impl.VsWProgAnn
-import Workspace.Impl.VsWProgEig
-import Workspace.Proved.VsQAlg
-import Workspace.Proved.VsWEigCount
+module
+
+public import Workspace.Impl.VsQAnaBase
+public import Workspace.Impl.VsFAlgSpanProg
+public import Workspace.Impl.VsWProgId
+public import Workspace.Impl.VsWProgNil
+public import Workspace.Impl.VsWProgAnn
+public import Workspace.Impl.VsWProgEig
+public import Workspace.Proved.VsQAlg
+public import Workspace.Proved.VsWEigCount
+
+@[expose] public section
 
 /-!
 # The abelian branch of the analysis

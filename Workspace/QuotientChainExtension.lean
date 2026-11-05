@@ -1,5 +1,9 @@
-import Workspace.QuotientImage
-import Workspace.BudgetInductionSolvable
+module
+
+public import Workspace.QuotientImage
+public import Workspace.BudgetInductionSolvable
+
+@[expose] public section
 
 namespace GI.QuotientExtension
 
@@ -60,7 +64,7 @@ theorem step_split (p : G →* Q) (hk : 5 ≤ k) (s : AlternatingQuotientStep H 
     refine ⟨imageStep p s ?_⟩
     intro h hh
     have hm : s.quotient h ∈ f.ker.map s.quotient := ⟨h, hh, rfl⟩
-    simpa only [hb, Subgroup.mem_bot] using hm
+    simpa only [hb, Subgroup.mem_bot, MonoidHom.mem_ker] using hm
   · left
     refine ⟨kernelStep p s ?_⟩
     intro z

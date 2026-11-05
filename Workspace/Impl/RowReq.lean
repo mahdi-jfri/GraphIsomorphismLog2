@@ -1,5 +1,9 @@
-import Workspace.Impl.RowLayout
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Impl.RowLayout
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-!
 # The row step of the concrete program meets `RowSpec`
@@ -37,15 +41,15 @@ theorem rq_repsSpec_mono {Pg : Program} {A A' : ℝ} (hA : A ≤ A') {g : ℕ}
     htr hlH hlN hlS hcard hsN hN hqα us vs hus hvs
   refine (h S k e c hc sv lv L hsv hlv hq0 hgood hrow label hnat hq h0 E hP σH σN σS hH hNg hS
     htr hlH hlN hlS hcard hsN hN hqα us vs hus hvs).mono ?_
-  rintro u cost ⟨reps, h1, h2, h3, h4, h5⟩
-  exact ⟨reps, h1, h2, h3, h4, h5.trans (rq_exp_mono hA _)⟩
+  rintro u cost ⟨R', hRH, hNR, hsolv, uR, reps, h1, h2, h3, h4, h5, h6, h7⟩
+  exact ⟨R', hRH, hNR, hsolv, uR, reps, h1, h2, h3, h4, h5, h6, h7.trans (rq_exp_mono hA _)⟩
 
 theorem rq_cosetSpec_mono {Pg : Program} {A A' : ℝ} (hA : A ≤ A') {g : ℕ}
     (h : Iface.TermCosetSpec Pg A g) : Iface.TermCosetSpec Pg A' g := by
   intro Ω C _ S k e c hc sv lv L hsv hlv hq0 hgood hrow label hnat hq m h0 E hP σH σN σS hH hNg hS
-    htr hlH hlN hlS hcard hsN hN hqα us vs hus hvs r hr
+    htr hlH hlN hlS hcard hsN hN hqα us vs hus hvs R' hRH hNR hsolv hidx uR hGensR r hr
   refine (h S k e c hc sv lv L hsv hlv hq0 hgood hrow label hnat hq h0 E hP σH σN σS hH hNg hS
-    htr hlH hlN hlS hcard hsN hN hqα us vs hus hvs r hr).mono ?_
+    htr hlH hlN hlS hcard hsN hN hqα us vs hus hvs R' hRH hNR hsolv hidx uR hGensR r hr).mono ?_
   rintro u cost ⟨h1, h2⟩
   exact ⟨h1, h2.trans (rq_exp_mono hA _)⟩
 
@@ -111,12 +115,10 @@ theorem rq_rowW (hst : PointwiseStab) (hm : Membership) (hpre : Preimage)
 
 /-- **The row step of the concrete program meets its step specification**, given the open
 pieces of the terminal: T2 (`TermRadSpec`, for the code `rad`) and one radical coset
-(`TermCosetSpec`, for the code `cos`). Cited: `TransitiveAffected`, `PointwiseStab`,
-`Membership`, `Preimage`, `NormalizedFactor` and the [GMP] bounds `GMPAbelianFactors`,
-`GMPOutBound`, `GMPTransitiveNonabelian`. -/
-theorem rq_rowSpec (hcite : GI.Cited.TransitiveAffected) (hst : PointwiseStab)
+(`TermCosetSpec`, for the code `cos`). Cited: `PointwiseStab`,
+`Membership`, `Preimage`, `NormalizedFactor` and the [GMP] bound `GMPTransitiveNonabelian`. -/
+theorem rq_rowSpec (hst : PointwiseStab)
     (hm : Membership) (hpre : Preimage) (hfac : NormalizedFactor)
-    (hAb : GI.Cited.GMPAbelianFactors) (hOut : GI.Cited.GMPOutBound)
     (hTr : GI.Cited.GMPTransitiveNonabelian) {extra : List Prim} {gen rad cos agg : List Expr}
     (hg : gen.length ≤ asmSlot) (hr : rad.length ≤ rlCosOff - rlRadOff)
     (hc : cos.length ≤ asmSlot - rlCosOff) {K D : ℕ} {Ac : ℝ}
@@ -131,20 +133,20 @@ theorem rq_rowSpec (hcite : GI.Cited.TransitiveAffected) (hst : PointwiseStab)
   set I := (asmRest hst hm hpre hfac Wg (rqWr hst hfac (rqAa hst hm hpre hfac K D Ac)) Wa).iface
   have hA0 := rqA0_nonneg hm K D Ac
   have hreps : Iface.TermRepsSpec Pg (tmRpA hm K D) (rlb 12) :=
-    Iface.tm_termRepsSpec Pg hm hAb hOut hTr (rl_repsAt hg hr hc) hrad
+    Iface.tm_termRepsSpec Pg hm hTr (rl_repsAt hg hr hc) hrad
   have hreps' : Iface.TermRepsSpec Pg (rqA0 hm K D Ac) (rlb 12) :=
     rq_repsSpec_mono ((le_max_left _ _).trans (le_max_left _ _)) hreps
   have hcos' : Iface.TermCosetSpec Pg (rqA0 hm K D Ac) (rlb rlCosOff) :=
     rq_cosetSpec_mono ((le_max_right _ _).trans (le_max_left _ _)) hcos
   have hdom : Iface.TermDomSpec Pg (tmSplitA hm (rqA0 hm K D Ac)) (rlb 9) :=
-    Iface.tm_termDomSpec Pg hm hAb hOut hTr (rl_splitAt hg hr hc) asmProg_prim_mem hA0
+    Iface.tm_termDomSpec Pg hm hTr (rl_splitAt hg hr hc) asmProg_prim_mem hA0
     hreps' hcos'
   have hasm : Iface.TermAsmSpec Pg (rqAa hst hm hpre hfac K D Ac) (rlb 8) :=
     Iface.tm_termAsmSpec Pg hst hpre hfac (rl_liftAt hg hr hc) asmProg_prim_pst
     asmProg_prim_pre asmProg_prim_fac (rq_tmSplitA_nonneg hm hA0) hdom
   have hT : I.RowTermSpec Pg asmF (Iface.tmWt hst (rqAa hst hm hpre hfac K D Ac)) (rlb 1) :=
     Iface.tm_rowTermSpec I Pg asmF hst (rl_tmFuns hg hr hc) hasm
-  have h : I.RowSpec Pg asmF (rlb 0) := Iface.rowSpec I Pg asmF hcite hst hfac (fun _ _ _ _ h => h) (rl_rsAt hg hr hc) hT
+  have h : I.RowSpec Pg asmF (rlb 0) := Iface.rowSpec I Pg asmF hst hfac (fun _ _ _ _ h => h) (rl_rsAt hg hr hc) hT
     (rq_rowW hst hm hpre hfac Wg Wa _)
   exact @h
 

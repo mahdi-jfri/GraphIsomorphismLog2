@@ -1,5 +1,9 @@
-import Workspace.Impl.LinMixedCost
-import Workspace.Impl.LinMixedAdvance
+module
+
+public import Workspace.Impl.LinMixedCost
+public import Workspace.Impl.LinMixedAdvance
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -14,9 +18,11 @@ private theorem linMixedStepWholeCost {W A C Q S cc ct cb out : ℕ}
 set_option maxHeartbeats 1500000 in
 theorem linMixedLoop_step_spec (hm : ConstructiveMembership) (hv : VectorStabilizer)
     {P : Program} {b jm jv n d : ℕ} (hat : linMixedLoopAt P b jm jv hm hv)
-    (gs : List (Equiv.Perm (Fin n))) (hs : IsSolvable (gens gs))
+    (gs : List (Equiv.Perm (Fin n)))
     (m : Fin d → ℕ) (hmpos : ∀ i, 0 < m i)
-    (ρ : gens gs →* (linFiniteVec m ≃+ linFiniteVec m)) (c : gens gs → linFiniteVec m)
+    (ρ : gens gs →* (linFiniteVec m ≃+ linFiniteVec m))
+    (hs : IsSolvable ρ.range)
+    (c : gens gs → linFiniteVec m)
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g)
     (x : linFiniteVec m) (acc0 : Equiv.Perm (Fin n)) (j : ℕ) (hj : j < n) (cur : Val)
     (hinv : linMixedLoopInv gs m hmpos ρ c x acc0 j cur) :
@@ -54,7 +60,7 @@ theorem linMixedLoop_step_spec (hm : ConstructiveMembership) (hv : VectorStabili
     let S := (Val.list [orig, .nat j, state]).wt
     have hcur : linMixedLoopInv gs m hmpos ρ c x acc0 j state :=
       Or.inr ⟨ks, hle, r, rfl, hlen, hpoint, hofs, hcover⟩
-    have hks := linPrimaryCover_solvable gs ks hs hle
+    have hks := linPrimaryRange_solvable gs ks ρ hs hle
     have dl := Det.length (Det.arg' (P := P) (vs := [orig, .nat j, state]) (rest := []) (j := 2) rfl)
     apply EvalAll.ite dl (fun v cost ho => ⟨3, ho.1⟩)
     intro q cc hq
@@ -88,7 +94,7 @@ theorem linMixedLoop_step_spec (hm : ConstructiveMembership) (hv : VectorStabili
       have hpass : FunAll P (b + 11) (linPrimePrepareInputVal ks m ρ' c' point accum (j + 1))
           (fun out cost => linPrimePassOut ks m (linTrialPrimaryData m (j + 1) hp hmpos)
             ρ' c' point accum out ∧ cost ≤ C) :=
-        FunAll.mono (linPrimePass_spec hm hv hat.pass ks hlen hks m hp (by omega) hmpos ρ' c' hc' point accum)
+        FunAll.mono (linPrimePass_spec hm hv hat.pass ks hlen m hp (by omega) hmpos ρ' hks c' hc' point accum)
           (fun out cost ho => ⟨ho.1, ho.2.trans (linMixedCallBudget_bound hm hv hi)⟩)
       have da := linMixedPassArg_spec (P := P) (linActionContext gs m ρ c) (linFinitePointVal m x)
         (encPerm acc0) (linVecVal (fun i => (m i : ℤ)))

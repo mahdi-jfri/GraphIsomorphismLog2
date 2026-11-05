@@ -1,4 +1,8 @@
-import Workspace.Impl.AggStructDC
+module
+
+public import Workspace.Impl.AggStructDC
+
+@[expose] public section
 
 /-! # A deterministic output fits its proved time budget -/
 

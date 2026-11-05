@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojQuery
+module
+
+public import Workspace.Impl.AggItemCiSojQuery
+
+@[expose] public section
 
 /-!
 # The complete permitted matrix transporter from the two physical answers
@@ -41,12 +45,12 @@ theorem itcs_transporter_answers (rep : RectRep P₀ S L W R) (M N : W → R →
       left
       refine ⟨⟨h, hh⟩, rep.mem_of_transports hh ?_, he⟩
       have htr := RectRep.transports_untwist (t := (1 : permitted W R)) hp
-      simpa only [inv_one, one_mul, ← he] using htr
+      simpa only [inv_one, one_mul, ← he, itcsRepMap, MonoidHom.coe_mk, OneHom.coe_mk] using htr
     · have he : itcsRepMap rep ⟨h, hh⟩ = t⁻¹ * p := Subtype.ext hπ
       right
       refine ⟨t, ht, ⟨h, hh⟩, rep.mem_of_transports hh ?_, ?_⟩
       · have htr := RectRep.transports_untwist (t := t) hp
-        simpa only [← he] using htr
+        simpa only [← he, itcsRepMap, MonoidHom.coe_mk, OneHom.coe_mk] using htr
       · rw [he, mul_inv_cancel_left]
   · rintro (⟨h, hh, he⟩ | ⟨t, -, h, hh, he⟩)
     · obtain ⟨hh', htr⟩ := rep.transports_of_mem hh

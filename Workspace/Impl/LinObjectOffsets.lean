@@ -1,7 +1,11 @@
-import Workspace.Impl.LinObjectOffsetRows
-import Workspace.Impl.LinObjectOffsetCert
-import Workspace.Impl.LinObjectFlattenCoords
-import Workspace.Impl.LinPolyEnvelope
+module
+
+public import Workspace.Impl.LinObjectOffsetRows
+public import Workspace.Impl.LinObjectOffsetCert
+public import Workspace.Impl.LinObjectFlattenCoords
+public import Workspace.Impl.LinPolyEnvelope
+
+@[expose] public section
 
 /-! Collect all local offsets and their integer exponent vectors. The
 table is computed by the abelian zero-fuel transporter, not an oracle. -/

@@ -1,4 +1,8 @@
-import Workspace.Impl.VStabLinSift
+module
+
+public import Workspace.Impl.VStabLinSift
+
+@[expose] public section
 
 /-!
 # Inserting a vector pair into echelon rows
@@ -65,7 +69,7 @@ theorem vsInvTest_spec {P : Program} {f : ℕ} (hf : P.funs[f]? = some vsInvTest
     lt_trans (wt_le_wt_list (by simp)) (wt_le_wt_list (v := Val.list [.nat p, .nat c]) (by simp))
   have hN : N + 1 ≤ (N + 1) ^ 2 := Nat.le_self_pow (by omega) _
   simp only [BinOp.eval] at h1 h2 ⊢
-  split_ifs at h2 ⊢ <;> omega
+  by_cases heq : s * c % p = 1 <;> simp_all only [heq, ite_true, ite_false] <;> omega
 
 /-- The inverse, on `[p, c]`: search `range p`. -/
 def vsInvF (rng fnd : ℕ) : Expr :=

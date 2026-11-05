@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectFrameRep
-import Workspace.Impl.LinObjectReindexPresentation
+module
+
+public import Workspace.Impl.LinObjectFrameRep
+public import Workspace.Impl.LinObjectReindexPresentation
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Multicoset

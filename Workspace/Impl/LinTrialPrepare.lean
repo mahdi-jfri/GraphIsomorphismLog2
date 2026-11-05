@@ -1,5 +1,9 @@
-import Workspace.Impl.LinTrialFactors
-import Workspace.Impl.LinPairColumns
+module
+
+public import Workspace.Impl.LinTrialFactors
+public import Workspace.Impl.LinPairColumns
+
+@[expose] public section
 
 /-! Prepare the primary exponent vector and signed cyclic-order vector from
 positive signed orders. The prime remains an explicit small input. -/

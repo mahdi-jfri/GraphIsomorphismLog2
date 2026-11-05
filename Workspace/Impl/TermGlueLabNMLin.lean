@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabNVecOK
-import Workspace.Impl.TermGlueLabPPoly
+module
+
+public import Workspace.Impl.TermGlueLabNVecOK
+public import Workspace.Impl.TermGlueLabPPoly
+
+@[expose] public section
 
 /-!
 # The label driver: the linear library module and the vector module

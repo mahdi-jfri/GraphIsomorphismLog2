@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabAct
+module
+
+public import Workspace.Impl.TermGlueLabAct
+
+@[expose] public section
 
 /-!
 # The affine action through the lifts: an action of `D/N`
@@ -91,7 +95,7 @@ theorem tmGL_J_transport (hn : Normalizes H N) (hker : TmGLKer N H φ) {h : P} (
 theorem tmGL_rowAct_inv (e : Fin q → P) (z : Fin q → Ω) :
     rowAct (fun i => (e i)⁻¹) 1 (rowAct e 1 z) = z := by
   funext i
-  simp [rowAct]
+  simp [rowAct, Perm.one_symm]
 
 /-- The inverse tuple has class `h⁻¹`. -/
 theorem tmGL_cls_inv (hn : Normalizes H N) {h : P} (hh : h ∈ H) {e : Fin q → P}

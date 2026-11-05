@@ -1,4 +1,8 @@
-import Workspace.Impl.TermScr
+module
+
+public import Workspace.Impl.TermScr
+
+@[expose] public section
 
 /-!
 # The step function of the row terminal (T1)

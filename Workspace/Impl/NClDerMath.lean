@@ -1,4 +1,8 @@
-import Workspace.Impl.NClMath
+module
+
+public import Workspace.Impl.NClMath
+
+@[expose] public section
 
 /-!
 # The derived subgroup as a normal closure

@@ -10,9 +10,13 @@ The machine program is `glueProgram P f`. Its procedure 0, `mainBody f`:
 3. copies the cells of the answer `[c₀, …, c_{k-1}]` to the cells right after the answer value,
    and returns their address.
 -/
-import Workspace.Lang.CorrectMain
-import Workspace.Lang.Encode
-import Workspace.Machine.LoopRules
+module
+
+public import Workspace.Lang.CorrectMain
+public import Workspace.Lang.Encode
+public import Workspace.Machine.LoopRules
+
+@[expose] public section
 
 set_option linter.unusedSimpArgs false
 
@@ -41,7 +45,8 @@ theorem valsAt_map_nat_iff {mem : ℕ → ℕ} {b : ℕ} {l : List ℕ} :
         simp only [List.getElem_cons_succ]
         rw [show b + 2 * (i + 1) = b + 2 + 2 * i by ring]; exact this
     · intro h
-      refine ⟨⟨by simpa using (h 0 (by simp)).1, by simpa using (h 0 (by simp)).2⟩,
+      have h0 := h 0 (by simp)
+      refine ⟨⟨by simpa using h0.1, by simpa [List.getElem_cons] using h0.2⟩,
         fun i hi => ?_⟩
       have := h (i + 1) (by simpa using hi)
       rw [show b + 2 * (i + 1) = b + 2 + 2 * i by ring] at this

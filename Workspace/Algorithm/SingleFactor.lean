@@ -1,4 +1,8 @@
-import Workspace.Algorithm.Dispatch
+module
+
+public import Workspace.Algorithm.Dispatch
+
+@[expose] public section
 
 /-!
 # The single-factor normalization

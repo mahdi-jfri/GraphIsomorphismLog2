@@ -10,7 +10,11 @@ test: a language function `tf` that sends `[c, encPerm σ]` to the Boolean `q σ
 Both cost at most `|els| T + 3 loopModK (|els| + 1) (W + 1)`, where `T` bounds the cost of the
 test and `W` is the weight of the argument.
 -/
-import Workspace.Lang.Lib.Schreier
+module
+
+public import Workspace.Lang.Lib.Schreier
+
+@[expose] public section
 
 namespace GI.Lang
 
@@ -106,7 +110,7 @@ theorem find?_eq_findIdx {α : Type} (l : List α) (q : α → Bool) :
     by_cases ha : q a = true
     · simp [List.findIdx_cons, ha]
     · simp only [Bool.not_eq_true] at ha
-      simp only [List.find?_cons, ha, List.findIdx_cons, cond_false, List.length_cons,
+      simp only [List.find?_cons, ha, List.findIdx_cons, Bool.false_eq_true, ite_false, List.length_cons,
         Nat.add_lt_add_iff_right, List.getElem_cons_succ, ih]
 
 /-- **The first element that passes a test.** On `[c, [encPerm σ | σ ∈ els]]`, the list

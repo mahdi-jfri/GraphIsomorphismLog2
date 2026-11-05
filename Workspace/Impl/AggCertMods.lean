@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCertMvBase
-import Workspace.Impl.AggLiftChild
+module
+
+public import Workspace.Impl.AggCertMvBase
+public import Workspace.Impl.AggLiftChild
+
+@[expose] public section
 
 /-!
 # The modules of the move program, within one budget

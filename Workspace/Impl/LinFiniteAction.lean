@@ -1,4 +1,9 @@
-import Workspace.Impl.LinFiniteHomogeneous
+module
+
+public import Workspace.Impl.LinFiniteHomogeneous
+public import Workspace.Impl.AddEquivGroup
+
+@[expose] public section
 
 /-! The full affine data attached to a cover element and its inverse.
 Its group law is matrix multiplication followed by finite-coordinate reduction. -/

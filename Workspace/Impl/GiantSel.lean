@@ -1,4 +1,8 @@
-import Workspace.Impl.GiantNat
+module
+
+public import Workspace.Impl.GiantNat
+
+@[expose] public section
 
 /-!
 # The selector of `GiantStep`

@@ -1,6 +1,10 @@
-import Mathlib.GroupTheory.SpecificGroups.Alternating
-import Mathlib.Data.Finset.Card
-import Aesop
+module
+
+public import Mathlib.GroupTheory.SpecificGroups.Alternating
+public import Mathlib.Data.Finset.Card
+public import Aesop
+
+@[expose] public section
 
 /-! The explicit transfer construction (LG3) in Theorem A.18.
 The coordinate group H is arbitrary; no commutativity or subdirectness is assumed. -/

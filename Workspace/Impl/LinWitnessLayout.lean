@@ -1,4 +1,8 @@
-import Workspace.Impl.LinCoordinateWitness
+module
+
+public import Workspace.Impl.LinCoordinateWitness
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

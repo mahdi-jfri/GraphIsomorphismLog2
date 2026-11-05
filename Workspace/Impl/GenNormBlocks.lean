@@ -1,6 +1,10 @@
-import Workspace.Impl.GenNormLabels
-import Workspace.Impl.GenCosetsMath
-import Workspace.Impl.GenNormRecover
+module
+
+public import Workspace.Impl.GenNormLabels
+public import Workspace.Impl.GenCosetsMath
+public import Workspace.Impl.GenNormRecover
+
+@[expose] public section
 
 /-!
 # Computing the Johnson block indicators

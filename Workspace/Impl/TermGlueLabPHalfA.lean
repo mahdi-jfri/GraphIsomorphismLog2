@@ -1,6 +1,10 @@
-import Workspace.Impl.TermGlueLabPXs
-import Workspace.Impl.TermGlueLabPOffM
-import Workspace.Impl.TermGlueLabPLiftS
+module
+
+public import Workspace.Impl.TermGlueLabPXs
+public import Workspace.Impl.TermGlueLabPOffM
+public import Workspace.Impl.TermGlueLabPLiftS
+
+@[expose] public section
 
 /-!
 # The callees of the per-generator program (step 5)

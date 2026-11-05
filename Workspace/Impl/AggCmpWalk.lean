@@ -1,4 +1,8 @@
-import Workspace.Impl.ScriptCmp
+module
+
+public import Workspace.Impl.ScriptCmp
+
+@[expose] public section
 
 /-!
 # The walk through the whole comparison phase

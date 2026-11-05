@@ -1,4 +1,8 @@
-import Workspace.RectangleSides
+module
+
+public import Workspace.RectangleSides
+
+@[expose] public section
 
 /-!
 # The exact side image of the permitted group, parity twists and alignments

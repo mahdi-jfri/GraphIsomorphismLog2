@@ -1,8 +1,12 @@
-import Workspace.Impl.SCosProg
-import Workspace.Proved.SCosMath
-import Workspace.Proved.NIntMath
-import Workspace.Impl.LargestOrbit
-import Workspace.Proved.SCosPalfy
+module
+
+public import Workspace.Impl.SCosProg
+public import Workspace.Proved.SCosMath
+public import Workspace.Proved.NIntMath
+public import Workspace.Impl.LargestOrbit
+public import Workspace.Proved.SCosPalfy
+
+@[expose] public section
 
 /-!
 # Problem and answer values

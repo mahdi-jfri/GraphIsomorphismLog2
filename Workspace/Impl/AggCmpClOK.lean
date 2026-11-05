@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCmpClBud
+module
+
+public import Workspace.Impl.AggCmpClBud
+
+@[expose] public section
 
 /-!
 # The call of a stage: `CmCallOK`

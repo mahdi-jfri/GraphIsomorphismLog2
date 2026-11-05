@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectCertF
+module
+
+public import Workspace.Impl.AggRectCertF
+
+@[expose] public section
 
 /-!
 # The certificate search meets its contract

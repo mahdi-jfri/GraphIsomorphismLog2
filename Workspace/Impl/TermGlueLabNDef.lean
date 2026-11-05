@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabSCall
-import Workspace.Impl.TermGlueLabPStep5
+module
+
+public import Workspace.Impl.TermGlueLabSCall
+public import Workspace.Impl.TermGlueLabPStep5
+
+@[expose] public section
 
 /-!
 # The driver of the label program: the results of step 5 and of the vector program
@@ -34,6 +38,7 @@ open GI.Cited (Val encPerm encGroup encIntMatrix gens)
 open scoped Pointwise
 
 attribute [local instance] stringRAct
+set_option backward.isDefEq.respectTransparency false
 
 /-- **The trampoline**: return the input. Step 6 calls it in place of step 5. -/
 def tmGLNIdF : Expr := .var 0

@@ -1,4 +1,8 @@
-import Workspace.Impl.VsPGrow
+module
+
+public import Workspace.Impl.VsPGrow
+
+@[expose] public section
 
 /-!
 # Do the local matrices of a list commute?

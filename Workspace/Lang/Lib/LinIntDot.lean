@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.LinIntVector
+module
+
+public import Workspace.Lang.Lib.LinIntVector
+
+@[expose] public section
 
 /-! Integer dot products. Partial sums are bounded by n times a product bound,
 so the loop uses a polynomial bit bound rather than iterating a scalar cost bound. -/

@@ -1,6 +1,10 @@
-import Workspace.Impl.JohnMain
-import Workspace.Impl.CamCells
-import Workspace.Lang.Bridge
+module
+
+public import Workspace.Impl.JohnMain
+public import Workspace.Impl.CamCells
+public import Workspace.Lang.Bridge
+
+@[expose] public section
 
 /-!
 # Johnson identification in polynomial time

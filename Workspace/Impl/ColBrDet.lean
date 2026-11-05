@@ -1,4 +1,8 @@
-import Workspace.Impl.ColBr
+module
+
+public import Workspace.Impl.ColBr
+
+@[expose] public section
 
 /-!
 # The value that the column branch computes

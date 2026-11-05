@@ -1,4 +1,8 @@
-import Workspace.Paper.TotalCost
+module
+
+public import Workspace.Paper.TotalCost
+
+@[expose] public section
 
 /-!
 # The number of script calls of a node

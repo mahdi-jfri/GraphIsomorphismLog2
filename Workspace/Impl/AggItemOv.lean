@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemRun
+module
+
+public import Workspace.Impl.AggItemRun
+
+@[expose] public section
 
 /-!
 # A program's representative stands for the model's overcoset

@@ -1,20 +1,24 @@
-import Workspace.Cited.CompositionFactors
-import Mathlib.GroupTheory.Perm.Basic
-import Mathlib.GroupTheory.GroupAction.Defs
-import Mathlib.GroupTheory.Index
-import Mathlib.Algebra.Group.End
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+module
+
+public import Workspace.Cited.CompositionFactors
+public import Mathlib.GroupTheory.Perm.Basic
+public import Mathlib.GroupTheory.GroupAction.Defs
+public import Mathlib.GroupTheory.Index
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+@[expose] public section
 
 /-!
-# Three results of Guralnick, Maróti and Pyber
+# Two results of Guralnick, Maróti and Pyber
 
 [GMP] = R. M. Guralnick, A. Maróti, L. Pyber, *Normalizers of primitive permutation groups*,
 Adv. Math. 310 (2017) 1017-1063. We read arXiv:1603.00187v2 (27 January 2017). In [GMP] the
 base of logarithms is 2 ("Throughout the paper the base of the logarithms is 2 unless otherwise
 stated", p. 2). The products `a(X)`, `b(X)` are those of `GI.Cited.CompositionProducts`.
 
-The paper uses all three in the proof of Lemma A.21 (`lem:radical-free-order`) and of
+The paper uses both in the proof of Lemma A.21 (`lem:radical-free-order`) and of
 Corollary A.22 (`cor:transitive-kernel-multicoset`).
 -/
 
@@ -44,29 +48,6 @@ subgroups of the canonical `Equiv.Perm (Fin n)`. -/
 def GMPAbelianFactors : Prop :=
   ∀ (n : ℕ), 1 ≤ n → ∀ (P : Subgroup (Equiv.Perm (Fin n))) (a b : ℕ),
     CompositionProducts P a b → (a : ℝ) ≤ (24 : ℝ) ^ (((n : ℝ) - 1) / 3)
-
-/-- **[GMP, Lemma 7.7], applied to the regular representation.** For every finite nonabelian
-simple group `T`, `|Out(T)| ≤ 2 √|T|`. Here `|Out(T)|` is the index of the inner automorphisms
-`MulAut.conj.range` in `MulAut T`.
-
-*Source, verbatim (arXiv v2, Section 7).* "Lemma 7.7. Let `S` be a nonabelian finite simple
-group and suppose that `S` has a nontrivial permutation representation of degree `n`. Then
-`|Out(S)| ≤ 2 log n` or `S = L_d(q)` with `d > 2` or `S = PΩ⁺₈(3^e)` with `e` an integer, and
-`|Out(S)| ≤ 3 log n`. In all cases we have `|Out(S)| ≤ 2 √n`. ..." The regular representation
-of `T` is a nontrivial permutation representation of degree `|T|`, so `|Out(T)| ≤ 2 √|T|`.
-The paper: "By [GMP, Lemma 7.7], applied to the regular representation of `T_i`,
-`|Out(T_i)| ≤ 2 √|T_i|`."
-
-*Why it is true.* By the classification, `|Out(T)| ≤ 4` for alternating and sporadic `T`, and
-for `T` of Lie type over `𝔽_q`, `q = p^f`, of rank `r`, `|Out(T)|` is at most a small multiple
-of `(r+1) f`, while `|T| ≥ q^r`. The extreme small cases: `A_5` (`|Out| = 2`, `2√60 ≈ 15.5`),
-`A_6` (`4`, `2√360 ≈ 37.9`), `PSL_3(4)` (`12`, `2√20160 ≈ 284`).
-
-*Form.* The weakest form the paper uses: only the regular representation. Stated for groups in
-`Type`; the proof of Lemma A.21 transfers it along isomorphisms. -/
-def GMPOutBound : Prop :=
-  ∀ (T : Type) [Group T] [Finite T], IsSimpleGroup T → (∃ x y : T, x * y ≠ y * x) →
-    ((MulAut.conj : T →* MulAut T).range.index : ℝ) ≤ 2 * Real.sqrt (Nat.card T)
 
 /-- **[GMP, Theorem 1.4], transitive case.** If `G ◁ A ≤ Sym(n)`, `n ≥ 1`, and `G` is
 transitive, then `b(A/G) ≤ n^{log₂ n}`.

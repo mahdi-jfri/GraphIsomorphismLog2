@@ -1,9 +1,13 @@
-import Workspace.ExactConfiguration
-import Workspace.Paper.Rectangles
-import Workspace.LargeSymmetry
-import Workspace.SideParity
-import Workspace.TowerRank
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+module
+
+public import Workspace.ExactConfiguration
+public import Workspace.Paper.Rectangles
+public import Workspace.LargeSymmetry
+public import Workspace.SideParity
+public import Workspace.TowerRank
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+@[expose] public section
 
 /-!
 # Paper statements: the width `aw`, Lemma A.12 (`lem:exact-configuration`)

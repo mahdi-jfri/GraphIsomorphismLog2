@@ -1,4 +1,8 @@
-import Workspace.Impl.LinActionItem
+module
+
+public import Workspace.Impl.LinActionItem
+
+@[expose] public section
 
 /-! Evaluate all newly returned cover generators in the retained full action. -/
 namespace GI.Impl

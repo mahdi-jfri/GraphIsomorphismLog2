@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabMain
+module
+
+public import Workspace.Impl.TermGlueLabMain
+
+@[expose] public section
 
 /-!
 # The label torsor `A/B(x)` of Theorem A.23

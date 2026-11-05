@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojTW
-import Workspace.Impl.PolyBd
+module
+
+public import Workspace.Impl.AggItemCiSojTW
+public import Workspace.Impl.PolyBd
+
+@[expose] public section
 
 /-!
 # The component-table function table, with every precondition discharged

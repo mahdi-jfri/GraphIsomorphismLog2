@@ -1,7 +1,11 @@
-import Workspace.Impl.VsPCtx
-import Workspace.Proved.VsQLoc
-import Workspace.Proved.VsFAlgSpanMath
-import Workspace.Proved.VsMBasic
+module
+
+public import Workspace.Impl.VsPCtx
+public import Workspace.Proved.VsQLoc
+public import Workspace.Proved.VsFAlgSpanMath
+public import Workspace.Proved.VsMBasic
+
+@[expose] public section
 
 /-!
 # What the membership test means
@@ -18,6 +22,8 @@ open Matrix
 namespace GI.Proved
 
 open GI.Impl GI.Cited GI.Lang
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 variable {p : ℕ}
 
@@ -135,7 +141,7 @@ theorem vsP_adjoin_transpose {D : ℕ} {S : Set (Matrix (Fin D) (Fin D) (ZMod p)
 /-- A subalgebra of matrices contains the inverses of its invertible elements. -/
 theorem vsP_inv_mem {D : ℕ} [Fact p.Prime] (B : Subalgebra (ZMod p) (Matrix (Fin D) (Fin D) (ZMod p)))
     {M N : Matrix (Fin D) (Fin D) (ZMod p)} (hM : M ∈ B) (hMN : M * N = 1) : N ∈ B := by
-  have hNM : N * M = 1 := Matrix.mul_eq_one_comm.1 hMN
+  have hNM : N * M = 1 := mul_eq_one_comm.1 hMN
   let f : B →ₗ[ZMod p] B := LinearMap.mulLeft (ZMod p) (⟨M, hM⟩ : B)
   have hf : Function.Injective f := by
     intro a b hab

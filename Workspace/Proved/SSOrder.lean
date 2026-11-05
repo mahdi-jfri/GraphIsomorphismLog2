@@ -1,4 +1,8 @@
-import Workspace.Proved.SSGroup
+module
+
+public import Workspace.Proved.SSGroup
+
+@[expose] public section
 
 /-!
 # The order and the pointwise stabilizer from a closed table

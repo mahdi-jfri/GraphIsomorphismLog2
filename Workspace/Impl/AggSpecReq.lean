@@ -1,5 +1,9 @@
-import Workspace.Impl.AggSpecLayout
-import Workspace.Impl.GenNormStepCost
+module
+
+public import Workspace.Impl.AggSpecLayout
+public import Workspace.Impl.GenNormStepCost
+
+@[expose] public section
 
 /-!
 # The work of the aggregation round is polynomial in `N`

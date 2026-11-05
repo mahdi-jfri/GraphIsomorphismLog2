@@ -1,4 +1,8 @@
-import Workspace.Impl.LinWreathInputCompose
+module
+
+public import Workspace.Impl.LinWreathInputCompose
+
+@[expose] public section
 
 /-! The two-copy task input is computed from the source task's encoding and
 its target vector, at a fixed polynomial cost in their input weight. -/

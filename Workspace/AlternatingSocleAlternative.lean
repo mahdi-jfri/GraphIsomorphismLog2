@@ -1,7 +1,11 @@
-import Workspace.PhysicalActionTransport
-import Workspace.BoundedSocleValuation
-import Workspace.AlternatingSocleEmbedding
-import Workspace.AlternatingNaturalRealization
+module
+
+public import Workspace.PhysicalActionTransport
+public import Workspace.BoundedSocleValuation
+public import Workspace.AlternatingSocleEmbedding
+public import Workspace.AlternatingNaturalRealization
+
+@[expose] public section
 
 namespace GI.BudgetInduction
 

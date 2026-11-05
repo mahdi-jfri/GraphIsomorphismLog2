@@ -1,8 +1,12 @@
-import Workspace.Impl.AggItemOKStr
-import Workspace.Impl.AggItemOKC1
-import Workspace.Impl.AggItemHvCase
-import Workspace.Impl.AggRectCertS
-import Workspace.Impl.LayoutAsm
+module
+
+public import Workspace.Impl.AggItemOKStr
+public import Workspace.Impl.AggItemOKC1
+public import Workspace.Impl.AggItemHvCase
+public import Workspace.Impl.AggRectCertS
+public import Workspace.Impl.LayoutAsm
+
+@[expose] public section
 
 /-!
 # The concrete part of the items' list

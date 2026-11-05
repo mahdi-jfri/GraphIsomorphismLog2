@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCfRTable
+module
+
+public import Workspace.Impl.AggItemCfRTable
+
+@[expose] public section
 
 namespace GI.Impl
 

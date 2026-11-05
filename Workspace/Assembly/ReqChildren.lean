@@ -1,5 +1,9 @@
-import Workspace.Impl.LayoutAsm
-import Workspace.Paper.ScriptCalls
+module
+
+public import Workspace.Impl.LayoutAsm
+public import Workspace.Paper.ScriptCalls
+
+@[expose] public section
 
 /-!
 # The children of the row and aggregation nodes

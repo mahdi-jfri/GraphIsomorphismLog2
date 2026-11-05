@@ -1,6 +1,10 @@
-import Workspace.PrimitiveProductStabilizer
-import Workspace.CosetProductCoordinates
-import Workspace.PrimitiveAbelianNormal
+module
+
+public import Workspace.PrimitiveProductStabilizer
+public import Workspace.CosetProductCoordinates
+public import Workspace.PrimitiveAbelianNormal
+
+@[expose] public section
 
 namespace GI.PrimitiveCartesian
 
@@ -61,6 +65,3 @@ theorem primitive_minimalNormal_product_degree
   rfl
 
 end GI.PrimitiveCartesian
-
-#print axioms GI.PrimitiveCartesian.primitiveMinimalProductCoordinates
-#print axioms GI.PrimitiveCartesian.primitive_minimalNormal_product_degree

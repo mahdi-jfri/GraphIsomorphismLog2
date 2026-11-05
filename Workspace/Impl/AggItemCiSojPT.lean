@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojPull
-import Workspace.Impl.AggItemCiSojSG
+module
+
+public import Workspace.Impl.AggItemCiSojPull
+public import Workspace.Impl.AggItemCiSojSG
+
+@[expose] public section
 
 /-!
 # Tabulating the pulled rectangle colors

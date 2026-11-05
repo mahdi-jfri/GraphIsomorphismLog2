@@ -1,4 +1,8 @@
-import Workspace.Impl.LinAffineCallerCost
+module
+
+public import Workspace.Impl.LinAffineCallerCost
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

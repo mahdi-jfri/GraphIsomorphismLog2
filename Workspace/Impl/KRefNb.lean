@@ -1,4 +1,8 @@
-import Workspace.Impl.KRefBounds
+module
+
+public import Workspace.Impl.KRefBounds
+
+@[expose] public section
 
 /-!
 # The table of neighbours of each tuple

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgE
+module
+
+public import Workspace.Impl.AggItemCiCfgE
+
+@[expose] public section
 
 /-!
 # The configuration query: the automorphisms of a configuration on its fiber

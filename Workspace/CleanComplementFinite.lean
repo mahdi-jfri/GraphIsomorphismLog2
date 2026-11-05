@@ -1,5 +1,9 @@
-import Workspace.CleanComplementLG2
-import Mathlib.GroupTheory.Perm.Fin
+module
+
+public import Workspace.CleanComplementLG2
+public import Mathlib.GroupTheory.Perm.Fin
+
+@[expose] public section
 
 /-! Finite support sets and even full-support cycles for the actual LG2 inputs. -/
 namespace GI.CleanLocalization

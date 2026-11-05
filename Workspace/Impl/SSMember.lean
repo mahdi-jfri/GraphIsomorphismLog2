@@ -1,4 +1,8 @@
-import Workspace.Impl.SSWrapProg
+module
+
+public import Workspace.Impl.SSWrapProg
+
+@[expose] public section
 
 /-!
 # The membership wrapper

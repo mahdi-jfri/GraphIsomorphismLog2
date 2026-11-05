@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabNMid
-import Workspace.Impl.RowSpecProg
+module
+
+public import Workspace.Impl.TermGlueLabNMid
+public import Workspace.Impl.RowSpecProg
+
+@[expose] public section
 
 /-!
 # The label driver meets the contract of the nonempty label part
@@ -105,7 +109,7 @@ theorem tmGLN_ne_spec {P : Program} {g mg lc xlab ylab sup bsb s5 vec s6 : ℕ}
     {K D : ℕ} (hK : ∀ W, tmGLNTotC F W ≤ K * (W + 1) ^ D) :
     Iface.TmGLPNeSpec P (K * 6 ^ D) D g := by
   intro Ω C _ S k e c _ sv lv L hsv hlv _ _ _ label hnat hq m h0 E hP σH σN σS hσH hσN hσS htr
-    _ _ _ hcard hsN hN hqα us vs hus hvs r _ w hw hne
+    _ _ _ hcard hsN hN hqα us vs hus hvs R' hRH hNR hsolv r _ w hw hne
   obtain ⟨τ, U, rfl, hUl, hτ⟩ := tmGLN_w_cons hw hne
   obtain ⟨ps, hlvE, -, hgen, hπ⟩ := hlv
   have hps : PairGens e L.toGiantLabels S.G ps := rsPairGens hgen hπ
@@ -113,7 +117,7 @@ theorem tmGLN_ne_spec {P : Program} {g mg lc xlab ylab sup bsb s5 vec s6 : ℕ}
   have hk : k < sv.wt := tmGLN_k_lt hsv
   have hqc : L.q < (coordsVal e S E).wt := tmGLN_q_lt e S E
   have hmU : m < (encGroup U).wt := tmGLN_m_lt U
-  set I := tmGLSI P₀ hnat hq h0 E hP htr hcard hsN hN hqα with hI
+  set I := tmGLSIWith P₀ hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv with hI
   set inp : Val := .list [.list [.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
     encFun (rowLab e L.con.blocks)], .list us, .list vs], encPerm r,
     .list [encPerm τ, encGroup U]] with hinp
@@ -216,6 +220,6 @@ theorem tmGLN_ne_spec {P : Program} {g mg lc xlab ylab sup bsb s5 vec s6 : ℕ}
       (tmRowStr S E (.inl j)) (tmRowStr S E (.inr l))).Nonempty :=
     tmGLN_row_iso (I := I) hτ hy hy0 hyH
   exact tmGLN_mid hnat hq h0 E hP htr hcard hsN hN hqα hF hxF hyF hsF hbF h5F hvF h6F hxo hyo
-    hsupo hbso hs5 hvec hs6 e hlvE hσN hσS hus hT hiso hcl hτ hy hy0 hw hUl
+    hsupo hbso hs5 hvec hs6 hRH hNR hsolv e hlvE hσN hσS hus hT hiso hcl hτ hy hy0 hw hUl
 
 end GI.Impl

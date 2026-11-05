@@ -1,6 +1,10 @@
-import Mathlib.GroupTheory.QuotientGroup.Defs
-import Mathlib.GroupTheory.Subgroup.Simple
-import Mathlib.SetTheory.Cardinal.Finite
+module
+
+public import Mathlib.GroupTheory.QuotientGroup.Defs
+public import Mathlib.GroupTheory.Subgroup.Simple
+public import Mathlib.SetTheory.Cardinal.Finite
+
+@[expose] public section
 
 /-!
 # Composition series and the products `a(X)`, `b(X)`

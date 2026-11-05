@@ -1,5 +1,9 @@
-import Workspace.Impl.LinGroupCompare
-import Workspace.Impl.LinObjectColor
+module
+
+public import Workspace.Impl.LinGroupCompare
+public import Workspace.Impl.LinObjectColor
+
+@[expose] public section
 
 /-! Decide the orbit-color class of two unrestricted coset-object encodings.
 The old numeric colors are compared in binary; no loop uses their magnitude. -/

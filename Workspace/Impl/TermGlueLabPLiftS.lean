@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPLift
+module
+
+public import Workspace.Impl.TermGlueLabPLift
+
+@[expose] public section
 
 /-!
 # The lifts `k(s)` of the label step: the specifications of the two entry points

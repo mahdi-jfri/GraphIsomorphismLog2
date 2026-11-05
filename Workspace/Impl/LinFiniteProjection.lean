@@ -1,5 +1,9 @@
-import Workspace.Impl.LinFiniteHomogeneous
-import Workspace.Impl.LinDescendAction
+module
+
+public import Workspace.Impl.LinFiniteHomogeneous
+public import Workspace.Impl.LinDescendAction
+
+@[expose] public section
 
 /-! Explicit coordinate reduction to cyclic quotient moduli. -/
 namespace GI.Impl

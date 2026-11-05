@@ -1,4 +1,8 @@
-import Workspace.Impl.VsPS2P
+module
+
+public import Workspace.Impl.VsPS2P
+
+@[expose] public section
 
 /-!
 # The assembled program
@@ -81,7 +85,8 @@ theorem _root_.GI.Proved.VsPHyp.not_le_Sp [Fact I.p.Prime] {s : VsQSt I} {hs : V
   obtain ⟨y, hyK, hy, rfl⟩ := (vsPBar_mem_iff hs).1 hv
   have hxS := (vsPSp_iff hs as hx).1 (hle hxK)
   have hyS := (vsPSp_iff hs as hy).1 (hle hyK)
-  exact vsM_scal_comm (fun a ha b hb => Subgroup.mem_centralizer_iff.1 (hH.habl hb) a ha) hyS hxS
+  set_option backward.isDefEq.respectTransparency false in
+    exact vsM_scal_comm (fun a ha b hb => Subgroup.mem_centralizer_iff.1 (hH.habl hb) a ha) hyS hxS
 
 set_option maxHeartbeats 16000000 in
 /-- **Step 4 of the analysis.** On the input `vsPIn s as Lb ccs tcs`, under the hypotheses

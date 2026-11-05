@@ -1,4 +1,8 @@
-import Workspace.Impl.GiantSel
+module
+
+public import Workspace.Impl.GiantSel
+
+@[expose] public section
 
 /-!
 # The row partition of the row step, as a value
@@ -86,7 +90,7 @@ theorem rowPart_val [Finite Ω] (e : Ω ≃ Fin k) {S : State Ω C} {L : GiantLa
         haveI : Fintype S.dom := Fintype.ofFinite _
         have := Fintype.card_lt_of_injective_not_surjective _ hinj hns
         rw [Nat.card_eq_fintype_card]
-        simp at this; exact this
+        simpa only [Fintype.card_fin] using this
       simp only [Nat.card_eq_fintype_card, Fintype.card_fin] at h1
       omega
   · by_cases hi : e.symm i ∈ S.dom <;> by_cases hj : e.symm j ∈ S.dom
@@ -177,7 +181,7 @@ theorem lblMap_det {P : Program} {b jpre : ℕ} (hb : NatAt P b jpre) (e : Ω �
       · simp only [hi, dite_true]
         have := lblStep_some hb.lblStep hb.findEq hq
           (fun j : Fin L.q => if j ∈ J.p ⟨e.symm i, hi⟩ then 1 else 0)
-          (fun t => by dsimp only; split_ifs <;> omega)
+          (fun t => by split_ifs <;> omega)
         unfold lblOf; simp only [hi, dite_true]
         exact this
       · simp only [hi, dite_false]

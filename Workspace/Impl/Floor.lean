@@ -1,5 +1,9 @@
-import Workspace.Impl.Cases
-import Workspace.Lang.Lib.Tabulate
+module
+
+public import Workspace.Impl.Cases
+public import Workspace.Lang.Lib.Tabulate
+
+@[expose] public section
 
 /-!
 # The floor reset of `Continue`

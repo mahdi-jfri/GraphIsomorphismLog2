@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryRecord
+module
+
+public import Workspace.Impl.LinPrimaryRecord
+
+@[expose] public section
 
 /-! Build all field-layer generator data from the retained full action. The
 map is valid even when the action has a kernel. -/

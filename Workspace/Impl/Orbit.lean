@@ -1,6 +1,10 @@
-import Workspace.Impl.LargestOrbit
-import Workspace.Impl.Floor
-import Workspace.Impl.ColsSplit
+module
+
+public import Workspace.Impl.LargestOrbit
+public import Workspace.Impl.Floor
+public import Workspace.Impl.ColsSplit
+
+@[expose] public section
 
 /-!
 # The orbit chain of `Continue`

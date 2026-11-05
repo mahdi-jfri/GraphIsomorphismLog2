@@ -1,4 +1,8 @@
-import Workspace.Impl.RowPure
+module
+
+public import Workspace.Impl.RowPure
+
+@[expose] public section
 
 /-!
 # Coordinates from clean 3-cycles

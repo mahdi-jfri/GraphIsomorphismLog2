@@ -1,8 +1,12 @@
-import Workspace.Impl.TermGlueLabPLiftM
-import Workspace.Impl.RowA18Prog
-import Workspace.Impl.LabelLift
-import Workspace.Impl.AggItemHvLift
-import Workspace.Impl.GenProdSq
+module
+
+public import Workspace.Impl.TermGlueLabPLiftM
+public import Workspace.Impl.RowA18Prog
+public import Workspace.Impl.LabelLift
+public import Workspace.Impl.AggItemHvLift
+public import Workspace.Impl.GenProdSq
+
+@[expose] public section
 
 /-!
 # The lifts `k(s)` of the label step, as a program
@@ -122,7 +126,7 @@ theorem tmGLPLiftAt_of {P : Program} {b jp jf : ℕ} (h : P.HasAt b (tmGLPLiftFu
       fstM := r10.left
       liftLab := by simpa using r11 0 (by simp)
       shift :=
-        { shiftApp := by simpa [Nat.add_assoc] using r11 1 (by simp)
+        { shiftApp := by have h11 := r11 1 (by simp); norm_num at h11; exact h11
           append := r12.left
           addMap := r13.left
           addK := by simpa using r14 0 (by simp) }

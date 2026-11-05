@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJProgLocMath
-import Workspace.Impl.TermStep
+module
+
+public import Workspace.Impl.TermJProgLocMath
+public import Workspace.Impl.TermStep
+
+@[expose] public section
 
 /-!
 # The local transporter of a class (program, part 1: the tests)

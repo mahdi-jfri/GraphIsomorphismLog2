@@ -1,5 +1,9 @@
-import Workspace.Impl.Weights
-import Workspace.Lang.Prims.BlockMath
+module
+
+public import Workspace.Impl.Weights
+public import Workspace.Lang.Prims.BlockMath
+
+@[expose] public section
 
 /-!
 # The mathematics of the row test of `GiantStep`
@@ -120,7 +124,7 @@ theorem blocks_eq_label {L : GiantLabels S} (J : JohnsonBlocks S L) (hq : 5 ≤ 
     rw [Finset.mem_map]
     exact ⟨b, hb, by simp [hg]⟩
   rw [← h2] at hbm
-  simpa using hbm
+  simpa [Equiv.Perm.one_symm] using hbm
 
 /-- **A natural kernel-orbit map exists exactly when the blocks have size one and the kernel is
 transitive on each block fiber.** -/

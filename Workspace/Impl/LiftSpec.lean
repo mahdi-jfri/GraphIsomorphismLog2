@@ -1,4 +1,8 @@
-import Workspace.Impl.Lift
+module
+
+public import Workspace.Impl.Lift
+
+@[expose] public section
 
 /-!
 # The specification of the lift

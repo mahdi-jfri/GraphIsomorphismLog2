@@ -1,7 +1,11 @@
-import Workspace.Impl.TermJProgPrep
-import Workspace.Impl.TermJProgNs
-import Workspace.Impl.TermJProgTs
-import Workspace.Impl.TermJProgS2
+module
+
+public import Workspace.Impl.TermJProgPrep
+public import Workspace.Impl.TermJProgNs
+public import Workspace.Impl.TermJProgTs
+public import Workspace.Impl.TermJProgS2
+
+@[expose] public section
 
 /-!
 # Polynomial forms of the step specifications used for `Aut_J`

@@ -1,8 +1,12 @@
-import Workspace.Impl.GenNormStage
-import Workspace.Impl.GenNormNumbering
-import Workspace.Impl.GenNormSel
-import Workspace.Impl.GenNormFiber
-import Workspace.Impl.GenNormCall
+module
+
+public import Workspace.Impl.GenNormStage
+public import Workspace.Impl.GenNormNumbering
+public import Workspace.Impl.GenNormSel
+public import Workspace.Impl.GenNormFiber
+public import Workspace.Impl.GenNormCall
+
+@[expose] public section
 
 /-! # The data passed from preparation to the recursive normalization calls -/
 namespace GI.Impl

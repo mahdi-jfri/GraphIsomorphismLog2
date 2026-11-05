@@ -1,6 +1,10 @@
-import Workspace.Algorithm.AuxCarrierRect
-import Workspace.Algorithm.CarrierKeep
-import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+module
+
+public import Workspace.Algorithm.AuxCarrierRect
+public import Workspace.Algorithm.CarrierKeep
+public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+
+@[expose] public section
 
 /-!
 # The data of Lemma A.30 from the state
@@ -94,7 +98,9 @@ noncomputable def colHom : S.G →* Perm (Col S c) where
   map_mul' g k := by
     ext x
     induction x using Quotient.inductionOn with
-    | h a => simp [Quotient.congr_mk]
+    | h a =>
+      change (⟦S.domHom (g * k) a⟧ : Col S c) = ⟦S.domHom g (S.domHom k a)⟧
+      rw [map_mul, Perm.mul_apply]
 
 theorem colHom_col (g : S.G) (v : S.dom) : colHom hs g (col c v) = col c (S.domHom g v) := rfl
 

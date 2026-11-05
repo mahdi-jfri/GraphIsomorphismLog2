@@ -1,5 +1,9 @@
-import Workspace.Algorithm.Certificates
-import Workspace.Algorithm.RefineFn
+module
+
+public import Workspace.Algorithm.Certificates
+public import Workspace.Algorithm.RefineFn
+
+@[expose] public section
 
 /-!
 # The canonical structure of an aggregation round and its equivariance

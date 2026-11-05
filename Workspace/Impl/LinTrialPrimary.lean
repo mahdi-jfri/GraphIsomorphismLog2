@@ -1,6 +1,10 @@
-import Workspace.Impl.LinPrimeSplit
-import Workspace.Impl.LinNatPower
-import Mathlib.Data.Nat.Factorization.Basic
+module
+
+public import Workspace.Impl.LinPrimeSplit
+public import Workspace.Impl.LinNatPower
+public import Mathlib.Data.Nat.Factorization.Basic
+
+@[expose] public section
 
 /-! Trial division needs only a number of divisions bounded by the bit length
 of the cyclic order. No integer factorization primitive is used. -/

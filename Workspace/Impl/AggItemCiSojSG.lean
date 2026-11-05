@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojSq
+module
+
+public import Workspace.Impl.AggItemCiSojSq
+
+@[expose] public section
 
 /-!
 # Constructing an edge exchange at a square index

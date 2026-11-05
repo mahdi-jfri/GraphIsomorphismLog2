@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgN
+module
+
+public import Workspace.Impl.AggItemCiCfgN
+
+@[expose] public section
 
 /-!
 # The configuration query: the step program

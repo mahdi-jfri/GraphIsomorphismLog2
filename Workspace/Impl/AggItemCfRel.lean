@@ -1,8 +1,12 @@
-import Workspace.Impl.AggItemCfProg
-import Workspace.Impl.AggItemStepWt
-import Workspace.Impl.AggItemCase
-import Workspace.Impl.AggItemOK
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Impl.AggItemCfProg
+public import Workspace.Impl.AggItemStepWt
+public import Workspace.Impl.AggItemCase
+public import Workspace.Impl.AggItemOK
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3: the bounds and the relations of the case program

@@ -1,5 +1,9 @@
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
-import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
+module
+
+public import Mathlib.LinearAlgebra.Matrix.SchurComplement
+public import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
+
+@[expose] public section
 
 /-!
 # Bordered determinants

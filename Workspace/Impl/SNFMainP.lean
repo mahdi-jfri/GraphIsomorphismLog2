@@ -1,6 +1,10 @@
-import Workspace.Impl.SNFPairP
-import Workspace.Impl.KRefLib
-import Workspace.Proved.SNFBound
+module
+
+public import Workspace.Impl.SNFPairP
+public import Workspace.Impl.KRefLib
+public import Workspace.Proved.SNFBound
+
+@[expose] public section
 
 /-!
 # The main function of the Smith form program

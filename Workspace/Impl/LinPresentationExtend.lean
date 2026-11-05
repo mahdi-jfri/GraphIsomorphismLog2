@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPresentation
-import Mathlib.LinearAlgebra.Isomorphisms
+module
+
+public import Workspace.Impl.LinPresentation
+public import Mathlib.LinearAlgebra.Isomorphisms
+
+@[expose] public section
 
 /-! Appending relation generators constructs the quotients A/B_i and W/D.
 The equivalence sends an integer coordinate vector to its original image,

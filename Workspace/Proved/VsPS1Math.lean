@@ -1,4 +1,8 @@
-import Workspace.Proved.VsPS3Math
+module
+
+public import Workspace.Proved.VsPS3Math
+
+@[expose] public section
 
 /-!
 # The first branches
@@ -8,6 +12,8 @@ import Workspace.Proved.VsPS3Math
   with a generator outside `L`, grows `A` (branches `N₀` and `N₂` abelian).
 * `VsPHyp.two_le_n`: `n ≥ 2` (since `C̄` is not abelian).
 -/
+
+set_option backward.isDefEq.respectTransparency false
 
 namespace GI.Proved
 

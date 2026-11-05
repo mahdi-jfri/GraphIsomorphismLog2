@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.Basic
+module
+
+public import Workspace.Lang.Lib.Basic
+
+@[expose] public section
 
 /-!
 # Sparse programs

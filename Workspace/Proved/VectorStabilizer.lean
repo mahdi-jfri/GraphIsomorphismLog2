@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHProg
+module
+
+public import Workspace.Impl.VsHProg
+
+@[expose] public section
 
 /-!
 # Vector stabilizers in polynomial time

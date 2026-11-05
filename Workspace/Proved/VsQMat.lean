@@ -1,6 +1,10 @@
-import Workspace.Proved.VsFMatPowMath
-import Workspace.Impl.VsQTr
-import Workspace.Cited.AlgoLinear
+module
+
+public import Workspace.Proved.VsFMatPowMath
+public import Workspace.Impl.VsQTr
+public import Workspace.Cited.AlgoLinear
+
+@[expose] public section
 
 /-!
 # Matrices over `𝔽_p` as lists

@@ -1,11 +1,15 @@
-import Workspace.Algorithm.Correctness
-import Workspace.Algorithm.Certificates
-import Workspace.Algorithm.Cases
-import Workspace.Algorithm.Tree
-import Workspace.Paper.LocalCertificates
-import Workspace.GraphReduction
-import Workspace.GraphOutput
-import Workspace.Statement.Main
+module
+
+public import Workspace.Algorithm.Correctness
+public import Workspace.Algorithm.Certificates
+public import Workspace.Algorithm.Cases
+public import Workspace.Algorithm.Tree
+public import Workspace.Paper.LocalCertificates
+public import Workspace.GraphReduction
+public import Workspace.GraphOutput
+public import Workspace.Statement.Main
+
+@[expose] public section
 
 /-!
 # Paper statements: the algorithm of Sections 3 and 6
@@ -134,12 +138,12 @@ theorem graph_reduction_answer [Fintype V] (X Y : SimpleGraph V) [DecidableRel X
   · rintro ⟨⟨p, rfl⟩, hp⟩
     refine ⟨p, fun u v => ?_, rfl⟩
     have h := congrArg Prod.snd (hp (u, v))
-    simp only [pairColor, diagonalHom_apply, decide_eq_decide] at h
-    exact h.symm
+    dsimp only [pairColor, diagonalHom_apply] at h
+    exact decide_eq_decide.mp h.symm
   · rintro ⟨p, hp, rfl⟩
     refine ⟨⟨p, rfl⟩, fun ⟨u, v⟩ => ?_⟩
-    simp only [pairColor, diagonalHom_apply, Prod.mk.injEq, decide_eq_decide]
-    exact ⟨p.injective.eq_iff, (hp u v).symm⟩
+    simp only [pairColor, diagonalHom_apply, Prod.mk.injEq]
+    exact ⟨decide_eq_decide.mpr p.injective.eq_iff, decide_eq_decide.mpr (hp u v).symm⟩
 
 /-- **Algorithm 1** (`alg:graph-wrapper`, `GraphIso`), correctness. Let `A` be the
 output of a run of `Solve` on the pair state of `X` and `Y`. The vertex permutations
@@ -269,7 +273,7 @@ end Certificates
 `C(q,3) > N`. Also `q` exceeds the logarithmic transitive-kernel threshold. The
 support classification therefore gives precisely the one-label and two-label
 cases." -/
-theorem cases_support_classification (hcite : GI.Cited.TransitiveAffected) {α : ℝ}
+theorem cases_support_classification {α : ℝ}
     (hα : 1 / 3 < α) :
     ∃ N₁ : ℕ, ∀ N : ℕ, N₁ ≤ N →
       ∀ {Ω Γ : Type} [Fintype Ω] [DecidableEq Ω] [Fintype Γ] [DecidableEq Γ]
@@ -279,7 +283,7 @@ theorem cases_support_classification (hcite : GI.Cited.TransitiveAffected) {α :
         (Nonempty (GI.StabilizerQuotient.KernelQuotient φ Ω Γ) ∨
           Nonempty (GI.StabilizerQuotient.KernelQuotient φ Ω (GI.Pairs.OrderedPair Γ)) ∨
           Nonempty (GI.StabilizerQuotient.KernelQuotient φ Ω (GI.Johnson.SubsetVertex Γ 2))) :=
-  large_giant_support_cases hcite hα
+  large_giant_support_cases hα
 
 /-- **Section 6.2**, second paragraph: "a selected Johnson constituent has
 `C(q,a) ≥ q` physical blocks … there are exactly `q` physical blocks and `a = 1`." -/

@@ -1,5 +1,9 @@
-import Workspace.Impl.CamSmallM
-import Workspace.Impl.CamXOrbits
+module
+
+public import Workspace.Impl.CamSmallM
+public import Workspace.Impl.CamXOrbits
+
+@[expose] public section
 
 /-!
 # The sizes read by `camProg`

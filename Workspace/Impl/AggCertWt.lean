@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertPhase
+module
+
+public import Workspace.Impl.AggCertPhase
+
+@[expose] public section
 
 /-!
 # The weight of the program states of the certificate phase

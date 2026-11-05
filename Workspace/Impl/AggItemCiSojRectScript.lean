@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojQueryPost
-import Workspace.Impl.AggItemCiSojGuard
+module
+
+public import Workspace.Impl.AggItemCiSojQueryPost
+public import Workspace.Impl.AggItemCiSojGuard
+
+@[expose] public section
 
 /-! # Exact model dispatch from the source certificate to the ordered queries -/
 

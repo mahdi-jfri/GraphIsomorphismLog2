@@ -1,5 +1,11 @@
-import Workspace.Impl.LinObjectReindexDiagonal
-import Workspace.Impl.LinObjectBlockPresentation
+module
+
+public import Workspace.Impl.LinObjectReindexDiagonal
+public import Workspace.Impl.LinObjectBlockPresentation
+
+@[expose] public section
+
+set_option backward.isDefEq.respectTransparency false
 
 namespace GI.Impl
 open GI.Cited GI.Multicoset

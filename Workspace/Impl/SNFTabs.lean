@@ -1,5 +1,9 @@
-import Workspace.Impl.HNFTabs
-import Workspace.Proved.SNFEmb
+module
+
+public import Workspace.Impl.HNFTabs
+public import Workspace.Proved.SNFEmb
+
+@[expose] public section
 
 /-!
 # Tables for the Smith form program

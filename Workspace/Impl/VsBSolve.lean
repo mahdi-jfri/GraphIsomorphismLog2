@@ -1,7 +1,11 @@
-import Workspace.Proved.VsBSolveMath
-import Workspace.Impl.VsWProgKer
-import Workspace.Impl.VsWProgImg
-import Workspace.Lang.Lib.Search
+module
+
+public import Workspace.Proved.VsBSolveMath
+public import Workspace.Impl.VsWProgKer
+public import Workspace.Impl.VsWProgImg
+public import Workspace.Lang.Lib.Search
+
+@[expose] public section
 
 /-!
 # The solving program

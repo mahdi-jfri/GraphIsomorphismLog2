@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabN6
-import Workspace.Impl.LinAffineIface
+module
+
+public import Workspace.Impl.TermGlueLabN6
+public import Workspace.Impl.LinAffineIface
+
+@[expose] public section
 
 /-!
 # The label driver: the step-6 module
@@ -11,8 +15,8 @@ output reduction and its library blocks, and the affine transporter
 ConstructiveMembership at `jm` and VectorStabilizer at `jv`.
 
 `tmGLN_m6_ok`: placed at `b`, with these primitives and PointwiseStab at `jp`, the module meets
-the step-6 contract `TmGLNS6OK`. The affine contract `TmGLAffineSpec` is no longer a hypothesis:
-it is `linAffineTransportAll_iface_of`, with its constants `tmGLNAffK`, `tmGLNAffD`.
+the step-6 contract `TmGLNS6OK`. The affine contract `TmGLAffineSpec` is not a hypothesis: it
+is `linAffineTransportAll_iface_of`, with its constants `tmGLNAffK`, `tmGLNAffD`.
 
 Layout (offsets from `b`): `0` step 6, `1` the trampoline, `2` `mkGroup` (7), `9` the output,
 `10` the reduction, `11` the conjugation, `12` append (3), `15` inverse (12), `27` compose (4),

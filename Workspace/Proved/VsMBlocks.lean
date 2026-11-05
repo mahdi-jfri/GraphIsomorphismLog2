@@ -1,5 +1,9 @@
-import Workspace.Proved.VsMBasic
-import Workspace.Proved.Palfy
+module
+
+public import Workspace.Proved.VsMBasic
+public import Workspace.Proved.Palfy
+
+@[expose] public section
 
 /-!
 # M2, blocks of pieces and Pálfy's bound
@@ -277,8 +281,8 @@ theorem vsM_blocks [FiniteDimensional (ZMod p) V] [Nontrivial V] : VsMBlocksStmt
       rw [← Subgroup.index_ker]
       exact Nat.le_of_dvd (Nat.pos_of_ne_zero Subgroup.index_ne_zero_of_finite)
         (Subgroup.index_dvd_of_le hker)
-    haveI : IsSolvable H := hsol
-    haveI : IsSolvable ρ.range := solvable_of_surjective ρ.rangeRestrict_surjective
+    haveI : Group.IsSolvable H := hsol
+    haveI : Group.IsSolvable ρ.range := solvable_of_surjective ρ.rangeRestrict_surjective
     haveI := vsM_labHom_preprimitive hinv htr hmin
     haveI : FaithfulSMul ρ.range C := ⟨fun h => Subtype.ext (Equiv.ext h)⟩
     have hΓ : Nat.card ρ.range ≤ C.ncard ^ 24 := by

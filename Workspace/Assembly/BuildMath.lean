@@ -1,5 +1,9 @@
-import Workspace.Assembly.Refinement
-import Workspace.Lang.Lib.Tabulate
+module
+
+public import Workspace.Assembly.Refinement
+public import Workspace.Lang.Lib.Tabulate
+
+@[expose] public section
 
 /-!
 # The pair state of Algorithm 1, entry by entry

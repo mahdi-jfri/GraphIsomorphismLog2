@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJProgLabs
-import Workspace.Impl.Reduce
+module
+
+public import Workspace.Impl.TermJProgLabs
+public import Workspace.Impl.Reduce
+
+@[expose] public section
 
 /-!
 # The answer `[t₀, ⟨t₀⁻¹ t_h, Aut_J⟩]` (program)

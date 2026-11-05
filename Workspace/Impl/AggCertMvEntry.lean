@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertMvStart
+module
+
+public import Workspace.Impl.AggCertMvStart
+
+@[expose] public section
 
 /-!
 # The move program: the entry, and the condition of `cert_phase_spec`

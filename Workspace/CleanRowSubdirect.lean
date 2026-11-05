@@ -1,4 +1,8 @@
-import Workspace.CleanRowKernel
+module
+
+public import Workspace.CleanRowKernel
+
+@[expose] public section
 
 /-! The common local group H and the subdirect row subgroup are extracted from
 the actual clean-coordinate kernel, rather than supplied as hypotheses. -/

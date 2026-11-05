@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectLift
-import Workspace.Impl.LinPermWordImage
+module
+
+public import Workspace.Impl.LinObjectLift
+public import Workspace.Impl.LinPermWordImage
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

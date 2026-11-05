@@ -1,4 +1,8 @@
-import Workspace.Algorithm.AuxPartitions
+module
+
+public import Workspace.Algorithm.AuxPartitions
+
+@[expose] public section
 
 /-!
 # The first rectangle of a configuration branch (Lemma 5.1)
@@ -111,7 +115,7 @@ theorem comp_emb {P : PairCfg q} {v : ℕ} (hv : v ∈ P.vals) (s : Bool) (i : F
     exact ⟨k, (mem_colorComponent _ _ _ _ _).2 hk, rfl⟩
   · rintro ⟨k, hk, rfl⟩
     have hk := (mem_colorComponent _ _ _ _ _).1 hk
-    exact Relation.ReflTransGen.lift (P.emb rfl) (fun a b hab => (edge_emb_iff hv s a b).2 hab) hk
+    exact Relation.ReflTransGen.lift (P.emb rfl) (fun a b hab => (edge_emb_iff hv s a b).2 hab) _ _ hk
 
 end PairCfg
 
@@ -447,7 +451,7 @@ theorem rectItem_valid (O : RectOracle P S L) (ch : SojChoice) {X Y : PairCfg L.
         (certVals X (X.idx hx) cert).2.2) with hN
     obtain ⟨hlen, hcall, hsound, hcomp⟩ :=
       O.valid _ _ (rectM X (X.idx hx) cert) N a₀ hlam hdis h3 hRne
-        (by simpa only [etaB] using harea)
+        (by simpa only [etaB, rectW, rectR] using harea)
     -- every parent isomorphism gives a permitted matrix transporter
     have htrans : ∀ g ∈ S.answer ∩ B, ∃ hg : g ∈ S.G,
         a₀⁻¹ * L.π ⟨g, hg⟩ ∈ leftOvercoset (rectM X (X.idx hx) cert) N := by

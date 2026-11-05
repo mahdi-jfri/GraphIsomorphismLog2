@@ -1,5 +1,9 @@
-import Workspace.Impl.VsFMatStep
-import Workspace.Impl.VStabLinSift
+module
+
+public import Workspace.Impl.VsFMatStep
+public import Workspace.Impl.VStabLinSift
+
+@[expose] public section
 
 /-!
 # Matrix products over `𝔽_p` as a `GI.Lang` program

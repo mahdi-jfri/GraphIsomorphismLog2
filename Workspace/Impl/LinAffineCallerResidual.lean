@@ -1,4 +1,8 @@
-import Workspace.Impl.LinAffineCallerCoset
+module
+
+public import Workspace.Impl.LinAffineCallerCoset
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

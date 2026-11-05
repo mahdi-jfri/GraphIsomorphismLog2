@@ -1,5 +1,9 @@
-import Workspace.AlternatingSimple
-import Mathlib.GroupTheory.Commutator.Basic
+module
+
+public import Workspace.AlternatingSimple
+public import Mathlib.GroupTheory.Commutator.Basic
+
+@[expose] public section
 
 open scoped commutatorElement
 

@@ -1,5 +1,9 @@
-import Workspace.Lang.Prims.LinNormal
-import Workspace.Impl.LinSlp
+module
+
+public import Workspace.Lang.Prims.LinNormal
+public import Workspace.Impl.LinSlp
+
+@[expose] public section
 
 /-! The constructive-membership task, including the cost of writing its SLP.
 The bound on program length alone is insufficient: the instruction indices must

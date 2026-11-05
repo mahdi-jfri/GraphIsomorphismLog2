@@ -1,8 +1,12 @@
-import Workspace.Impl.AggCertWalk
-import Workspace.Impl.AggCacheProg
-import Workspace.Impl.AggInc
-import Workspace.Impl.AggTup
-import Workspace.Impl.AggPTProg
+module
+
+public import Workspace.Impl.AggCertWalk
+public import Workspace.Impl.AggCacheProg
+public import Workspace.Impl.AggInc
+public import Workspace.Impl.AggTup
+public import Workspace.Impl.AggPTProg
+
+@[expose] public section
 
 /-!
 # The program states of the certificate phase

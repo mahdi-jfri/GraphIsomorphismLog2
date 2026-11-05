@@ -1,4 +1,8 @@
-import Workspace.Impl.JohnD
+module
+
+public import Workspace.Impl.JohnD
+
+@[expose] public section
 
 /-!
 # The sets `B(x, y)` and `C(x, y)` as programs

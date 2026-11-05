@@ -1,5 +1,9 @@
-import Workspace.Impl.KRefFinal
-import Workspace.Lang.Bridge
+module
+
+public import Workspace.Impl.KRefFinal
+public import Workspace.Lang.Bridge
+
+@[expose] public section
 
 /-!
 # Joint `k`-ary coherent refinement in polynomial time

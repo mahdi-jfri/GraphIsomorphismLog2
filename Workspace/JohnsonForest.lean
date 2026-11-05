@@ -1,6 +1,10 @@
-import Workspace.JohnsonEntropy
-import Mathlib.Data.Finset.Card
-import Lean.Elab.Tactic.Omega
+module
+
+public import Workspace.JohnsonEntropy
+public import Mathlib.Data.Finset.Card
+public import Lean.Elab.Tactic.Omega
+
+@[expose] public section
 
 namespace GI.Johnson
 

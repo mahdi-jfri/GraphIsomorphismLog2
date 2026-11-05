@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectBlockPresentation
+module
+
+public import Workspace.Impl.LinObjectBlockPresentation
+
+@[expose] public section
 
 /-! Read the last coefficient block of an integer solution as the common
 translation. A failed row equation is exactly failure of liftability. -/
@@ -13,7 +17,7 @@ theorem linRowStack_vecMul {r s d : ℕ} (M : Matrix (Fin r) (Fin d) ℤ)
   ext j
   simp only [Matrix.vecMul, dotProduct, Pi.add_apply]
   rw [Fin.sum_univ_add]
-  simp [linRowStack]
+  simp [linRowStack, Fin.addCases]
 
 theorem linObjectCorrection_rows {Q : Type*} [AddCommGroup Q] {p r d : ℕ}
     (B : Fin p → Submodule ℤ Q) (f : (Fin d → ℤ) →ₗ[ℤ] Q)

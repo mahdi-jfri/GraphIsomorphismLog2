@@ -1,5 +1,9 @@
-import Workspace.Impl.LinModReduce
-import Workspace.Impl.LinMapEncoded
+module
+
+public import Workspace.Impl.LinModReduce
+public import Workspace.Impl.LinMapEncoded
+
+@[expose] public section
 
 /-! Reduce integer vectors and dense matrices entrywise to F_p. -/
 namespace GI.Impl

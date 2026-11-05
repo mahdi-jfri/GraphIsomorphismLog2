@@ -1,7 +1,11 @@
-import Workspace.AlternatingSimple
-import Workspace.OrbitBudget
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Data.Fintype.Powerset
+module
+
+public import Workspace.AlternatingSimple
+public import Workspace.OrbitBudget
+public import Mathlib.Data.Nat.Choose.Basic
+public import Mathlib.Data.Fintype.Powerset
+
+@[expose] public section
 
 /-!
 # Lemma A.11: the three mathematical steps

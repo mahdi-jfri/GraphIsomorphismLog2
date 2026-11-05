@@ -1,7 +1,11 @@
-import Workspace.Impl.LinMatrixTable
-import Workspace.Impl.LinObjectBlockPresentation
-import Workspace.Lang.Lib.LinIntTests
-import Workspace.Lang.Lib.LinIntVector
+module
+
+public import Workspace.Impl.LinMatrixTable
+public import Workspace.Impl.LinObjectBlockPresentation
+public import Workspace.Lang.Lib.LinIntTests
+public import Workspace.Lang.Lib.LinIntVector
+
+@[expose] public section
 
 /-! The diagonal relation rows, assembled without enumerating elements
 of `A/N`. One original coordinate is repeated in every local block. -/

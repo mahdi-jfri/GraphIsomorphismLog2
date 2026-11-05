@@ -1,6 +1,10 @@
-import Workspace.RectangleSides
-import Workspace.RectangleOutput
-import Workspace.MatrixCaps
+module
+
+public import Workspace.RectangleSides
+public import Workspace.RectangleOutput
+public import Workspace.MatrixCaps
+
+@[expose] public section
 
 namespace GI.Rectangle
 

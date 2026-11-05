@@ -1,5 +1,9 @@
-import Workspace.Impl.DomRestrict
-import Workspace.Lang.Prims.Ops
+module
+
+public import Workspace.Impl.DomRestrict
+public import Workspace.Lang.Prims.Ops
+
+@[expose] public section
 
 /-!
 # Lifting an answer from the domain back to `Ω`, in `GI.Lang`

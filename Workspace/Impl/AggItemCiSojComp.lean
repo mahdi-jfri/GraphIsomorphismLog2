@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojMath
+module
+
+public import Workspace.Impl.AggItemCiSojMath
+
+@[expose] public section
 
 /-!
 # Labeling the imprimitive blocks by components

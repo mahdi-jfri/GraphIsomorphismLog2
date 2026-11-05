@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimeAction
-import Workspace.Impl.LinPrimaryRecord
+module
+
+public import Workspace.Impl.LinPrimeAction
+public import Workspace.Impl.LinPrimaryRecord
+
+@[expose] public section
 
 /-! Project both retained affine matrices by reducing their destination rows.
 The original record remains available to lift the returned cover elements. -/

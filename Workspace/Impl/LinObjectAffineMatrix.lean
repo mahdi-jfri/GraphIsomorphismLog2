@@ -1,7 +1,11 @@
-import Workspace.Impl.LinObjectEvalSpec
-import Workspace.Impl.LinIntBasis
-import Workspace.Impl.LinFiniteDifference
-import Workspace.Impl.TermGlueLabPTr
+module
+
+public import Workspace.Impl.LinObjectEvalSpec
+public import Workspace.Impl.LinIntBasis
+public import Workspace.Impl.LinFiniteDifference
+public import Workspace.Impl.TermGlueLabPTr
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

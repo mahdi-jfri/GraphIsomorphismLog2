@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemC1Top
+module
+
+public import Workspace.Impl.AggItemC1Top
+
+@[expose] public section
 
 /-!
 # Case 1 as a program: the functions in one place

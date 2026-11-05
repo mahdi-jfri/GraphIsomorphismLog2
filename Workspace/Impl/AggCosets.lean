@@ -1,5 +1,9 @@
-import Workspace.Impl.AggKer
-import Workspace.Impl.AggChoice
+module
+
+public import Workspace.Impl.AggKer
+public import Workspace.Impl.AggChoice
+
+@[expose] public section
 
 /-!
 # Coset representatives of `ker(φ_T|_A)` in `A` from the orbit of the test tuple

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectSourceOffsetsMath
+module
+
+public import Workspace.Impl.LinObjectSourceOffsetsMath
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

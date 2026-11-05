@@ -1,7 +1,8 @@
-import Workspace.Assembly.Refinement
-import Workspace.AutCardFromOut
-import Workspace.Axioms.GMP
-import Workspace.Axioms.SimpleValuationDegree
+module
+
+public import Workspace.Assembly.Refinement
+
+@[expose] public section
 
 /-!
 # The final reduction
@@ -20,8 +21,6 @@ of a run `r` on the pair state at cost `K (r.total w + …)^d` (a). Theorem 1.1 
 returns the exact answer, so the conversion gives a correct output (b). A polynomial in
 `exp(C' (log(n+2))²)` and `n` is again at most `exp(C'' (log(n+2))²)` (`qp_poly`), and `glue`
 (`Workspace/Lang/Glue.lean`) turns the language program into a machine program.
-
-`final_of_axioms` discharges the cited inputs by the axioms of `Workspace/Axioms/`.
 -/
 
 namespace GI.Assembly
@@ -150,17 +149,15 @@ theorem mainBody_spec {Pg : Program} {fb fs fc : ℕ} {inp : Val}
 * (b) `GraphWrapper Pg fm fs`: function `fm` is Algorithm 1 around `fs`;
 * (c) `WorkBound w`: the work function `w` satisfies the work bounds of Section 7.4.
 
-Assume the cited results `GMPOutBound` ([GMP, Lemma 7.7]) and `SimpleValuationDegree`. Then
-graph isomorphism is in quasipolynomial time. -/
-theorem final (hOut : GI.Cited.GMPOutBound) (hLie : GI.Cited.SimpleValuationDegree)
-    {Pg : Program} {fm fs : ℕ} {w : Node P₀ → ℝ}
+Then graph isomorphism is in quasipolynomial time. -/
+theorem final {Pg : Program} {fm fs : ℕ} {w : Node P₀ → ℝ}
     (ha : Implements .solve Pg fs w) (hb : GraphWrapper Pg fm fs) (hc : WorkBound w) :
     GI.Statement.GraphIsomorphismInQuasipolynomialTime := by
   classical
   obtain ⟨Ka, da, hsolve⟩ := ha
   obtain ⟨fb, fc, hfm, ⟨Kb, db, hbuild⟩, ⟨Kc, dc, hconv⟩⟩ := hb
   obtain ⟨cw, hcw, hw⟩ := hc
-  obtain ⟨C₁, hC₁⟩ := thm_main_graph_stage1'' (GI.autCardLeSq_of_outBound hOut) hLie hw hcw
+  obtain ⟨C₁, hC₁⟩ := thm_main_graph_stage1'' hw hcw
   -- The constants of the bound, chosen before `n`.
   obtain ⟨CB, hCB⟩ := qp_poly Kb db 0
   obtain ⟨CV, hCV⟩ := qp_add C₁ CB
@@ -220,12 +217,5 @@ theorem final (hOut : GI.Cited.GMPOutBound) (hLie : GI.Cited.SimpleValuationDegr
   have := (Nat.cast_nonneg n : (0 : ℝ) ≤ n)
   push_cast at hfin ⊢
   nlinarith
-
-/-- **The final reduction, with the cited inputs taken from the axioms** `GI.Axioms.gmpOutBound`
-and `GI.Axioms.simpleValuationDegree`. What remains are the obligations (a), (b), (c). -/
-theorem final_of_axioms {Pg : Program} {fm fs : ℕ} {w : Node P₀ → ℝ}
-    (ha : Implements .solve Pg fs w) (hb : GraphWrapper Pg fm fs) (hc : WorkBound w) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
-  final GI.Axioms.gmpOutBound GI.Axioms.simpleValuationDegree ha hb hc
 
 end GI.Assembly

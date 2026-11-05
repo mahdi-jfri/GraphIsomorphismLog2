@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojFrameScript
-import Workspace.Impl.AggItemCiSojFP
-import Workspace.Impl.AggItemCiSojGC
+module
+
+public import Workspace.Impl.AggItemCiSojFrameScript
+public import Workspace.Impl.AggItemCiSojFP
+public import Workspace.Impl.AggItemCiSojGC
+
+@[expose] public section
 
 /-! # Certificate sides and the actual table programs -/
 

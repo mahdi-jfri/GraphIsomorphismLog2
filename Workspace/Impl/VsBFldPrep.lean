@@ -1,7 +1,11 @@
-import Workspace.Impl.VsBFldHyp
-import Workspace.Impl.VsBDesc
-import Workspace.Impl.VsBSolve
-import Workspace.Impl.VsQAnaBase
+module
+
+public import Workspace.Impl.VsBFldHyp
+public import Workspace.Impl.VsBDesc
+public import Workspace.Impl.VsBSolve
+public import Workspace.Impl.VsQAnaBase
+
+@[expose] public section
 
 /-!
 # The preparation of the field line

@@ -1,9 +1,13 @@
-import Workspace.Proved.VsQSplit1
-import Workspace.Impl.VsQAnaLC
-import Workspace.Proved.VsFAlgSpanMath
-import Workspace.Proved.VsWAlgMath
-import Workspace.Proved.VsWEigMath
-import Workspace.Proved.VsFAlgPiece
+module
+
+public import Workspace.Proved.VsQSplit1
+public import Workspace.Impl.VsQAnaLC
+public import Workspace.Proved.VsFAlgSpanMath
+public import Workspace.Proved.VsWAlgMath
+public import Workspace.Proved.VsWEigMath
+public import Workspace.Proved.VsFAlgPiece
+
+@[expose] public section
 
 /-!
 # The local algebra of an abelian state
@@ -22,6 +26,8 @@ branch of the analysis uses.
 -/
 
 open Matrix
+
+set_option backward.isDefEq.respectTransparency false
 
 namespace GI.Proved
 
@@ -234,7 +240,6 @@ theorem vsQBe_mem (f : Module.End (ZMod I.p) (Fin (vsQD s) → ZMod I.p)) :
 theorem vsQBe_comm (hab : s.Ab) : ∀ x ∈ vsQBe s, ∀ y ∈ vsQBe s, Commute x y := by
   rintro _ ⟨X, hX, rfl⟩ _ ⟨Y, hY, rfl⟩
   have := vsQBl_comm hs hab X hX Y hY
-  simp only [AlgEquiv.toAlgHom_eq_coe]
   exact this.map _
 
 theorem vsQ_toLin_lam_comm (hab : s.Ab) {g : Perm (Fin I.n)} (hg : g ∈ s.hs)
@@ -414,7 +419,8 @@ theorem vsQFixF_mem (hab : s.Ab) (i) : vsQFixF s i ∈ vsQBe s ∧ vsQFixF s i ^
   refine ⟨⟨_, h.1, rfl⟩, ?_⟩
   have e := congrArg (Matrix.toLinAlgEquiv' : _ ≃ₐ[ZMod I.p] _) h.2
   rw [map_pow] at e
-  simpa only [vsQFixF, vsWLin, Fin.getElem_fin] using e
+  change vsQFixF s i ^ I.p = vsQFixF s i at e
+  exact e
 
 /-- **There is a piece.** -/
 theorem vsQPcs_ne (hab : s.Ab) (hD : 1 ≤ vsQD s) : vsQPcs s ≠ [] := by
@@ -445,7 +451,6 @@ theorem vsQ_field (hab : s.Ab) (hann : vsWSp I.p (vsQD s) (vsQAnnL s) = ⊤)
   obtain ⟨-, -, c, hc⟩ := (vsFEigL_pieces I.prime _ (vsQFix_sq (s := s))).1 Q hQ
   have hspan : ∀ t ∈ vsQBe s, t ^ I.p = t → t ∈ Submodule.span (ZMod I.p) (Set.range (vsQFixF s)) := by
     rintro _ ⟨x, hx, rfl⟩ hfix
-    simp only [AlgEquiv.toAlgHom_eq_coe] at hfix ⊢
     rw [← map_pow] at hfix
     have hx' : x ^ I.p = x := Matrix.toLinAlgEquiv'.injective hfix
     have hmem := (vsFFixL_span I.prime (vsQBm_sq s) (vsQBm_comm hs hab) x).2

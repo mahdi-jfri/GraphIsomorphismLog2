@@ -1,6 +1,10 @@
-import Workspace.Impl.LinPermChain
-import Workspace.Impl.LinPermPow
-import Workspace.Impl.LinAssign
+module
+
+public import Workspace.Impl.LinPermChain
+public import Workspace.Impl.LinPermPow
+public import Workspace.Impl.LinAssign
+
+@[expose] public section
 
 /-! Deterministic preparation of one cyclic relation, from permutation inputs. -/
 namespace GI.Impl

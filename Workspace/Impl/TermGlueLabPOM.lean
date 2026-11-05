@@ -1,6 +1,10 @@
-import Workspace.Impl.TermGlueLabPGenM
-import Workspace.Impl.TermGlueLabPE
-import Workspace.CitedChecks.AlgoTerminalChecks
+module
+
+public import Workspace.Impl.TermGlueLabPGenM
+public import Workspace.Impl.TermGlueLabPE
+public import Workspace.CitedChecks.AlgoTerminalChecks
+
+@[expose] public section
 
 /-!
 # The orientation coordinate in the items (step 5, all types distinct)

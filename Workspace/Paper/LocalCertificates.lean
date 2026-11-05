@@ -1,5 +1,9 @@
-import Workspace.CertificateCalls
-import Workspace.CertificateComparison
+module
+
+public import Workspace.CertificateCalls
+public import Workspace.CertificateComparison
+
+@[expose] public section
 
 /-!
 # Paper statements: local certificates (Section 4, Sections A.1 and A.3)

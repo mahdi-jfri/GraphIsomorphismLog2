@@ -1,4 +1,8 @@
-import Workspace.Impl.TermCosetLink
+module
+
+public import Workspace.Impl.TermCosetLink
+
+@[expose] public section
 
 /-!
 # Reading `N`-transporters from the stored coset table: the mathematics

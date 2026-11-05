@@ -1,7 +1,11 @@
-import Workspace.Proved.VsPStep4Math
-import Workspace.Proved.VsPBasMath
-import Workspace.Proved.VsMIndep
-import Workspace.Impl.VsPFin
+module
+
+public import Workspace.Proved.VsPStep4Math
+public import Workspace.Proved.VsPBasMath
+public import Workspace.Proved.VsMIndep
+public import Workspace.Impl.VsPFin
+
+@[expose] public section
 
 /-!
 # The nondegenerate stage in permutation terms
@@ -13,6 +17,8 @@ the commutator `ζ = ρ c0` gives the pairing, and the radical lies in `S`. From
 * the orbit lists stay in `vsPT`, with fitting keys, for every number of passes;
 * the spin dimension `d` of the program has `r^d ≤ D²` (`VsPS4.pow_dim_le`).
 -/
+
+set_option backward.isDefEq.respectTransparency false
 
 namespace GI.Proved
 

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectBlockPresentation
+module
+
+public import Workspace.Impl.LinObjectBlockPresentation
+
+@[expose] public section
 
 /-! Assemble the presentation of the object quotient from the presentation
 of `A/N` and coordinate vectors of local stabilizer generators. -/

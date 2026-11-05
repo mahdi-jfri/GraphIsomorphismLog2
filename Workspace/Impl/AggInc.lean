@@ -1,4 +1,8 @@
-import Workspace.Impl.AggIncMath
+module
+
+public import Workspace.Impl.AggIncMath
+
+@[expose] public section
 
 /-!
 # The window increment as a program

@@ -1,5 +1,9 @@
-import Mathlib.GroupTheory.GroupAction.Quotient
-import Mathlib.Algebra.Group.Pi.Lemmas
+module
+
+public import Mathlib.GroupTheory.GroupAction.Quotient
+public import Mathlib.Algebra.Group.Pi.Lemmas
+
+@[expose] public section
 
 namespace GI.PrimitiveCartesian
 
@@ -62,7 +66,3 @@ theorem physical_product_fiber_transport
     physical_product_coordinate_action a F Q c representatives coordinates, hz, one_smul]
 
 end GI.PrimitiveCartesian
-
-#print axioms GI.PrimitiveCartesian.physical_product_coordinate_action
-#print axioms GI.PrimitiveCartesian.physical_product_coordinate_fiber
-#print axioms GI.PrimitiveCartesian.physical_product_fiber_transport

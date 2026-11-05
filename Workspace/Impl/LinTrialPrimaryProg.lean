@@ -1,5 +1,9 @@
-import Workspace.Impl.LinTrialPrimary
-import Workspace.Impl.LinLoopInit
+module
+
+public import Workspace.Impl.LinTrialPrimary
+public import Workspace.Impl.LinLoopInit
+
+@[expose] public section
 
 /-! Repeated trial division of one positive cyclic order. -/
 namespace GI.Impl

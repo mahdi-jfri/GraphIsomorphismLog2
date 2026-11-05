@@ -1,5 +1,9 @@
-import Workspace.Proved.VsPSpinMath
-import Workspace.Proved.VStabLinMath
+module
+
+public import Workspace.Proved.VsPSpinMath
+public import Workspace.Proved.VStabLinMath
+
+@[expose] public section
 
 /-!
 # Few keys

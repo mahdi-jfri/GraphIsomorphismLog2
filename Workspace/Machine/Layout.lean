@@ -21,7 +21,11 @@ Each layout occupies the cells `a, …, a + size - 1`, and its predicate depends
 These are the formats of `GI.Statement.InputLayout` and `GI.Statement.CorrectOutput`
 (`inputLayout_matrices`, `correctOutput_of_layout`).
 -/
-import Workspace.Machine.Compose
+module
+
+public import Workspace.Machine.Compose
+
+@[expose] public section
 
 namespace GI.Machine
 

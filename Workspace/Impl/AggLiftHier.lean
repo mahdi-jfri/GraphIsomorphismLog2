@@ -1,5 +1,9 @@
-import Workspace.Impl.AggLiftMath
-import Workspace.Lang.Lib.Fold
+module
+
+public import Workspace.Impl.AggLiftMath
+public import Workspace.Lang.Lib.Fold
+
+@[expose] public section
 
 /-!
 # The hierarchy of a continuation, as a program

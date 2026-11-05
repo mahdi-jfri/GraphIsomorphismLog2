@@ -1,6 +1,10 @@
-import Workspace.Lang.Prims.Reduce
-import Workspace.Lang.Lib.Fold
-import Workspace.Lang.Lib.Perm
+module
+
+public import Workspace.Lang.Prims.Reduce
+public import Workspace.Lang.Lib.Fold
+public import Workspace.Lang.Lib.Perm
+
+@[expose] public section
 
 /-!
 # Combining the answers of the cosets

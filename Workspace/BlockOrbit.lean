@@ -1,4 +1,8 @@
-import Workspace.BlockBudget
+module
+
+public import Workspace.BlockBudget
+
+@[expose] public section
 
 namespace GI
 

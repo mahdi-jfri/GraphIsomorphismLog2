@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPXLab
+module
+
+public import Workspace.Impl.TermGlueLabPXLab
+
+@[expose] public section
 
 /-!
 # The stabilizer generators `b_j` from the `N`-test table

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinModReduce
+module
+
+public import Workspace.Impl.LinModReduce
+
+@[expose] public section
 
 /-! Extract a layer digit from a nonnegative signed coordinate. The divisor
 is supplied once by the outer layer loop. -/

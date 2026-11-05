@@ -1,6 +1,10 @@
-import Workspace.Impl.FinLayoutPrTr
-import Workspace.Impl.AggItemCiCfgTab
-import Workspace.Impl.FinLayoutC23OK
+module
+
+public import Workspace.Impl.FinLayoutPrTr
+public import Workspace.Impl.AggItemCiCfgTab
+public import Workspace.Impl.FinLayoutC23OK
+
+@[expose] public section
 
 /-!
 # The pair room

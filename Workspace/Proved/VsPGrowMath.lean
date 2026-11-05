@@ -1,5 +1,9 @@
-import Workspace.Proved.VsPLb
-import Workspace.Proved.VsPDerMath
+module
+
+public import Workspace.Proved.VsPLb
+public import Workspace.Proved.VsPDerMath
+
+@[expose] public section
 
 /-!
 # Why the grow output is correct
@@ -15,6 +19,8 @@ import Workspace.Proved.VsPDerMath
 namespace GI.Proved
 
 open GI.Impl GI.Cited GI.Lang Equiv
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 variable {I : VecStabInst} {s : VsQSt I}
 
@@ -154,6 +160,8 @@ namespace GI.Proved
 
 open GI.Impl GI.Cited GI.Lang Equiv
 
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 variable {I : VecStabInst} {s : VsQSt I}
 
 /-- A matrix commuting with `Λ(y)` commutes with `Λ(y⁻¹)`. -/
@@ -161,7 +169,7 @@ theorem vsQLam_comm_inv (hs : VsQStOK s) {M : Matrix (Fin (vsQD s)) (Fin (vsQD s
     {y : Perm (Fin I.n)} (hy : y ∈ gens s.hs) (h : M * vsQLam s y = vsQLam s y * M) :
     M * vsQLam s y⁻¹ = vsQLam s y⁻¹ * M := by
   have h1 := vsQLam_inv hs hy
-  have h2 : vsQLam s y⁻¹ * vsQLam s y = 1 := Matrix.mul_eq_one_comm.1 h1
+  have h2 : vsQLam s y⁻¹ * vsQLam s y = 1 := mul_eq_one_comm.1 h1
   calc M * vsQLam s y⁻¹ = vsQLam s y⁻¹ * (vsQLam s y * M) * vsQLam s y⁻¹ := by
         rw [← mul_assoc, h2, one_mul]
     _ = vsQLam s y⁻¹ * (M * vsQLam s y) * vsQLam s y⁻¹ := by rw [h]

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJAutJ2
+module
+
+public import Workspace.Impl.TermJAutJ2
+
+@[expose] public section
 
 /-!
 # Generators of `Aut_J(x)` (the theorem)
@@ -82,7 +86,9 @@ theorem tmJ_autJ_gens (L0 : Set (Perm (B × Fin q)))
   have hNstar : ∀ {s : Perm B}, s ∈ φ.ker.map N.subtype → s ∈ N ∧ phiT N φ s = 1 := by
     rintro s ⟨n, hn, rfl⟩
     refine ⟨n.2, ?_⟩
-    simp only [phiT, Subgroup.coe_subtype, dif_pos n.2]
+    change phiT N φ ↑n = 1
+    unfold phiT
+    rw [dif_pos n.2]
     exact hn
   have hTW : ∀ σ ∈ {σ | ∃ t ∈ Tl, σ = tmJSw t.1 t.2.1 t.2.2}, σ ∈ tmJW N := by
     rintro σ ⟨t, ht, rfl⟩; exact tmJSw_mem (hTl t ht).2

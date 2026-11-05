@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosBigMath2
+module
+
+public import Workspace.Impl.SCosBigMath2
+
+@[expose] public section
 
 /-!
 # The mathematics of `bigF` (function 5), part 3

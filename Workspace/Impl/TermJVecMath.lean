@@ -1,4 +1,8 @@
-import Workspace.Impl.LinAbelianCoordinates
+module
+
+public import Workspace.Impl.LinAbelianCoordinates
+
+@[expose] public section
 
 /-!
 # The coordinate vector of one element of `A = N / N*` (mathematics)
@@ -38,7 +42,7 @@ theorem tmJV_images {n : ℕ} (ns as : List (Equiv.Perm (Fin n))) (hle : gens ns
     exact Subgroup.subset_closure hy
   have hn : (ns.map (linIntoSubgroup A)).map π = List.replicate ns.length 1 := by
     rw [List.map_map]
-    simpa using List.map_eq_replicate_iff.mpr (fun y hy => hns y hy)
+    simpa [Function.comp_def] using List.map_eq_replicate_iff.mpr (fun y hy => hns y hy)
   have ht : (List.finRange as.length).take as.length = List.finRange as.length := by
     simp
   rw [List.map_append, List.map_append, hn]

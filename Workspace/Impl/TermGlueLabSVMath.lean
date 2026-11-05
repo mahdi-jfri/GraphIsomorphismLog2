@@ -1,7 +1,11 @@
-import Workspace.Impl.TermGlueLabPItem
-import Workspace.Impl.TermGlueLabPYLab
-import Workspace.Impl.TermGlueLabPOr
-import Workspace.Impl.TermGlueLabLift
+module
+
+public import Workspace.Impl.TermGlueLabPItem
+public import Workspace.Impl.TermGlueLabPYLab
+public import Workspace.Impl.TermGlueLabPOr
+public import Workspace.Impl.TermGlueLabLift
+
+@[expose] public section
 
 /-!
 # The two label vectors of step 6: the mathematics

@@ -1,6 +1,10 @@
-import Workspace.Impl.LinObjectBlockSpec
-import Workspace.Impl.LinObjectDiagonalProg
-import Workspace.Impl.LinAppend
+module
+
+public import Workspace.Impl.LinObjectBlockSpec
+public import Workspace.Impl.LinObjectDiagonalProg
+public import Workspace.Impl.LinAppend
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

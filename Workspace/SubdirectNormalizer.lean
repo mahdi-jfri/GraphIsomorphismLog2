@@ -1,5 +1,9 @@
-import Workspace.SubdirectNormalizerStep
-import Mathlib.Data.Fin.Tuple.Basic
+module
+
+public import Workspace.SubdirectNormalizerStep
+public import Mathlib.Data.Fin.Tuple.Basic
+
+@[expose] public section
 
 namespace GI.PrimitiveProducts
 
@@ -75,6 +79,3 @@ theorem subdirect_normalizer [Fintype I] [IsSimpleGroup S]
   exact subdirect_normalizer_fin nonabelian _ K hK
 
 end GI.PrimitiveProducts
-
-#print axioms GI.PrimitiveProducts.subdirect_normalizer_fin
-#print axioms GI.PrimitiveProducts.subdirect_normalizer

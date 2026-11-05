@@ -1,4 +1,8 @@
-import Workspace.Algorithm.AuxItems
+module
+
+public import Workspace.Algorithm.AuxItems
+
+@[expose] public section
 
 /-!
 # The items of an aggregation round from the proved lemmas

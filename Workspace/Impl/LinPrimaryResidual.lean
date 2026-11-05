@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryLoopInput
+module
+
+public import Workspace.Impl.LinPrimaryLoopInput
+
+@[expose] public section
 
 /-! The full-action facts used when the loop replaces its cover by a layer
 stabilizer and multiplies its accumulated representative. -/

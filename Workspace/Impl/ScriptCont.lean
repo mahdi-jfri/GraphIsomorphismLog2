@@ -1,4 +1,8 @@
-import Workspace.Algorithm.Aggregation
+module
+
+public import Workspace.Algorithm.Aggregation
+
+@[expose] public section
 
 /-!
 # The rest of a script, after some of its calls

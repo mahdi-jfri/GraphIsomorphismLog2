@@ -1,4 +1,8 @@
-import Workspace.Impl.CamTransport
+module
+
+public import Workspace.Impl.CamTransport
+
+@[expose] public section
 
 /-!
 # The socle and its factors, read through a Maróti identification

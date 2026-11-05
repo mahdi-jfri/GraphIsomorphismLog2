@@ -1,4 +1,8 @@
-import Workspace.Impl.VsPOrb
+module
+
+public import Workspace.Impl.VsPOrb
+
+@[expose] public section
 
 /-!
 # A basis of the span of the orbit keys

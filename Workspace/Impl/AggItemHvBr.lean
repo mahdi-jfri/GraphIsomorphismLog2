@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemHvScr
+module
+
+public import Workspace.Impl.AggItemHvScr
+
+@[expose] public section
 
 /-!
 # Case 2a: the branch step

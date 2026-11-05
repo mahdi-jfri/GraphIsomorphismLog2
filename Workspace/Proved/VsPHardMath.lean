@@ -1,5 +1,9 @@
-import Workspace.Proved.VsPSpinMath
-import Workspace.Proved.VsMBasic
+module
+
+public import Workspace.Proved.VsPSpinMath
+public import Workspace.Proved.VsMBasic
+
+@[expose] public section
 
 /-!
 # The hand-off satisfies `VsMHard`

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPHalf
+module
+
+public import Workspace.Impl.TermGlueLabPHalf
+
+@[expose] public section
 
 /-!
 # The data of one generator (step 5, program)

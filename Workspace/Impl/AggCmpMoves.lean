@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCmpRep
-import Workspace.Impl.AggCertStart
+module
+
+public import Workspace.Impl.AggCmpRep
+public import Workspace.Impl.AggCertStart
+
+@[expose] public section
 
 /-!
 # The moves of the comparison phase, for the relation `CmRep`

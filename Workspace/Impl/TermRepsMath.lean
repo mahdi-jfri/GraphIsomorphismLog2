@@ -1,4 +1,8 @@
-import Workspace.Impl.TermHyp
+module
+
+public import Workspace.Impl.TermHyp
+
+@[expose] public section
 
 /-!
 # Right coset representatives by closure (T3, the mathematics)

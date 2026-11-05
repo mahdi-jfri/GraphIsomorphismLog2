@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosBase4
+module
+
+public import Workspace.Impl.SCosBase4
+
+@[expose] public section
 
 /-!
 # The base case, the answer

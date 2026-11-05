@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgW
+module
+
+public import Workspace.Impl.AggItemCiCfgW
+
+@[expose] public section
 
 /-!
 # The configuration query: the start program of the configuration branch

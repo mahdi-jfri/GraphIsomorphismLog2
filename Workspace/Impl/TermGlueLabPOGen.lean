@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPOEps
+module
+
+public import Workspace.Impl.TermGlueLabPOEps
+
+@[expose] public section
 
 /-!
 # The item of one generator with the orientation coordinate (step 5, program)

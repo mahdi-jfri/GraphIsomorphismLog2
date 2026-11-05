@@ -1,5 +1,9 @@
-import Mathlib.Algebra.Group.Equiv.Defs
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Group.Equiv.Defs
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-! Descend additive actions through a surjective coordinate projection whose
 kernel they preserve. This supplies primary actions without enumerating a

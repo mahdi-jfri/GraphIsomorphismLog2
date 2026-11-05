@@ -1,4 +1,8 @@
-import Workspace.Impl.LinAffineLayer
+module
+
+public import Workspace.Impl.LinAffineLayer
+
+@[expose] public section
 
 /-! Compute the homogeneous representation data before making a vector call. -/
 namespace GI.Impl

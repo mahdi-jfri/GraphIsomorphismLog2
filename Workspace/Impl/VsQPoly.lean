@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQTop
+module
+
+public import Workspace.Impl.VsQTop
+
+@[expose] public section
 
 /-!
 # Polynomial bounds

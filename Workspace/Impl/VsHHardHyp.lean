@@ -1,5 +1,9 @@
-import Workspace.Impl.VsHHard
-import Workspace.Impl.VsQA4
+module
+
+public import Workspace.Impl.VsHHard
+public import Workspace.Impl.VsQA4
+
+@[expose] public section
 
 /-!
 # The hard case as the spine's hypothesis
@@ -15,6 +19,8 @@ namespace GI.Impl
 open GI.Lang GI.Cited GI.Proved Equiv
 
 variable {I : VecStabInst}
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 /-- The weight of the hand-off value. -/
 theorem vsH_wt_GIn [Fact I.p.Prime] {S Tm : ℕ} (hS : VsQDSz I S Tm) {s : VsQSt I} (hs : VsQStOK s)

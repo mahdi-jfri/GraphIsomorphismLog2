@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojFrameBuild
-import Workspace.Impl.AggItemCiSojRectScript
+module
+
+public import Workspace.Impl.AggItemCiSojFrameBuild
+public import Workspace.Impl.AggItemCiSojRectScript
+
+@[expose] public section
 
 /-! # The fixed start choices give the retained frame's exact model script -/
 

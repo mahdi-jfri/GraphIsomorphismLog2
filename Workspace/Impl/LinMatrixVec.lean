@@ -1,7 +1,11 @@
-import Workspace.Impl.LinMapEncoded
-import Workspace.Impl.LinSumPerm
-import Workspace.Lang.Lib.LinIntColumn
-import Workspace.Impl.LinIntPoly
+module
+
+public import Workspace.Impl.LinMapEncoded
+public import Workspace.Impl.LinSumPerm
+public import Workspace.Lang.Lib.LinIntColumn
+public import Workspace.Impl.LinIntPoly
+
+@[expose] public section
 
 /-! A dense integer matrix applied to a column vector, using the proved
 shared-entry integer dot-product program on each matrix row. -/
@@ -88,7 +92,8 @@ theorem linMatrixVec_spec {P : Program} {b m r : ℕ} (h : linMatrixVecAt P b)
     apply Finset.sum_congr rfl
     intro j _
     exact mul_comm _ _
-  simpa only [linVecVal, encIntMatrix, List.map_map, Function.comp_def, he, linMatrixVecCost, a, W] using hh
+  set_option backward.isDefEq.respectTransparency false in
+    simpa only [linVecVal, encIntMatrix, List.map_map, Function.comp_def, he, linMatrixVecCost, a, W] using hh
 
 theorem linMatrixVecCost_mono {W V r s : ℕ} (hW : W ≤ V) (hr : r ≤ s) :
     linMatrixVecCost W r ≤ linMatrixVecCost V s := by

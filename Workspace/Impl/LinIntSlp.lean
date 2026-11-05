@@ -1,4 +1,8 @@
-import Workspace.Impl.LinIntSlpTrace
+module
+
+public import Workspace.Impl.LinIntSlpTrace
+
+@[expose] public section
 
 /-! Polynomial-cost SLP evaluation in integer exponent vectors. The table stores
 shared entries, so an instruction never expands the word that it denotes. -/
@@ -80,8 +84,7 @@ theorem linSlp_spec {P : Program} {b step add scale ib t : ℕ}
     have dc := Det.call (Det.mk3 dg da dins) hss
     have dn := Det.snoc da dc
     refine dn.post fun cost hc => ⟨?_, ?_⟩
-    · dsimp only
-      rw [hnext]
+    · rw [hnext]
       simp only [linSlpTable, List.map_append, List.map_cons, List.map_nil]
       rfl
     · have wi := wt_nat_le i

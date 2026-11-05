@@ -1,4 +1,8 @@
-import Workspace.PairStabilizers
+module
+
+public import Workspace.PairStabilizers
+
+@[expose] public section
 
 namespace GI.Pairs
 

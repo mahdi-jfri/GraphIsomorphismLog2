@@ -1,5 +1,9 @@
-import Workspace.Compat
-import Workspace.CleanCompletionTransfer
+module
+
+public import Workspace.Compat
+public import Workspace.CleanCompletionTransfer
+
+@[expose] public section
 
 /-! From actual localized lifts to the clean block cycles used in A.17.
 The existence of the localized lifts (LG2) remains an explicit input. -/

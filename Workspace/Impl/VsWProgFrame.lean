@@ -1,4 +1,8 @@
-import Workspace.Impl.VsWProgComp
+module
+
+public import Workspace.Impl.VsWProgComp
+
+@[expose] public section
 
 /-!
 # Frames as programs

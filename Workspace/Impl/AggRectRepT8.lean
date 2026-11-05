@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepT7
+module
+
+public import Workspace.Impl.AggRectRepT7
+
+@[expose] public section
 
 /-!
 # Glue for the top-level proof of the representation program

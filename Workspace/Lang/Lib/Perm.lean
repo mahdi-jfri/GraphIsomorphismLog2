@@ -9,8 +9,12 @@ format (`encFun`): the list of the values at `0, …, n - 1`.
 
 Each operation costs at most `permK * (n + 1) ^ 3`.
 -/
-import Workspace.Lang.Lib.Fold
-import Mathlib.GroupTheory.Perm.Basic
+module
+
+public import Workspace.Lang.Lib.Fold
+public import Mathlib.GroupTheory.Perm.Basic
+
+@[expose] public section
 
 namespace GI.Lang
 
@@ -60,8 +64,7 @@ theorem Det.applyPerm {P : Program} {env : List Val} {e ei : Expr} {σ : Equiv.P
 theorem range_eq_encPerm_one : natList (List.range n) = encPerm (1 : Equiv.Perm (Fin n)) := by
   simp only [natList, encPerm, Equiv.Perm.coe_one, id]
   congr 1
-  rw [← List.map_coe_finRange, List.map_map]
-  rfl
+  apply List.ext_getElem <;> simp
 
 /-! ### Composition -/
 

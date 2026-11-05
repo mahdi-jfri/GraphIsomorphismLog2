@@ -1,4 +1,8 @@
-import Workspace.Impl.LinIntSlpValue
+module
+
+public import Workspace.Impl.LinIntSlpValue
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -85,6 +89,6 @@ theorem linExponent_spec {P : Program} {f table step add scale ib t : ℕ}
   have heq : Multiplicative.toAdd (es.getLast?.getD 1) = z := by
     simpa [linExponentValue, linSlpValue, he] using hz
   have h := linSlpValue_spec hf hp hstep hi ha hs (vectors.map Multiplicative.ofAdd) hgs prog es he
-  simpa only [heq, linSlpTable, List.map_map, Function.comp_def] using h
+  simpa only [heq, linSlpTable, List.map_map, Function.comp_def, toAdd_ofAdd] using h
 
 end GI.Impl

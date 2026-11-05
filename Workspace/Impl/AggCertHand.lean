@@ -1,7 +1,11 @@
-import Workspace.Impl.AggCertMvEntry
-import Workspace.Impl.AggSubMath
-import Workspace.Impl.AggSpecDefs
-import Workspace.Impl.AggCmpHand
+module
+
+public import Workspace.Impl.AggCertMvEntry
+public import Workspace.Impl.AggSubMath
+public import Workspace.Impl.AggSpecDefs
+public import Workspace.Impl.AggCmpHand
+
+@[expose] public section
 
 /-!
 # The hand-over to the certificate phase

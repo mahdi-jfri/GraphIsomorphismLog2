@@ -1,5 +1,9 @@
-import Workspace.Impl.LinTrialFactor
-import Workspace.Impl.LinMapSource
+module
+
+public import Workspace.Impl.LinTrialFactor
+public import Workspace.Impl.LinMapSource
+
+@[expose] public section
 
 /-! Run bounded trial division over the cyclic orders. Repeated orders require
 no injectivity assumption on the input encoding. -/

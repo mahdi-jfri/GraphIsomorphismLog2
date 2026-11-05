@@ -1,7 +1,11 @@
-import Workspace.Impl.AggItemUpd
-import Workspace.Impl.AggKer
-import Workspace.Impl.AggLiftMath
-import Workspace.Impl.AggWin
+module
+
+public import Workspace.Impl.AggItemUpd
+public import Workspace.Impl.AggKer
+public import Workspace.Impl.AggLiftMath
+public import Workspace.Impl.AggWin
+
+@[expose] public section
 
 /-!
 # Case 2a: the mathematics of the halving item

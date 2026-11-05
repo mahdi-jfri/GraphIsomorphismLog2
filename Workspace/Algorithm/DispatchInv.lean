@@ -1,4 +1,8 @@
-import Workspace.Algorithm.Expose
+module
+
+public import Workspace.Algorithm.Expose
+
+@[expose] public section
 
 /-!
 # The dispatcher keeps the hierarchy invariant

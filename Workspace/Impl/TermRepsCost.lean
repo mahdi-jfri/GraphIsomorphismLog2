@@ -1,4 +1,8 @@
-import Workspace.Impl.TermReps
+module
+
+public import Workspace.Impl.TermReps
+
+@[expose] public section
 
 /-!
 # The cost of T3 is within `expLogSq`
@@ -113,25 +117,52 @@ theorem tmRp_cost_poly (hm : Membership) (K D n : ℕ) {X : ℕ} (hX : 1 ≤ X) 
 
 /-- The constant in front of the polynomial in `N`. -/
 noncomputable def tmRpCbig (hm : Membership) (K D : ℕ) : ℕ :=
-  (2 * tmRpC1 hm K D + 23) * 27 * (4 * 10 ^ 6) ^ tmRpE hm D
+  (2 * tmRpC1 hm K D + 23) * 27 * (12 * 10 ^ 6) ^ tmRpE hm D
 
 /-- **The exponent constant of T3.** -/
 noncomputable def tmRpA (hm : Membership) (K D : ℕ) : ℝ :=
-  3 * (Real.log (tmRpCbig hm K D) + ((8 * tmRpE hm D : ℕ) : ℝ)) + 9
+  3 * (Real.log (tmRpCbig hm K D) + ((8 * tmRpE hm D : ℕ) : ℝ)) + (9 + ((3 * tmRpE hm D : ℕ) : ℝ))
 
 /-- **The cost of T3 lies in `expLogSq`.** -/
 theorem tmRp_cost_le (hm : Membership) (K D : ℕ) {N n X W : ℕ}
-    (hn : (n : ℝ) ≤ expLogSq 3 N) (hX : 1 ≤ X) (hXN : X ≤ tmVB N) (hW : W ≤ tmVB N) :
+    (hn : (n : ℝ) ≤ expLogSq 3 N) (hX : 1 ≤ X) (hXN : X ≤ tmVB N + ⌈expLogSq 3 N⌉₊)
+    (hW : W ≤ tmVB N) :
     ((2 * tmRpCost hm K D n X + 3 * W + 20 : ℕ) : ℝ) ≤ expLogSq (tmRpA hm K D) N := by
   set e := tmRpE hm D
-  set V := tmVB N with hV
+  set V := tmVB N * (⌈expLogSq 3 N⌉₊ + 1) with hV
   set C1 := tmRpC1 hm K D
-  have hV1 : 1 ≤ V := by rw [hV]; unfold tmVB; exact Nat.one_le_iff_ne_zero.2 (by positivity)
-  have hVr : ((V ^ e : ℕ) : ℝ) = (4 * 10 ^ 6 : ℝ) ^ e * ((N : ℝ) + 2) ^ (8 * e) := by
-    rw [hV]; unfold tmVB; push_cast; rw [mul_pow, ← pow_mul]; norm_num
+  have hVB1 : 1 ≤ tmVB N := by unfold tmVB; exact Nat.one_le_iff_ne_zero.2 (by positivity)
+  have hV1 : 1 ≤ V := by rw [hV]; exact Nat.mul_pos hVB1 (by omega)
+  have hXV : X ≤ V := by
+    rw [hV, Nat.mul_add, Nat.mul_one]
+    have : ⌈expLogSq 3 N⌉₊ ≤ tmVB N * ⌈expLogSq 3 N⌉₊ := Nat.le_mul_of_pos_left _ hVB1
+    omega
+  have hWV : W ≤ V := hW.trans (by rw [hV]; exact Nat.le_mul_of_pos_right _ (by omega))
+  have hE1 : (1 : ℝ) ≤ expLogSq 3 N := tm_one_le_expLogSq (by norm_num) N
+  have hVr : ((V ^ e : ℕ) : ℝ) ≤
+      (12 * 10 ^ 6 : ℝ) ^ e * ((N : ℝ) + 2) ^ (8 * e) * expLogSq ((3 : ℕ) * e) N := by
+    have hceil : ((⌈expLogSq 3 N⌉₊ + 1 : ℕ) : ℝ) ≤ 3 * expLogSq 3 N := by
+      have : (⌈expLogSq 3 N⌉₊ : ℝ) < expLogSq 3 N + 1 := Nat.ceil_lt_add_one (by positivity)
+      push_cast
+      linarith
+    have hVle : ((V : ℕ) : ℝ) ≤ (12 * 10 ^ 6 : ℝ) * ((N : ℝ) + 2) ^ 8 * expLogSq 3 N := by
+      have h1 : ((tmVB N : ℕ) : ℝ) = (4 * 10 ^ 6 : ℝ) * ((N : ℝ) + 2) ^ 8 := by
+        unfold tmVB; push_cast; norm_num
+      calc ((V : ℕ) : ℝ) = ((tmVB N : ℕ) : ℝ) * ((⌈expLogSq 3 N⌉₊ + 1 : ℕ) : ℝ) := by
+            rw [hV]; push_cast; rfl
+        _ ≤ ((4 * 10 ^ 6 : ℝ) * ((N : ℝ) + 2) ^ 8) * (3 * expLogSq 3 N) := by
+            rw [← h1]; exact mul_le_mul_of_nonneg_left hceil (Nat.cast_nonneg _)
+        _ = (12 * 10 ^ 6 : ℝ) * ((N : ℝ) + 2) ^ 8 * expLogSq 3 N := by ring
+    calc ((V ^ e : ℕ) : ℝ) = ((V : ℕ) : ℝ) ^ e := by push_cast; rfl
+      _ ≤ ((12 * 10 ^ 6 : ℝ) * ((N : ℝ) + 2) ^ 8 * expLogSq 3 N) ^ e :=
+          pow_le_pow_left₀ (Nat.cast_nonneg _) hVle e
+      _ = (12 * 10 ^ 6 : ℝ) ^ e * ((N : ℝ) + 2) ^ (8 * e) * (expLogSq 3 N) ^ e := by
+          rw [mul_pow, mul_pow, ← pow_mul]
+      _ = (12 * 10 ^ 6 : ℝ) ^ e * ((N : ℝ) + 2) ^ (8 * e) * expLogSq ((3 : ℕ) * e) N := by
+          rw [tm_expLogSq_pow 3 e N]; push_cast; ring_nf
   clear_value V
   have hP : tmRpCost hm K D n X ≤ C1 * ((n + 2) ^ 3 * X ^ e) := tmRp_cost_poly hm K D n hX
-  have hXe : X ^ e ≤ V ^ e := Nat.pow_le_pow_left hXN e
+  have hXe : X ^ e ≤ V ^ e := Nat.pow_le_pow_left hXV e
   have hVe : 1 ≤ V ^ e := Nat.one_le_pow _ _ (by omega)
   have hn3 : 1 ≤ (n + 2) ^ 3 := Nat.one_le_pow _ _ (by omega)
   -- a natural bound
@@ -149,7 +180,6 @@ theorem tmRp_cost_le (hm : Membership) (K D : ℕ) {N n X W : ℕ}
         2 * (C1 * ((n + 2) ^ 3 * V ^ e)) + 23 * ((n + 2) ^ 3 * V ^ e) := by ring
     rw [e2]
     omega
-  have hE1 : (1 : ℝ) ≤ expLogSq 3 N := tm_one_le_expLogSq (by norm_num) N
   have hL : ((n : ℝ) + 2) ≤ 3 * expLogSq 3 N := by linarith
   have hL3 : ((n : ℝ) + 2) ^ 3 ≤ 27 * expLogSq 9 N := by
     have : ((n : ℝ) + 2) ^ 3 ≤ (3 * expLogSq 3 N) ^ 3 := pow_le_pow_left₀ (by positivity) hL 3
@@ -168,23 +198,25 @@ theorem tmRp_cost_le (hm : Membership) (K D : ℕ) {N n X W : ℕ}
     have := (Nat.cast_le (α := ℝ)).2 hnat
     push_cast at this ⊢
     linarith
-  have hCb : (tmRpCbig hm K D : ℝ) = ((2 * C1 + 23 : ℕ) : ℝ) * 27 * (4 * 10 ^ 6 : ℝ) ^ e := by
+  have hCb : (tmRpCbig hm K D : ℝ) = ((2 * C1 + 23 : ℕ) : ℝ) * 27 * (12 * 10 ^ 6 : ℝ) ^ e := by
     unfold tmRpCbig; push_cast; ring
-  have heA : tmRpA hm K D = 3 * (Real.log (tmRpCbig hm K D) + ((8 * e : ℕ) : ℝ)) + 9 := rfl
+  have heA : tmRpA hm K D =
+      3 * (Real.log (tmRpCbig hm K D) + ((8 * e : ℕ) : ℝ)) + (9 + ((3 * e : ℕ) : ℝ)) := rfl
   clear_value e C1
   have hC0 : (0 : ℝ) ≤ ((2 * C1 + 23 : ℕ) : ℝ) := Nat.cast_nonneg _
-  have hNe : (0 : ℝ) ≤ (4 * 10 ^ 6 : ℝ) ^ e * ((N : ℝ) + 2) ^ (8 * e) :=
-    mul_nonneg (pow_nonneg (by norm_num : (0 : ℝ) ≤ 4 * 10 ^ 6) e)
-      (pow_nonneg (by have := Nat.cast_nonneg (α := ℝ) N; linarith) (8 * e))
   refine hcast.trans ?_
   calc ((2 * C1 + 23 : ℕ) : ℝ) * (((n : ℝ) + 2) ^ 3 * ((V ^ e : ℕ) : ℝ))
       ≤ ((2 * C1 + 23 : ℕ) : ℝ) * ((27 * expLogSq 9 N) *
-          ((4 * 10 ^ 6 : ℝ) ^ e * ((N : ℝ) + 2) ^ (8 * e))) := by
-        rw [hVr]
-        exact mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right hL3 hNe) hC0
-    _ = ((tmRpCbig hm K D : ℝ) * ((N : ℝ) + 2) ^ (8 * e)) * expLogSq 9 N := by rw [hCb]; ring
-    _ ≤ expLogSq (3 * (Real.log (tmRpCbig hm K D) + ((8 * e : ℕ) : ℝ))) N * expLogSq 9 N :=
-        mul_le_mul_of_nonneg_right hpe (expLogSq_nonneg _ _)
-    _ = expLogSq (tmRpA hm K D) N := by rw [tm_expLogSq_mul, heA]
+          ((12 * 10 ^ 6 : ℝ) ^ e * ((N : ℝ) + 2) ^ (8 * e) * expLogSq ((3 : ℕ) * e) N)) := by
+        exact mul_le_mul_of_nonneg_left
+          (mul_le_mul hL3 hVr (Nat.cast_nonneg _)
+            (mul_nonneg (by norm_num) (expLogSq_nonneg _ _))) hC0
+    _ = ((tmRpCbig hm K D : ℝ) * ((N : ℝ) + 2) ^ (8 * e)) *
+          (expLogSq 9 N * expLogSq ((3 : ℕ) * e) N) := by rw [hCb]; ring
+    _ ≤ expLogSq (3 * (Real.log (tmRpCbig hm K D) + ((8 * e : ℕ) : ℝ))) N *
+          (expLogSq 9 N * expLogSq ((3 : ℕ) * e) N) :=
+        mul_le_mul_of_nonneg_right hpe (mul_nonneg (expLogSq_nonneg _ _) (expLogSq_nonneg _ _))
+    _ = expLogSq (tmRpA hm K D) N := by
+        rw [tm_expLogSq_mul, tm_expLogSq_mul, heA]; push_cast; rfl
 
 end GI.Impl

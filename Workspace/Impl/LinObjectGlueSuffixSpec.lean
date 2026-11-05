@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectGlueSuffix
+module
+
+public import Workspace.Impl.LinObjectGlueSuffix
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset GI.Assembly

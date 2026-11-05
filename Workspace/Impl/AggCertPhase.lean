@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertMoves
+module
+
+public import Workspace.Impl.AggCertMoves
+
+@[expose] public section
 
 /-!
 # The certificate phase, from a move function

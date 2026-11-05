@@ -1,5 +1,9 @@
-import Workspace.Impl.AggStructCol
-import Workspace.Impl.AggStructPat
+module
+
+public import Workspace.Impl.AggStructCol
+public import Workspace.Impl.AggStructPat
+
+@[expose] public section
 
 /-!
 # The relation module of the tuple colorings, from the comparison table

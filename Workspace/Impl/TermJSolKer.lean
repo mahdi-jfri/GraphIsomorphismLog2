@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJSolSolve
+module
+
+public import Workspace.Impl.TermJSolSolve
+
+@[expose] public section
 
 /-!
 # The coefficient kernel (specification)

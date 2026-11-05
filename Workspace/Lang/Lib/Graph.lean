@@ -8,8 +8,12 @@ The work is done for any list of numbers `cs` (the cells): `matVal cs n off` is 
 matrix whose entry `(i, j)` is cell `off + n * i + j`. A row is a `map` over the points that reads
 cells, and the matrix is a `map` over the points that builds rows.
 -/
-import Workspace.Lang.Lib.Orbit
-import Workspace.Lang.Glue
+module
+
+public import Workspace.Lang.Lib.Orbit
+public import Workspace.Lang.Glue
+
+@[expose] public section
 
 namespace GI.Lang
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.ColStep
-import Workspace.Impl.GenCls
+module
+
+public import Workspace.Impl.ColStep
+public import Workspace.Impl.GenCls
+
+@[expose] public section
 
 /-!
 # Partition values and counts from the class numbering

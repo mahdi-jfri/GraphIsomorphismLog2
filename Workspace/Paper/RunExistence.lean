@@ -1,5 +1,9 @@
-import Workspace.Algorithm.Existence
-import Workspace.Paper.Algorithm
+module
+
+public import Workspace.Algorithm.Existence
+public import Workspace.Paper.Algorithm
+
+@[expose] public section
 
 /-!
 # Every state has a run of the recursion

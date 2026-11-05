@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabPTr
-import Workspace.Impl.LinFiniteProduct
+module
+
+public import Workspace.Impl.TermGlueLabPTr
+public import Workspace.Impl.LinFiniteProduct
+
+@[expose] public section
 
 /-!
 # The matrix program of the linear part

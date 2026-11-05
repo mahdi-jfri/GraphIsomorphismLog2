@@ -1,5 +1,9 @@
-import Workspace.Impl.RowA18Link
-import Workspace.Lang.Lib.SmallGroup
+module
+
+public import Workspace.Impl.RowA18Link
+public import Workspace.Lang.Lib.SmallGroup
+
+@[expose] public section
 
 /-!
 # The positions of the domain outside row `0`, in `GI.Lang`
@@ -122,7 +126,6 @@ theorem offList_spec {P : Program} {b f : ℕ} (hb : P.HasAt b (filterFuns b f))
       have : i < n := List.mem_range.mp hi
       have e : (Val.list [Val.list [natList rl, .nat q], Val.nat i]).wt =
         (Val.list [c, Val.nat i]).wt := rfl
-      dsimp only
       unfold offK; omega)
   rw [← hxs] at hF
   refine hF.mono fun w cost ⟨hw, hc⟩ => ⟨?_, ?_⟩

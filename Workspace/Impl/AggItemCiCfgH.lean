@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgY
+module
+
+public import Workspace.Impl.AggItemCiCfgY
+
+@[expose] public section
 
 /-!
 # The configuration query: the Schreier list for long generator lists

@@ -1,5 +1,9 @@
-import Workspace.Impl.GenExposeMath
-import Workspace.Impl.ColsSplit
+module
+
+public import Workspace.Impl.GenExposeMath
+public import Workspace.Impl.ColsSplit
+
+@[expose] public section
 
 /-!
 # Numbering the classes of a labeling, in `GI.Lang`

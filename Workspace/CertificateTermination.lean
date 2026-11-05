@@ -1,4 +1,8 @@
-import Workspace.CertificateEndpoint
+module
+
+public import Workspace.CertificateEndpoint
+
+@[expose] public section
 
 /-!
 # Termination of the endpoint procedure and the two certificates

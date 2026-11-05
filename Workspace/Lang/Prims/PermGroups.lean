@@ -21,7 +21,11 @@ whose result format does not carry the bound state it (`w.wt ≤ …`).
 The proofs are the same for every task: the encoding of the instances is injective (the degree
 is stored in every group encoding, `encGroup_deg`), so `Prim.ofHyp_spec` applies.
 -/
-import Workspace.Lang.Prims.Basic
+module
+
+public import Workspace.Lang.Prims.Basic
+
+@[expose] public section
 
 namespace GI.Lang
 
@@ -289,24 +293,6 @@ theorem compositionSeries_call (h : CompositionSeriesAlgo) {P : Program} {env : 
   EvalAll.prim_spec_le hj ha (compositionSeriesPrim_spec h hG)
     fun w hw => by obtain ⟨_, hs, -⟩ := hw; exact SeriesVal.wt_le hs
 
-/-- **Chief series** as a primitive. -/
-noncomputable def chiefSeriesPrim (h : ChiefSeriesAlgo) : Prim := Prim.ofHyp _ _ h
-
-theorem chiefSeriesPrim_spec (h : ChiefSeriesAlgo) {gv : Val} {G : Subgroup (Perm (Fin n))}
-    (hG : GroupVal n gv G) :
-    PrimSpec (chiefSeriesPrim h) gv (fun w => ∃ Hs, SeriesVal n w Hs ∧ IsChiefSeries G Hs) := by
-  obtain ⟨gs, rfl, rfl⟩ := hG
-  exact (Prim.ofHyp_spec h (⟨n, gs⟩ : GroupInst) (groupInst_inj gs)).mono
-    fun w hw => seriesOf_iff.mp hw
-
-theorem chiefSeries_call (h : ChiefSeriesAlgo) {P : Program} {env : List Val} {j : ℕ}
-    {a : Expr} {ca : ℕ} {gv : Val} {G : Subgroup (Perm (Fin n))}
-    (hj : P.prims[j]? = some (chiefSeriesPrim h)) (ha : Det P env a gv ca) (hG : GroupVal n gv G) :
-    EvalAll P env (.prim j a) (fun w c => (∃ Hs, SeriesVal n w Hs ∧ IsChiefSeries G Hs) ∧
-      c ≤ ca + (chiefSeriesPrim h).bound gv + 100 * (n + 1) ^ 8 + 1) :=
-  EvalAll.prim_spec_le hj ha (chiefSeriesPrim_spec h hG)
-    fun w hw => by obtain ⟨_, hs, -⟩ := hw; exact SeriesVal.wt_le hs
-
 /-! ### Normalized subgroups -/
 
 /-- `G` normalizes `N`. -/
@@ -383,119 +369,7 @@ theorem normalizedFactor_call (h : NormalizedFactor) {P : Program} {env : List V
   EvalAll.prim_spec_le hj ha (normalizedFactorPrim_spec h hG hN hnorm hx)
     fun w hw => FactorOut.wt_le hw
 
-/-! ### Sylow subgroups -/
-
-/-- **A Sylow subgroup** as a primitive. -/
-noncomputable def sylowPrim (h : SylowAlgo) : Prim := Prim.ofHyp _ _ h
-
-theorem sylowPrim_spec (h : SylowAlgo) {gv : Val} {G : Subgroup (Perm (Fin n))}
-    (hG : GroupVal n gv G) {p : ℕ} (hp : p.Prime) (hdvd : p ∣ Nat.card G) :
-    PrimSpec (sylowPrim h) (.list [gv, .nat p])
-      (fun w => ∃ S, GensVal n w S ∧ IsSylowOf p G S) := by
-  obtain ⟨gs, rfl, rfl⟩ := hG
-  refine (Prim.ofHyp_spec h (⟨n, gs, p, hp, hdvd⟩ : SylowInst) ?_).mono fun w hw => ?_
-  · rintro ⟨n', gs', p', _, _⟩ hy
-    simp only [Val.list.injEq, List.cons.injEq, Val.nat.injEq, and_true] at hy
-    obtain rfl := encGroup_deg hy.1
-    obtain rfl := encGroup_injective hy.1
-    obtain rfl := hy.2
-    rfl
-  · exact hw
-
-theorem sylow_call (h : SylowAlgo) {P : Program} {env : List Val} {j : ℕ} {a : Expr} {ca : ℕ}
-    {gv : Val} {G : Subgroup (Perm (Fin n))} {p : ℕ}
-    (hj : P.prims[j]? = some (sylowPrim h)) (ha : Det P env a (.list [gv, .nat p]) ca)
-    (hG : GroupVal n gv G) (hp : p.Prime) (hdvd : p ∣ Nat.card G) :
-    EvalAll P env (.prim j a) (fun w c => (∃ S, GensVal n w S ∧ IsSylowOf p G S) ∧
-      c ≤ ca + (sylowPrim h).bound (.list [gv, .nat p]) + 13 * (n + 1) ^ 6 + 1) :=
-  EvalAll.prim_spec_le hj ha (sylowPrim_spec h hG hp hdvd)
-    fun w hw => by obtain ⟨_, hs, -⟩ := hw; exact GensVal.wt_le hs
-
-/-- **Conjugating Sylow subgroups** as a primitive. -/
-noncomputable def sylowConjugatePrim (h : SylowConjugate) : Prim := Prim.ofHyp _ _ h
-
-/-- The result of Sylow conjugation: `g ∈ G` with `g⁻¹ P₁ g = P₂`. -/
-def SylowConjOut (G P₁ P₂ : Subgroup (Perm (Fin n))) (w : Val) : Prop :=
-  ∃ g ∈ G, w = encPerm g ∧ ∀ x, x ∈ P₂ ↔ g * x * g⁻¹ ∈ P₁
-
-theorem sylowConjugatePrim_spec (h : SylowConjugate) {gv v₁ v₂ : Val}
-    {G P₁ P₂ : Subgroup (Perm (Fin n))} (hG : GroupVal n gv G) (h₁ : GroupVal n v₁ P₁)
-    (h₂ : GroupVal n v₂ P₂) {p : ℕ} (hp : p.Prime) (hpn : p ≤ n) (hs₁ : IsSylowOf p G P₁)
-    (hs₂ : IsSylowOf p G P₂) :
-    PrimSpec (sylowConjugatePrim h) (.list [gv, .nat p, v₁, v₂]) (SylowConjOut G P₁ P₂) := by
-  obtain ⟨gs, rfl, rfl⟩ := hG
-  obtain ⟨ps₁, rfl, rfl⟩ := h₁
-  obtain ⟨ps₂, rfl, rfl⟩ := h₂
-  exact Prim.ofHyp_spec h (⟨n, gs, p, hp, hpn, ps₁, ps₂, hs₁, hs₂⟩ : SylowConjInst) (by
-    rintro ⟨n', gs', p', _, _, ps₁', ps₂', _, _⟩ hy
-    simp only [Val.list.injEq, List.cons.injEq, Val.nat.injEq, and_true] at hy
-    obtain rfl := encGroup_deg hy.1
-    obtain rfl := encGroup_injective hy.1
-    obtain rfl := hy.2.1
-    obtain rfl := encGroup_injective hy.2.2.1
-    obtain rfl := encGroup_injective hy.2.2.2
-    rfl)
-
-theorem sylowConjugate_call (h : SylowConjugate) {P : Program} {env : List Val} {j : ℕ}
-    {a : Expr} {ca : ℕ} {gv v₁ v₂ : Val} {G P₁ P₂ : Subgroup (Perm (Fin n))} {p : ℕ}
-    (hj : P.prims[j]? = some (sylowConjugatePrim h))
-    (ha : Det P env a (.list [gv, .nat p, v₁, v₂]) ca)
-    (hG : GroupVal n gv G) (h₁ : GroupVal n v₁ P₁) (h₂ : GroupVal n v₂ P₂) (hp : p.Prime)
-    (hpn : p ≤ n) (hs₁ : IsSylowOf p G P₁) (hs₂ : IsSylowOf p G P₂) :
-    EvalAll P env (.prim j a) (fun w c => SylowConjOut G P₁ P₂ w ∧
-      c ≤ ca + (sylowConjugatePrim h).bound (.list [gv, .nat p, v₁, v₂]) + 4 * (n + 1) ^ 2 + 1) :=
-  EvalAll.prim_spec_le hj ha (sylowConjugatePrim_spec h hG h₁ h₂ hp hpn hs₁ hs₂)
-    fun w hw => by obtain ⟨g, -, rfl, -⟩ := hw; exact wt_encPerm_le g
-
-/-! ### Centralizers in quotients -/
-
-/-- **Centralizers in quotients** as a primitive. -/
-noncomputable def quotientCentralizerPrim (h : QuotientCentralizer) : Prim := Prim.ofHyp _ _ h
-
-/-- The result: generators of the preimage in `H` of `C_{H/K}(N/K)`. -/
-def QuotCentOut (K H N : Subgroup (Perm (Fin n))) (w : Val) : Prop :=
-  ∃ C, GensVal n w C ∧ ∀ y, y ∈ C ↔ y ∈ H ∧ ∀ x ∈ N, y * x * y⁻¹ * x⁻¹ ∈ K
-
-theorem quotientCentralizerPrim_spec (h : QuotientCentralizer) {gv kv hv nv : Val}
-    {G K H N : Subgroup (Perm (Fin n))} (hG : GroupVal n gv G) (hK : GroupVal n kv K)
-    (hH : GroupVal n hv H) (hN : GroupVal n nv N) (hKG : K ≤ G)
-    (hKn : ∀ g ∈ G, ∀ k ∈ K, g * k * g⁻¹ ∈ K) (hKH : K ≤ H) (hKN : K ≤ N) (hHG : H ≤ G)
-    (hNG : N ≤ G) (hHN : ∀ y ∈ H, ∀ x ∈ N, y * x * y⁻¹ ∈ N) :
-    PrimSpec (quotientCentralizerPrim h) (.list [gv, kv, hv, nv]) (QuotCentOut K H N) := by
-  obtain ⟨gs, rfl, rfl⟩ := hG
-  obtain ⟨ks, rfl, rfl⟩ := hK
-  obtain ⟨hs, rfl, rfl⟩ := hH
-  obtain ⟨ns, rfl, rfl⟩ := hN
-  refine (Prim.ofHyp_spec h (⟨n, gs, ks, hs, ns, hKG, hKn, hKH, hKN, hHG, hNG, hHN⟩ :
-    QuotCentInst) ?_).mono fun w hw => ⟨_, hw, fun y => Iff.rfl⟩
-  rintro ⟨n', gs', ks', hs', ns', _, _, _, _, _, _, _⟩ hy
-  simp only [Val.list.injEq, List.cons.injEq, and_true] at hy
-  obtain rfl := encGroup_deg hy.1
-  obtain rfl := encGroup_injective hy.1
-  obtain rfl := encGroup_injective hy.2.1
-  obtain rfl := encGroup_injective hy.2.2.1
-  obtain rfl := encGroup_injective hy.2.2.2
-  rfl
-
-theorem quotientCentralizer_call (h : QuotientCentralizer) {P : Program} {env : List Val}
-    {j : ℕ} {a : Expr} {ca : ℕ} {gv kv hv nv : Val} {G K H N : Subgroup (Perm (Fin n))}
-    (hj : P.prims[j]? = some (quotientCentralizerPrim h))
-    (ha : Det P env a (.list [gv, kv, hv, nv]) ca)
-    (hG : GroupVal n gv G) (hK : GroupVal n kv K)
-    (hH : GroupVal n hv H) (hN : GroupVal n nv N) (hKG : K ≤ G)
-    (hKn : ∀ g ∈ G, ∀ k ∈ K, g * k * g⁻¹ ∈ K) (hKH : K ≤ H) (hKN : K ≤ N) (hHG : H ≤ G)
-    (hNG : N ≤ G) (hHN : ∀ y ∈ H, ∀ x ∈ N, y * x * y⁻¹ ∈ N) :
-    EvalAll P env (.prim j a) (fun w c => QuotCentOut K H N w ∧
-      c ≤ ca + (quotientCentralizerPrim h).bound (.list [gv, kv, hv, nv]) + 13 * (n + 1) ^ 6 + 1) :=
-  EvalAll.prim_spec_le hj ha
-    (quotientCentralizerPrim_spec h hG hK hH hN hKG hKn hKH hKN hHG hNG hHN)
-    fun w hw => by obtain ⟨_, hs, -⟩ := hw; exact GensVal.wt_le hs
-
-/-! ### Solvable coset intersections -/
-
-/-- **Coset intersection with a solvable group** as a primitive. -/
-noncomputable def solvableCosetIntersectionPrim (h : SolvableCosetIntersection) : Prim :=
-  Prim.ofHyp _ _ h
+/-! ### Coset intersections -/
 
 /-- The result: `0` if `G x ∩ H` is empty, otherwise `[y, L]` with `y ∈ G x ∩ H` and `L`
 generators of `G ∩ H`, so that `G x ∩ H = (G ∩ H) y`. -/
@@ -515,31 +389,5 @@ theorem CosetIntOut.wt_le {G H : Subgroup (Perm (Fin n))} {x : Perm (Fin n)} {w 
     have := GensVal.wt_le hL
     have : (n + 1) ^ 2 ≤ (n + 1) ^ 6 := Nat.pow_le_pow_right (by omega) (by omega)
     omega
-
-theorem solvableCosetIntersectionPrim_spec (h : SolvableCosetIntersection) {gv hv : Val}
-    {G H : Subgroup (Perm (Fin n))} (hG : GroupVal n gv G) (hsol : IsSolvable G)
-    (hH : GroupVal n hv H) (x : Perm (Fin n)) :
-    PrimSpec (solvableCosetIntersectionPrim h) (.list [gv, hv, encPerm x]) (CosetIntOut G H x) := by
-  obtain ⟨gs, rfl, rfl⟩ := hG
-  obtain ⟨hs, rfl, rfl⟩ := hH
-  refine (Prim.ofHyp_spec h (⟨n, gs, hsol, hs, x⟩ : SolvCosetInst) ?_).mono fun w hw => ?_
-  · rintro ⟨n', gs', _, hs', x'⟩ hy
-    simp only [Val.list.injEq, List.cons.injEq, and_true] at hy
-    obtain rfl := encGroup_deg hy.1
-    obtain rfl := encGroup_injective hy.1
-    obtain rfl := encGroup_injective hy.2.1
-    obtain rfl := encPerm_injective hy.2.2
-    rfl
-  · exact hw
-
-theorem solvableCosetIntersection_call (h : SolvableCosetIntersection) {P : Program}
-    {env : List Val} {j : ℕ} {a : Expr} {ca : ℕ} {gv hv : Val} {G H : Subgroup (Perm (Fin n))}
-    {x : Perm (Fin n)} (hj : P.prims[j]? = some (solvableCosetIntersectionPrim h))
-    (ha : Det P env a (.list [gv, hv, encPerm x]) ca)
-    (hG : GroupVal n gv G) (hsol : IsSolvable G) (hH : GroupVal n hv H) :
-    EvalAll P env (.prim j a) (fun w c => CosetIntOut G H x w ∧
-      c ≤ ca + (solvableCosetIntersectionPrim h).bound (.list [gv, hv, encPerm x]) + 40 * (n + 1) ^ 6 + 1) :=
-  EvalAll.prim_spec_le hj ha (solvableCosetIntersectionPrim_spec h hG hsol hH x)
-    fun w hw => CosetIntOut.wt_le hw
 
 end GI.Lang

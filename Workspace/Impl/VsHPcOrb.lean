@@ -1,5 +1,9 @@
-import Workspace.Impl.VsHPcMath
-import Workspace.Impl.VsQTSot
+module
+
+public import Workspace.Impl.VsHPcMath
+public import Workspace.Impl.VsQTSot
+
+@[expose] public section
 
 /-!
 # The orbit of a tuple of pieces is small
@@ -26,6 +30,7 @@ theorem vsQTAct_eq (hs : VsQStOK s) {g : Perm (Fin I.n)} (hg : g ∈ gens s.hs) 
   unfold vsQTAct vsHTPhi
   rw [vsPRho_of hs hg, vsQRho_eq_toLin' hs hg]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- **The orbit of a tuple of pieces.** -/
 theorem vsH_tup_orbit [Fact I.p.Prime] (hs : VsQStOK s) {ι : Type*}
     {X : ι → Submodule (ZMod I.p) (Fin (vsQD s) → ZMod I.p)} {ys₀ : VsQTup s}

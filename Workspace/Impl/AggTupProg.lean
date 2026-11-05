@@ -1,4 +1,8 @@
-import Workspace.Impl.AggTup
+module
+
+public import Workspace.Impl.AggTup
+
+@[expose] public section
 
 /-!
 # The orbit of a test tuple, on a list of label pairs

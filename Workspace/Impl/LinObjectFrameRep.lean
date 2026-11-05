@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectFrameMath
+module
+
+public import Workspace.Impl.LinObjectFrameMath
+
+@[expose] public section
 
 namespace GI.Impl
 

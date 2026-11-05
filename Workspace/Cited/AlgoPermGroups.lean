@@ -1,17 +1,20 @@
--- Proved in `Workspace/Proved/` or taken as axioms in `Workspace/Axioms/AlgoPermGroups.lean` (see each docstring)
-import Workspace.Cited.Encoding
-import Mathlib.GroupTheory.Perm.Basic
-import Mathlib.Algebra.Group.Subgroup.Lattice
-import Mathlib.GroupTheory.Sylow
-import Mathlib.GroupTheory.Solvable
-import Mathlib.SetTheory.Cardinal.Finite
+-- Proved in `Workspace/Proved/` (see each docstring)
+module
+
+public import Workspace.Cited.Encoding
+public import Mathlib.GroupTheory.Perm.Basic
+public import Mathlib.Algebra.Group.Subgroup.Lattice
+public import Mathlib.GroupTheory.Sylow
+public import Mathlib.GroupTheory.Solvable
+public import Mathlib.SetTheory.Cardinal.Finite
+
+@[expose] public section
 
 /-!
 # Stage 2 tasks: basic permutation-group algorithms
 
 **Each docstring says how its task enters the main theorem.** Ten tasks are proved in
-`Workspace/Proved/`. Four (`ChiefSeriesAlgo`, `SylowAlgo`, `SylowConjugate`,
-`QuotientCentralizer`) are axioms of `Workspace/Axioms/AlgoPermGroups.lean`. Two (`Orbits`,
+`Workspace/Proved/`. Two (`Orbits`,
 `CompositionSeriesAlgo`) are not assumed by the main theorem. Each task is a `PolyTimeAt`
 statement of stage 2.
 
@@ -35,7 +38,7 @@ Conventions.
   prepended so that the encoding always contains `n` cells with values below `n`; then every
   number in the input, including `n`, is at most the number of cells, even when `gs = []`.
 * An instance that needs a hypothesis (a normal subgroup, a prime dividing the order, …) is a
-  structure carrying a proof of it; the encoding forgets the proof. The axiom then says nothing
+  structure carrying a proof of it; the encoding forgets the proof. The task then says nothing
   about inputs that violate the hypothesis.
 * A subgroup in an output is "some generating list with at most `n²` entries" (`GensOf`): the
   output relation names the subgroup, never one particular list. The bound `n²` is part of the
@@ -286,21 +289,10 @@ def IsCompositionSeries {n : ℕ} (G : Subgroup (Perm (Fin n)))
     ∀ N : Subgroup (Perm (Fin n)), Hs[i + 1] ≤ N → N ≤ Hs[i] →
       (∀ x ∈ Hs[i], ∀ y ∈ N, x * y * x⁻¹ ∈ N) → N = Hs[i + 1] ∨ N = Hs[i]
 
-/-- `Hs` is a chief series of `G`: it starts at `G`, ends at `1`, every term is normal in `G`,
-and each factor is a minimal normal subgroup of `G` modulo the next term. -/
-def IsChiefSeries {n : ℕ} (G : Subgroup (Perm (Fin n)))
-    (Hs : List (Subgroup (Perm (Fin n)))) : Prop :=
-  Hs.head? = some G ∧ Hs.getLast? = some ⊥ ∧
-  (∀ H ∈ Hs, ∀ x ∈ G, ∀ y ∈ H, x * y * x⁻¹ ∈ H) ∧
-  ∀ i (h : i + 1 < Hs.length),
-    Hs[i + 1] < Hs[i] ∧
-    ∀ N : Subgroup (Perm (Fin n)), Hs[i + 1] ≤ N → N ≤ Hs[i] →
-      (∀ x ∈ G, ∀ y ∈ N, x * y * x⁻¹ ∈ N) → N = Hs[i + 1] ∨ N = Hs[i]
-
 /-- A list of at most `n² + 1` subgroups, each by some generating list of at most `n²`
 generators.
 
-*Why every algorithm can meet the bounds.* In a composition or chief series every term is a
+*Why every algorithm can meet the bounds.* In a composition series every term is a
 proper subgroup of the one before, so by Lagrange's theorem its order is at most half of it. A
 series `G = H₀ > H₁ > … > H_m = 1` therefore has `2^m ≤ |G| ≤ n! ≤ 2^(n²)`, so `m ≤ n²` and it
 has at most `n² + 1` terms. Each term's generating list is reduced to at most `n²` generators as
@@ -316,14 +308,6 @@ def CompositionSeriesTask : Task GroupInst :=
 
 /-- Not assumed by the main theorem. -/
 def CompositionSeriesAlgo : Prop := ∃ p, PolyTimeAt CompositionSeriesTask p
-
-/-- **Chief series** ([LM, Theorem 3.1(x)]; used after Lemma A.21: "Compute a chief series of
-`H`"). -/
-def ChiefSeriesTask : Task GroupInst :=
-  Task.ofVal (fun I => encGroup I.gs) (fun I v => SeriesOf (IsChiefSeries (gens I.gs)) v)
-
-/-- Taken as the axiom `GI.Axioms.chiefSeriesAlgo` (`Workspace/Axioms/AlgoPermGroups.lean`). -/
-def ChiefSeriesAlgo : Prop := ∃ p, PolyTimeAt ChiefSeriesTask p
 
 /-! ### Normalized subgroups (Luks–Miyazaki, Theorem 3.1 (viii)) -/
 
@@ -361,111 +345,6 @@ def NormalizedFactorTask : Task FactorInst :=
 
 /-- Proved as `GI.Proved.normalizedFactor` in `Workspace/Proved/NInt.lean`. -/
 def NormalizedFactor : Prop := ∃ p, PolyTimeAt NormalizedFactorTask p
-
-/-! ### Sylow subgroups (CFSG) -/
-
-/-- An instance: a group and a prime dividing its order. The prime is at most `n`, since it
-divides `|G|`, which divides `n!`; so the input bound of `Task.ofVal` holds. -/
-structure SylowInst where
-  n : ℕ
-  gs : List (Perm (Fin n))
-  p : ℕ
-  prime : p.Prime
-  dvd : p ∣ Nat.card (gens gs)
-
-/-- `P` is a Sylow `p`-subgroup of `G`: a `p`-subgroup of `G` whose index in `G` is prime to
-`p`. -/
-def IsSylowOf {n : ℕ} (p : ℕ) (G P : Subgroup (Perm (Fin n))) : Prop :=
-  P ≤ G ∧ IsPGroup p P ∧ ¬ p ∣ (P.subgroupOf G).index
-
-/-- **A Sylow subgroup** ([LM, Theorem 3.1(xi)], CFSG, Kantor; used in the proof of Lemma A.19).
-Output a generating list of some Sylow `p`-subgroup, with at most `n²` generators (`GensOf`).
-
-*Input bound.* A prime dividing `|G|`, `G ≤ Sym(n)`, divides `n!`, so `p ≤ n`. -/
-def SylowTask : Task SylowInst :=
-  Task.ofVal (fun I => .list [encGroup I.gs, .nat I.p])
-    (fun I v => ∃ S, GensOf S v ∧ IsSylowOf I.p (gens I.gs) S)
-
-/-- Taken as the axiom `GI.Axioms.sylowAlgo` (`Workspace/Axioms/AlgoPermGroups.lean`). -/
-def SylowAlgo : Prop := ∃ p, PolyTimeAt SylowTask p
-
-/-- An instance: two Sylow `p`-subgroups of `G`. -/
-structure SylowConjInst where
-  n : ℕ
-  gs : List (Perm (Fin n))
-  p : ℕ
-  prime : p.Prime
-  p_le : p ≤ n
-  P₁ : List (Perm (Fin n))
-  P₂ : List (Perm (Fin n))
-  syl₁ : IsSylowOf p (gens gs) (gens P₁)
-  syl₂ : IsSylowOf p (gens gs) (gens P₂)
-
-/-- **Conjugating Sylow subgroups** ([LM, Theorem 3.1(xi)]: "given such subgroups `P₁` and `P₂`
-of `G`, find `g ∈ G` such that `P₁^g = P₂`"). Output some `g ∈ G` with `g⁻¹ P₁ g = P₂`
-(`P^g = g⁻¹ P g`). One exists by Sylow's theorem. -/
-def SylowConjugateTask : Task SylowConjInst :=
-  Task.ofVal (fun I => .list [encGroup I.gs, .nat I.p, encGroup I.P₁, encGroup I.P₂])
-    (fun I v => ∃ g ∈ gens I.gs, v = encPerm g ∧
-      ∀ x, x ∈ gens I.P₂ ↔ g * x * g⁻¹ ∈ gens I.P₁)
-
-/-- Taken as the axiom `GI.Axioms.sylowConjugate` (`Workspace/Axioms/AlgoPermGroups.lean`). -/
-def SylowConjugate : Prop := ∃ p, PolyTimeAt SylowConjugateTask p
-
-/-! ### Centralizers in quotients (Kantor–Luks, CFSG) -/
-
-/-- An instance of a quotient centralizer: `K ⊴ G`, and subgroups `H, N` of `G` containing `K`
-with `H` normalizing `N`. -/
-structure QuotCentInst where
-  n : ℕ
-  gs : List (Perm (Fin n))
-  ks : List (Perm (Fin n))
-  hs : List (Perm (Fin n))
-  ns : List (Perm (Fin n))
-  K_le : gens ks ≤ gens gs
-  K_normal : ∀ g ∈ gens gs, ∀ k ∈ gens ks, g * k * g⁻¹ ∈ gens ks
-  K_le_H : gens ks ≤ gens hs
-  K_le_N : gens ks ≤ gens ns
-  H_le : gens hs ≤ gens gs
-  N_le : gens ns ≤ gens gs
-  normalizes : ∀ h ∈ gens hs, ∀ x ∈ gens ns, h * x * h⁻¹ ∈ gens ns
-
-/-- The preimage in `H` of `C_{H/K}(N/K)`: the `h ∈ H` whose commutators with `N` lie in `K`. -/
-def quotCentralizer (I : QuotCentInst) : Subgroup (Perm (Fin I.n)) where
-  carrier := {h | h ∈ gens I.hs ∧ ∀ x ∈ gens I.ns, h * x * h⁻¹ * x⁻¹ ∈ gens I.ks}
-  one_mem' := ⟨(gens I.hs).one_mem, fun x _ => by simp⟩
-  mul_mem' := by
-    rintro a b ⟨ha, ha'⟩ ⟨hb, hb'⟩
-    refine ⟨(gens I.hs).mul_mem ha hb, fun x hx => ?_⟩
-    -- `ab x (ab)⁻¹ x⁻¹ = a (b x b⁻¹ x⁻¹) a⁻¹ · (a x a⁻¹ x⁻¹)`
-    have h1 := ha' x hx
-    have h2 := hb' x hx
-    have h3 : a * (b * x * b⁻¹ * x⁻¹) * a⁻¹ ∈ gens I.ks :=
-      I.K_normal a (I.H_le ha) _ h2
-    have := (gens I.ks).mul_mem h3 h1
-    simpa [mul_assoc] using this
-  inv_mem' := by
-    rintro a ⟨ha, ha'⟩
-    refine ⟨(gens I.hs).inv_mem ha, fun x hx => ?_⟩
-    -- `a⁻¹ x a x⁻¹ = (a y a⁻¹ y⁻¹)⁻¹` with `y = a⁻¹ x a ∈ N`.
-    have hy : a⁻¹ * x * a ∈ gens I.ns := by
-      have := I.normalizes a⁻¹ ((gens I.hs).inv_mem ha) x hx
-      simpa using this
-    have h1 := (gens I.ks).inv_mem (ha' _ hy)
-    have e : (a * (a⁻¹ * x * a) * a⁻¹ * (a⁻¹ * x * a)⁻¹)⁻¹ = a⁻¹ * x * a⁻¹⁻¹ * x⁻¹ := by group
-    rw [e] at h1
-    exact h1
-
-/-- **Centralizers in quotients** ([LM, Lemma 3.2] (Kantor–Luks, CFSG), verbatim: "For
-`Ḡ = G/K`, where `K ⊴ G ≤ Sym(Ω)`, given `H̄, N̄ ≤ Ḡ` such that `H̄` normalizes `N̄`, one can find
-`C_H̄(N̄)` (including, in particular, `Z(H̄)`) in polynomial time"; used after Lemma A.21 for
-`C_{H/V}(U/V)`). Output a generating list of the preimage of `C_{H/K}(N/K)` in `H`. -/
-def QuotientCentralizerTask : Task QuotCentInst :=
-  Task.ofVal (fun I => .list [encGroup I.gs, encGroup I.ks, encGroup I.hs, encGroup I.ns])
-    (fun I v => GensOf (quotCentralizer I) v)
-
-/-- Taken as the axiom `GI.Axioms.quotientCentralizer` (`Workspace/Axioms/AlgoPermGroups.lean`). -/
-def QuotientCentralizer : Prop := ∃ p, PolyTimeAt QuotientCentralizerTask p
 
 /-! ### Solvable coset intersections (Luks–Miyazaki, Proposition 3.9) -/
 

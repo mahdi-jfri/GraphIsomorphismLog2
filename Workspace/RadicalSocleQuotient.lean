@@ -1,4 +1,8 @@
-import Workspace.RadicalSocleBasic
+module
+
+public import Workspace.RadicalSocleBasic
+
+@[expose] public section
 
 namespace GI.RadicalSocle
 
@@ -11,7 +15,7 @@ def preimageHom (f : G →* Q) (N : Subgroup Q) : N.comap f →* N where
 
 /-- Solvability of a preimage is proved from its actual kernel and image. -/
 theorem solvable_preimage (f : G →* Q) (N : Subgroup Q)
-    [IsSolvable f.ker] [IsSolvable N] : IsSolvable (N.comap f) := by
+    [Group.IsSolvable f.ker] [Group.IsSolvable N] : Group.IsSolvable (N.comap f) := by
   have hle : f.ker ≤ N.comap f := by
     intro g hg
     change f g ∈ N
@@ -24,13 +28,13 @@ theorem solvable_preimage (f : G →* Q) (N : Subgroup Q)
   exact ⟨⟨g, hf⟩, rfl⟩
 
 def MaximalSolvableNormal (R : Subgroup G) : Prop :=
-  R.Normal ∧ IsSolvable R ∧ ∀ N : Subgroup G,
-    N.Normal → IsSolvable N → R ≤ N → N = R
+  R.Normal ∧ Group.IsSolvable R ∧ ∀ N : Subgroup G,
+    N.Normal → Group.IsSolvable N → R ≤ N → N = R
 
 theorem exists_maximal_solvable_normal (G : Type*) [Group G] [Finite G] :
     ∃ R : Subgroup G, MaximalSolvableNormal R := by
   classical
-  let candidates : Set (Subgroup G) := {N | N.Normal ∧ IsSolvable N}
+  let candidates : Set (Subgroup G) := {N | N.Normal ∧ Group.IsSolvable N}
   have hnonempty : candidates.Nonempty := ⟨⊥, inferInstance, inferInstance⟩
   obtain ⟨R, hR, hmax⟩ := Set.Finite.exists_maximalFor id candidates
     (Set.toFinite candidates) hnonempty
@@ -39,20 +43,20 @@ theorem exists_maximal_solvable_normal (G : Type*) [Group G] [Finite G] :
 /-- Factoring out a maximal solvable normal subgroup leaves no nontrivial
 solvable normal subgroup. The extension argument is proved, not assumed. -/
 theorem quotient_radicalFree_of_maximal (R : Subgroup G) [R.Normal]
-    [IsSolvable R]
-    (maximal : ∀ N : Subgroup G, N.Normal → IsSolvable N → R ≤ N → N = R) :
-    ∀ N : Subgroup (G ⧸ R), N.Normal → IsSolvable N → N = ⊥ := by
+    [Group.IsSolvable R]
+    (maximal : ∀ N : Subgroup G, N.Normal → Group.IsSolvable N → R ≤ N → N = R) :
+    ∀ N : Subgroup (G ⧸ R), N.Normal → Group.IsSolvable N → N = ⊥ := by
   intro N hN hsolv
   letI := hN
   letI := hsolv
   let q := QuotientGroup.mk' R
   let M := N.comap q
   letI : M.Normal := hN.comap q
-  haveI : IsSolvable q.ker := by
+  haveI : Group.IsSolvable q.ker := by
     dsimp only [q]
     rw [QuotientGroup.ker_mk']
     infer_instance
-  haveI : IsSolvable M := solvable_preimage q N
+  haveI : Group.IsSolvable M := solvable_preimage q N
   have hle : R ≤ M := by
     intro r hr
     change q r ∈ N
@@ -77,29 +81,29 @@ theorem solvableRadical_maximal [Finite G] : MaximalSolvableNormal (solvableRadi
 instance solvableRadical_normal [Finite G] : (solvableRadical G).Normal :=
   solvableRadical_maximal.1
 
-instance solvableRadical_solvable [Finite G] : IsSolvable (solvableRadical G) :=
+instance solvableRadical_solvable [Finite G] : Group.IsSolvable (solvableRadical G) :=
   solvableRadical_maximal.2.1
 
 theorem radical_quotient_radicalFree [Finite G] :
-    ∀ N : Subgroup (G ⧸ solvableRadical G), N.Normal → IsSolvable N → N = ⊥ :=
+    ∀ N : Subgroup (G ⧸ solvableRadical G), N.Normal → Group.IsSolvable N → N = ⊥ :=
   quotient_radicalFree_of_maximal (solvableRadical G) solvableRadical_maximal.2.2
 
 /-- Every solvable normal subgroup lies in the constructed radical. Hence
 the choice above is unique and agrees with the usual solvable radical. -/
-theorem le_solvableRadical [Finite G] (N : Subgroup G) [N.Normal] [IsSolvable N] :
+theorem le_solvableRadical [Finite G] (N : Subgroup G) [N.Normal] [Group.IsSolvable N] :
     N ≤ solvableRadical G := by
   let q := QuotientGroup.mk' (solvableRadical G)
   haveI : (N.map q).Normal := (inferInstance : N.Normal).map q
     (QuotientGroup.mk'_surjective (solvableRadical G))
-  haveI : IsSolvable (N.map q) := solvable_of_surjective (q.subgroupMap_surjective N)
+  haveI : Group.IsSolvable (N.map q) := solvable_of_surjective (q.subgroupMap_surjective N)
   have he := radical_quotient_radicalFree (N.map q) inferInstance inferInstance
   intro n hn
   have hm : q n ∈ N.map q := ⟨n, hn, rfl⟩
   rw [he, Subgroup.mem_bot] at hm
   exact (QuotientGroup.eq_one_iff n).mp hm
 
-theorem solvableRadical_eq_of_greatest [Finite G] (R : Subgroup G) [R.Normal] [IsSolvable R]
-    (greatest : ∀ N : Subgroup G, N.Normal → IsSolvable N → N ≤ R) :
+theorem solvableRadical_eq_of_greatest [Finite G] (R : Subgroup G) [R.Normal] [Group.IsSolvable R]
+    (greatest : ∀ N : Subgroup G, N.Normal → Group.IsSolvable N → N ≤ R) :
     R = solvableRadical G :=
   (le_solvableRadical R).antisymm (greatest _ inferInstance inferInstance)
 

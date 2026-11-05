@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemStepSpec
-import Workspace.Impl.AggCmpRun
+module
+
+public import Workspace.Impl.AggItemStepSpec
+public import Workspace.Impl.AggCmpRun
+
+@[expose] public section
 
 /-!
 # The sizes of the context of the items

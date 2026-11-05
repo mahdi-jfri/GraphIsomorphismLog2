@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojAlign
-import Workspace.Impl.AggItemCiSojSq
+module
+
+public import Workspace.Impl.AggItemCiSojAlign
+public import Workspace.Impl.AggItemCiSojSq
+
+@[expose] public section
 
 /-!
 # Fixed implication and alignment choices

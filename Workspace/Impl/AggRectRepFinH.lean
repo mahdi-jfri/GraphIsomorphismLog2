@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepFin
+module
+
+public import Workspace.Impl.AggRectRepFin
+
+@[expose] public section
 
 /-!
 # The group of the representation, as the program computes it

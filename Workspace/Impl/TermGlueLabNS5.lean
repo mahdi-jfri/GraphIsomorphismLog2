@@ -1,8 +1,12 @@
-import Workspace.Impl.TermGlueLabNDist
-import Workspace.Impl.TermGlueLabN6
-import Workspace.Impl.TermGlueLabPS5O
-import Workspace.Impl.TermGlueLabPEx
-import Workspace.Impl.TermGlueLabPAlign
+module
+
+public import Workspace.Impl.TermGlueLabNDist
+public import Workspace.Impl.TermGlueLabN6
+public import Workspace.Impl.TermGlueLabPS5O
+public import Workspace.Impl.TermGlueLabPEx
+public import Workspace.Impl.TermGlueLabPAlign
+
+@[expose] public section
 
 /-!
 # The label driver: step 5 with the choice of the orientation case
@@ -26,6 +30,7 @@ open GI.Cited (Val encPerm encGroup encIntMatrix gens)
 open scoped Pointwise
 
 attribute [local instance] stringRAct
+set_option backward.isDefEq.respectTransparency false
 
 /-- **The step-5 function of the driver**: the test on the labels of `x`, then the
 orientation variant `s5o` (flag `1`) or the plain step 5 `s5p` (flag `0`). -/

@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabNProg
-import Workspace.Impl.TermGlueLabPS5Ad
+module
+
+public import Workspace.Impl.TermGlueLabNProg
+public import Workspace.Impl.TermGlueLabPS5Ad
+
+@[expose] public section
 
 /-!
 # The driver of the label program: step 6 on the precomputed step-5 output
@@ -33,18 +37,26 @@ def TmGLNS6OK (P : Program) (s6 : ℕ) (F : ℕ → ℕ) : Prop :=
     (htr : MulAction.IsPretransitive (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nl
       (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).B)
     (hcard : Fintype.card (Fin m) * L.q = S.size) (hsN : S.size ≤ S.N) (hN : 0 < S.N)
-    (hqα : (S.N : ℝ) ^ Pp.α < L.q) {σN U gs : List (Perm (Fin m))} {r τ : Perm (Fin m)},
+    (hqα : (S.N : ℝ) ^ Pp.α < L.q)
+    {R' : Subgroup (Perm (Fin m))}
+    (hRH : R' ≤ (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Hb)
+    (hNR : (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ≤ R')
+    (hsolv : ∃ ℓ, GI.Multicoset.relDerived R' (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ℓ ≤
+      (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb)
+    {σN U gs : List (Perm (Fin m))} {r τ : Perm (Fin m)},
     gens σN = (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).Nb →
     AnsC (Equiv.refl (Fin m)) (.list [encPerm τ, encGroup U])
-      (tmGlRes (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα) r) →
-    gens gs ⊔ gens σN = gens (U.map fun x => τ * x * τ⁻¹) → IsSolvable (gens gs) →
+      (tmGlRes (tmGLSIWith Pp hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv) r) →
+    gens gs ⊔ gens σN = gens (U.map fun x => τ * x * τ⁻¹) →
+    (∃ _ : ((gens σN).subgroupOf (gens gs)).Normal,
+      Group.IsSolvable ((gens gs) ⧸ (gens σN).subgroupOf (gens gs))) →
     gs.length ≤ m ^ 2 → ∀ (U5 V D : Matrix (Fin σN.length) (Fin σN.length) ℤ) (o5 vv ww : Val),
     (∃ hgs ws, TmGLNS5At hnat hq h0 E hP htr hcard hsN hN hqα σN gs hgs U5 V D ws o5) →
     TmGLNVecRes hnat hq h0 E hP htr hcard hsN hN hqα σN τ V D vv ww →
     ∀ B : ℕ, (Val.list [encGroup σN, encPerm τ, .list (gs.map encPerm), o5, vv, ww]).wt ≤ B →
     FunAll P s6 (.list [encGroup σN, encPerm τ, .list (gs.map encPerm), o5, vv, ww])
       (fun w c => AnsC (Equiv.refl (Fin m)) w
-        (tmGlLab (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα) r) ∧ c ≤ F B)
+        (tmGlLab (tmGLSIWith Pp hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv) r) ∧ c ≤ F B)
 
 end Iface
 
@@ -92,8 +104,13 @@ theorem tmGLN_s6_ok (hps : PointwiseStab) {Pg : Program}
     (hA : Iface.TmGLAffineSpec Pg Ka Da ja) :
     Iface.TmGLNS6OK Pg s6 (fun B => tmGLS6C Ka Da (pointwiseStabPrim hps).c
       (pointwiseStabPrim hps).k (B + 1) B) := by
-  intro Ω C Pp S L label hnat hq m h0 E hP htr hcard hsN hN hqα σN U gs r τ hσN hw hSN hsol hgl
-    U' V D o5 vv ww h5 hv B hB
+  intro Ω C Pp S L label hnat hq m h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv σN U gs r τ hσN
+    hw hSN hsol hgl U' V D o5 vv ww h5 hv B hB
+  have hsol'' : ∃ _ : ((@id (Subgroup (Perm (Fin m)))
+      (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).Nb).subgroupOf (gens gs)).Normal,
+      Group.IsSolvable ((gens gs) ⧸ (@id (Subgroup (Perm (Fin m)))
+        (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).Nb).subgroupOf (gens gs)) :=
+    hσN ▸ hsol
   have hrep := tmGLP_rep_ok (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).Nb
     (@id (Fin L.q → Fin m → C)
       (rowTuple (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).e S.x))
@@ -114,10 +131,10 @@ theorem tmGLN_s6_ok (hps : PointwiseStab) {Pg : Program}
     have h5' : FunAll Pg idx (.list [tmGLPMCtx U' V (fun i => D i i), .list _])
         (fun w c => TmGLS5Out (linVecVal (fun i => D i i)) _ w ∧ c ≤ _) :=
       FunAll.mono hT5 fun w c ⟨hw', hc'⟩ => ⟨⟨_, _, _, hw'⟩, hc'⟩
-    have hcall := tmGLS_call' hnat hq h0 E hP htr hcard hsN hN hqα hA hgs hsol hgl hT
+    have hcall := tmGLS_call' hnat hq h0 E hP htr hcard hsN hN hqα hA hgs hsol'' hgl hT
       (tmGLQMod_pos hpos) Ev hrep τ
     rw [← tmGLS_affIn_eq, ← tmGLP_modV hpos] at hcall
-    exact FunAll.mono (tmGLS6_lab hnat hq h0 E hP htr hcard hsN hN hqα hps hf hmg hout hred happ hj hinv hcp hcj hmc hσN hw hSN hgl
+    exact FunAll.mono (tmGLS6_lab hnat hq h0 E hP htr hcard hsN hN hqα hps hf hmg hout hred happ hj hinv hcp hcj hmc hRH hNR hsolv hσN hw hSN hgl
       hrep _ _ _ _ _ _ h5' hcall) fun w c h => ⟨h.1, hcost c h.2⟩
   · -- all types distinct: the orientation coordinate
     obtain ⟨rfl, rfl⟩ := hv.2 hT E' Ev hE hEv
@@ -125,10 +142,10 @@ theorem tmGLN_s6_ok (hps : PointwiseStab) {Pg : Program}
         (fun w c => TmGLS5Out (linVecVal (Fin.cons 2 (fun i => D i i) : Fin (σN.length + 1) → ℤ))
           _ w ∧ c ≤ _) :=
       FunAll.mono hT5 fun w c ⟨hw', hc'⟩ => ⟨⟨_, _, _, hw'⟩, hc'⟩
-    have hcall := tmGLS_call hnat hq h0 E hP htr hcard hsN hN hqα hA hgs hsol hgl
+    have hcall := tmGLS_call hnat hq h0 E hP htr hcard hsN hN hqα hA hgs hsol'' hgl
       (tmGLQMod_cons_pos hpos) Ev hrep τ
     rw [← tmGLS_affIn_eq, ← tmGLN_modV_cons hpos] at hcall
-    exact FunAll.mono (tmGLS6_lab hnat hq h0 E hP htr hcard hsN hN hqα hps hf hmg hout hred happ hj hinv hcp hcj hmc hσN hw hSN hgl
+    exact FunAll.mono (tmGLS6_lab hnat hq h0 E hP htr hcard hsN hN hqα hps hf hmg hout hred happ hj hinv hcp hcj hmc hRH hNR hsolv hσN hw hSN hgl
       hrep _ _ _ _ _ _ h5' hcall) fun w c h => ⟨h.1, hcost c h.2⟩
 
 end GI.Impl

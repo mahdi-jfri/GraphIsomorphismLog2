@@ -1,5 +1,9 @@
-import Workspace.Proved.VsHKeptMath
-import Workspace.Proved.VsMIndep
+module
+
+public import Workspace.Proved.VsHKeptMath
+public import Workspace.Proved.VsMIndep
+
+@[expose] public section
 
 /-!
 # Few kept elements

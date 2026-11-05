@@ -1,4 +1,8 @@
-import Workspace.Impl.ColHier
+module
+
+public import Workspace.Impl.ColHier
+
+@[expose] public section
 
 /-!
 # The child partitions of the column step from position keys

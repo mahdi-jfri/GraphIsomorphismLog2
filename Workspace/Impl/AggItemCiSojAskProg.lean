@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojRectStart
-import Workspace.Impl.AggItemCiSojWt
+module
+
+public import Workspace.Impl.AggItemCiSojRectStart
+public import Workspace.Impl.AggItemCiSojWt
+
+@[expose] public section
 
 /-! # The actual initial-query constructor on the representation bytes -/
 

@@ -1,6 +1,10 @@
-import Workspace.Impl.LinAffineCallerPrepareSpec
-import Workspace.Impl.LinAffineCallerResidual
-import Workspace.Impl.LinAffineCallerLeftArg
+module
+
+public import Workspace.Impl.LinAffineCallerPrepareSpec
+public import Workspace.Impl.LinAffineCallerResidual
+public import Workspace.Impl.LinAffineCallerLeftArg
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -19,7 +23,7 @@ theorem linAffineCallerMain_spec (hmem : Membership) (hm : ConstructiveMembershi
     (m : Fin d → ℕ) (hmpos : ∀ i, 0 < m i)
     (ρ : gens gs →* (linFiniteVec m ≃+ linFiniteVec m)) (c : gens gs → linFiniteVec m)
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g)
-    (hs : IsSolvable (gens gs)) (hprime : ∀ i p, p.Prime → p ∣ m i → p ≤ n)
+    (hs : IsSolvable ρ.range) (hprime : ∀ i p, p.Prime → p ∣ m i → p ≤ n)
     (v w : linFiniteVec m) :
     let a := tmGLAffIn gs m ρ c v w
     FunAll P (b + 1) a (fun out cost => CosetC n out (tmGLAffTrans gs ρ c v w) ∧
@@ -40,10 +44,10 @@ theorem linAffineCallerMain_spec (hmem : Membership) (hm : ConstructiveMembershi
   have wprep : prep.wt ≤ linAffineCallerLoopArg hmem hm W := hprep0.2
   have dprep := Det.call (Det.var' (P := P) (env := [a]) (i := 0) rfl) hprepare
   have hcb := linActionRestricted_cocycle m ρ c' (linFiniteRecenter_cocycle ρ c hc w) (Subgroup.inclusion hle)
-  have hskeep := linPrimaryCover_solvable gs kept hs hle
+  have hskeep := linPrimaryRange_solvable gs kept ρ hs hle
   have hloop : FunAll P (b + 244) prep (fun out cost =>
       linMixedLoopInv kept m hmpos ρb cb point 1 n out ∧ cost ≤ L) :=
-    FunAll.mono (linMixedLoop_spec hm hv hat.mixed kept (length_keepList_le gs) hskeep m hmpos ρb cb hcb point 1)
+    FunAll.mono (linMixedLoop_spec hm hv hat.mixed kept (length_keepList_le gs) m hmpos ρb hskeep cb hcb point 1)
       (fun out cost ho => ⟨ho.1, ho.2.trans (linAffineCallerLoop_bound hmem hm hv wprep)⟩)
   have call := normBound_call (Det.var' (P := P) (env := [a, prep]) (i := 1) rfl) hloop
   apply FunAll.intro hat.main

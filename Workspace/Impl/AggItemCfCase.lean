@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCfOb
+module
+
+public import Workspace.Impl.AggItemCfOb
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3: the case contract
@@ -51,7 +55,8 @@ variable (I : Iface) (Pg : Program)
 
 set_option maxHeartbeats 8000000 in
 /-- **The case contract of Cases 2b and 3.** -/
-theorem itS_c23_caseOK {F : Funs} {f0 fb st ct ob o2 o3 wr grp rb mp sf app fcol forb fdes fd kt
+theorem itS_c23_caseOK
+    {F : Funs} {f0 fb st ct ob o2 o3 wr grp rb mp sf app fcol forb fdes fd kt
       eqn ref brep j fi fs fk Co Do : ℕ} {Xt : ℕ → ℕ}
     (hobj : ItCfObjSpec Pg fcol forb fdes Co Do) (hitem : ItCfItemSpec I Pg F fi fs fk Xt)
     (h2 : KaryRefinement 2) (hj : Pg.prims[j]? = some (karyRefinementPrim h2))

@@ -1,5 +1,9 @@
-import Workspace.Impl.VsHFront
-import Workspace.Impl.VsQSot
+module
+
+public import Workspace.Impl.VsHFront
+public import Workspace.Impl.VsQSot
+
+@[expose] public section
 
 /-!
 # Conjugation of local matrices

@@ -1,5 +1,9 @@
-import Workspace.JohnsonOrbits
-import Workspace.JohnsonAssembly
+module
+
+public import Workspace.JohnsonOrbits
+public import Workspace.JohnsonAssembly
+
+@[expose] public section
 
 namespace GI.Johnson
 

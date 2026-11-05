@@ -1,5 +1,9 @@
-import Workspace.Impl.LinRecenterRecord
-import Workspace.Impl.LinFiniteActionProg
+module
+
+public import Workspace.Impl.LinRecenterRecord
+public import Workspace.Impl.LinFiniteActionProg
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

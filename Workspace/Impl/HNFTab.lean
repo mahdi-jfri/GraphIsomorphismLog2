@@ -1,4 +1,8 @@
-import Workspace.Impl.LinTabulate
+module
+
+public import Workspace.Impl.LinTabulate
+
+@[expose] public section
 
 /-!
 # Tables of a matrix, as a program

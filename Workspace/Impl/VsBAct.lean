@@ -1,6 +1,10 @@
-import Workspace.Impl.VsQApp
-import Workspace.Impl.VsWProgCo
-import Workspace.Lang.Lib.LinIntTail
+module
+
+public import Workspace.Impl.VsQApp
+public import Workspace.Impl.VsWProgCo
+public import Workspace.Lang.Lib.LinIntTail
+
+@[expose] public section
 
 /-!
 # The affine action on local coordinates

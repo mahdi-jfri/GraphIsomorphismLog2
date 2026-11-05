@@ -1,5 +1,9 @@
-import Mathlib.GroupTheory.SpecificGroups.Alternating
-import Lean.Elab.Tactic.Omega
+module
+
+public import Mathlib.GroupTheory.SpecificGroups.Alternating
+public import Lean.Elab.Tactic.Omega
+
+@[expose] public section
 
 namespace GI
 

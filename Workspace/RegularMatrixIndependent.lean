@@ -1,8 +1,12 @@
-import Workspace.SemiregularTwins
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-import Mathlib.Tactic.Linarith
+module
+
+public import Workspace.SemiregularTwins
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
+public import Mathlib.Tactic.Linarith
+
+@[expose] public section
 
 namespace GI.Semiregular
 

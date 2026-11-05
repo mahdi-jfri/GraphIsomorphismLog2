@@ -1,4 +1,8 @@
-import Workspace.SocleFactorAction
+module
+
+public import Workspace.SocleFactorAction
+
+@[expose] public section
 namespace GI.RadicalSocle
 
 variable {G : Type*} [Group G] [Finite G]

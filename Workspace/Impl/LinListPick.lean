@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectFind
+module
+
+public import Workspace.Impl.LinObjectFind
+
+@[expose] public section
 
 /-! Select a nonempty entry of a table of lists. In the object glue the
 entries are the local transporter cosets, computed at recursive fuel zero. -/

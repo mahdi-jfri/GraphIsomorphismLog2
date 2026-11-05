@@ -1,4 +1,8 @@
-import Workspace.Impl.NClPreSift
+module
+
+public import Workspace.Impl.NClPreSift
+
+@[expose] public section
 
 /-!
 # The lifts of the preimage program

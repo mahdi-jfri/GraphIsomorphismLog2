@@ -1,4 +1,8 @@
-import Workspace.StabilizerImage
+module
+
+public import Workspace.StabilizerImage
+
+@[expose] public section
 
 namespace GI.StabilizerQuotient.KernelQuotient
 

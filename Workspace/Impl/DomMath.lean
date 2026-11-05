@@ -1,4 +1,8 @@
-import Workspace.Impl.LargestOrbit
+module
+
+public import Workspace.Impl.LargestOrbit
+
+@[expose] public section
 
 /-!
 # The faithful image on the domain, and lifting answers back
@@ -46,7 +50,7 @@ theorem posOf_lt {l : List ℕ} {j : ℕ} (h : j ∈ l) : posOf l j < l.length :
 
 theorem getElem_posOf {l : List ℕ} {j : ℕ} (h : j ∈ l) : l[posOf l j]'(posOf_lt h) = j := by
   have := List.findIdx_getElem (p := fun x => decide (x = j)) (xs := l) (w := posOf_lt h)
-  simpa using this
+  exact of_decide_eq_true this
 
 theorem posOf_getElem {l : List ℕ} (hl : l.Nodup) (i : ℕ) (hi : i < l.length) :
     posOf l l[i] = i := by

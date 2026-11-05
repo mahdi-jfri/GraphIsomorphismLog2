@@ -1,4 +1,8 @@
-import Workspace.CleanCompletionEven
+module
+
+public import Workspace.CleanCompletionEven
+
+@[expose] public section
 
 /-! Construct the even completion's transfer bijection from the actual clean cycle. -/
 namespace GI.CleanEvenCoordinates

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinHermite
-import Workspace.Lang.Lib.LinIntTake
+module
+
+public import Workspace.Impl.LinHermite
+public import Workspace.Lang.Lib.LinIntTake
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

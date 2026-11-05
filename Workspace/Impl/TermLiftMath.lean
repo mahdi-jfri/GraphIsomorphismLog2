@@ -1,4 +1,8 @@
-import Workspace.Impl.TermAsm
+module
+
+public import Workspace.Impl.TermAsm
+
+@[expose] public section
 
 /-!
 # The lift of the table transport to the domain (T7, mathematics)

@@ -1,6 +1,10 @@
-import Workspace.Impl.VsHCProd
-import Workspace.Impl.VsHCTrans
-import Workspace.Impl.VsHCSize
+module
+
+public import Workspace.Impl.VsHCProd
+public import Workspace.Impl.VsHCTrans
+public import Workspace.Impl.VsHCSize
+
+@[expose] public section
 
 namespace GI.Impl
 

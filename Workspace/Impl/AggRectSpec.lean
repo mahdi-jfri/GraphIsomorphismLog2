@@ -1,6 +1,10 @@
-import Workspace.Impl.AggPairs
-import Workspace.Impl.Canon
-import Workspace.Algorithm.Aggregation
+module
+
+public import Workspace.Impl.AggPairs
+public import Workspace.Impl.Canon
+public import Workspace.Algorithm.Aggregation
+
+@[expose] public section
 
 /-!
 # The rectangle programs: the contracts
@@ -155,7 +159,6 @@ theorem rcCellCode_injective {W R : Finset (Fin q)} :
       have e1 : (a.1.val : ℕ) = b.1.val := by
         have h' : (a.1.val : ℕ) * q + a.2.val = b.1.val * q + b.2.val := by omega
         have := congrArg (· / q) h'
-        simp only at this
         rwa [Nat.mul_comm, Nat.mul_add_div (by omega), Nat.mul_comm, Nat.mul_add_div (by omega),
           Nat.div_eq_of_lt hr1, Nat.div_eq_of_lt hr2, add_zero, add_zero] at this
       have e2 : (a.2.val : ℕ) = b.2.val := by

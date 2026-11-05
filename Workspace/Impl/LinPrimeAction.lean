@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimeSplit
-import Workspace.Impl.LinFiniteAction
+module
+
+public import Workspace.Impl.LinPrimeSplit
+public import Workspace.Impl.LinFiniteAction
+
+@[expose] public section
 
 /-! The full primary action and its explicit generator matrices are obtained
 by reducing the retained finite-abelian coordinates. -/

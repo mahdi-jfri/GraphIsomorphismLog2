@@ -1,5 +1,9 @@
-import Mathlib.GroupTheory.Commutator.Basic
-import Mathlib.GroupTheory.Subgroup.Simple
+module
+
+public import Mathlib.GroupTheory.Commutator.Basic
+public import Mathlib.GroupTheory.Subgroup.Simple
+
+@[expose] public section
 
 open scoped commutatorElement
 

@@ -1,7 +1,11 @@
-import Workspace.Impl.LinObjectQuotient
-import Workspace.Impl.LinFiniteCoordinates
-import Mathlib.GroupTheory.OrderOfElement
-import Mathlib.Data.Nat.Prime.Factorial
+module
+
+public import Workspace.Impl.LinObjectQuotient
+public import Workspace.Impl.LinFiniteCoordinates
+public import Mathlib.GroupTheory.OrderOfElement
+public import Mathlib.Data.Nat.Prime.Factorial
+
+@[expose] public section
 
 /-! The size of `W` may exceed the size of `A/N`, but its exponent does
 not. Thus the primary loop still only needs primes at most the cover degree. -/

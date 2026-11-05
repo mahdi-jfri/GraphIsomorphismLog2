@@ -1,5 +1,9 @@
-import Workspace.Impl.NClMath
-import Workspace.Lang.Prims.BlockHom
+module
+
+public import Workspace.Impl.NClMath
+public import Workspace.Lang.Prims.BlockHom
+
+@[expose] public section
 
 /-!
 # The normal closure loop as a program

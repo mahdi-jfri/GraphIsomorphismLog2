@@ -1,4 +1,9 @@
-import Workspace.OrbitBudget
+module
+
+public import Workspace.OrbitBudget
+public import Mathlib.GroupTheory.SpecificGroups.Alternating.Simple
+
+@[expose] public section
 
 namespace GI
 namespace AlternatingSimple
@@ -35,7 +40,7 @@ theorem extend_injective (s : Finset α) : Function.Injective (extend s) := by
 theorem simple_of_card_five (h : Fintype.card α = 5) : IsSimpleGroup (alternatingGroup α) := by
   let e : Fin 5 ≃ α := (Fintype.equivFinOfCardEq h).symm
   letI : Nontrivial (alternatingGroup α) :=
-    alternatingGroup.nontrivial_of_three_le_card (by omega)
+    alternatingGroup.nontrivial_of_three_le_card (by simpa only [Nat.card_eq_fintype_card] using (show 3 ≤ Fintype.card α by omega))
   exact IsSimpleGroup.isSimpleGroup_of_surjective (relabel e).toMonoidHom (relabel e).surjective
 
 /-- A nonidentity permutation fails to commute with a three-cycle which
@@ -147,7 +152,7 @@ theorem normal_eq_top_of_small (h5 : 5 ≤ Fintype.card α)
     rw [support_ofSubtype, Finset.card_map]
     exact hu₀.card_support
   have hcl : normalClosure ({extend s u} : Set (alternatingGroup α)) = ⊤ :=
-    hu3.alternating_normalClosure h5
+    hu3.alternating_normalClosure (by simpa only [Nat.card_eq_fintype_card] using h5)
   apply top_le_iff.mp
   rw [← hcl]
   exact normalClosure_le_normal (Set.singleton_subset_iff.mpr huN)
@@ -156,7 +161,7 @@ theorem normal_eq_top_of_small (h5 : 5 ≤ Fintype.card α)
 five-point theorem and the normal closure of three-cycles. -/
 theorem isSimple (h5 : 5 ≤ Fintype.card α) : IsSimpleGroup (alternatingGroup α) := by
   letI : Nontrivial (alternatingGroup α) :=
-    alternatingGroup.nontrivial_of_three_le_card (by omega)
+    alternatingGroup.nontrivial_of_three_le_card (by simpa only [Nat.card_eq_fintype_card] using (show 3 ≤ Fintype.card α by omega))
   refine ⟨fun N hN => ?_⟩
   letI := hN
   by_cases hb : N = ⊥
@@ -174,7 +179,7 @@ theorem isSimple (h5 : 5 ≤ Fintype.card α) : IsSimpleGroup (alternatingGroup 
 theorem nonabelian (h5 : 5 ≤ Fintype.card α) :
     ∃ f t : alternatingGroup α, f * t ≠ t * f := by
   letI : Nontrivial (alternatingGroup α) :=
-    alternatingGroup.nontrivial_of_three_le_card (by omega)
+    alternatingGroup.nontrivial_of_three_le_card (by simpa only [Nat.card_eq_fintype_card] using (show 3 ≤ Fintype.card α by omega))
   obtain ⟨f, hf⟩ := exists_ne (1 : alternatingGroup α)
   obtain ⟨t, ht, _⟩ := small_commutator h5 f hf
   refine ⟨f, t, fun h => ht ?_⟩

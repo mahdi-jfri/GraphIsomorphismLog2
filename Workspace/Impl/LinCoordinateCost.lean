@@ -1,5 +1,9 @@
-import Workspace.Impl.LinCoordinateCollect
-import Workspace.Impl.LinIntSolverCost
+module
+
+public import Workspace.Impl.LinCoordinateCollect
+public import Workspace.Impl.LinIntSolverCost
+
+@[expose] public section
 
 /-! Uniform bit-cost bounds for the permutation-input coordinate collector. -/
 namespace GI.Impl

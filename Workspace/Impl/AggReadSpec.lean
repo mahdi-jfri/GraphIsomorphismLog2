@@ -1,4 +1,8 @@
-import Workspace.Impl.AggReadOut
+module
+
+public import Workspace.Impl.AggReadOut
+
+@[expose] public section
 
 /-!
 # The reading: the specification of `rdF`

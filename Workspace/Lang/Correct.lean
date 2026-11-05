@@ -11,7 +11,11 @@ pointer and the registers `2, …, t - 1` are unchanged, and the machine cost is
 This file proves one lemma per construct of the language. `Workspace.Lang.CorrectMain` puts them
 together by induction on `EvalAll`.
 -/
-import Workspace.Lang.CompileFacts
+module
+
+public import Workspace.Lang.CompileFacts
+
+@[expose] public section
 
 set_option linter.unusedSimpArgs false
 
@@ -958,7 +962,8 @@ theorem spec_prim {j : ℕ} {a : Expr} {p : Prim} {Ra : Val → ℕ → Prop} (h
   rw [hh] at va2 e20 e2t k2
   obtain ⟨hpre, hpost⟩ := hq va ca hRa
   have hcall := GI.Machine.PolyTimeWith.wp_call p.spec (compile_embeds_prim hj) (st := st₂)
-    (r := t + 1) (e := .reg t) (x := ⟨va, hpre⟩) (by simpa [e2t] using va2)
+    (r := t + 1) (e := .reg t) (x := ⟨va, hpre⟩)
+    (by simpa [primTask, GI.Cited.Task.ofVal, e2t] using va2)
   simp only [machine_simps, e2t] at hcall
   refine WP.seq' (fun st₃ c₃ => GI.Machine.CallPost (primTask p.Pre p.Post) p.c p.k ⟨va, hpre⟩
     h (t + 1) (1 + len h) st₂ .normal st₃ c₃) (hcall.mono fun o st' c hp => ⟨hp.normal,

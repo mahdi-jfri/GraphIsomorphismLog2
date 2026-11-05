@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormBlocks
-import Workspace.Impl.Lift
+module
+
+public import Workspace.Impl.GenNormBlocks
+public import Workspace.Impl.Lift
+
+@[expose] public section
 
 /-!
 # Mapping the Johnson block computation over the positions

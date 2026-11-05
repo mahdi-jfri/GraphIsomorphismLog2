@@ -1,5 +1,9 @@
-import Workspace.Proved.VsQMat
-import Workspace.Impl.VsQPow
+module
+
+public import Workspace.Proved.VsQMat
+public import Workspace.Impl.VsQPow
+
+@[expose] public section
 
 /-!
 # Matrices as group elements
@@ -135,7 +139,6 @@ theorem vsQMul_spec [NeZero p] {P : Program} {b : ℕ} (hb : P.HasAt b (vsQGLFun
   have gx : vx.wt = (vsQE p d E x).wt := rfl
   have gy : vy.wt = (vsQE p d E y).wt := rfl
   rw [← e1]
-  simp only [List.getElem_cons_zero, List.getElem_cons_succ] at *
   omega
 
 /-- The weight bound of carried matrices. -/

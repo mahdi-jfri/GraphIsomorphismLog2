@@ -1,5 +1,9 @@
-import Workspace.AlternatingNaturalJohnson
-import Workspace.BudgetInductionAlternatives
+module
+
+public import Workspace.AlternatingNaturalJohnson
+public import Workspace.BudgetInductionAlternatives
+
+@[expose] public section
 
 namespace GI.AlternatingActions
 

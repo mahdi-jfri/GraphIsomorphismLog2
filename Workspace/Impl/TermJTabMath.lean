@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJProgTl
-import Workspace.Impl.TermJHMath
+module
+
+public import Workspace.Impl.TermJProgTl
+public import Workspace.Impl.TermJHMath
+
+@[expose] public section
 
 /-!
 # The table lists generate the wreath stabilizer (mathematics)

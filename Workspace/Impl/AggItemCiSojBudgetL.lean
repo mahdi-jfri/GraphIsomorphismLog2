@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojBudget
-import Mathlib.Order.Iterate
+module
+
+public import Workspace.Impl.AggItemCiSojBudget
+public import Mathlib.Order.Iterate
+
+@[expose] public section
 
 /-! # Comparing the fixed encoding stages with the common item budget -/
 

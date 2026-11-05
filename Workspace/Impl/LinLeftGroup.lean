@@ -1,5 +1,9 @@
-import Workspace.Impl.LinActionEmbedding
-import Workspace.Impl.LinObjectColor
+module
+
+public import Workspace.Impl.LinActionEmbedding
+public import Workspace.Impl.LinObjectColor
+
+@[expose] public section
 
 /-! A right translate preserves the left stabilizer of a set. Thus an object
 can be relabeled by its numeric color and its underlying coset subgroup. -/
@@ -43,7 +47,7 @@ theorem linLeftGroup_coset (L : Subgroup G) (h : G) :
     have hh := (hg h).mpr (show h ∈ (fun l => l * h) '' (L : Set G) from ⟨1, L.one_mem, by simp⟩)
     obtain ⟨l, hl, he⟩ := hh
     have he' : l = g := mul_right_cancel he
-    simpa only [he'] using hl
+    simpa only [he', SetLike.mem_coe] using hl
   · intro hg x
     simp only [linRightSet_mem]
     constructor

@@ -1,5 +1,9 @@
-import Workspace.Algorithm.ColumnCoords
-import Workspace.Algorithm.Expose
+module
+
+public import Workspace.Algorithm.ColumnCoords
+public import Workspace.Algorithm.Expose
+
+@[expose] public section
 
 /-!
 # The hierarchy invariant after a column step
@@ -464,7 +468,7 @@ theorem hierInv (htr : S.Transitive) : HierInv S.G S.dom I.hier' := by
     intro a ha w hw _
     obtain ⟨c, i, rfl⟩ := I.coords ha
     obtain ⟨d, i', rfl⟩ := I.coords hw
-    exact (I.upperPart_e _ _ _ _ _).2 ⟨1, by simpa using I.lvl_top c d⟩
+    exact (I.upperPart_e _ _ _ _ _).2 ⟨1, by simpa [blk] using I.lvl_top c d⟩
   · rw [hier', caps_append, caps_append, hmidEnd]
     refine ⟨⟨?_, ?_⟩, ?_⟩
     · exact caps_towerSplit_fst (G := S.G) (D := S.dom) I.Lt I.Nl I.lowerPart I.upperPart

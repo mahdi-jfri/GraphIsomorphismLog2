@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJLabHom
-import Workspace.Impl.TermJAlg
+module
+
+public import Workspace.Impl.TermJLabHom
+public import Workspace.Impl.TermJAlg
+
+@[expose] public section
 
 /-!
 # The zero-sum correction at a row terminal

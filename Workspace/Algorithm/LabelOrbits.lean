@@ -1,6 +1,10 @@
-import Workspace.Algorithm.AggregationCanon
-import Workspace.Algorithm.PartitionCap
-import Workspace.Paper.Caps
+module
+
+public import Workspace.Algorithm.AggregationCanon
+public import Workspace.Algorithm.PartitionCap
+public import Workspace.Paper.Caps
+
+@[expose] public section
 
 /-!
 # Orbits of the ideal certificate group and the cases of the aggregation

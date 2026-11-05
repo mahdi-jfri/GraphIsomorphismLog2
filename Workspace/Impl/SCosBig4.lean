@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosBig3
+module
+
+public import Workspace.Impl.SCosBig3
+
+@[expose] public section
 
 /-!
 # Function 5 (`bigF`), the children and the paste

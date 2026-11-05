@@ -1,7 +1,11 @@
-import Workspace.Impl.VsBWalk
-import Workspace.Impl.VsBAct
-import Workspace.Impl.VsQAnaBase
-import Workspace.Proved.VsBFldA
+module
+
+public import Workspace.Impl.VsBWalk
+public import Workspace.Impl.VsBAct
+public import Workspace.Impl.VsQAnaBase
+public import Workspace.Proved.VsBFldA
+
+@[expose] public section
 
 /-!
 # The programs of the λ-chain

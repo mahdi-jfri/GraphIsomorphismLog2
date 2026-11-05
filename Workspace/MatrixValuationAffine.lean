@@ -1,7 +1,11 @@
-import Workspace.MatrixValuationBounds
-import Mathlib.GroupTheory.SemidirectProduct
-import Mathlib.Algebra.Group.Equiv.TypeTags
-import Mathlib.Algebra.Group.TypeTags.Finite
+module
+
+public import Workspace.MatrixValuationBounds
+public import Mathlib.GroupTheory.SemidirectProduct
+public import Mathlib.Algebra.Group.Equiv.TypeTags
+public import Mathlib.Algebra.Group.TypeTags.Finite
+
+@[expose] public section
 
 namespace GI.MatrixValuation
 
@@ -50,7 +54,7 @@ theorem affineGroup_valuation [Fintype F] {p : ℕ} [hp : Fact p.Prime]
       padicValNat p (Nat.card (GL (Fin d) F)) := by
   rw [affineGroup_card, padicValNat.mul
     (pow_ne_zero _ (Nat.ne_of_gt Fintype.card_pos)) (Nat.ne_of_gt Nat.card_pos),
-    padicValNat.pow _ (Nat.ne_of_gt Fintype.card_pos),
+    padicValNat.pow,
     padicValNat.eq_zero_of_not_dvd hpq]
   simp
 

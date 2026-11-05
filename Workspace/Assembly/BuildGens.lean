@@ -1,4 +1,8 @@
-import Workspace.Assembly.BuildMath
+module
+
+public import Workspace.Assembly.BuildMath
+
+@[expose] public section
 
 /-!
 # Building the generators of the pair state

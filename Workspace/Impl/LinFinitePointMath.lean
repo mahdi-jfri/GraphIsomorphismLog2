@@ -1,5 +1,9 @@
-import Workspace.Impl.LinFiniteAction
-import Workspace.Impl.LinFiniteReduce
+module
+
+public import Workspace.Impl.LinFiniteAction
+public import Workspace.Impl.LinFiniteReduce
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

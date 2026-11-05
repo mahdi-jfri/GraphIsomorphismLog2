@@ -1,5 +1,9 @@
-import Workspace.Impl.CamXParams
-import Workspace.AlternatingSubsetTransitive
+module
+
+public import Workspace.Impl.CamXParams
+public import Workspace.AlternatingSubsetTransitive
+
+@[expose] public section
 
 /-!
 # The orbits of the factors of the socle

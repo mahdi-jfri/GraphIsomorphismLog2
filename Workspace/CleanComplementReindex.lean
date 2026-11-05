@@ -1,4 +1,8 @@
-import Workspace.CleanComplementLogAssemble
+module
+
+public import Workspace.CleanComplementLogAssemble
+
+@[expose] public section
 
 /-! Renaming the block indices of a clean block action. The odd and even
 constructions use the index types `Option (J × Bool)` and

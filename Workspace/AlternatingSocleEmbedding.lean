@@ -1,5 +1,9 @@
-import Workspace.AltAutEquivalence
-import Workspace.RadicalSocleBasic
+module
+
+public import Workspace.AltAutEquivalence
+public import Workspace.RadicalSocleBasic
+
+@[expose] public section
 
 namespace GI.AlternatingSocle
 

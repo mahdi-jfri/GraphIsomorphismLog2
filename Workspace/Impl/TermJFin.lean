@@ -1,6 +1,10 @@
-import Workspace.Impl.TermJLayAt
-import Workspace.Impl.FinLayoutAgg
-import Workspace.Impl.LinPrims
+module
+
+public import Workspace.Impl.TermJLayAt
+public import Workspace.Impl.FinLayoutAgg
+public import Workspace.Impl.LinPrims
+
+@[expose] public section
 
 /-!
 # The `J`-answer in the final program
@@ -19,8 +23,8 @@ namespace GI.Impl
 
 open GI.Algorithm GI.Assembly GI.Lang
 open GI.Cited (PointwiseStab Preimage NormalizedFactor Membership MinimalBlocks GroupOrder
-  CameronRecognition ChiefSeriesAlgo DerivedSubgroup QuotientCentralizer NormalizedIntersection
-  SylowAlgo SylowConjugate NormalClosure SolvableCosetIntersection HermiteFullRank
+  CameronRecognition DerivedSubgroup NormalizedIntersection
+  NormalClosure SolvableCosetIntersection HermiteFullRank
   SmithNonsingular ConstructiveMembership VectorStabilizer)
 
 /-- **The code of the `J`-answer** at `flcJIdx`. -/
@@ -34,22 +38,22 @@ theorem tmJ_final (hst : PointwiseStab) (hm : Membership) (hfac : NormalizedFact
     (hO : GroupOrder) (hni : NormalizedIntersection) (hh : HermiteFullRank)
     (hcmb : ConstructiveMembership) :
     ∃ Kj Dj : ℕ, ∀ (hpre : Preimage) (hmb : MinimalBlocks) (hC : CameronRecognition)
-      (hcs : ChiefSeriesAlgo) (hder : DerivedSubgroup) (hqc : QuotientCentralizer)
-      (hsy : SylowAlgo) (hsc : SylowConjugate) (hnc : NormalClosure)
-      (hs : SolvableCosetIntersection) (hn : SmithNonsingular) (hv : VectorStabilizer)
-      (ext' : List Prim) (recF labF : List Expr) (crE cmE itE : Expr) (crF cmF itF : List Expr),
+      (hder : DerivedSubgroup)
+      (hnc : NormalClosure) (hs : SolvableCosetIntersection) (hn : SmithNonsingular)
+      (hv : VectorStabilizer) (ext' : List Prim) (recF labF : List Expr) (crE cmE itE : Expr)
+      (crF cmF itF : List Expr),
       recF.length ≤ flcLabOff - flcRecOff → labF.length ≤ flcJOff - flcLabOff →
-      Iface.TermJSpec (fagProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc
+      Iface.TermJSpec (fagProg hst hm hpre hfac hmb hO hC hder hni hnc
         (linA20Extra hs hh hn hcmb hv ++ ext') recF labF tmJFinF crE cmE itE crF cmF itF)
         Kj Dj flcJIdx := by
   obtain ⟨K, D, hT⟩ := tmJ_termJSpec hm hfac hcmb hh hO hni hst
-  refine ⟨K, D, fun hpre hmb hC hcs hder hqc hsy hsc hnc hs hn hv ext' recF labF crE cmE itE
+  refine ⟨K, D, fun hpre hmb hC hder hnc hs hn hv ext' recF labF crE cmE itE
     crF cmF itF hrec hlab => ?_⟩
   have hg : gsGen.length ≤ asmSlot := by rw [length_gsGen]; unfold asmSlot; decide
   have hF : FlcFits recF labF tmJFinF := ⟨hrec, hlab, tmJFinF_fits⟩
   have hJ := (flc_hasAt (hst := hst) (hm := hm) (hpre := hpre) (hfac := hfac) (hmb := hmb)
-    (hO := hO) (hC := hC) (hcs := hcs) (hder := hder) (hqc := hqc) (hni := hni) (hsy := hsy)
-    (hsc := hsc) (hnc := hnc) (ext := linA20Extra hs hh hn hcmb hv ++ ext')
+    (hO := hO) (hC := hC) (hder := hder) (hni := hni)
+    (hnc := hnc) (ext := linA20Extra hs hh hn hcmb hv ++ ext')
     (agg := fagAgg crE cmE itE crF cmF itF) hg hF).2.2.2
   obtain ⟨h0, hne, hHA⟩ := tmJLay_at hJ
   have h0' : _ = some (tmJTopF (tmJA flcJIdx 1)) := h0

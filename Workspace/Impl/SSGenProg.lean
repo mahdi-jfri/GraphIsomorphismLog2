@@ -1,4 +1,8 @@
-import Workspace.Impl.SSInsertProg
+module
+
+public import Workspace.Impl.SSInsertProg
+
+@[expose] public section
 
 /-!
 # Inserting the generators, as a program

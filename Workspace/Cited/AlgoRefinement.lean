@@ -1,7 +1,11 @@
 -- The instances at arities 64 and 2 are proved in `Workspace/Proved/KRef.lean`
-import Workspace.Cited.Encoding
-import Workspace.Cited.CoherentConfig
-import Mathlib.Algebra.BigOperators.Fin
+module
+
+public import Workspace.Cited.Encoding
+public import Workspace.Cited.CoherentConfig
+public import Mathlib.Algebra.BigOperators.Fin
+
+@[expose] public section
 
 /-!
 # Stage 2 task: `k`-ary Weisfeiler–Leman refinement, run on two inputs jointly

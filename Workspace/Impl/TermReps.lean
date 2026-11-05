@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRepsStep
+module
+
+public import Workspace.Impl.TermRepsStep
+
+@[expose] public section
 
 /-!
 # The radical coset representatives (T2, T3): `Iface.TermRepsSpec`
@@ -33,7 +37,8 @@ def tmRpInnerF (mk grad rg wh : ℕ) : Expr :=
   (.letE (tmRpGrpE mk 1)
   (.letE (.call grad (mk2 (.var 1) (.var 2)))
   (.letE (.call mk (mk2 tmMExpr (.var 3)))
-  (.call wh (mk3 (mk2 (.var 4) (.get (arg 3) (.nat 0))) (.nat 0) (mk1 (.call rg tmMExpr)))))))
+  (.letE (.call wh (mk3 (mk2 (.var 4) (.get (arg 3) (.nat 0))) (.nat 0) (mk1 (.call rg tmMExpr))))
+  (mk2 (.var 3) (.var 5))))))
 
 /-- **The entry** on `[tin, us, vs]`. -/
 def tmRpEntryF (fi : ℕ) : Expr := .call fi (.get (.var 0) (.nat 0))
@@ -88,18 +93,22 @@ theorem tmRpInner_spec (hm : Membership) {f fi mk grad rg wh st fb gt ab pt jm c
     (h : TmRpAt P hm f fi mk grad rg wh st fb gt ab pt jm comp inv) {K D : ℕ}
     (hrad : Iface.TermRadSpec P K D grad) (sv lv rv : Val) (hq : 0 < q)
     (σH σN σS : List (Perm (Fin m))) (hNH : gens σN ≤ gens σH)
-    (hn : GI.Multicoset.Normalizes (gens σH) (gens σN)) :
+    (hn : GI.Multicoset.Normalizes (gens σH) (gens σN))
+    (htr : MulAction.IsPretransitive (gens σN) (Fin m)) :
     FunAll P fi (.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0, rv]) (fun w cost =>
-      ∃ reps : List (Perm (Fin m)), w = .list (reps.map encPerm) ∧
-        (∃ j, TmRpInv (gens σH) (radicalPreimage (gens σH) (gens σN)) σH j reps ∧
-          reps.length ≤ j) ∧
-        cost ≤ tmRpCost hm K D (((radicalPreimage (gens σH) (gens σN)).subgroupOf
-          (gens σH)).index) ((Val.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0, rv]).wt + 1)) := by
+      ∃ (R : Subgroup (Perm (Fin m))) (uR : Val) (reps : List (Perm (Fin m))),
+        w = .list [uR, .list (reps.map encPerm)] ∧
+        GensOf R uR ∧ R ≤ gens σH ∧ gens σN ≤ R ∧
+        (∃ ℓ, GI.Multicoset.relDerived R (gens σN) ℓ ≤ gens σN) ∧
+        (∀ [((gens σN).subgroupOf (gens σH)).Normal],
+          (R.subgroupOf (gens σH)).index ≤
+            GI.Composition.bFac ((gens σH) ⧸ (gens σN).subgroupOf (gens σH)) ^ 2) ∧
+        (∃ j, TmRpInv (gens σH) R σH j reps ∧ reps.length ≤ j) ∧
+        cost ≤ tmRpCost hm K D ((R.subgroupOf (gens σH)).index)
+          ((Val.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0, rv]).wt + ⌈expLogSq 3 m⌉₊ + 1)) := by
   set av := a18Out σH σN σS 0 with hav
   set tin := Val.list [sv, lv, coordsVal e S E, av, rv] with htin
-  set X := tin.wt + 1 with hX
-  set R := radicalPreimage (gens σH) (gens σN) with hRdef
-  set n := (R.subgroupOf (gens σH)).index with hnI
+  set X := tin.wt + ⌈expLogSq 3 m⌉₊ + 1 with hX
   have hav' : av = .list [.list (σH.map encPerm), .list (σN.map encPerm), .list (σS.map encPerm),
     .nat 0] := rfl
   set L4 : List Val := [.list (σH.map encPerm), .list (σN.map encPerm), .list (σS.map encPerm),
@@ -124,11 +133,12 @@ theorem tmRpInner_spec (hm : Membership) {f fi mk grad rg wh st fb gt ab pt jm c
   have dN := dσ [encGroup σH] 1 σN rfl
   refine EvalAll.letE dN fun v2 c2 hv2 => ?_
   obtain ⟨rfl, hc2⟩ := hv2
-  -- 2. the radical preimage
+  -- 2. the radical subgroup `R`
   have dHN := Det.mk2 (P := P) (env := [tin, encGroup σH, encGroup σN])
     (Det.var' (i := 1) (v := encGroup σH) rfl) (Det.var' (i := 2) (v := encGroup σN) rfl)
-  refine EvalAll.letE (EvalAll.call_spec dHN (hrad σH σN hNH hn)) fun v3 c3 hv3 => ?_
-  obtain ⟨cb3, ⟨⟨hs, rfl, hsl, hsR⟩, hcb3⟩, hc3⟩ := hv3
+  refine EvalAll.letE (EvalAll.call_spec dHN (hrad σH σN hNH hn htr)) fun v3 c3 hv3 => ?_
+  obtain ⟨cb3, ⟨R, ⟨hs, rfl, hsl, hsR⟩, hRH, hNR, hsolv, hidx, hcb3⟩, hc3⟩ := hv3
+  set n := (R.subgroupOf (gens σH)).index with hnI
   have dmR := tmM_det (P := P) e S E sv lv av rv [encGroup σH, encGroup σN,
     .list (hs.map encPerm)] hq
   have dR := Det.call (Det.mk2 dmR (Det.var' (P := P) (i := 3) (v := .list (hs.map encPerm)) rfl))
@@ -173,13 +183,18 @@ theorem tmRpInner_spec (hm : Membership) {f fi mk grad rg wh st fb gt ab pt jm c
   have hY : (m + 1) ^ 4 ≤ 10 ^ 3 * X ^ 6 := by omega
   have hcY : (Val.list [encGroup hs, .list (σH.map encPerm)]).wt ≤ 10 ^ 3 * X ^ 6 := by
     have := wt_list2_le (encGroup hs) (.list (σH.map encPerm)); omega
-  refine (EvalAll.call_spec dl (tmRpLoop_spec hm h.wh h.round hRV hgs hY hcY)).mono ?_
+  refine EvalAll.letE (EvalAll.call_spec dl (tmRpLoop_spec hm h.wh h.round hRV hgs hY hcY)) ?_
   rintro w c5 ⟨cb5, ⟨reps, rfl, hinv, hcb5⟩, hc5⟩
-  refine ⟨reps, rfl, hinv, ?_⟩
+  have d3 := Det.var' (P := P) (env := env5 ++ [.list (reps.map encPerm)]) (i := 3)
+    (v := .list (hs.map encPerm)) rfl
+  have d5 := Det.var' (P := P) (env := env5 ++ [.list (reps.map encPerm)]) (i := 5)
+    (v := .list (reps.map encPerm)) rfl
+  refine (Det.mk2 d3 d5).post fun c6 hc6 =>
+    ⟨R, .list (hs.map encPerm), reps, rfl, ⟨hs, rfl, hsl, hsR⟩, hRH, hNR, hsolv, hidx, hinv, ?_⟩
   obtain ⟨j, hinvj, -⟩ := hinv
   have hlen := hinvj.length_le
   rw [← hnI] at hlen hcb5
-  clear dH dN dHN dR dmR dl dc d1 dm5 da5 dσ
+  clear dH dN dHN dR dmR dl dc d1 dm5 da5 dσ d3 d5
   -- the weights of the values
   have wreps := tmRp_wt_reps hY reps (L := n + 2) (by omega)
   set Y := 10 ^ 3 * X ^ 6 with hYdef
@@ -206,18 +221,21 @@ theorem tmRpInner_spec (hm : Membership) {f fi mk grad rg wh st fb gt ab pt jm c
   have w6 := wt_list1_le (encPerm (1 : Perm (Fin m)))
   have w7 := wt_list3_le (Val.list [encGroup hs, Val.list (σH.map encPerm)]) (Val.nat 0)
     (Val.list [encPerm (1 : Perm (Fin m))])
+  have w8 := wt_list2_le (Val.list (hs.map encPerm)) (Val.list (reps.map encPerm))
   have w0 := wt_nat_le 0
   have wm := wt_nat_le m
   have eT : (Val.list T5).wt = tin.wt := rfl
   have eT' : (Val.list [sv, lv, coordsVal e S E, av, rv]).wt = tin.wt := rfl
   have p0 : 1 ≤ X ^ 4 := Nat.one_le_pow _ _ (by omega)
+  have p34 : X ≤ X ^ 4 := Nat.le_self_pow (by omega) X
   -- the radical call
-  have hrc : K * ((Val.list [encGroup σH, encGroup σN]).wt + 1) ^ D ≤ K * (4000 * X ^ 4) ^ D :=
+  have hrc : K * ((Val.list [encGroup σH, encGroup σN]).wt + ⌈expLogSq 3 m⌉₊ + 1) ^ D ≤
+      K * (4000 * X ^ 4) ^ D :=
     Nat.mul_le_mul_left _ (Nat.pow_le_pow_left (by omega) _)
   -- the loop
   set Z := (n + 1) * (tmRpRoundC hm Y (n + 2) +
     tmRpWK * (Y + n + 10 * ((n + 2) * Y) + 10)) with hZ
-  have hQ : 100 * ((n + 2) * Y) ≤ tmRpRoundC hm Y (n + 2) := by
+  have hQ : 1000 * ((n + 2) * Y) ≤ tmRpRoundC hm Y (n + 2) := by
     unfold tmRpRoundC
     have : (n + 2) * Y ≤ Y * ((n + 2) * Y) := Nat.le_mul_of_pos_left _ (by omega)
     omega

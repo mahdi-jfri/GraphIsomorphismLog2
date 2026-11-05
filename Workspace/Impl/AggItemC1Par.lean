@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemC1Dat
+module
+
+public import Workspace.Impl.AggItemC1Dat
+
+@[expose] public section
 
 /-!
 # Case 1 as a program: the parity of a permutation

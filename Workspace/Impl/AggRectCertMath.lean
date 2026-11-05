@@ -1,5 +1,9 @@
-import Workspace.Impl.AggRectSpec
-import Workspace.Impl.AggCaseMath
+module
+
+public import Workspace.Impl.AggRectSpec
+public import Workspace.Impl.AggCaseMath
+
+@[expose] public section
 
 /-!
 # The certificate search: the mathematics

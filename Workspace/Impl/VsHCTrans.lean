@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHCData
+module
+
+public import Workspace.Impl.VsHCData
+
+@[expose] public section
 
 namespace GI.Impl
 

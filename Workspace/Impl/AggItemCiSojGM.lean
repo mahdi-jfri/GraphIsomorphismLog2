@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojPG
-import Workspace.Impl.AggItemCiSojRP
+module
+
+public import Workspace.Impl.AggItemCiSojPG
+public import Workspace.Impl.AggItemCiSojRP
+
+@[expose] public section
 
 /-!
 # The actual map of canonical answer generators

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinElementMap
-import Workspace.Impl.LinMapAll
+module
+
+public import Workspace.Impl.LinElementMap
+public import Workspace.Impl.LinMapAll
+
+@[expose] public section
 
 /-! Integer coordinates of a list of known elements of the same group.
 The output rows have the right images in every abelian quotient. -/
@@ -51,7 +55,7 @@ theorem linForall₂_vecMatrix {α : Type*} {d : ℕ} (R : α → (Fin d → ℤ
   refine ⟨Z, ?_, fun i => (hZ i).2⟩
   apply List.ext_getElem (by simp [h.length_eq])
   intro i hi hj
-  simpa only [List.getElem_map, List.getElem_finRange] using (hZ ⟨i, by simpa using hj⟩).1
+  simpa only [List.getElem_map, List.getElem_finRange, Fin.cast] using (hZ ⟨i, by simpa using hj⟩).1
 
 set_option maxHeartbeats 1500000 in
 set_option maxRecDepth 8000 in

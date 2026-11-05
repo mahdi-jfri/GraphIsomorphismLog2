@@ -1,5 +1,9 @@
-import Workspace.Impl.CamNormalizer
-import Workspace.Cited.AlgoJohnson
+module
+
+public import Workspace.Impl.CamNormalizer
+public import Workspace.Cited.AlgoJohnson
+
+@[expose] public section
 
 /-!
 # Two Johnson identifications of one group differ by a permutation of `Fin m`

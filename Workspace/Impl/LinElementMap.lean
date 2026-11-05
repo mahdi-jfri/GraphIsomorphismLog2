@@ -1,5 +1,9 @@
-import Workspace.Impl.LinElementCoordinates
-import Workspace.Impl.LinPermCertificate
+module
+
+public import Workspace.Impl.LinElementCoordinates
+public import Workspace.Impl.LinPermCertificate
+
+@[expose] public section
 
 /-! The integer vector returned by the element-coordinate program has the
 right image in every abelian quotient of the supplied permutation group. -/

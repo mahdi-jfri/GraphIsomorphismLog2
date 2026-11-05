@@ -1,8 +1,12 @@
-import Workspace.Impl.RowKer
-import Workspace.Impl.RowParts
-import Workspace.Impl.RowTrans
-import Workspace.Impl.RowOff
-import Workspace.Impl.RowMain
+module
+
+public import Workspace.Impl.RowKer
+public import Workspace.Impl.RowParts
+public import Workspace.Impl.RowTrans
+public import Workspace.Impl.RowOff
+public import Workspace.Impl.RowMain
+
+@[expose] public section
 
 /-!
 # The groups of Theorem A.18 as a program

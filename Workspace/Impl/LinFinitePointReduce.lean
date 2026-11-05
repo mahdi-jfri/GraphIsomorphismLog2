@@ -1,4 +1,8 @@
-import Workspace.Impl.LinFinitePointMath
+module
+
+public import Workspace.Impl.LinFinitePointMath
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

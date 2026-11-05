@@ -1,4 +1,8 @@
-import Workspace.Proved.DixonSemiregular
+module
+
+public import Workspace.Proved.DixonSemiregular
+
+@[expose] public section
 
 /-!
 # A normal subgroup of prime order in the transitive case

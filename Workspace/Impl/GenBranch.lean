@@ -1,7 +1,11 @@
-import Workspace.Impl.GenProdStep
-import Workspace.Impl.GenCase
-import Workspace.Impl.GenChild
-import Workspace.Impl.GenExposeProg
+module
+
+public import Workspace.Impl.GenProdStep
+public import Workspace.Impl.GenCase
+public import Workspace.Impl.GenChild
+public import Workspace.Impl.GenExposeProg
+
+@[expose] public section
 
 /-!
 # The branch of the general dispatcher after the case decision

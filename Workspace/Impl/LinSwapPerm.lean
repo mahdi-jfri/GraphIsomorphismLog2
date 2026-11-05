@@ -1,4 +1,8 @@
-import Workspace.Impl.LinSumPerm
+module
+
+public import Workspace.Impl.LinSumPerm
+
+@[expose] public section
 
 /-! The permutation that exchanges the two consecutive copies. -/
 namespace GI.Impl

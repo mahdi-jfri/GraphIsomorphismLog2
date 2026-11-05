@@ -1,4 +1,8 @@
-import Workspace.Impl.SSChain
+module
+
+public import Workspace.Impl.SSChain
+
+@[expose] public section
 
 /-!
 # One step of sifting, as a program

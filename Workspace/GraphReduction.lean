@@ -1,5 +1,9 @@
-import Workspace.Transport
-import Mathlib.Combinatorics.SimpleGraph.Maps
+module
+
+public import Workspace.Transport
+public import Mathlib.Combinatorics.SimpleGraph.Maps
+
+@[expose] public section
 
 namespace GI
 

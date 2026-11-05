@@ -1,5 +1,9 @@
-import Workspace.ImprimitiveIndexBound
-import Workspace.PrimitiveSocleBudget
+module
+
+public import Workspace.ImprimitiveIndexBound
+public import Workspace.PrimitiveSocleBudget
+
+@[expose] public section
 
 namespace GI.AlternatingActions
 

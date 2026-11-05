@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosPaste4
+module
+
+public import Workspace.Impl.SCosPaste4
+
+@[expose] public section
 
 /-!
 # The paste function

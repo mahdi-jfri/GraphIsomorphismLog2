@@ -1,4 +1,8 @@
-import Workspace.AffineRecognition
+module
+
+public import Workspace.AffineRecognition
+
+@[expose] public section
 namespace GI.AffineRecognition
 
 open MatrixValuation BudgetInduction

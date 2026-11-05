@@ -1,5 +1,9 @@
-import Workspace.Impl.LinIntFinish
-import Workspace.Impl.LinNormal
+module
+
+public import Workspace.Impl.LinIntFinish
+public import Workspace.Impl.LinNormal
+
+@[expose] public section
 
 /-! The full-column-rank integer row solver. Its only cited call is the
 Hermite task. Everything after that call is a proved language program. -/

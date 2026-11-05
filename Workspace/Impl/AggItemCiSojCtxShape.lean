@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojParentBudget
+module
+
+public import Workspace.Impl.AggItemCiSojParentBudget
+
+@[expose] public section
 
 /-! # Reading the supplied context at rectangle construction calls -/
 

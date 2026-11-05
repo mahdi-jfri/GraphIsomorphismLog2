@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosTop3
+module
+
+public import Workspace.Impl.SCosTop3
+
+@[expose] public section
 
 /-!
 # The top level, part 4 (the last step of `scosTopF`)

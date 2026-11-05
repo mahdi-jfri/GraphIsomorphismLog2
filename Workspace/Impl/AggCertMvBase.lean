@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertProg
+module
+
+public import Workspace.Impl.AggCertProg
+
+@[expose] public section
 
 /-!
 # The move program: context and reading the program state

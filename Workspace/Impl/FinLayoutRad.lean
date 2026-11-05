@@ -1,117 +1,94 @@
-import Workspace.Impl.TermRad
-import Workspace.Impl.RowLayout
-import Workspace.Impl.GenSpecLayout
+module
+
+public import Workspace.Impl.OutbRad
+public import Workspace.Impl.RowLayout
+public import Workspace.Impl.GenSpecLayout
+public import Workspace.Proved.MBlk
+public import Workspace.Proved.NClNormal
+
+@[expose] public section
 
 /-!
-# The radical program T2 in the row slot `rad`
+# The Stage 2 radical subgroup program in the row slot `rad`
 
-`flRadFuns b` is the code of T2 (the radical preimage, paragraph after Lemma A.21), written to
-sit at index `b`. It is self-contained: besides the cited primitives it uses only its own
-modules. Offsets from `b`:
-
-* `0` the entry `radEntry`, `1` the step on one chief factor `radStepBody`;
-* `2` the loop over the factors (`iterFuns`, 3 functions), `5` append (3), `8` `mkGroup` (7),
-  `15` the subgroup test `le` (5). In all, 20 functions.
+`outbRadFuns b` (`OutbRad.lean`) is the code of the Stage 2 radical subgroup program (Lemma A.21′),
+written to sit at index `b`. In all, it has 496 functions:
+* `0`: `outbRadEntry`,
+* `1`–`3`: `mapFuns` (3 functions),
+* `4`–`334`: `flRadFuns` (331 functions),
+* `335`–`434`: `socPreFuns` (100 functions),
+* `435`–`495`: `outbSuppFuns` (61 functions).
 
 The primitive table of the final program is `[pst, mem, pre, fac] ++ gsExtra ++ flRadExtra ++
-ext`. The list `flRadExtra` puts the four primitives of T2 that are not in the table yet at
-indices `7`–`10`: **ChiefSeriesAlgo** `7`, **DerivedSubgroup** `8`, **QuotientCentralizer**
-`9`, **NormalizedIntersection** `10`. **Membership** is the base primitive `1`.
+ext`. The list `flRadExtra` puts the primitives of T2 at indices `7`–`10`:
+**MinimalBlocks** `7`, **DerivedSubgroup** `8`, **NormalClosure** `9`,
+**NormalizedIntersection** `10`. **Membership** is `1`, **Preimage** is `2`, and **GroupOrder**
+is `5` (from `gsExtra`).
 
-`fl_radAt`: the layout `RadAt` holds at `rlb rlRadOff` in
-`asmProg … (gsExtra … ++ (flRadExtra … ++ ext)) gen (rlRow (flRad) cos) agg`, for every `ext`,
-`gen`, `cos` and `agg` that fit their slots. `fl_termRadSpec` is then `rad_termRadSpec`.
+`fl_radAt`: the layout `OutbRadAt` holds at `rlb rlRadOff` in
+`asmProg … (gsExtra … ++ (flRadExtra … ++ ext)) gen (rlRow flRad cos) agg`, for every `ext`,
+`gen`, `cos` and `agg` that fit their slots. `fl_termRadSpec` is then `outbRad_termRadSpec`.
 -/
 
 namespace GI.Impl
 
 open GI.Algorithm GI.Assembly GI.Lang Equiv Equiv.Perm
 open GI.Cited (Val PointwiseStab Preimage NormalizedFactor Membership MinimalBlocks GroupOrder
-  CameronRecognition ChiefSeriesAlgo DerivedSubgroup QuotientCentralizer NormalizedIntersection)
+  CameronRecognition NormalClosure DerivedSubgroup NormalizedIntersection)
 
 set_option maxRecDepth 100000
 
-/-- **The code of T2** at base `b`, with the primitive indices `jcs` (ChiefSeriesAlgo), `jder`
-(DerivedSubgroup), `jqc` (QuotientCentralizer), `jni` (NormalizedIntersection), `jmem`
-(Membership). -/
-def flRadFuns (b jcs jder jqc jni jmem : ℕ) : List Expr :=
-  [radEntry (b + 2) jcs jni, radStepBody (b + 5) (b + 8) (b + 15) jder jni jqc] ++
-  iterFuns (b + 2) (b + 1) ++ appendFuns (b + 5) ++ mkGroupFuns (b + 8) ++ leFuns (b + 15) jmem
+/-- The primitives of T2 at indices `7`–`10` of the final table. -/
+noncomputable def flRadExtra (hder : DerivedSubgroup)
+    (hni : NormalizedIntersection) : List Prim :=
+  [minimalBlocksPrim GI.Proved.minimalBlocks, derivedSubgroupPrim hder,
+   normalClosurePrim GI.Proved.normalClosure, normalizedIntersectionPrim hni]
 
-theorem length_flRadFuns (b jcs jder jqc jni jmem : ℕ) :
-    (flRadFuns b jcs jder jqc jni jmem).length = 20 := rfl
-
-/-- **The layout of T2** from the position of `flRadFuns` and the primitive entries. -/
-theorem flRadAt_of {P : Program} {b jcs jder jqc jni jmem : ℕ} {hcs : ChiefSeriesAlgo}
-    {hder : DerivedSubgroup} {hqc : QuotientCentralizer} {hni : NormalizedIntersection}
-    {hmem : Membership} (h : P.HasAt b (flRadFuns b jcs jder jqc jni jmem))
-    (pc : P.prims[jcs]? = some (chiefSeriesPrim hcs))
-    (pd : P.prims[jder]? = some (derivedSubgroupPrim hder))
-    (pq : P.prims[jqc]? = some (quotientCentralizerPrim hqc))
-    (pi : P.prims[jni]? = some (normalizedIntersectionPrim hni))
-    (pm : P.prims[jmem]? = some (membershipPrim hmem)) :
-    RadAt P b (b + 2) (b + 1) (b + 5) (b + 8) (b + 15) jcs jder jni jqc jmem hcs hder hqc hni
-      hmem where
-  entry := by simpa using (h.block (gs := [radEntry (b + 2) jcs jni]) 0 rfl).single
-  iter := h.block 2 rfl
-  step :=
-    { step := (h.block (gs := [radStepBody (b + 5) (b + 8) (b + 15) jder jni jqc]) 1 rfl).single
-      ap := h.block 5 rfl
-      mg := h.block 8 rfl
-      le := h.block 15 rfl
-      jd := pd
-      jq := pq
-      ji := pi
-      jm := pm }
-  jc := pc
-
-/-- The four primitives of T2 that are not in `[pst, mem, pre, fac] ++ gsExtra`, at indices
-`7`–`10` of the final table. -/
-noncomputable def flRadExtra (hcs : ChiefSeriesAlgo) (hder : DerivedSubgroup)
-    (hqc : QuotientCentralizer) (hni : NormalizedIntersection) : List Prim :=
-  [chiefSeriesPrim hcs, derivedSubgroupPrim hder, quotientCentralizerPrim hqc,
-    normalizedIntersectionPrim hni]
-
-/-- The code of T2 in the row slot `rad`: base `rlb rlRadOff`, primitives `7`–`10` and `1`. -/
-def flRad : List Expr := flRadFuns (rlb rlRadOff) 7 8 9 10 1
+/-- The code of T2 in the row slot `rad`: base `rlb rlRadOff`, primitives `7, 2, 1, 9, 10, 8, 5`. -/
+def flRad : List Expr := outbRadFuns (rlb rlRadOff) 7 2 1 9 10 8 5
 
 theorem length_flRad : flRad.length ≤ rlCosOff - rlRadOff := by
-  rw [flRad, length_flRadFuns]; unfold rlCosOff rlRadOff; omega
+  rw [flRad, length_outbRadFuns]; unfold rlCosOff rlRadOff; omega
 
-/-- The constant of the cost bound of T2 (`radK` of the five cited primitives). -/
-noncomputable def flRadK (hcs : ChiefSeriesAlgo) (hder : DerivedSubgroup)
-    (hqc : QuotientCentralizer) (hni : NormalizedIntersection) (hm : Membership) : ℕ :=
-  radK (chiefSeriesPrim hcs) (derivedSubgroupPrim hder) (quotientCentralizerPrim hqc)
-    (normalizedIntersectionPrim hni) (membershipPrim hm)
+/-- The constant of the cost bound of T2 (`outbRadK` of the primitives). -/
+noncomputable def flRadK (hder : DerivedSubgroup)
+    (hni : NormalizedIntersection) (hm : Membership) (hpre : Preimage) (hO : GroupOrder) : ℕ :=
+  outbRadK (tcChainPrim GI.Proved.minimalBlocks hpre hm GI.Proved.normalClosure hni hder)
+    (derivedSubgroupPrim hder) (gmpFactorKernelPrim hm hpre)
+    (normalizedIntersectionPrim hni) (membershipPrim hm) (gmpRepsPrim hm)
+    (normalClosurePrim GI.Proved.normalClosure) (groupOrderPrim hO)
 
-/-- The exponent of the cost bound of T2 (`radD` of the five cited primitives). -/
-noncomputable def flRadD (hcs : ChiefSeriesAlgo) (hder : DerivedSubgroup)
-    (hqc : QuotientCentralizer) (hni : NormalizedIntersection) (hm : Membership) : ℕ :=
-  radD (chiefSeriesPrim hcs) (derivedSubgroupPrim hder) (quotientCentralizerPrim hqc)
-    (normalizedIntersectionPrim hni) (membershipPrim hm)
+/-- The exponent of the cost bound of T2 (`outbRadD` of the primitives). -/
+noncomputable def flRadD (hder : DerivedSubgroup)
+    (hni : NormalizedIntersection) (hm : Membership) (hpre : Preimage) (hO : GroupOrder) : ℕ :=
+  outbRadD (tcChainPrim GI.Proved.minimalBlocks hpre hm GI.Proved.normalClosure hni hder)
+    (derivedSubgroupPrim hder) (gmpFactorKernelPrim hm hpre)
+    (normalizedIntersectionPrim hni) (membershipPrim hm) (gmpRepsPrim hm)
+    (normalClosurePrim GI.Proved.normalClosure) (groupOrderPrim hO)
 
 section Asm
 
 variable {hst : PointwiseStab} {hm : Membership} {hpre : Preimage} {hfac : NormalizedFactor}
-  {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition} {hcs : ChiefSeriesAlgo}
-  {hder : DerivedSubgroup} {hqc : QuotientCentralizer} {hni : NormalizedIntersection}
+  {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition}
+  {hder : DerivedSubgroup} {hni : NormalizedIntersection}
   {ext : List Prim} {gen cos agg : List Expr}
 
-/-- **The layout `RadAt` of T2 in the final program.** -/
+/-- **The layout `OutbRadAt` of T2 in the final program.** -/
 theorem fl_radAt (hg : gen.length ≤ asmSlot) (hc : cos.length ≤ asmSlot - rlCosOff) :
-    RadAt (asmProg hst hm hpre hfac (gsExtra hmb hO hC ++ (flRadExtra hcs hder hqc hni ++ ext))
+    OutbRadAt (asmProg hst hm hpre hfac (gsExtra hmb hO hC ++ (flRadExtra hder hni ++ ext))
         gen (rlRow flRad cos) agg)
-      (rlb rlRadOff) (rlb rlRadOff + 2) (rlb rlRadOff + 1) (rlb rlRadOff + 5)
-      (rlb rlRadOff + 8) (rlb rlRadOff + 15) 7 8 10 9 1 hcs hder hqc hni hm :=
-  flRadAt_of (rl_hasAt_rad hg length_flRad hc) rfl rfl rfl rfl rfl
+      (rlb rlRadOff) 7 2 1 9 10 8 5
+      GI.Proved.minimalBlocks hpre hm GI.Proved.normalClosure hni hder hO :=
+  outbRadAt_of (rl_hasAt_rad hg length_flRad hc) rfl rfl rfl rfl rfl rfl rfl
 
-/-- **T2 in the final program**: `TermRadSpec` at `rlb rlRadOff` (`rad_termRadSpec`). -/
-theorem fl_termRadSpec (hg : gen.length ≤ asmSlot) (hc : cos.length ≤ asmSlot - rlCosOff) :
+/-- **T2 in the final program**: `TermRadSpec` at `rlb rlRadOff` (`outbRad_termRadSpec`). -/
+theorem fl_termRadSpec
+    (hg : gen.length ≤ asmSlot) (hc : cos.length ≤ asmSlot - rlCosOff) :
     Iface.TermRadSpec
-      (asmProg hst hm hpre hfac (gsExtra hmb hO hC ++ (flRadExtra hcs hder hqc hni ++ ext))
+      (asmProg hst hm hpre hfac (gsExtra hmb hO hC ++ (flRadExtra hder hni ++ ext))
         gen (rlRow flRad cos) agg)
-      (flRadK hcs hder hqc hni hm) (flRadD hcs hder hqc hni hm) (rlb rlRadOff) :=
-  rad_termRadSpec (fl_radAt hg hc)
+      (flRadK hder hni hm hpre hO) (flRadD hder hni hm hpre hO) (rlb rlRadOff) :=
+  outbRad_termRadSpec (fl_radAt hg hc)
 
 end Asm
 

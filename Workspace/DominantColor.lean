@@ -1,4 +1,8 @@
-import Workspace.CoherentFiberMatrix
+module
+
+public import Workspace.CoherentFiberMatrix
+
+@[expose] public section
 
 namespace GI.CoherentEntrance
 
@@ -73,8 +77,3 @@ theorem dominant_color_symmetric (c : Coloring n) (hc : Coherent c)
   exact hrev.trans (dominant_reverse c hc side hh x i hi a)
 
 end GI.CoherentEntrance
-
-#print axioms GI.CoherentEntrance.different_color_valencies_le
-#print axioms GI.CoherentEntrance.dominant_constant_column
-#print axioms GI.CoherentEntrance.dominant_reverse
-#print axioms GI.CoherentEntrance.dominant_color_symmetric

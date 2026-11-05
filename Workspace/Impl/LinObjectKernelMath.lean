@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectKernel
-import Workspace.Impl.LinObjectPieceIndex
+module
+
+public import Workspace.Impl.LinObjectKernel
+public import Workspace.Impl.LinObjectPieceIndex
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Multicoset

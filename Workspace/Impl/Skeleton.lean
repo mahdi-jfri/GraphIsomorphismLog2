@@ -1,4 +1,8 @@
-import Workspace.Impl.Canon
+module
+
+public import Workspace.Impl.Canon
+
+@[expose] public section
 
 /-!
 # The recursion skeleton of obligation (a)

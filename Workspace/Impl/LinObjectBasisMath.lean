@@ -1,6 +1,10 @@
-import Workspace.Impl.LinObjectIndexed
-import Workspace.Impl.LinObjectConfigAdd
-import Workspace.Impl.TermRecProgShift
+module
+
+public import Workspace.Impl.LinObjectIndexed
+public import Workspace.Impl.LinObjectConfigAdd
+public import Workspace.Impl.TermRecProgShift
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -121,7 +125,8 @@ theorem linObjectWordPieces_piece {n : ℕ} (as : List (Equiv.Perm (Fin n))) (Y 
   rw [linObjectWordPieces_ms] at hp ⊢
   unfold linObjectConfigOf at hp ⊢
   rw [partAt_conf hi (linObjectBasisWords_mem as Y z), linObjectBasisWords_index] at hp
-  simpa only [tmRi_ms_shift] using hp
+  rw [tmRi_ms_shift]
+  exact hp
 
 /-- Listing genuine pieces whose sum is Z also lists every piece of Z. -/
 theorem linObjectPieces_cover {n : ℕ} (A : Subgroup (Equiv.Perm (Fin n)))

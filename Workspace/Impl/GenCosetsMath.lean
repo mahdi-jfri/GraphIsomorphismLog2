@@ -1,6 +1,10 @@
-import Workspace.Algorithm.Dispatch
-import Workspace.Assembly.Encoding
-import Workspace.Impl.GenCosets
+module
+
+public import Workspace.Algorithm.Dispatch
+public import Workspace.Assembly.Encoding
+public import Workspace.Impl.GenCosets
+
+@[expose] public section
 
 /-!
 # Coset representatives of the block kernel: the mathematics

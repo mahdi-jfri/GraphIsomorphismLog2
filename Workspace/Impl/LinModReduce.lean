@@ -1,5 +1,9 @@
-import Workspace.Impl.LinIntPoly
-import Workspace.Cited.AlgoLinear
+module
+
+public import Workspace.Impl.LinIntPoly
+public import Workspace.Cited.AlgoLinear
+
+@[expose] public section
 
 /-! Reduce signed integer coordinates to the canonical residues required by
 the vector-stabilizer task. -/

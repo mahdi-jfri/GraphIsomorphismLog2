@@ -1,7 +1,11 @@
-import Mathlib.Data.Fintype.Powerset
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Tactic.Positivity
+module
+
+public import Mathlib.Data.Fintype.Powerset
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Tactic.Positivity
+
+@[expose] public section
 
 namespace GI
 

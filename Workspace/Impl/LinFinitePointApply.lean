@@ -1,6 +1,10 @@
-import Workspace.Impl.LinMatrixVec
-import Workspace.Impl.LinFinitePointReduce
-import Workspace.Impl.LinFiniteActionCost
+module
+
+public import Workspace.Impl.LinMatrixVec
+public import Workspace.Impl.LinFinitePointReduce
+public import Workspace.Impl.LinFiniteActionCost
+
+@[expose] public section
 
 /-! Apply a retained full affine transformation to a retained full point.
 Reduction takes place after the integer dot products, including modulus zero

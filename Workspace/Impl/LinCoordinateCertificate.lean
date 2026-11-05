@@ -1,4 +1,8 @@
-import Workspace.Impl.LinCoordinateSlp
+module
+
+public import Workspace.Impl.LinCoordinateSlp
+
+@[expose] public section
 
 /-! A checked prefix SLP family gives every hypothesis of linPresentationEquiv.
 Surjectivity, triangularity and the order calculation are derived here. -/
@@ -101,6 +105,7 @@ theorem linAbelianCertificate {G : Type*} [Group G] [Finite G]
   have hdet := linRelationMatrix_det_ne e hpos C hc
   refine ⟨hdet, hf, linRelationMatrix_relations e C f hrel, ?_⟩
   rw [linRelationMatrix_det e C hc, ← Int.natAbsHom_apply, map_prod]
-  simpa only [Int.natAbs_natCast] using (linCyclicOrders_product N as hgen).symm
+  simpa only [Int.natAbsHom_apply, Int.natAbs_natCast, e, Additive] using
+    (linCyclicOrders_product N as hgen).symm
 
 end GI.Impl

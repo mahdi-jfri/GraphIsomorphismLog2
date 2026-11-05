@@ -1,4 +1,8 @@
-import Workspace.Impl.DomMath
+module
+
+public import Workspace.Impl.DomMath
+
+@[expose] public section
 
 /-!
 # Restricting a state value to its domain, in `GI.Lang`

@@ -1,5 +1,9 @@
-import Workspace.Pullback
-import Mathlib.Algebra.Group.Subgroup.Map
+module
+
+public import Workspace.Pullback
+public import Mathlib.Algebra.Group.Subgroup.Map
+
+@[expose] public section
 
 namespace GI.TransportOutput
 

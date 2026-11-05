@@ -1,8 +1,12 @@
 -- VectorStabilizer is proved in `Workspace/Proved/VectorStabilizer.lean`; SmithNormalForm is not assumed
-import Workspace.Cited.AlgoPermGroups
-import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Nat.Bits
+module
+
+public import Workspace.Cited.AlgoPermGroups
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Data.Nat.Bits
+
+@[expose] public section
 
 /-!
 # Stage 2 tasks: integer normal forms and vector stabilizers
@@ -110,20 +114,20 @@ def encVec {p d : ℕ} (v : Fin d → ZMod p) : Val :=
 def encModMatrix {p d : ℕ} (M : Matrix (Fin d) (Fin d) (ZMod p)) : Val :=
   .list ((List.finRange d).map fun i => encVec (M i))
 
-/-- An instance: a solvable `G = ⟨gs⟩ ≤ Sym(n)`, a prime `p ≤ n`, a representation
-`φ : G → GL_d(𝔽_p)` (encoded by the images of the generators, which determine it), and a vector
-`v`. In the paper `p` is at most the cover degree ("The invariant factors of the represented
-finite abelian groups have no prime divisors above `b`"), so `p ≤ n` holds and keeps the input
-numbers polynomial. -/
+/-- An instance: `G = ⟨gs⟩ ≤ Sym(n)`, a prime `p ≤ n`, a representation
+`φ : G → GL_d(𝔽_p)` (encoded by the images of the generators, which determine it) with solvable
+linear image `φ.range`, and a vector `v`. In the paper `p` is at most the cover degree ("The
+invariant factors of the represented finite abelian groups have no prime divisors above `b`"),
+so `p ≤ n` holds and keeps the input numbers polynomial. -/
 structure VecStabInst where
   n : ℕ
   gs : List (Perm (Fin n))
-  solvable : IsSolvable (gens gs)
   p : ℕ
   prime : p.Prime
   p_le : p ≤ n
   d : ℕ
   φ : gens gs →* Matrix.GeneralLinearGroup (Fin d) (ZMod p)
+  solvable : IsSolvable φ.range
   v : Fin d → ZMod p
 
 /-- The stabilizer `C_G(v) = {g ∈ G | φ(g) v = v}`, as a subgroup of `G`. -/

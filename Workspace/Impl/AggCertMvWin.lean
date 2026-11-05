@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertMvNext
+module
+
+public import Workspace.Impl.AggCertMvNext
+
+@[expose] public section
 
 /-!
 # The move program: after a window answer

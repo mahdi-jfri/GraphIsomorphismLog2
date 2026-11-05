@@ -1,4 +1,8 @@
-import Workspace.CertificateTermination
+module
+
+public import Workspace.CertificateTermination
+
+@[expose] public section
 
 /-!
 # Lockstep: a marked-window transporter conjugates the two endpoint procedures

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertMods
+module
+
+public import Workspace.Impl.AggCertMods
+
+@[expose] public section
 
 /-!
 # The move program: the end of a string

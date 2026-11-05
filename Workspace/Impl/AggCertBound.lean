@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertFzSpec
+module
+
+public import Workspace.Impl.AggCertFzSpec
+
+@[expose] public section
 
 /-!
 # The certificate phase: the bound `X W₀`

@@ -1,6 +1,10 @@
-import Workspace.PrimitiveProductCoordinates
-import Workspace.CosetCoordinateFibers
-import Workspace.RadicalSocleHomogeneous
+module
+
+public import Workspace.PrimitiveProductCoordinates
+public import Workspace.CosetCoordinateFibers
+public import Workspace.RadicalSocleHomogeneous
+
+@[expose] public section
 
 namespace GI.PrimitiveCartesian
 
@@ -88,10 +92,3 @@ theorem primitive_minimalNormal_fiber_transport
       (minimalNormal_socle_eq_top hN) (MulAut.conjNormal (H := N) g)) g j v w hvw
 
 end GI.PrimitiveCartesian
-
-#print axioms GI.PrimitiveCartesian.minimalCoordinateEmbedding
-#print axioms GI.PrimitiveCartesian.normalFactorPositions
-#print axioms GI.PrimitiveCartesian.normalFactorPositions_transitive
-#print axioms GI.PrimitiveCartesian.minimalCoordinate_representatives
-#print axioms GI.PrimitiveCartesian.primitiveMinimalProductCoordinates_apply
-#print axioms GI.PrimitiveCartesian.primitive_minimalNormal_fiber_transport

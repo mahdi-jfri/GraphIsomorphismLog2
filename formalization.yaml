@@ -1,0 +1,83 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+# formalization.yaml (v0.4): https://github.com/mathlib-initiative/formalization.yaml
+
+version: "v0.4"
+
+project:
+  name: "Graph isomorphism in quasipolynomial time"
+  description: >-
+    A Lean 4 proof that a deterministic algorithm decides graph isomorphism in time
+    n^O(log n). The algorithm is one program for a log-cost RAM with procedure calls. The proof
+    shows that for all graphs G and H on n vertices the program returns a correct answer, at a
+    cost of at most exp(C * (log(n + 2))^2) for one constant C. If G and H are isomorphic, the
+    answer includes one isomorphism and generators of the automorphism group of G. The three
+    cited results that rest on the classification of finite simple groups (the classification,
+    Schreier's conjecture for the groups on the list, and Maróti's bound on the orders of
+    primitive groups) are proved with AxiomMath/CFSG and MarotiOrdersOfPrimitiveGroups.
+  authors: ["Mahdi JafariRaviz"]
+  responsible_maintainers: ["Mahdi JafariRaviz"]
+  license: "Apache-2.0"
+
+sources:
+  - title: "Deterministic n^{O(log n)} Graph Isomorphism Algorithm via Inherited Decompositions"
+    authors: ["MohammadTaghi Hajiaghayi", "Mahdi JafariRaviz"]
+    id: "arXiv:2611.01399v1"
+    type: "article"
+    location: "Theorem 1.1"
+    relationship: "formalizes"
+    author_endorsement: "participated"
+
+related_formalizations:
+  - id: "https://github.com/AxiomMath/CFSG"
+    relationship: "builds-on"
+    note: >-
+      The proofs of the classification of finite simple groups and of Schreier's conjecture for
+      the groups on the list. Eight files of the library are adapted from it (see
+      THIRD_PARTY_NOTICES.txt).
+  - id: "https://github.com/mahdi-jfri/MarotiOrdersOfPrimitiveGroups"
+    relationship: "builds-on"
+    note: "The proof of Theorem 1.1 of A. Maróti, On the orders of primitive groups (2002)."
+  - id: "https://github.com/TauCetiProject/TauCeti"
+    relationship: "builds-on"
+    note: "The statement of the classification and the list of finite simple groups."
+
+classification:
+  arxiv: ["cs.DS", "cs.CC", "math.GR", "math.CO"]
+  msc2020: ["68Q25", "05C60", "68R10", "20B25"]
+
+status:
+  scope: "Theorem 1.1 of the paper, in full."
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: ["propext", "Classical.choice", "Quot.sound"]
+  main_results:
+    - declaration: "GI.graphIsomorphismInQuasipolynomialTime"
+      file: "Solution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+
+automation:
+  methods:
+    - method: "agent"
+
+fidelity:
+  divergences: >-
+    The paper does not fix a machine model. The Lean statement fixes one: a log-cost RAM with
+    procedure calls (Workspace/Statement/Machine.lean), where every operation costs one plus the
+    number of binary digits of each number it reads or writes. The time bound and the output are
+    those of the paper's Theorem 1.1. Some steps of the proof differ from the paper without
+    changing the statement. For example, Bochert's bound replaces Maróti's bound in Lemmas A.12
+    and A.24, and Theorem A.20 uses Dixon's derived length bound with the constant 5 in place
+    of 5/2, which changes only constants inside the proof.
+
+review:
+  status: "self-assessed"
+
+alignment:
+  namespace: "GI"
+  statements:
+    - source: "Theorem 1.1"
+      lean: "GI.graphIsomorphismInQuasipolynomialTime"
+      module: "Solution.lean"
+      status: "proved"

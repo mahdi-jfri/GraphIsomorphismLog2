@@ -1,5 +1,9 @@
-import Workspace.Algorithm.DomainRestriction
-import Workspace.Paper.LocalCertificates
+module
+
+public import Workspace.Algorithm.DomainRestriction
+public import Workspace.Paper.LocalCertificates
+
+@[expose] public section
 
 /-!
 # The local-test calls are charged calls (Lemma 4.1 on the domain of a state)

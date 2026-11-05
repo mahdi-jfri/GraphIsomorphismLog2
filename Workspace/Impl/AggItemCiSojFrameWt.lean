@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojFrame
-import Workspace.Impl.AggItemCiSojRectStart
-import Workspace.Impl.AggItemCiSojBudgetL
+module
+
+public import Workspace.Impl.AggItemCiSojFrame
+public import Workspace.Impl.AggItemCiSojRectStart
+public import Workspace.Impl.AggItemCiSojBudgetL
+
+@[expose] public section
 
 /-! # Uniform byte-value bounds for both rectangle continuation states -/
 

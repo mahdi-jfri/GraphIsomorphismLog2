@@ -1,6 +1,10 @@
-import Workspace.Impl.TermGlueLabPSup
-import Workspace.Impl.LinElementMap
-import Workspace.Lang.Lib.LinIntVector
+module
+
+public import Workspace.Impl.TermGlueLabPSup
+public import Workspace.Impl.LinElementMap
+public import Workspace.Lang.Lib.LinIntVector
+
+@[expose] public section
 
 /-!
 # Coordinate sums of elements of `N`

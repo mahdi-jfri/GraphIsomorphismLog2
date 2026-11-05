@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCmpMvA
+module
+
+public import Workspace.Impl.AggCmpMvA
+
+@[expose] public section
 
 /-!
 # The move program: the answer of a call

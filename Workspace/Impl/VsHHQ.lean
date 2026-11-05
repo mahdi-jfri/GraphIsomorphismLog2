@@ -1,5 +1,9 @@
-import Workspace.Impl.VsHCSpec
-import Workspace.Impl.VsHHardPoly
+module
+
+public import Workspace.Impl.VsHCSpec
+public import Workspace.Impl.VsHHardPoly
+
+@[expose] public section
 
 namespace GI.Impl
 

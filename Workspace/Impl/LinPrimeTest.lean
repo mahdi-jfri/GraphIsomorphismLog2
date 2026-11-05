@@ -1,6 +1,10 @@
-import Workspace.Impl.LinMapSource
-import Workspace.Impl.LinPrimaryRecord
-import Workspace.Lang.Lib.Search
+module
+
+public import Workspace.Impl.LinMapSource
+public import Workspace.Impl.LinPrimaryRecord
+public import Workspace.Lang.Lib.Search
+
+@[expose] public section
 
 /-! Trial primality for the bounded characteristics. Its cost is polynomial
 in the numeric candidate, which is at most the explicit permutation degree. -/

@@ -1,4 +1,8 @@
-import Workspace.Proved.SSTable
+module
+
+public import Workspace.Proved.SSTable
+
+@[expose] public section
 
 /-!
 # A closed table describes the group

@@ -1,5 +1,9 @@
-import Workspace.PrimitiveMinimalNormals
-import Mathlib.GroupTheory.NoncommCoprod
+module
+
+public import Workspace.PrimitiveMinimalNormals
+public import Mathlib.GroupTheory.NoncommCoprod
+
+@[expose] public section
 
 namespace GI.PrimitiveStructure
 
@@ -24,8 +28,8 @@ theorem minimalNormalPairHom_injective {M N : Subgroup G}
 theorem minimalNormalPairHom_range {M N : Subgroup G}
     (hM : MinimalNormal M) (hN : MinimalNormal N) (hne : M ≠ N) :
     (minimalNormalPairHom hM hN hne).range = M ⊔ N := by
-  rw [minimalNormalPairHom, MonoidHom.noncommCoprod_range,
-    Subgroup.range_subtype, Subgroup.range_subtype]
+  exact (MonoidHom.noncommCoprod_range M.subtype N.subtype _).trans (by
+    rw [Subgroup.range_subtype, Subgroup.range_subtype])
 
 section Action
 
@@ -88,10 +92,3 @@ theorem two_minimal_socle_card_eq_degree_sq {M N : Subgroup G}
 
 end Action
 end GI.PrimitiveStructure
-
-#print axioms GI.PrimitiveStructure.minimalNormalPairHom_injective
-#print axioms GI.PrimitiveStructure.minimalNormalPairHom_range
-#print axioms GI.PrimitiveStructure.commutingRegularEquiv
-#print axioms GI.PrimitiveStructure.distinctMinimalNormalsEquiv
-#print axioms GI.PrimitiveStructure.twoMinimalSocleEquiv
-#print axioms GI.PrimitiveStructure.two_minimal_socle_card_eq_degree_sq

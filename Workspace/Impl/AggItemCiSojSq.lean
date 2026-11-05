@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojEG
-import Workspace.Impl.AggItemCiCfgA
+module
+
+public import Workspace.Impl.AggItemCiSojEG
+public import Workspace.Impl.AggItemCiCfgA
+
+@[expose] public section
 
 /-!
 # Numbering the color-edge exchanges by one square index

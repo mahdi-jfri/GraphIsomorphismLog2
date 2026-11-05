@@ -1,4 +1,8 @@
-import Workspace.PairRefinement
+module
+
+public import Workspace.PairRefinement
+
+@[expose] public section
 
 namespace GI.PairRefinement
 

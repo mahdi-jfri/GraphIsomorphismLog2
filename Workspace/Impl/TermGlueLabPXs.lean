@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPItem
+module
+
+public import Workspace.Impl.TermGlueLabPItem
+
+@[expose] public section
 
 /-!
 # The list of one generator's offset (step 5, program)

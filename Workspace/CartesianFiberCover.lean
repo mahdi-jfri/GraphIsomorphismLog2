@@ -1,4 +1,8 @@
-import Workspace.CartesianConstruct
+module
+
+public import Workspace.CartesianConstruct
+
+@[expose] public section
 
 namespace GI.CartesianCover
 
@@ -56,9 +60,3 @@ theorem ofFiberInvariance_positions (positions : H →* Equiv.Perm I)
     (ofFiberInvariance positions fibers).positions = positions := rfl
 
 end GI.CartesianCover
-
-#print axioms GI.CartesianCover.coordinateFromFibers
-#print axioms GI.CartesianCover.coordinateFromFibers_apply
-#print axioms GI.CartesianCover.ofStabilizerFiberInvariance
-#print axioms GI.CartesianCover.ofFiberInvariance
-#print axioms GI.CartesianCover.ofFiberInvariance_positions

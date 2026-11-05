@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHQ8Math
+module
+
+public import Workspace.Impl.VsHQ8Math
+
+@[expose] public section
 
 /-!
 # The key of the tuple `(T(b))_{b ∈ B}`

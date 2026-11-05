@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojCC
+module
+
+public import Workspace.Impl.AggItemCiSojCC
+
+@[expose] public section
 
 /-!
 # Complete answer cosets indexed by query occurrence

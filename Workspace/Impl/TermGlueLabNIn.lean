@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabNVec
-import Workspace.Impl.TermCosetTop
+module
+
+public import Workspace.Impl.TermGlueLabNVec
+public import Workspace.Impl.TermCosetTop
+
+@[expose] public section
 
 /-!
 # The label driver: facts about the input

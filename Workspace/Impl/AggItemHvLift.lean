@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemHvSig
-import Workspace.Impl.AggLiftChild
-import Workspace.Impl.RowProg
+module
+
+public import Workspace.Impl.AggItemHvSig
+public import Workspace.Impl.AggLiftChild
+public import Workspace.Impl.RowProg
+
+@[expose] public section
 
 /-!
 # Case 2a: the lifts `τ₀` and `t`

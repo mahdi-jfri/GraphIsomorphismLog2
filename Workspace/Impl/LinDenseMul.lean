@@ -1,5 +1,9 @@
-import Workspace.Lang.Lib.LinIntMatrix
-import Workspace.Impl.LinIntPoly
+module
+
+public import Workspace.Lang.Lib.LinIntMatrix
+public import Workspace.Impl.LinIntPoly
+
+@[expose] public section
 
 /-! A concrete self-contained layout of the proved dense integer product. -/
 namespace GI.Impl

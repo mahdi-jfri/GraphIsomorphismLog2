@@ -1,6 +1,10 @@
-import Workspace.Impl.ColBrSpec
-import Workspace.Impl.GenCls
-import Workspace.Impl.AggPairs
+module
+
+public import Workspace.Impl.ColBrSpec
+public import Workspace.Impl.GenCls
+public import Workspace.Impl.AggPairs
+
+@[expose] public section
 
 /-!
 # The row step as a program
@@ -348,10 +352,10 @@ def RowW (hst : GI.Cited.PointwiseStab) (hfac : GI.Cited.NormalizedFactor)
 
 set_option maxHeartbeats 4000000 in
 /-- **The row step meets its specification** (`Iface.RowSpec`), given the specification of the
-terminal function (`RowTermSpec`) and the work bound `RowW`. Cited: `TransitiveAffected`
-(through `coords_spec_good`), `PointwiseStab` and `NormalizedFactor` (primitives at `jp`, `jf`),
+terminal function (`RowTermSpec`) and the work bound `RowW`. Cited:
+`PointwiseStab` and `NormalizedFactor` (primitives at `jp`, `jf`),
 `Preimage` (through the natural-label module `NatAt`). -/
-theorem rowSpec (hcite : GI.Cited.TransitiveAffected) (hst : GI.Cited.PointwiseStab)
+theorem rowSpec (hst : GI.Cited.PointwiseStab)
     (hfac : GI.Cited.NormalizedFactor)
     (hLab : ∀ {Ω C : Type} {k : ℕ} (e : Ω ≃ Fin k) (S : State Ω C) (lv : Val)
       (L : SuppliedLabels S), I.LabVal e S lv L → LabValStd e S lv L)
@@ -428,7 +432,7 @@ theorem rowSpec (hcite : GI.Cited.TransitiveAffected) (hst : GI.Cited.PointwiseS
   obtain ⟨rfl, hc2⟩ := h2
   have wctx := d2.wt_lt
   -- step 3: the coordinates
-  have hco := coords_spec_good hcite hst hfac hgood hrow hA.coord hA.pst hA.fac hps hRL hnat
+  have hco := coords_spec_good hst hfac hgood hrow hA.coord hA.pst hA.fac hps hRL hnat
   have dm := Det.mk1 (Det.var' (P := Pg) (env := [Val.list [sv, lv], natList rlL, winCtx k L.q rlL ps]) (i := 2) (v := winCtx k L.q rlL ps) rfl)
   have wm := wt_list1_le (winCtx k L.q rlL ps)
   have e3 : EvalAll Pg [Val.list [sv, lv], natList rlL, winCtx k L.q rlL ps] (.call cB (mk1 (.var 2)))

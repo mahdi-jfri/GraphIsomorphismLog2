@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormIncProg
-import Workspace.Impl.PolyBd
+module
+
+public import Workspace.Impl.GenNormIncProg
+public import Workspace.Impl.PolyBd
+
+@[expose] public section
 
 /-!
 # Recovering the Cameron point permutations by finite loops
@@ -340,10 +344,12 @@ theorem normRecoverSize_le_input {n m k : ℕ} (e : Fin n ≃ (Fin 1 → Product
   have wm : (encPerm (1 : Perm (Fin m))).wt < a.wt := wt_le_wt_list (by simp)
   have hn : n < (encPerm (1 : Perm (Fin n))).wt := by
     have h := length_lt_wt_list ((List.finRange n).map fun i : Fin n => Val.nat i)
-    simpa only [List.length_map, List.length_finRange] using h
+    rw [List.length_map, List.length_finRange] at h
+    exact h
   have hm : m < (encPerm (1 : Perm (Fin m))).wt := by
     have h := length_lt_wt_list ((List.finRange m).map fun i : Fin m => Val.nat i)
-    simpa only [List.length_map, List.length_finRange] using h
+    rw [List.length_map, List.length_finRange] at h
+    exact h
   change normRecoverSize e x ≤ 10 * (a.wt + 2)
   unfold normRecoverSize
   omega

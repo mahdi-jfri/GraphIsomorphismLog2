@@ -1,7 +1,11 @@
-import Workspace.SupportClassification
-import Workspace.SupportTwoQuotient
-import Workspace.KernelOrbitEquiv
-import Workspace.Cited.TransitiveAffected
+module
+
+public import Workspace.SupportClassification
+public import Workspace.SupportTwoQuotient
+public import Workspace.KernelOrbitEquiv
+public import Workspace.AffectThreshold
+
+@[expose] public section
 
 /-!
 # Paper statements: Lemma A.15, Lemma A.24, Corollary A.25, Lemma A.26
@@ -31,59 +35,26 @@ open scoped Pointwise
 
 /-- **Lemma A.15** (No large giant above a transitive kernel).
 Suppose `N ◁ E ≤ Sym(B)`, `N` is transitive, `|B| = f`, and
-`E/N ≅ Alt(k)`. Then `k ≤ max {8, 2 + log₂ f}`.
+`E/N ≅ Alt(k)`. Then `k ≤ max {63, 12 log₂ f}`.
 
-"Transitive" refers to `N`, as the title and the proof ("transitivity gives
-`E = N E_v`") show. Transitivity of `E` alone would not do: `E = Alt(k)` on
-`k ≥ 9` points with `N = 1` violates the bound.
-
-The proof is the paper's: transitivity of `N` gives `E = N E_v`, so `E_v`
-maps onto `E/N`, every point is unaffected, and this contradicts
-`[H, Lemma 4.3(a)]` (`GI.Cited.TransitiveAffected`). -/
-theorem lem_transitive_kernel_giant_threshold (hcite : GI.Cited.TransitiveAffected)
+"Transitive" refers to `N`, as the title shows. Transitivity of `E` alone would
+not do: `E = Alt(k)` on `k ≥ 64` points with `N = 1` violates the bound. -/
+theorem lem_transitive_kernel_giant_threshold
     {B : Type} [Fintype B] [DecidableEq B] (E N : Subgroup (Perm B)) (hNE : N ≤ E)
     [(N.subgroupOf E).Normal] [MulAction.IsPretransitive N B] {k : ℕ}
     (e : E ⧸ N.subgroupOf E ≃* alternatingGroup (Fin k)) :
-    (k : ℝ) ≤ max 8 (2 + Real.logb 2 (Fintype.card B)) := by
-  by_contra hlt
-  push Not at hlt
-  have hk : 9 ≤ k := by
-    have : (8 : ℝ) < k := lt_of_le_of_lt (le_max_left _ _) hlt
-    exact_mod_cast this
+    (k : ℝ) ≤ max 63 (12 * Real.logb 2 (Fintype.card B)) := by
   let q : E →* alternatingGroup (Fin k) := e.toMonoidHom.comp (QuotientGroup.mk' _)
   have hq : Function.Surjective q :=
     e.surjective.comp (QuotientGroup.mk'_surjective _)
-  have hqN : ∀ n : N, q ⟨n, hNE n.2⟩ = 1 := by
-    intro n
+  have ht : ∀ x y : B, ∃ g : E, q g = 1 ∧ g.val x = y := by
+    intro x y
+    obtain ⟨n, hn⟩ := MulAction.exists_smul_eq N x y
+    refine ⟨⟨n, hNE n.2⟩, ?_, hn⟩
     have : (⟨n, hNE n.2⟩ : E) ∈ N.subgroupOf E := n.2
     simp only [q, MonoidHom.comp_apply, QuotientGroup.mk'_apply,
       (QuotientGroup.eq_one_iff _).mpr this, map_one]
-  -- `B` is nonempty: otherwise `E` is trivial and cannot map onto `Alt(k)`.
-  obtain ⟨v⟩ : Nonempty B := by
-    by_contra hB
-    rw [not_nonempty_iff] at hB
-    haveI : Subsingleton E := ⟨fun g h => Subtype.ext (Subsingleton.elim _ _)⟩
-    haveI : Nontrivial (alternatingGroup (Fin k)) :=
-      alternatingGroup.nontrivial_of_three_le_card (by simp; omega)
-    obtain ⟨a, b, hab⟩ := exists_pair_ne (alternatingGroup (Fin k))
-    obtain ⟨g, rfl⟩ := hq a
-    obtain ⟨h, rfl⟩ := hq b
-    exact hab (congrArg q (Subsingleton.elim g h))
-  -- `E` is transitive, since it contains the transitive `N`.
-  haveI : MulAction.IsPretransitive E B := ⟨fun x y => by
-    obtain ⟨n, hn⟩ := MulAction.exists_smul_eq N x y
-    exact ⟨⟨n, hNE n.2⟩, hn⟩⟩
-  -- `E = N E_v`, so `E_v` maps onto `E/N ≅ Alt(k)`: the point `v` is unaffected.
-  have hunaff : (MulAction.stabilizer E v).map q = ⊤ := by
-    rw [eq_top_iff]
-    intro a _
-    obtain ⟨g, rfl⟩ := hq a
-    obtain ⟨n, hn⟩ := MulAction.exists_smul_eq N v (g • v)
-    refine ⟨⟨n, hNE n.2⟩⁻¹ * g, ?_, ?_⟩
-    · rw [SetLike.mem_coe, MulAction.mem_stabilizer_iff, mul_smul, inv_smul_eq_iff]
-      exact hn.symm
-    · rw [map_mul, map_inv, hqN, inv_one, one_mul]
-  exact hcite B E k q hq hlt v hunaff
+  exact GI.AffectThreshold.transitive_kernel_alternating_quotient_bound q hq ht
 
 /-! ### Lemma A.24 -/
 
@@ -118,7 +89,7 @@ theorem coset_action_equiv {Q W : Type*} [Group Q] [MulAction Q W]
       (∀ g : Q, f (QuotientGroup.mk g) = g • w) ∧
       ∀ (g : Q) (y : Q ⧸ MulAction.stabilizer Q w), f (g • y) = g • f y := by
   let f := (MulAction.orbitEquivQuotientStabilizer Q w).symm.trans
-    ((Equiv.setCongr (MulAction.orbit_eq_univ Q w)).trans (Equiv.Set.univ W))
+    ((Set.equivOfEq (MulAction.orbit_eq_univ Q w)).trans (Equiv.Set.univ W))
   have hf : ∀ g : Q, f (QuotientGroup.mk g) = g • w := fun g => by
     simp [f, MulAction.orbitEquivQuotientStabilizer_symm_apply]
   refine ⟨f, hf, ?_⟩
@@ -193,28 +164,47 @@ theorem index_stabilizer_map_le (G : Subgroup (Perm Ω)) [MulAction.IsPretransit
   rw [MulAction.index_stabilizer_of_transitive, Nat.card_eq_fintype_card] at hd
   exact Nat.le_of_dvd (Fintype.card_pos_iff.mpr ⟨x⟩) hd
 
-/-- The trivial-action case is excluded at the unaffected-stabilizer threshold:
-no point stabilizer maps onto `Alt(Γ)`, by `[H, Lemma 4.3(a)]`. -/
-theorem stabilizer_map_ne_top (hcite : GI.Cited.TransitiveAffected)
+omit [DecidableEq Ω] in
+/-- The trivial-action case is excluded at the logarithmic threshold:
+no point stabilizer maps onto `Alt(Γ)`, by Lemma A.15. -/
+theorem stabilizer_map_ne_top
     (G : Subgroup (Perm Ω)) [MulAction.IsPretransitive G Ω]
     (φ : G →* alternatingGroup Γ) (hφ : Function.Surjective φ)
-    (hlog : max 8 (2 + Real.logb 2 (Fintype.card Ω)) < (Fintype.card Γ : ℝ)) (x : Ω) :
+    (hlog : max 63 (12 * Real.logb 2 (Fintype.card Ω)) < (Fintype.card Γ : ℝ)) (x : Ω) :
     (MulAction.stabilizer G x).map φ ≠ ⊤ := by
   intro htop
   let r := GI.AlternatingSimple.relabel (Fintype.equivFin Γ)
   let ψ : G →* alternatingGroup (Fin (Fintype.card Γ)) := r.toMonoidHom.comp φ
   have hψ : Function.Surjective ψ := r.surjective.comp hφ
-  apply hcite Ω G (Fintype.card Γ) ψ hψ hlog x
-  rw [← Subgroup.map_map, htop]
-  exact Subgroup.map_top_of_surjective _ r.surjective
+  have hx : ∀ w : Ω, ∃ g : G, ψ g = 1 ∧ g.val x = w := by
+    intro w
+    obtain ⟨g, hgw⟩ := MulAction.exists_smul_eq G x w
+    have hmem : φ g ∈ (MulAction.stabilizer G x).map φ := by
+      rw [htop]
+      exact Subgroup.mem_top _
+    obtain ⟨s, hsx, hsg⟩ := hmem
+    refine ⟨g * s⁻¹, ?_, ?_⟩
+    · simp only [ψ, MonoidHom.comp_apply, map_mul, map_inv, hsg, mul_inv_cancel]
+    · have hsx' : s⁻¹ • x = x := MulAction.mem_stabilizer_iff.mp (Subgroup.inv_mem _ hsx)
+      change (g * s⁻¹) • x = w
+      rw [mul_smul, hsx', hgw]
+  have ht : ∀ y z : Ω, ∃ g : G, ψ g = 1 ∧ g.val y = z := by
+    intro y z
+    obtain ⟨g₁, hg₁, hy⟩ := hx y
+    obtain ⟨g₂, hg₂, hz⟩ := hx z
+    refine ⟨g₂ * g₁⁻¹, ?_, ?_⟩
+    · simp only [map_mul, map_inv, hg₁, hg₂, inv_one, mul_one]
+    · change g₂.val (g₁.val.symm y) = z
+      rw [← hy, Equiv.symm_apply_apply, hz]
+  exact not_lt_of_ge (GI.AffectThreshold.transitive_kernel_alternating_quotient_bound ψ hψ ht) hlog
 
 /-- The three proper cases of Corollary A.25, each with its quotient map. -/
-theorem physical_support_cases (hcite : GI.Cited.TransitiveAffected)
+theorem physical_support_cases
     (G : Subgroup (Perm Ω)) [MulAction.IsPretransitive G Ω]
     (φ : G →* alternatingGroup Γ) (hφ : Function.Surjective φ)
     (hm : lowIndexThreshold ≤ Fintype.card Γ)
     (hn : Fintype.card Ω < (Fintype.card Γ).choose 3)
-    (hlog : max 8 (2 + Real.logb 2 (Fintype.card Ω)) < (Fintype.card Γ : ℝ)) :
+    (hlog : max 63 (12 * Real.logb 2 (Fintype.card Ω)) < (Fintype.card Γ : ℝ)) :
     Nonempty (KernelQuotient φ Ω Γ) ∨
       Nonempty (KernelQuotient φ Ω (GI.Pairs.OrderedPair Γ)) ∨
       Nonempty (KernelQuotient φ Ω (GI.Johnson.SubsetVertex Γ 2)) := by
@@ -225,7 +215,7 @@ theorem physical_support_cases (hcite : GI.Cited.TransitiveAffected)
     rw [not_nonempty_iff] at hΩ
     haveI : Subsingleton G := ⟨fun g h => Subtype.ext (Subsingleton.elim _ _)⟩
     haveI : Nontrivial (alternatingGroup Γ) :=
-      alternatingGroup.nontrivial_of_three_le_card (by omega)
+      alternatingGroup.nontrivial_of_three_le_card (by rw [Nat.card_eq_fintype_card]; omega)
     obtain ⟨a, b, hab⟩ := exists_pair_ne (alternatingGroup Γ)
     obtain ⟨g, rfl⟩ := hφ a
     obtain ⟨h, rfl⟩ := hφ b
@@ -235,7 +225,7 @@ theorem physical_support_cases (hcite : GI.Cited.TransitiveAffected)
   have hI := (index_stabilizer_map_le G φ hφ x).trans_lt hn
   rcases low_index_classification hm _ hI with htop | ⟨a, ha⟩ | ⟨a, b, hab, hp⟩ |
       ⟨a, b, hab, hs⟩
-  · exact absurd htop (stabilizer_map_ne_top hcite G φ hφ hlog x)
+  · exact absurd htop (stabilizer_map_ne_top G φ hφ hlog x)
   · exact Or.inl ⟨kernelQuotientOfImage φ x a hφ hsource
       (alternating_point_transitive (by omega) a) ha⟩
   · exact Or.inr (Or.inl ⟨kernelQuotientOfImage φ x (⟨(a, b), hab⟩ : GI.Pairs.OrderedPair Γ)
@@ -247,7 +237,7 @@ theorem physical_support_cases (hcite : GI.Cited.TransitiveAffected)
 /-- **Corollary A.25** (Constructive physical support thresholds).
 Let `G ≤ Sym(Ω)` be transitive, `|Ω| = n`, and `φ : G ↠ Alt(Γ)` with
 `m = |Γ| ≥ m₀` (`m₀ = lowIndexThreshold`, the constant of Lemma A.24),
-`K = ker φ`. Suppose `n < C(m,3)` and `m > max {8, 2 + log₂ n}`. Then the
+`K = ker φ`. Suppose `n < C(m,3)` and `m > max {63, 12 log₂ n}`. Then the
 action of `G` on its `K`-orbits is isomorphic to the natural, ordered-pair, or
 unordered-pair action on `Γ`: there is an equivariant surjective quotient map
 from `Ω` whose fibers are exactly the `K`-orbits, all of equal size
@@ -257,17 +247,17 @@ action is possible, so `K` is transitive inside each of its `m` natural
 blocks (the fibers).
 
 Deferred: "the equivariant quotient map is polynomial-time computable". -/
-theorem cor_physical_support_thresholds (hcite : GI.Cited.TransitiveAffected)
+theorem cor_physical_support_thresholds
     (G : Subgroup (Perm Ω)) [MulAction.IsPretransitive G Ω]
     (φ : G →* alternatingGroup Γ) (hφ : Function.Surjective φ)
     (hm : lowIndexThreshold ≤ Fintype.card Γ)
     (hn : Fintype.card Ω < (Fintype.card Γ).choose 3)
-    (hlog : max 8 (2 + Real.logb 2 (Fintype.card Ω)) < (Fintype.card Γ : ℝ)) :
+    (hlog : max 63 (12 * Real.logb 2 (Fintype.card Ω)) < (Fintype.card Γ : ℝ)) :
     (Nonempty (KernelQuotient φ Ω Γ) ∨
       Nonempty (KernelQuotient φ Ω (GI.Pairs.OrderedPair Γ)) ∨
       Nonempty (KernelQuotient φ Ω (GI.Johnson.SubsetVertex Γ 2))) ∧
     (Fintype.card Ω < (Fintype.card Γ).choose 2 → Nonempty (KernelQuotient φ Ω Γ)) := by
-  have hcases := physical_support_cases hcite G φ hφ hm hn hlog
+  have hcases := physical_support_cases G φ hφ hm hn hlog
   refine ⟨hcases, fun hn2 => ?_⟩
   have hm' : 201 ≤ Fintype.card Γ := hm
   -- The ordered and unordered pair actions have degrees `m(m-1)` and `C(m,2)`.
@@ -322,12 +312,12 @@ theorem lem_support_two_orbit_quotient
 hypotheses of Corollary A.25, at every point `x` either `φ(G_x)` is a point
 stabilizer (the support-one alternative), or there is a two-element
 `D ⊆ Γ` for which `φ(G_x)` satisfies (IR1), so Lemma A.26 applies. -/
-theorem par_when_the_hypothesis_occurs (hcite : GI.Cited.TransitiveAffected)
+theorem par_when_the_hypothesis_occurs
     (G : Subgroup (Perm Ω)) [MulAction.IsPretransitive G Ω]
     (φ : G →* alternatingGroup Γ) (hφ : Function.Surjective φ)
     (hm : lowIndexThreshold ≤ Fintype.card Γ)
     (hn : Fintype.card Ω < (Fintype.card Γ).choose 3)
-    (hlog : max 8 (2 + Real.logb 2 (Fintype.card Ω)) < (Fintype.card Γ : ℝ)) (x : Ω) :
+    (hlog : max 63 (12 * Real.logb 2 (Fintype.card Ω)) < (Fintype.card Γ : ℝ)) (x : Ω) :
     (∃ a : Γ, (MulAction.stabilizer G x).map φ = MulAction.stabilizer (alternatingGroup Γ) a) ∨
       ∃ D : Finset Γ, D.card = 2 ∧
         (GI.AlternatingSimple.extend (Finset.univ \ D)).range ≤
@@ -335,7 +325,7 @@ theorem par_when_the_hypothesis_occurs (hcite : GI.Cited.TransitiveAffected)
         (MulAction.stabilizer G x).map φ ≤ MulAction.stabilizer (alternatingGroup Γ) D := by
   have hI := (index_stabilizer_map_le G φ hφ x).trans_lt hn
   rcases low_index_classification hm _ hI with htop | ha | ⟨a, b, hab, hp⟩ | ⟨a, b, hab, hs⟩
-  · exact absurd htop (stabilizer_map_ne_top hcite G φ hφ hlog x)
+  · exact absurd htop (stabilizer_map_ne_top G φ hφ hlog x)
   · exact Or.inl ha
   · refine Or.inr ⟨{a, b}, Finset.card_pair hab, ?_, ?_⟩
     · rw [hp, ← GI.Pairs.complement_alternating_range a b hab]

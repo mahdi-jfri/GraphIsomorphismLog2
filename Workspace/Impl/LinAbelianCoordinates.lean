@@ -1,5 +1,9 @@
-import Workspace.Impl.LinCoordinateUniform
-import Workspace.Impl.LinCoordinateSplit
+module
+
+public import Workspace.Impl.LinCoordinateUniform
+public import Workspace.Impl.LinCoordinateSplit
+
+@[expose] public section
 
 /-! End-to-end assembly of the integer presentation of A/N, from permutation inputs. -/
 namespace GI.Impl

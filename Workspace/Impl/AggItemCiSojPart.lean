@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojComp
+module
+
+public import Workspace.Impl.AggItemCiSojComp
+
+@[expose] public section
 
 /-!
 # The component-partition overcoset item

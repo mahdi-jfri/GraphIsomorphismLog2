@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJPair
+module
+
+public import Workspace.Impl.TermJPair
+
+@[expose] public section
 
 /-!
 # The groups of the `J`-step of Theorem A.23
@@ -230,7 +234,7 @@ theorem tmJ_mem_T [Nonempty I.B] {r : Perm I.B} (hr : r ∈ I.Hb) {σ : Perm (I.
         terminalTransport_eq I.Nb_le I.normalizes (fun h hh i => I.lift_mem hh i)]
     rw [h1]
     exact and_congr_right fun _ => rowAct_eq_iff
-  have hNR : I.Nb ≤ tmRad I := (radicalPreimage_spec I.Nb_le I.normalizes).2.1
+  have hNR : I.Nb ≤ tmRad I := I.Nb_le_rad
   constructor
   · rintro ⟨p, ⟨hp, x, hx, hxr⟩, rfl⟩
     obtain ⟨hG, hxy⟩ := (hex p).1 hp

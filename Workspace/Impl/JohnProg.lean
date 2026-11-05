@@ -1,7 +1,11 @@
-import Workspace.Lang.Lib.Orbit
-import Workspace.Lang.Lib.NatList
-import Workspace.Lang.Lib.Search
-import Workspace.Lang.Lib.Fold
+module
+
+public import Workspace.Lang.Lib.Orbit
+public import Workspace.Lang.Lib.NatList
+public import Workspace.Lang.Lib.Search
+public import Workspace.Lang.Lib.Fold
+
+@[expose] public section
 
 /-!
 # The program for the Johnson identification

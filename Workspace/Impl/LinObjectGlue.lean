@@ -1,6 +1,10 @@
-import Workspace.Impl.LinObjectGlueCore
-import Workspace.Impl.LinObjectCallSteps
-import Workspace.Impl.LinObjectNormalizeBounds
+module
+
+public import Workspace.Impl.LinObjectGlueCore
+public import Workspace.Impl.LinObjectCallSteps
+public import Workspace.Impl.LinObjectNormalizeBounds
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

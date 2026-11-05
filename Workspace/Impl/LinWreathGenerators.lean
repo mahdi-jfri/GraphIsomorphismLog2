@@ -1,4 +1,8 @@
-import Workspace.Impl.LinWreath
+module
+
+public import Workspace.Impl.LinWreath
+
+@[expose] public section
 
 /-! The explicit generating list for the two-copy wreath calculation. -/
 namespace GI.Impl

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinLeftGroup
-import Workspace.Impl.TermRecProgPcs
+module
+
+public import Workspace.Impl.LinLeftGroup
+public import Workspace.Impl.TermRecProgPcs
+
+@[expose] public section
 
 /-! Extend the finite color renaming to a global equivariant embedding. Unused
 classes have a separate tag, so the extension is injective even off the input. -/
@@ -77,7 +81,8 @@ theorem linObjectColor_index {n : ℕ} (Z : List (TmRiO n)) (o : TmRiO n) :
   congr 1
   funext x
   apply Bool.eq_iff_iff.mpr
-  simp only [Function.comp_apply, decide_eq_true_eq, linObjectColorEq, linObjectPair, Prod.mk.injEq]
+  simp only [Function.comp_apply, decide_eq_true_eq]
+  simp only [linObjectColorEq, linObjectPair, Prod.mk.injEq]
 
 theorem linObjectCoded_norm {n : ℕ} (Z : List (TmRiO n)) {o : TmRiO n} (ho : o ∈ Z) :
     (linObjectCoded Z).toFun (tmRiObj o) =

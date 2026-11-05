@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepS1
+module
+
+public import Workspace.Impl.AggRectRepS1
+
+@[expose] public section
 
 /-!
 # Evaluation with a uniform weight bound

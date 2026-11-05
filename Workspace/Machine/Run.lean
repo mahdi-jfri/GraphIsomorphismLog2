@@ -10,7 +10,11 @@ We also prove two facts used later: a returned value has length at most the cost
 that returns it (`GI.Machine.Runs.len_returned_le`), and the registers that a statement never
 writes keep their values (`GI.Machine.Runs.regs_eq_of_not_writes`).
 -/
-import Workspace.Machine.Len
+module
+
+public import Workspace.Machine.Len
+
+@[expose] public section
 
 namespace GI.Machine
 

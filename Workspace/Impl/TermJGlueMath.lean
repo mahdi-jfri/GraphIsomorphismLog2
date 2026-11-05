@@ -1,7 +1,11 @@
-import Workspace.Impl.TermJProgTop
-import Workspace.Impl.TermJOMath
-import Workspace.Impl.TermJAlg
-import Workspace.Impl.TermJLabTr
+module
+
+public import Workspace.Impl.TermJProgTop
+public import Workspace.Impl.TermJOMath
+public import Workspace.Impl.TermJAlg
+public import Workspace.Impl.TermJLabTr
+
+@[expose] public section
 
 /-!
 # Glue of the `J`-step to the row terminal (mathematics)

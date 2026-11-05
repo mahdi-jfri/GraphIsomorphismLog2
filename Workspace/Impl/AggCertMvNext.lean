@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertMvClose
+module
+
+public import Workspace.Impl.AggCertMvClose
+
+@[expose] public section
 
 /-!
 # The move program: the next window call of a round

@@ -1,7 +1,11 @@
-import Workspace.Impl.GenSpecLayout
-import Workspace.Impl.GenCost
-import Workspace.Impl.GenNormPoly
-import Workspace.Assembly.Stage2
+module
+
+public import Workspace.Impl.GenSpecLayout
+public import Workspace.Impl.GenCost
+public import Workspace.Impl.GenNormPoly
+public import Workspace.Assembly.Stage2
+
+@[expose] public section
 
 /-!
 # The work of the general dispatcher fits in `E_N`
@@ -147,7 +151,8 @@ theorem final_modulo_gen (hst : PointwiseStab) (hm : Membership) (hpre : Preimag
 /-- **`final_modulo_gen` with more primitives.** The same, for the primitive table
 `[pst, mem, pre, fac] ++ gsExtra ++ ext`: any list `ext` of further primitives may follow
 `gsExtra`, from index `7` on. -/
-theorem final_modulo_gen_ext (hst : PointwiseStab) (hm : Membership) (hpre : Preimage)
+theorem final_modulo_gen_ext
+    (hst : PointwiseStab) (hm : Membership) (hpre : Preimage)
     (hfac : NormalizedFactor) (hmb : MinimalBlocks) (hO : GroupOrder) (hC : CameronRecognition)
     (ext : List Prim) (row agg : List Expr) (Wr Wa : Node P₀ → ℝ)
     (hrow : (asmRest hst hm hpre hfac (gsWg hst hm hpre hmb hO hC) Wr Wa).iface.RowSpec

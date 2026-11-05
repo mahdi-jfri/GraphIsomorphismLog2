@@ -1,5 +1,9 @@
-import Workspace.Impl.AggRectRepT5
-import Workspace.Impl.AggRectRepFinH
+module
+
+public import Workspace.Impl.AggRectRepT5
+public import Workspace.Impl.AggRectRepFinH
+
+@[expose] public section
 
 /-!
 # The generator lists of the program
@@ -55,15 +59,13 @@ theorem rcR_W01 {W : Finset (Fin q)} (hW : 2 ≤ W.card) :
     rw [this]
     simp only [beq_self_eq_true, Bool.true_and, Bool.not_eq_true', beq_eq_false_iff_ne]
     exact hc0
-  have h1l : rcRW1 (rcRInd W) q < (List.range q).length := List.findIdx_lt_length_of_exists hex1
+  have h1l := List.findIdx_lt_length_of_exists hex1
+  have hp1 := List.findIdx_getElem (w := h1l)
+  change rcRW1 (rcRInd W) q < (List.range q).length at h1l
   rw [List.length_range] at h1l
-  have hp1 := List.findIdx_getElem (w := (by rw [List.length_range]; exact h1l :
-    rcRW1 (rcRInd W) q < (List.range q).length))
   have hp1' : (rcRInd W).getD (rcRW1 (rcRInd W) q) 0 = 1 ∧
       rcRW1 (rcRInd W) q ≠ rcRW0 (rcRInd W) := by
-    simp only [List.getElem_range, Bool.and_eq_true, beq_iff_eq, Bool.not_eq_true',
-      beq_eq_false_iff_ne] at hp1
-    exact hp1
+    simpa [rcRW1] using hp1
   refine ⟨h0l, h1l, h0W, (rcR_ind_getD W ⟨_, h1l⟩).1 hp1'.1, fun h => hp1'.2 h.symm⟩
 
 /-! ### The generator lists -/
@@ -107,7 +109,7 @@ theorem rcR_genLs_eq (W R : Finset (Fin q)) (w₀ w₁ : Fin q) :
       (rcRGens W R w₀ w₁).map fun σ => rcRL fun i => (σ i : ℕ) := by
   classical
   unfold rcRGenLs rcRGens
-  rw [rcR_range_mul, List.map_flatMap, List.map_flatMap, ← List.map_coe_finRange,
+  rw [rcR_range_mul, List.map_flatMap, List.map_flatMap, ← List.map_coe_finRange_eq_range,
     List.flatMap_map]
   refine List.flatMap_congr fun a _ => ?_
   rw [List.map_map, List.map_map, List.map_map]
@@ -119,7 +121,7 @@ theorem rcR_genLs_eq (W R : Finset (Fin q)) (w₀ w₁ : Fin q) :
   have hmod : ((a : ℕ) * q + b) % q = b := by
     rw [Nat.add_comm, Nat.add_mul_mod_self_right, Nat.mod_eq_of_lt b.2]
   unfold rcRGenL
-  rw [hdiv, hmod, ← List.map_coe_finRange, List.map_map]
+  rw [hdiv, hmod, ← List.map_coe_finRange_eq_range, List.map_map]
   refine List.map_congr_left fun j _ => ?_
   simp only [Function.comp_apply]
   unfold rcRGrN

@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojRes
-import Workspace.Impl.AggItemCiSojSpec
-import Workspace.Impl.AggItemCiSojWt
+module
+
+public import Workspace.Impl.AggItemCiSojRes
+public import Workspace.Impl.AggItemCiSojSpec
+public import Workspace.Impl.AggItemCiSojWt
+
+@[expose] public section
 
 /-! # Returning an exact finished first-rectangle item to the aggregation stage -/
 

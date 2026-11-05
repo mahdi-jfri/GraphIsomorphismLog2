@@ -1,9 +1,13 @@
-import Workspace.Impl.CamXOrbits
-import Workspace.Cited.AlgoPermGroups
-import Workspace.AlternatingSimple
+module
+
+public import Workspace.Impl.CamXOrbits
+public import Workspace.Cited.AlgoPermGroups
+public import Workspace.AlternatingSimple
+
+@[expose] public section
 
 /-!
-# The factors of the socle, by chief series and centralizers
+# The factors of the socle, by normal subgroups and centralizers
 
 The main fact is `camX_normal_prod`: for `m ≥ 5`, a subgroup of `camProd e S` that is normalized
 by `camProd e S` is `camProd e T` for some `T ⊆ S`. The proof is the usual one for a power of a
@@ -13,12 +17,8 @@ commutator of `y` with `b` placed in coordinate `i` lies in `K` and lives in coo
 So the elements of `K` that live in coordinate `i` form a nontrivial normal subgroup of `T₀`,
 which is all of `T₀`.
 
-From it we get:
-* `camX_factor_chief_last`: the last nontrivial term of a chief series of `camProd e S` is one
-  factor `camProd e {i}`, because it is a minimal normal subgroup;
-* `camX_centralizer`: the centralizer of the factor `i` in `camProd e S` is `camProd e (S.erase i)`.
-`camX_chief_min` (minimality of the last nontrivial term of a chief series) and
-`camX_normal_prod` are used again in `CamXSocle`.
+From it we get `camX_centralizer`: the centralizer of the factor `i` in `camProd e S` is
+`camProd e (S.erase i)`. `camX_normal_prod` is also used in `CamDirectSocle`.
 -/
 
 namespace GI.Impl
@@ -26,53 +26,6 @@ namespace GI.Impl
 open Equiv GI.Cited
 
 variable {n m k r : ℕ} {e : Fin n ≃ (Fin r → {A : Finset (Fin m) // A.card = k})}
-
-/-! ### Facts on chief series -/
-
-/-- The terms of a chief series of `G` lie in `G`. -/
-theorem camX_chief_le {G : Subgroup (Perm (Fin n))} {Hs : List (Subgroup (Perm (Fin n)))}
-    (hHs : IsChiefSeries G Hs) : ∀ j (hj : j < Hs.length), Hs[j] ≤ G := by
-  obtain ⟨h1, -, -, h4⟩ := hHs
-  intro j
-  induction j with
-  | zero =>
-    intro hj
-    rw [List.head?_eq_getElem?, List.getElem?_eq_getElem hj] at h1
-    exact (Option.some.inj h1).le
-  | succ j ih =>
-    intro hj
-    exact (h4 j hj).1.le.trans (ih (by omega))
-
-/-- The last nontrivial term of a chief series of `G ≠ 1` is a minimal normal subgroup. -/
-theorem camX_chief_min {G : Subgroup (Perm (Fin n))} {Hs : List (Subgroup (Perm (Fin n)))}
-    (hHs : IsChiefSeries G Hs) (hG : G ≠ ⊥) :
-    ∃ M : Subgroup (Perm (Fin n)), Hs[Hs.length - 2]? = some M ∧ M ≤ G ∧ M ≠ ⊥ ∧
-      (∀ x ∈ G, ∀ y ∈ M, x * y * x⁻¹ ∈ M) ∧
-      ∀ N : Subgroup (Perm (Fin n)), N ≤ M → (∀ x ∈ G, ∀ y ∈ N, x * y * x⁻¹ ∈ N) →
-        N = ⊥ ∨ N = M := by
-  have hle := camX_chief_le hHs
-  obtain ⟨h1, h2, h3, h4⟩ := hHs
-  have hlen : 2 ≤ Hs.length := by
-    match Hs, h1, h2 with
-    | [], h1, _ => simp at h1
-    | [a], h1, h2 =>
-      simp only [List.head?_cons, Option.some.injEq] at h1
-      simp only [List.getLast?_singleton, Option.some.injEq] at h2
-      exact absurd (h1.symm.trans h2) hG
-    | _ :: _ :: _, _, _ => simp
-  obtain ⟨j, hj⟩ : ∃ j, Hs.length = j + 2 := ⟨Hs.length - 2, by omega⟩
-  rw [List.getLast?_eq_getElem?, hj, show j + 2 - 1 = j + 1 by omega,
-    List.getElem?_eq_getElem (by omega)] at h2
-  have hb : Hs[j + 1]'(by omega) = ⊥ := Option.some.inj h2
-  have hstep := h4 j (by omega)
-  refine ⟨Hs[j]'(by omega), ?_, hle j (by omega), ?_, h3 _ (List.getElem_mem _), ?_⟩
-  · rw [show Hs.length - 2 = j by omega, List.getElem?_eq_getElem]
-  · rw [← bot_lt_iff_ne_bot, ← hb]
-    exact hstep.1
-  · intro N hN hn
-    rcases hstep.2 N (hb ▸ bot_le) hN hn with h | h
-    · exact Or.inl (h.trans hb)
-    · exact Or.inr h
 
 /-! ### The coordinate products -/
 
@@ -98,7 +51,7 @@ theorem camX_alt_center (hm : 5 ≤ m) {c : Perm (Fin m)} (hc : c ∈ alternatin
     (h : ∀ a ∈ alternatingGroup (Fin m), a * c = c * a) : c = 1 := by
   haveI := GI.AlternatingSimple.isSimple_fin hm
   rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal
-      (Subgroup.center (alternatingGroup (Fin m))) inferInstance with hb | ht
+      (Subgroup.center (alternatingGroup (Fin m))) with hb | ht
   · have hmem : (⟨c, hc⟩ : alternatingGroup (Fin m)) ∈ Subgroup.center _ :=
       Subgroup.mem_center_iff.mpr fun g => Subtype.ext (h g g.2)
     rw [hb, Subgroup.mem_bot] at hmem
@@ -160,7 +113,7 @@ theorem camX_normal_pi (hm : 5 ≤ m) {S : Finset (Fin r)} {K : Subgroup (Fin r 
         rw [← hz]
         exact K.mul_mem (hnorm _ (hsingle b hb) _ hy) (K.inv_mem hy)
       have hLtop : L = ⊤ := by
-        rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal L hLn with hbot | htop
+        rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal L with hbot | htop
         · exfalso
           rw [hbot, Subgroup.mem_bot] at hzL
           have h1 : b * y i * b⁻¹ * (y i)⁻¹ = 1 := congrArg Subtype.val hzL
@@ -229,26 +182,6 @@ theorem camX_prod_ne_bot (hm : 5 ≤ m) (hk1 : 1 ≤ k) (hkm : k < m) (i : Fin r
   have h5 : Nat.factorial 5 ≤ m.factorial := Nat.factorial_le hm
   have : Nat.factorial 5 = 120 := by decide
   omega
-
-theorem camX_factor_chief_last (hm : 5 ≤ m) (hk1 : 1 ≤ k) (hkm : k < m)
-    {S : Finset (Fin r)} (hS : S.Nonempty) {Hs : List (Subgroup (Perm (Fin n)))}
-    (hHs : IsChiefSeries (camProd e S) Hs) :
-    ∃ i ∈ S, Hs[Hs.length - 2]? = some (camProd e {i}) := by
-  obtain ⟨i₀, hi₀⟩ := hS
-  have hne : camProd e S ≠ ⊥ := fun h => camX_prod_ne_bot hm hk1 hkm i₀
-    (le_bot_iff.mp (h ▸ camX_prod_mono (Finset.singleton_subset_iff.mpr hi₀)))
-  obtain ⟨M, hMeq, hMG, hMne, hMn, hMmin⟩ := camX_chief_min hHs hne
-  obtain ⟨T, hTS, rfl⟩ := camX_normal_prod hm hk1 hkm hMG fun x hx y hy => hMn x hx y hy
-  obtain ⟨i, hi⟩ : T.Nonempty := by
-    rw [Finset.nonempty_iff_ne_empty]
-    rintro rfl
-    exact hMne camX_prod_empty
-  refine ⟨i, hTS hi, ?_⟩
-  rw [hMeq]
-  rcases hMmin (camProd e {i}) (camX_prod_mono (Finset.singleton_subset_iff.mpr hi))
-      (camX_prod_normal S {i}) with h | h
-  · exact absurd h (camX_prod_ne_bot hm hk1 hkm i)
-  · rw [h]
 
 /-- A tuple concentrated in coordinate `i`, read through `e`, lies in the factor `i`. -/
 theorem camX_single_mem {i : Fin r} {a : Perm (Fin m)} (ha : a ∈ alternatingGroup (Fin m)) :

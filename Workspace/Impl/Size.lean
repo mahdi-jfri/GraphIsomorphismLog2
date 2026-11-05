@@ -1,5 +1,9 @@
-import Workspace.Impl.Cases
-import Workspace.Lang.Lib.Fold
+module
+
+public import Workspace.Impl.Cases
+public import Workspace.Lang.Lib.Fold
+
+@[expose] public section
 
 /-!
 # The size of the active domain, and the choice of case of `Solve`

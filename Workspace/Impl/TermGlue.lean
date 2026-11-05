@@ -1,5 +1,9 @@
-import Workspace.Impl.TermSplit
-import Workspace.MulticosetSolvable
+module
+
+public import Workspace.Impl.TermSplit
+public import Workspace.MulticosetSolvable
+
+@[expose] public section
 
 /-!
 # The affine glue of Theorem A.20 and the labels of Theorem A.23 (T6, as a hypothesis)
@@ -192,8 +196,8 @@ theorem tmGl_cosetT_eq (r : Perm I.B) :
       (I.typesOf (fun ac => (I.typeCall ac).answer) Sum.inr)).set =
       Iso I.Hb (types I.Nb (rowTuple I.e S.x)) (types I.Nb (rowTuple I.e S.y)) := by
     rw [hX, hY, radicalTransport_set I.Nb_le I.normalizes (fixes_types _ _) (fixes_types _ _)]
-  have hRH : tmRad I ≤ I.Hb := (radicalPreimage_spec I.Nb_le I.normalizes).1
-  have hNR : I.Nb ≤ tmRad I := (radicalPreimage_spec I.Nb_le I.normalizes).2.1
+  have hRH : tmRad I ≤ I.Hb := I.rad_le
+  have hNR : I.Nb ≤ tmRad I := I.Nb_le_rad
   -- the coordinate at `i0` is `h μ_{i0}`, and `μ_{i0} ∈ N`, normal in `H`, lies in `R`
   have hi0 : ∀ {h : Perm I.B} {μ : Fin L.q → Perm I.B}, h ∈ I.Hb → μ I.i0 ∈ I.Nb →
       ((∃ x ∈ tmRad I, (rowLift I.e I.i0 h * μ) I.i0 = x * r) ↔ ∃ x ∈ tmRad I, h = x * r) := by
@@ -240,7 +244,10 @@ variable (Pg : Program)
 def TermGlueObjSpec (K D g : ℕ) : Prop :=
   ∀ {n : ℕ} (σH σN σA : List (Perm (Fin n))) (X Y : List (ℕ × List (Perm (Fin n)) × Perm (Fin n)))
     (σB : List (Perm (Fin n))) (τ : Perm (Fin n)),
-    IsSolvable (gens σH) → gens σN ≤ gens σA → gens σA ≤ gens σH →
+    (∀ [((gens σN).subgroupOf (gens σH)).Normal],
+      IsSolvable ((gens σH) ⧸ (gens σN).subgroupOf (gens σH))) →
+    (∀ o ∈ X ++ Y, gens (o.2.1.map fun x => o.2.2⁻¹ * x * o.2.2⁻¹⁻¹) ≤ gens σH) →
+    gens σN ≤ gens σA → gens σA ≤ gens σH →
     GI.Multicoset.Normalizes (gens σH) (gens σN) → GI.Multicoset.Normalizes (gens σH) (gens σA) →
     (∀ a ∈ gens σA, ∀ b ∈ gens σA, a * b * a⁻¹ * b⁻¹ ∈ gens σN) →
     Fixes (gens σN) (tmGlMs X) → Fixes (gens σN) (tmGlMs Y) →
@@ -285,13 +292,18 @@ def TermGlueLabSpec (K D g : ℕ) : Prop :=
         us (tmTests L.q) →
       List.Forall₂ (fun v ij => AnsC (Equiv.refl (Fin m)) v (tmCosetState S E σH ij).answer)
         vs (tmCosets L.q) →
-      ∀ r : Perm (Fin m), r ∈ ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα).Hb →
+      ∀ (R' : Subgroup (Perm (Fin m)))
+        (hRH : R' ≤ (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Hb)
+        (hNR : (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ≤ R')
+        (hsolv : ∃ ℓ, GI.Multicoset.relDerived R' (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ℓ ≤
+          (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb),
+      ∀ r : Perm (Fin m), r ∈ ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv).Hb →
       ∀ w : Val, AnsC (Equiv.refl (Fin m)) w
-        (tmGlRes ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα) r) →
+        (tmGlRes ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv) r) →
       FunAll Pg g (.list [(.list [.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
           encFun (rowLab e L.con.blocks)], .list us, .list vs]), encPerm r, w])
         (fun u cost => AnsC (Equiv.refl (Fin m)) u
-            (tmGlLab ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα) r) ∧
+            (tmGlLab ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv) r) ∧
           cost ≤ K * ((Val.list [(.list [.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
             encFun (rowLab e L.con.blocks)], .list us, .list vs]), encPerm r, w]).wt + 1) ^ D)
 

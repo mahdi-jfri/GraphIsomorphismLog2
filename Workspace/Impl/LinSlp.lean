@@ -1,4 +1,8 @@
-import Workspace.Cited.AlgoTerminal
+module
+
+public import Workspace.Cited.AlgoTerminal
+
+@[expose] public section
 
 /-! Straight-line programs in the abelian-coordinate construction of Theorem A.20.
 The homomorphism law justifies replacing generators of N by zero. This file proves
@@ -61,8 +65,8 @@ theorem linSlpEntries_map {G H : Type*} [Group G] [Group H] (f : G →* H)
     simp only [linSlpEntries, linSlpStep_map]
     cases hs : linSlpStep gs acc ins with
     | none => rfl
-    | some g => simpa only [Option.map_some, Option.bind_some, List.map_append,
-        List.map_cons, List.map_nil] using ih (acc ++ [g])
+    | some g => simpa only [Option.map_some, Option.bind_some, bind,
+        List.map_append, List.map_cons, List.map_nil] using ih (acc ++ [g])
 
 /-- The empty program denotes the identity, as in the cited task. -/
 def linSlpValue {G : Type*} [Group G] (gs : List G) (prog : List SlpInstr) : Option G :=
@@ -146,7 +150,7 @@ theorem linSlpEntries_refs {G : Type*} [Group G] {gs : List G} (prog : List SlpI
       | none => simp [linSlpEntries, hx] at h
       | some x => exact ⟨x, rfl⟩
     have he : linSlpEntries gs prog (acc ++ [x]) = some es := by
-      simpa only [linSlpEntries, hx, Option.bind_some] using h
+      simpa only [linSlpEntries, hx, Option.bind_some, bind] using h
     obtain ⟨hl, hr⟩ := ih (acc ++ [x]) he
     constructor
     · simp only [List.length_append, List.length_cons, List.length_nil] at *

@@ -1,5 +1,9 @@
-import Workspace.NaturalCoordinatesGiant
-import Workspace.AlternatingImprimitiveBudget
+module
+
+public import Workspace.NaturalCoordinatesGiant
+public import Workspace.AlternatingImprimitiveBudget
+
+@[expose] public section
 
 namespace GI.BudgetInduction
 

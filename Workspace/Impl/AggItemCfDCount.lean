@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCfDMath
-import Workspace.Lang.Lib.OrbitT
+module
+
+public import Workspace.Impl.AggItemCfDMath
+public import Workspace.Lang.Lib.OrbitT
+
+@[expose] public section
 
 /-!
 # Counting colors by their encoded weight

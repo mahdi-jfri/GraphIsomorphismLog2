@@ -1,6 +1,10 @@
-import Workspace.Impl.LinWreathGroup
-import Workspace.Impl.LinSumPerm
-import Workspace.Impl.LinSwapPerm
+module
+
+public import Workspace.Impl.LinWreathGroup
+public import Workspace.Impl.LinSumPerm
+public import Workspace.Impl.LinSwapPerm
+
+@[expose] public section
 
 /-! The numbered cover generators as explicit disjoint permutation tables. -/
 namespace GI.Impl

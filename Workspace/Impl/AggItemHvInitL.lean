@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemHvInitB
+module
+
+public import Workspace.Impl.AggItemHvInitB
+
+@[expose] public section
 
 /-!
 # Case 2a: the init program as one list

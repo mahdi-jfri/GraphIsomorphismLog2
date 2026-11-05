@@ -1,5 +1,9 @@
-import Workspace.Proved.VsTCyc
-import Workspace.Proved.VsFAlgPiece
+module
+
+public import Workspace.Proved.VsTCyc
+public import Workspace.Proved.VsFAlgPiece
+
+@[expose] public section
 
 /-!
 # Step 1 of LM Proposition 5.12 without irreducibility
@@ -65,7 +69,7 @@ theorem vsT_conj_mem {G A : Subgroup (End (ZMod p) V)ˣ} (hA : VsTAbNormal G A)
 theorem vsTAlg_comm {A : Subgroup (End (ZMod p) V)ˣ} (hA : ∀ a ∈ A, ∀ b ∈ A, a * b = b * a) :
     ∀ x ∈ vsTAlg A, ∀ y ∈ vsTAlg A, Commute x y := by
   haveI : IsMulCommutative (vsTAlg A) :=
-    Algebra.isMulCommutative_adjoin (ZMod p) (vsTSet_comm hA)
+    Algebra.isMulCommutative_adjoin (ZMod p) (fun x hx y hy _ => vsTSet_comm hA x hx y hy)
   intro x hx y hy
   have h : (⟨x, hx⟩ : vsTAlg A) * ⟨y, hy⟩ = ⟨y, hy⟩ * ⟨x, hx⟩ :=
     IsMulCommutative.is_comm.comm _ _

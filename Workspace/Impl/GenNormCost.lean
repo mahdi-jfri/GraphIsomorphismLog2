@@ -1,6 +1,10 @@
-import Workspace.Impl.GenNormIncProg
-import Workspace.Impl.GenNormOrbit
-import Workspace.Impl.GenCost
+module
+
+public import Workspace.Impl.GenNormIncProg
+public import Workspace.Impl.GenNormOrbit
+public import Workspace.Impl.GenCost
+
+@[expose] public section
 
 /-!
 # The incidence-test budget

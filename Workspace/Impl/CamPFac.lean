@@ -1,6 +1,10 @@
-import Workspace.Impl.CamPCol
-import Workspace.Impl.CamPLoopMath
-import Workspace.Impl.CamCombine
+module
+
+public import Workspace.Impl.CamPCol
+public import Workspace.Impl.CamPLoopMath
+public import Workspace.Impl.CamCombine
+
+@[expose] public section
 
 /-!
 # Steps 7–8 of `camProg`: the coordinate of one factor, from the factor alone
@@ -18,7 +22,7 @@ The output `CamFacOut` is what `cam_combine` needs about the factor.
 
 namespace GI.Impl
 
-open GI.Lang GI.Cited Equiv
+open GI.Lang GI.Cited GI.Proved Equiv
 open GI.Machine (BinOp len len_le_self)
 
 variable {n m k r : ℕ}
@@ -36,15 +40,15 @@ def camFacFuns (b jj jq : ℕ) : List Expr :=
   [camFacBody b] ++ camRestrFuns (b + 1) ++ camColFuns (b + 64) jj jq
 
 structure CamFacAt (P : Program) (b jj jq : ℕ) (hj : JohnsonIdentification)
-    (hqc : QuotientCentralizer) : Prop where
+    (hqc : GMPNormalCentralizer) : Prop where
   body : P.funs[b]? = some (camFacBody b)
   restr : CamRestrAt P (b + 1)
   col : CamColAt P (b + 64) jj jq hj hqc
 
 theorem camFacAt_of {P : Program} {b jj jq : ℕ} {hj : JohnsonIdentification}
-    {hqc : QuotientCentralizer} (h : P.HasAt b (camFacFuns b jj jq))
+    {hqc : GMPNormalCentralizer} (h : P.HasAt b (camFacFuns b jj jq))
     (pj : P.prims[jj]? = some (johnsonPrim hj))
-    (pq : P.prims[jq]? = some (quotientCentralizerPrim hqc)) : CamFacAt P b jj jq hj hqc := by
+    (pq : P.prims[jq]? = some (gmpNormalCentralizerPrim hqc)) : CamFacAt P b jj jq hj hqc := by
   simp only [camFacFuns] at h
   exact ⟨h.left.left.single, camRestrAt_of h.left.right,
     camColAt_of (by simpa [length_camRestrFuns, Nat.add_assoc] using h.right) pj pq⟩
@@ -70,7 +74,7 @@ theorem cam_boundSize_mono (p : Prim) {B B' : ℕ} (h : B ≤ B') : p.boundSize 
   Nat.mul_le_mul_left _ (Nat.pow_le_pow_left (by omega) _)
 
 /-- **The coordinate of one factor.** -/
-theorem camFac_spec {hj : JohnsonIdentification} {hqc : QuotientCentralizer} {P : Program}
+theorem camFac_spec {hj : JohnsonIdentification} {hqc : GMPNormalCentralizer} {P : Program}
     {b jj jq : ℕ} (hP : CamFacAt P b jj jq hj hqc)
     (e : Fin n ≃ (Fin r → {A : Finset (Fin m) // A.card = k})) (hn : 0 < n)
     (h5 : 5 ≤ m) (hk1 : 1 ≤ k) (hk : 2 * k < m) (hb : (k + 1) ^ 2 < m + 2) (hmn : m ≤ n)
@@ -81,7 +85,7 @@ theorem camFac_spec {hj : JohnsonIdentification} {hqc : QuotientCentralizer} {P 
       (fun v cost => CamFacOut e i ⟨0, hn⟩ v ∧
         cost ≤ (johnsonPrim hj).boundSize (camFacB ((Val.list [.list [encGroup ns,
             encGroup ([] : List (Perm (Fin n))), .nat m, .nat k], encGroup ts]).wt + 1)) +
-          (quotientCentralizerPrim hqc).boundSize (camFacB ((Val.list [.list [encGroup ns,
+          (gmpNormalCentralizerPrim hqc).boundSize (camFacB ((Val.list [.list [encGroup ns,
             encGroup ([] : List (Perm (Fin n))), .nat m, .nat k], encGroup ts]).wt + 1)) +
           camFacK * ((Val.list [.list [encGroup ns, encGroup ([] : List (Perm (Fin n))), .nat m,
             .nat k], encGroup ts]).wt + 1) ^ 30) := by
@@ -175,7 +179,7 @@ theorem camFac_spec {hj : JohnsonIdentification} {hqc : QuotientCentralizer} {P 
     have hW' : (Val.list [cx, A]).wt + 1 ≤ 811 * Z ^ 2 := by omega
     have hB1 := cam_boundSize_mono (johnsonPrim hj) (show 10 * ((Val.list [cx, A]).wt + 1) ≤
       camFacB Z by unfold camFacB; omega)
-    have hB2 := cam_boundSize_mono (quotientCentralizerPrim hqc) (show 10 * ((Val.list [cx, A]).wt + 1) ≤
+    have hB2 := cam_boundSize_mono (gmpNormalCentralizerPrim hqc) (show 10 * ((Val.list [cx, A]).wt + 1) ≤
       camFacB Z by unfold camFacB; omega)
     have hC15 : ((Val.list [cx, A]).wt + 1) ^ 15 ≤ 811 ^ 15 * Z ^ 30 := by
       calc ((Val.list [cx, A]).wt + 1) ^ 15 ≤ (811 * Z ^ 2) ^ 15 := Nat.pow_le_pow_left hW' 15

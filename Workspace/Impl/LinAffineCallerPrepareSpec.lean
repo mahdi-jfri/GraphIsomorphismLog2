@@ -1,4 +1,8 @@
-import Workspace.Impl.LinAffineCallerPrep
+module
+
+public import Workspace.Impl.LinAffineCallerPrep
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

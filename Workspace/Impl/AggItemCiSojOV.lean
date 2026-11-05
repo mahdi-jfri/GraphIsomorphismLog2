@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojGB
-import Workspace.Impl.AggLiftChild
+module
+
+public import Workspace.Impl.AggItemCiSojGB
+public import Workspace.Impl.AggLiftChild
+
+@[expose] public section
 
 /-!
 # Encoding the full-label rectangle overcosets

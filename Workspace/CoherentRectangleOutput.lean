@@ -1,4 +1,8 @@
-import Workspace.CoherentMixedRectangle
+module
+
+public import Workspace.CoherentMixedRectangle
+
+@[expose] public section
 
 namespace GI.CoherentEntrance
 
@@ -74,7 +78,3 @@ theorem fiberMatrix_transport (c : Coloring n) (source target : Bool)
   rw [h w.val r.val]
 
 end GI.CoherentEntrance
-
-#print axioms GI.CoherentEntrance.dominant_rectangle_output
-#print axioms GI.CoherentEntrance.fiberTransport
-#print axioms GI.CoherentEntrance.fiberMatrix_transport

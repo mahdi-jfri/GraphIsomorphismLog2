@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojGM
+module
+
+public import Workspace.Impl.AggItemCiSojGM
+
+@[expose] public section
 
 /-!
 # Preserving the degree field when projecting an encoded group

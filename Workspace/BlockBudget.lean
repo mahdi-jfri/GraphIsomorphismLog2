@@ -1,6 +1,10 @@
-import Workspace.OrbitLocalization
-import Mathlib.Algebra.Group.Action.End
-import Mathlib.GroupTheory.Subgroup.Center
+module
+
+public import Workspace.OrbitLocalization
+public import Mathlib.Algebra.Group.Action.End
+public import Mathlib.GroupTheory.Subgroup.Center
+
+@[expose] public section
 
 open scoped commutatorElement
 

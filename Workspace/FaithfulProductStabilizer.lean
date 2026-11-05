@@ -1,6 +1,10 @@
-import Workspace.CoordinateFactors
-import Mathlib.GroupTheory.GroupAction.Quotient
-import Mathlib.GroupTheory.Index
+module
+
+public import Workspace.CoordinateFactors
+public import Mathlib.GroupTheory.GroupAction.Quotient
+public import Mathlib.GroupTheory.Index
+
+@[expose] public section
 
 namespace GI.PrimitiveProducts
 
@@ -55,7 +59,3 @@ theorem stabilizer_noFullFactors [Nontrivial S] [MulAction (I → S) V]
   exact hs (by simpa only [Pi.mulSingle_eq_same, Pi.one_apply] using he)
 
 end GI.PrimitiveProducts
-
-#print axioms GI.PrimitiveProducts.normal_le_stabilizer_eq_bot
-#print axioms GI.PrimitiveProducts.coordinateFactor_normal
-#print axioms GI.PrimitiveProducts.stabilizer_noFullFactors

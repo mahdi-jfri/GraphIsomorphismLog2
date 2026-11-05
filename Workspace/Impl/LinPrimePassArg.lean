@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimePassSuccess
+module
+
+public import Workspace.Impl.LinPrimePassSuccess
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

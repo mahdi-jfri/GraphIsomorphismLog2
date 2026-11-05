@@ -1,4 +1,8 @@
-import Workspace.Impl.AggSpecDefs
+module
+
+public import Workspace.Impl.AggSpecDefs
+
+@[expose] public section
 
 /-!
 # The run of a round when the overcosets are known up to coset

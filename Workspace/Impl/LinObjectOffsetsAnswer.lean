@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectOffsetsCost
-import Workspace.Impl.LinObjectLiftAnswer
+module
+
+public import Workspace.Impl.LinObjectOffsetsCost
+public import Workspace.Impl.LinObjectLiftAnswer
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -37,7 +41,8 @@ theorem linObjectOffsetsOut_of_rows {n : ℕ} {Q : Type*} [CommGroup Q]
   have hh := hgs.get i.isLt j.isLt
   let a : gens as := ⟨gs.get j, hh.1⟩
   refine ⟨a, hh.2, ?_⟩
-  rw [(linObjectUnflatten refs.length as.length).apply_symm_apply]
+  set_option backward.isDefEq.respectTransparency false in
+    rw [(linObjectUnflatten refs.length as.length).apply_symm_apply]
   have hm := congrArg Additive.ofMul (hM j)
   change linObjectLiftCoord as π (M j) = Additive.ofMul (π a)
   change linObjectLiftCoord as π (M j) = Additive.ofMul (π (linIntoSubgroup (gens as) (gs.get j))) at hm

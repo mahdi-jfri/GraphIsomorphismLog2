@@ -1,4 +1,8 @@
-import Workspace.Impl.LinActionRestrict
+module
+
+public import Workspace.Impl.LinActionRestrict
+
+@[expose] public section
 
 /-! A dictionary computed in the old cover is exactly the dictionary for
 the restricted subgroup action, with the same full affine coordinates. -/
@@ -60,7 +64,7 @@ theorem linActionRestrict_new_spec (h : ConstructiveMembership) {P : Program} {b
   have hmem : ∀ g ∈ hs, g ∈ gens gs := fun g hg => hle (Subgroup.subset_closure hg)
   have he := linIntoSubgroup_map (gens gs) hs hmem
   have he' : (hs.map (linIntoSubgroup (gens gs))).map (fun g => encPerm g.val) = hs.map encPerm := by
-    simpa only [List.map_map, Function.comp_def] using congrArg (List.map encPerm) he
+    simpa only [List.map_map, Function.comp_def, Subgroup.subtype_apply] using congrArg (List.map encPerm) he
   have hh := linActionRestrict_spec h hp gs m hm ρ c hc (hs.map (linIntoSubgroup (gens gs)))
   change FunDet P b (.list [linActionContext gs m ρ c,
     .list ((hs.map (linIntoSubgroup (gens gs))).map fun g => encPerm g.val)])

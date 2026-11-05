@@ -1,5 +1,9 @@
-import Workspace.CleanComplementLocal
-import Workspace.CleanComplementSplit
+module
+
+public import Workspace.CleanComplementLocal
+public import Workspace.CleanComplementSplit
+
+@[expose] public section
 
 /-! Transport the supplied group and block action along actual coordinates. -/
 namespace GI.CleanBlockAction
@@ -25,6 +29,8 @@ def relabel : CleanBlockAction (relabeledGroup (G := G) e) I where
     intro g x
     have h := A.action ((relabelEquiv (G := G) e).symm g) (e.symm x)
     change A.label (e.symm (g.val (e (e.symm x)))) = _ at h
+    change A.label (e.symm (g.val x)) =
+      (A.top ((relabelEquiv (G := G) e).symm g)).val (A.label (e.symm x))
     simpa only [e.apply_symm_apply] using h
 
 theorem relabel_top (g : G) : (A.relabel e).top (relabelEquiv (G := G) e g) = A.top g := by

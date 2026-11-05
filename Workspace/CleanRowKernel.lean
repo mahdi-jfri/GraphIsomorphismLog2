@@ -1,5 +1,9 @@
-import Workspace.CleanComplementLinear
-import Workspace.RowSemidirect
+module
+
+public import Workspace.CleanComplementLinear
+public import Workspace.RowSemidirect
+
+@[expose] public section
 
 /-! Identify the actual kernel in clean coordinates with a subgroup of row
 permutations, and derive alternating invariance from the clean section. -/

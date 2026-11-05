@@ -1,4 +1,8 @@
-import Workspace.Impl.SSOrderProg
+module
+
+public import Workspace.Impl.SSOrderProg
+
+@[expose] public section
 
 /-!
 # The order of a group

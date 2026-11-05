@@ -1,6 +1,10 @@
-import Workspace.PrimitiveUniformCoordinates
-import Workspace.FiniteCartesianWitness
-import Workspace.BudgetInductionAlternatives
+module
+
+public import Workspace.PrimitiveUniformCoordinates
+public import Workspace.FiniteCartesianWitness
+public import Workspace.BudgetInductionAlternatives
+
+@[expose] public section
 
 namespace GI.BudgetInduction
 
@@ -51,6 +55,3 @@ theorem unsupported_minimalNormal_projections_surjective
     radicalFree N hN a factorCount i hproper)
 
 end GI.BudgetInduction
-
-#print axioms GI.BudgetInduction.cartesian_alternative_of_minimalNormal_proper_projection
-#print axioms GI.BudgetInduction.unsupported_minimalNormal_projections_surjective

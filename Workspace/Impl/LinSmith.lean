@@ -1,4 +1,8 @@
-import Workspace.Impl.LinSolve
+module
+
+public import Workspace.Impl.LinSolve
+
+@[expose] public section
 
 /-! Relation tests and explicit integer lifts from the Smith multipliers.
 The invariant factors are the positive diagonal entries, with the divisibility

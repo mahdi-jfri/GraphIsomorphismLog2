@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabPRelM
-import Workspace.Impl.LabelLift
+module
+
+public import Workspace.Impl.TermGlueLabPRelM
+public import Workspace.Impl.LabelLift
+
+@[expose] public section
 
 /-!
 # Reading `N`-transporters from the stored coset table: the program

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinWreathVector
-import Workspace.Impl.LinTabulate
+module
+
+public import Workspace.Impl.LinWreathVector
+public import Workspace.Impl.LinTabulate
+
+@[expose] public section
 
 /-! Restrict a swapping cover permutation to its first-to-second copy map. -/
 namespace GI.Impl

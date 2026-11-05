@@ -1,4 +1,8 @@
-import Workspace.Impl.VsBFld0T
+module
+
+public import Workspace.Impl.VsBFld0T
+
+@[expose] public section
 
 /-!
 # The λ-descent and the point `m` in the case `T = 0`
@@ -64,10 +68,10 @@ theorem vsB_descA {P : Program} {dA bA sotA cmp phi jp jm Cφ S Tm : ℕ}
     (enc := vsBEncU s) hl hO hQ1 hW hWe hT
     (Ctk := 10 ^ 18 * S ^ 7)
     (fun q hq τ' => (vsB_tkA_spec hA hS hs hD (pp := q) (by
-      have := List.mem_range.mp hq; simp [vsBPs] at this; omega) τ').mono (by
+      have := List.mem_range.mp hq; omega) τ').mono (by
       have w := wt_list3_le (vsBCtxA s hD) (.nat q) (vsBEncU s τ')
       have := vsB_wt_ctxA hS hs hD; have := hWe τ'; have := wt_nat_le q
-      have : q < I.n + 1 := by have := List.mem_range.mp hq; simp [vsBPs] at this; omega
+      have : q < I.n + 1 := by have := List.mem_range.mp hq; omega
       have h13 : S ≤ S ^ 3 := Nat.le_self_pow (by norm_num) _
       have h37 : S ^ 3 ≤ S ^ 7 := Nat.pow_le_pow_right hS1 (by norm_num)
       omega))

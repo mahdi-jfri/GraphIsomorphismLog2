@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemSrcP
+module
+
+public import Workspace.Impl.AggItemSrcP
+
+@[expose] public section
 
 /-!
 # The structure step of the items
@@ -101,7 +105,7 @@ theorem it_str_spec (hk : GI.Cited.KaryRefinement P₀.κ) (hst : PointwiseStab)
   haveI := Ag.fin
   letI : Fintype S.dom := Fintype.ofFinite _
   letI : DecidableEq S.dom := Classical.decEq _
-  have hq16 : 16 ≤ L.q := by have := it_q_large Ag; have := Ag.κ_five; omega
+  have hq24 : 24 ≤ L.q := by have := it_q_large Ag; have := Ag.params.κ_seven; omega
   set st := itSt sv k L.q ps fx fy O.tuples (itCr Ag.fin S Ag.πd P₀.κ) with hstd
   have hst' : st = itSt sv k L.q ps fx fy O.tuples
       (stCr S Ag.πd P₀.κ (dstr S S.x) (dstr S S.y)) := rfl
@@ -138,7 +142,7 @@ theorem it_str_spec (hk : GI.Cited.KaryRefinement P₀.κ) (hst : PointwiseStab)
     have dcs := Det.call (Det.var' (P := P) (env := [st, wv]) (i := 0) rfl) hcs
     -- the source tuple
     have hsp2 := it_srcp_spec hsp hgrp hrb hmp' hsf happ hdom horb hrb hfd hpd hcnt hs2b hrep hs3
-      hpw hfs hsp' hdes hdc hrb sv ps fx fy O.tuples (itCr Ag.fin S Ag.πd P₀.κ) d d' hd hd' hq16
+      hpw hfs hsp' hdes hdc hrb sv ps fx fy O.tuples (itCr Ag.fin S Ag.πd P₀.κ) d d' hd hd' hq24
       (W := M) hM
     have dsp := Det.call (Det.mk3 (Det.var' (P := P) (env := [st, wv, cv]) (i := 0) rfl)
       (Det.var' (i := 1) rfl) (Det.var' (i := 2) rfl)) hsp2

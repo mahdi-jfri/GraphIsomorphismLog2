@@ -1,6 +1,10 @@
-import Workspace.Localization
-import Mathlib.GroupTheory.GroupAction.Basic
-import Mathlib.Data.Fintype.List
+module
+
+public import Workspace.Localization
+public import Mathlib.GroupTheory.GroupAction.Basic
+public import Mathlib.Data.Fintype.List
+
+@[expose] public section
 
 namespace GI
 

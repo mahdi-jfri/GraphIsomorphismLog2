@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCfDCount
-import Workspace.Impl.AggStructDesCol
+module
+
+public import Workspace.Impl.AggItemCfDCount
+public import Workspace.Impl.AggStructDesCol
+
+@[expose] public section
 
 /-! Tuple lookup with arbitrary colors. Only the number of entries and
 label bounds are used. The colors are charged by their encoded weights. -/

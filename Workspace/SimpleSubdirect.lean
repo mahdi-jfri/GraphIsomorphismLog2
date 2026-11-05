@@ -1,6 +1,10 @@
-import Mathlib.GroupTheory.Goursat
-import Mathlib.GroupTheory.Subgroup.Simple
-import Workspace.RadicalSocleStructure
+module
+
+public import Mathlib.GroupTheory.Goursat
+public import Mathlib.GroupTheory.Subgroup.Simple
+public import Workspace.RadicalSocleStructure
+
+@[expose] public section
 
 namespace GI.PrimitiveProducts
 
@@ -83,10 +87,3 @@ theorem simple_center_eq_bot [IsSimpleGroup S]
     exact (hxy ((Subgroup.mem_center_iff.mp hy) x)).elim
 
 end GI.PrimitiveProducts
-
-#print axioms GI.PrimitiveProducts.eq_top_of_goursatFst_eq_top
-#print axioms GI.PrimitiveProducts.eq_top_of_goursatSnd_eq_top
-#print axioms GI.PrimitiveProducts.fst_injective_of_goursatSnd_eq_bot
-#print axioms GI.PrimitiveProducts.snd_injective_of_goursatFst_eq_bot
-#print axioms GI.PrimitiveProducts.simple_subdirect_eq_top_or_graph
-#print axioms GI.PrimitiveProducts.simple_center_eq_bot

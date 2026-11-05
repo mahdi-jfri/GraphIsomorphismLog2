@@ -1,4 +1,8 @@
-import Workspace.Impl.LinIntSlpStep
+module
+
+public import Workspace.Impl.LinIntSlpStep
+
+@[expose] public section
 
 /-! Prefix traces and uniform size bounds for exponent-vector evaluation. -/
 namespace GI.Impl

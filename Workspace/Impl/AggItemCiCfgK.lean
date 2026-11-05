@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgL
+module
+
+public import Workspace.Impl.AggItemCiCfgL
+
+@[expose] public section
 
 /-!
 # The configuration branch: the color codes
@@ -241,7 +245,7 @@ theorem itcq_cds_spec {fpc fb fe fcd mb : ℕ} (hfp : P.funs[fpc]? = some itcqPc
     omega)
   simp only [List.length_map, List.length_finRange] at hout
   have hw' : w.wt ≤ 2 * (m * (W + 2)) + m + 4 := by
-    rw [hw]; unfold natList at hout; simpa [List.map_map] using hout
+    rw [hw]; unfold natList at hout; rw [List.map_map] at hout; exact hout
   have := Nat.mul_le_mul_left (mapK * (m + 1))
     (show (Val.list [c, natList (List.range m)]).wt + w.wt + 1 ≤ W + w.wt + 1 by omega)
   refine itcq_cds_arith hmw hw' ((hc.trans (Nat.add_le_add_left this _)).trans ?_)

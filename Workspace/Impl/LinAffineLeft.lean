@@ -1,7 +1,11 @@
-import Workspace.Impl.LinAffineCoset
-import Workspace.Impl.LinMapSource
-import Workspace.Impl.GenNormGlue
-import Workspace.Lang.Prims.BlockHom
+module
+
+public import Workspace.Impl.LinAffineCoset
+public import Workspace.Impl.LinMapSource
+public import Workspace.Impl.GenNormGlue
+public import Workspace.Lang.Prims.BlockHom
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

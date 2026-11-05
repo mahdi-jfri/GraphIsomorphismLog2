@@ -1,5 +1,9 @@
-import Workspace.Impl.SCosBigMath3
-import Workspace.Impl.SCosPaste5
+module
+
+public import Workspace.Impl.SCosBigMath3
+public import Workspace.Impl.SCosPaste5
+
+@[expose] public section
 
 /-!
 # Function 5 (`bigF`), the tools

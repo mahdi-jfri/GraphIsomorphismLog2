@@ -1,8 +1,12 @@
-import Workspace.Impl.TermGlueLabNM5
-import Workspace.Impl.LinAbelianCoordinates
-import Workspace.Impl.TermGlueLabQ
-import Workspace.Impl.TermGlueLabPInv
-import Workspace.Impl.TermGlueLabPPoly
+module
+
+public import Workspace.Impl.TermGlueLabNM5
+public import Workspace.Impl.LinAbelianCoordinates
+public import Workspace.Impl.TermGlueLabQ
+public import Workspace.Impl.TermGlueLabPInv
+public import Workspace.Impl.TermGlueLabPPoly
+
+@[expose] public section
 
 /-!
 # The label driver: the setup module of step 5

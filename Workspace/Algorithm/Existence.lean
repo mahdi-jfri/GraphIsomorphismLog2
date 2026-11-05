@@ -1,10 +1,14 @@
-import Workspace.Algorithm.PhaseTree
-import Workspace.Algorithm.DispatchInv
-import Workspace.Algorithm.DispatchKeep
-import Workspace.Algorithm.Counter
-import Workspace.Algorithm.LabelData
-import Workspace.Algorithm.CarrierSet
-import Workspace.Algorithm.OrbitKeep
+module
+
+public import Workspace.Algorithm.PhaseTree
+public import Workspace.Algorithm.DispatchInv
+public import Workspace.Algorithm.DispatchKeep
+public import Workspace.Algorithm.Counter
+public import Workspace.Algorithm.LabelData
+public import Workspace.Algorithm.CarrierSet
+public import Workspace.Algorithm.OrbitKeep
+
+@[expose] public section
 
 /-!
 # Every state has a run (termination of the recursion)
@@ -35,8 +39,7 @@ action, with upper-bound ratios and clamped bounds):
 The initial hierarchy of a fresh phase is not assumed: the hierarchy of all original orbits
 (`orbitHier`, `exists_orbitHier`) is used. Every step of the recursion keeps the invariant
 (`HierInv.mono`, `DispatchStep.hierInv`, `HierInv.capUpdate`), so a `Supply` only needs data on
-invariant states. Before, `Supply` asked for case data on every state, and it was empty
-(`Workspace/Algorithm/SupplyCheck.lean`).
+invariant states.
 
 The counter `h ≥ 1` at a column step is not assumed: it is proved from the invariant
 `CounterInv` of the state (`column_step_counter`, Section 7.1 and Lemma A.29).

@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemS2b
-import Workspace.Impl.AggItemSrc
-import Workspace.Impl.AggItemCol
+module
+
+public import Workspace.Impl.AggItemS2b
+public import Workspace.Impl.AggItemSrc
+public import Workspace.Impl.AggItemCol
+
+@[expose] public section
 
 /-!
 # The source tuple of the round, as a program
@@ -33,7 +37,7 @@ variable {Ω C : Type} {k : ℕ}
 noncomputable def itSrcOf {q κ : ℕ} (H : Subgroup (Perm (Fin q))) (d : (Fin κ → Fin q) → ℕ)
     (hq : 0 < q) : Fin (κ + 1) → Fin q :=
   match aggCase H with
-  | .twoB => if h : 6 ≤ (domSet H).card then stSrc2b _ h else fun _ => ⟨0, hq⟩
+  | .twoB => if h : 8 ≤ (domSet H).card then stSrc2b _ h else fun _ => ⟨0, hq⟩
   | .three => stSrc3 d (Nat.lt_succ_self _) hq
   | .one => fun _ => ⟨0, hq⟩
   | .twoA => fun _ => ⟨0, hq⟩
@@ -99,13 +103,14 @@ theorem it_srcp_spec {P : Program} {f grp dom s2b s3 rep rb mp sf app orb rng fd
     (sv : Val) {q : ℕ} (ps fx fy : List (Perm (Fin k) × Perm (Fin q)))
     (tt : List (TestTuple q P₀.κ)) (cr : TestTuple q P₀.κ → TestTuple q P₀.κ → Bool)
     (d d' : (Fin P₀.κ → Fin q) → ℕ) (hd : ∀ x, d x < 2 * q ^ P₀.κ)
-    (hd' : ∀ x, d' x < 2 * q ^ P₀.κ) (hq : 16 ≤ q) {W : ℕ}
+    (hd' : ∀ x, d' x < 2 * q ^ P₀.κ) (hq : 24 ≤ q) {W : ℕ}
     (hW : (itSt sv k q ps fx fy tt cr).wt + q ^ P₀.κ + q + P₀.κ ≤ W) :
     FunDet P f (.list [itSt sv k q ps fx fy tt cr, .list [encKColoring d, encKColoring d'],
         .nat (AggCase.code (aggCase (gens (fx.map Prod.snd))))])
       (natList (stL fun i => (itSrcOf (gens (fx.map Prod.snd)) d (by omega) i : ℕ)))
       (itSrcPC W) := by
   have hκ5 : 5 ≤ P₀.κ := by norm_num [P₀]
+  have hκ7 : 7 ≤ P₀.κ := by norm_num [P₀]
   set st := itSt sv k q ps fx fy tt cr with hst
   set H := gens (fx.map Prod.snd) with hH
   set wv := Val.list [encKColoring d, encKColoring d'] with hwv
@@ -216,9 +221,9 @@ theorem it_srcp_spec {P : Program} {f grp dom s2b s3 rep rb mp sf app orb rng fd
         (natList (stL fun i => (itSrcOf H d (by omega) i : ℕ))) 20
         (itGrpC W + itDomC (100 * (W + 1) ^ 3) + itS2bC (6 * (W + 1) ^ 2)) W' := by
     intro h2
-    have h6 : 6 ≤ (domSet H).card := st_domSet_six hq h2
-    have e : itSrcOf H d (by omega) = stSrc2b _ h6 := by
-      unfold itSrcOf; rw [h2, dif_pos h6]
+    have h8 : 8 ≤ (domSet H).card := st_domSet_eight hq h2
+    have e : itSrcOf H d (by omega) = stSrc2b _ h8 := by
+      unfold itSrcOf; rw [h2, dif_pos h8]
     rw [e]
     have hgr := it_grp_spec hgrp hrb hmp hsf happ fx (W := W) (by omega) (by omega)
     have hgw := it_grp_wt fx (W := W) (by omega) (by omega)
@@ -231,8 +236,8 @@ theorem it_srcp_spec {P : Program} {f grp dom s2b s3 rep rb mp sf app orb rng fd
         (fun x hx => by
           obtain ⟨y, -, rfl⟩ := List.mem_map.1 hx
           have := y.2; omega) (by simp; omega)
-      simpa [natList, List.map_map] using this
-    have hS := it_s2b_spec hs2b happ hrep (domSet H) h6 hκ5 (W := 6 * (W + 1) ^ 2) (by omega)
+      simpa [natList, List.map_map, Function.comp_def] using this
+    have hS := it_s2b_spec hs2b happ hrep (domSet H) h8 hκ7 (W := 6 * (W + 1) ^ 2) (by omega)
       (by omega)
     have h3 : stvs[3]? = some (.list (fx.map pairV)) := rfl
     have dfx := StDC.get a0 (StDC.nat (P := P) (env := [v]) (W := W') 3 (by omega)) h3 (by omega)
@@ -242,7 +247,7 @@ theorem it_srcp_spec {P : Program} {f grp dom s2b s3 rep rb mp sf app orb rng fd
       rfl
     have d2 := StDC.call d1 hD (by omega)
     have d3 := StDC.call d2 hS (by
-      have := it_wt_src (stSrc2b (ℓ := P₀.κ + 1) (domSet H) h6) (W := W) (by omega) (by omega)
+      have := it_wt_src (stSrc2b (ℓ := P₀.κ + 1) (domSet H) h8) (W := W) (by omega) (by omega)
       omega)
     exact d3.mono (by omega) (by omega)
   -- the branch

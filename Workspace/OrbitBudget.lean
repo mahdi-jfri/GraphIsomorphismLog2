@@ -1,6 +1,10 @@
-import Workspace.Compat
-import Workspace.FiniteBudget
-import Mathlib.GroupTheory.GroupAction.Basic
+module
+
+public import Workspace.Compat
+public import Workspace.FiniteBudget
+public import Mathlib.GroupTheory.GroupAction.Basic
+
+@[expose] public section
 
 namespace GI
 
@@ -126,7 +130,7 @@ noncomputable def visibleStep {k : ℕ} (c : ActionCover H a b)
     apply c.embed.injective
     change c.embed (c.project (Subgroup.inclusion s.lower l) b) =
       c.embed (c.project h b)
-    simpa only [c.orbit_apply] using hl
+    simpa only [c.orbit_apply, Subgroup.coe_inclusion] using hl
   visible := by
     intro p hp
     obtain ⟨h, rfl⟩ := c.project_surjective p

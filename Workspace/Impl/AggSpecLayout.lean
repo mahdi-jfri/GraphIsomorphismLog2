@@ -1,6 +1,10 @@
-import Workspace.Impl.AggSpecBody
-import Workspace.Impl.AggBodyKr
-import Workspace.Impl.LayoutAsm
+module
+
+public import Workspace.Impl.AggSpecBody
+public import Workspace.Impl.AggBodyKr
+public import Workspace.Impl.LayoutAsm
+
+@[expose] public section
 
 /-!
 # The aggregation round in the concrete program
@@ -75,7 +79,21 @@ theorem as_one (hG : Pg.HasAt asmAggBase (asAgg rd cr cm it rest)) {e : Expr} (i
 
 end Asm
 
-set_option maxHeartbeats 4000000 in
+private theorem spd_asAgg_peel {P : Program} {N n N' : ℕ} {A B : List Expr}
+    (h : P.HasAt (asb N) (A ++ B)) (hl : A.length = n) (hN : N + n = N') :
+    P.HasAt (asb N) A ∧ P.HasAt (asb N') B := by
+  refine ⟨h.left, ?_⟩
+  have h2 := h.right
+  rw [asb, hl, Nat.add_assoc, hN] at h2
+  exact h2
+
+private theorem spd_asAgg_cons {P : Program} {N N' : ℕ} {e : Expr} {B : List Expr}
+    (h : P.HasAt (asb N) (e :: B)) (hN : N + 1 = N') :
+    P.funs[asb N]? = some e ∧ P.HasAt (asb N') B := by
+  have h' : P.HasAt (asb N) ([e] ++ B) := h
+  obtain ⟨h1, h2⟩ := spd_asAgg_peel h' rfl hN
+  exact ⟨h1.single, h2⟩
+
 /-- **The aggregation round of the concrete program meets its step specification**, for the
 work `asWa`, given the contracts of the reading, the two phases and the items at
 `asb 1`, …, `asb 4`, with hand-over relations `H` and phase bound `X`. -/
@@ -95,22 +113,46 @@ theorem as_asm_agg (hst : PointwiseStab) (hm : Membership) (hpre : Preimage)
       (asmProg hst hm hpre hfac extra gen row (asAgg rd cr cm it rest)) asmF asmAggBase := by
   set R := asmRest hst hm hpre hfac Wg Wr (asWa hst hm hpre hfac X) with hR
   set Pg := asmProg hst hm hpre hfac extra gen row (asAgg rd cr cm it rest) with hPg
-  have hG : Pg.HasAt asmAggBase (asAgg rd cr cm it rest) := asmProg_hasAt_agg hgen hrow
+  have hG : Pg.HasAt (asb 0) (asAgg rd cr cm it rest) := asmProg_hasAt_agg hgen hrow
   have p0 : Pg.prims[0]? = some (pointwiseStabPrim hst) := rfl
   have p1 : Pg.prims[1]? = some (membershipPrim hm) := rfl
   have p2 : Pg.prims[2]? = some (preimagePrim hpre) := rfl
   have p3 : Pg.prims[3]? = some (normalizedFactorPrim hfac) := rfl
   have hlift : LiftAt Pg 289 112 2 3 := asm_liftAt
   have hsb : ShiftAt Pg 289 := ⟨hlift.shiftApp, hlift.append, hlift.addMap, hlift.addK⟩
+  unfold asAgg at hG
+  simp only [List.append_assoc, List.cons_append, List.nil_append] at hG
+  obtain ⟨h0, hG⟩ := spd_asAgg_cons (N' := 1) hG rfl
+  obtain ⟨_, hG⟩ := spd_asAgg_cons (N' := 2) hG rfl
+  obtain ⟨_, hG⟩ := spd_asAgg_cons (N' := 3) hG rfl
+  obtain ⟨_, hG⟩ := spd_asAgg_cons (N' := 4) hG rfl
+  obtain ⟨_, hG⟩ := spd_asAgg_cons (N' := 5) hG rfl
+  obtain ⟨h5, hG⟩ := spd_asAgg_cons (N' := 6) hG rfl
+  obtain ⟨h6, hG⟩ := spd_asAgg_cons (N' := 7) hG rfl
+  obtain ⟨h7, hG⟩ := spd_asAgg_cons (N' := 8) hG rfl
+  obtain ⟨h8, hG⟩ := spd_asAgg_cons (N' := 9) hG rfl
+  obtain ⟨h9, hG⟩ := spd_asAgg_cons (N' := 10) hG rfl
+  obtain ⟨_, hG⟩ := spd_asAgg_peel (N' := 20) hG rfl rfl
+  obtain ⟨h20, hG⟩ := spd_asAgg_peel (N' := 23) hG rfl rfl
+  obtain ⟨_, hG⟩ := spd_asAgg_peel (N' := 30) hG rfl rfl
+  obtain ⟨h30, hG⟩ := spd_asAgg_peel (N' := 33) hG rfl rfl
+  obtain ⟨h33, hG⟩ := spd_asAgg_peel (N' := 36) hG rfl rfl
+  obtain ⟨h36, hG⟩ := spd_asAgg_peel (N' := 42) hG rfl rfl
+  obtain ⟨h42, hG⟩ := spd_asAgg_peel (N' := 46) hG rfl rfl
+  obtain ⟨_, hG⟩ := spd_asAgg_peel (N' := 50) hG rfl rfl
+  obtain ⟨h50, hG⟩ := spd_asAgg_peel (N' := 100) hG rfl rfl
+  obtain ⟨h100, hG⟩ := spd_asAgg_peel (N' := 120) hG rfl rfl
+  obtain ⟨h120, hG⟩ := spd_asAgg_peel (N' := 124) hG rfl rfl
+  obtain ⟨h124, hG⟩ := spd_asAgg_peel (N' := 133) hG rfl rfl
+  obtain ⟨h133, hG⟩ := spd_asAgg_peel (N' := 136) hG rfl rfl
+  have h136 := hG.left
   have hlc : AsLcAt R.iface Pg asmF hpre hfac (asb 20) (abKrC hst) :=
-    asLcAt_of R.iface Pg asmF hpre hfac (as_blk hG 20 (by unfold asAgg; rfl)) (as_one hG 6 (by unfold asAgg; rfl)) (as_blk hG 50 (by unfold asAgg; rfl)) p2
-      (ab_krOK hst (as_blk hG 100 (by unfold asAgg; rfl)) p0) (abKrC_mono hst) (as_one hG 7 (by unfold asAgg; rfl)) hsb
-      (as_blk hG 124 (by unfold asAgg; rfl)) p3 (as_blk hG 120 (by unfold asAgg; rfl)) (as_one hG 8 (by unfold asAgg; rfl)) (as_blk hG 133 (by unfold asAgg; rfl))
+    asLcAt_of R.iface Pg asmF hpre hfac h20 h6 h50 p2
+      (ab_krOK hst h100 p0) (abKrC_mono hst) h7 hsb
+      h124 p3 h120 h8 h133
   have hce : AsCeAt Pg hm (asb 5) :=
-    asCeAt_of Pg hm (as_one hG 5 (by unfold asAgg; rfl)) (as_blk hG 30 (by unfold asAgg; rfl)) (as_blk hG 33 (by unfold asAgg; rfl)) (as_one hG 9 (by unfold asAgg; rfl))
-      (as_blk hG 42 (by unfold asAgg; rfl)) (as_blk hG 136 (by unfold asAgg; rfl)) (as_blk hG 30 (by unfold asAgg; rfl)) (as_blk hG 36 (by unfold asAgg; rfl)) p1
-  have h0 := as_one (e := aggBodyE (asb 1) (asb 2) (asb 3) (asb 4) (asb 20) (asb 5)) hG 0
-    (by unfold asAgg; rfl)
+    asCeAt_of Pg hm h5 h30 h33 h9
+      h42 h136 h30 h36 p1
   rw [show asb 0 = asmAggBase from Nat.add_zero _] at h0
   have hW : ∀ nd : Node P₀, nd.run.kind = .aggregate →
       (asOwn hpre hfac hm (abKrC hst) X (Nat.card nd.Ω) (R.iface.inW .giant nd.S) : ℝ) ≤

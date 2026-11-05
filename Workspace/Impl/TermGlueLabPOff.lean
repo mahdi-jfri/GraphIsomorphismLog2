@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabPRep
-import Workspace.Impl.TermGlueLabLift
+module
+
+public import Workspace.Impl.TermGlueLabPRep
+public import Workspace.Impl.TermGlueLabLift
+
+@[expose] public section
 
 /-!
 # The offsets from transporters computed row by row

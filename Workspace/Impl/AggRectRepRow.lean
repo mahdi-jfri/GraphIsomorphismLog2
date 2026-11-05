@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepPair
+module
+
+public import Workspace.Impl.AggRectRepPair
+
+@[expose] public section
 
 /-!
 # The row numbers of a retained row record

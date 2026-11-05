@@ -1,4 +1,8 @@
-import Workspace.Assembly.ConvertParts
+module
+
+public import Workspace.Assembly.ConvertParts
+
+@[expose] public section
 
 /-!
 # Converting the answer (`ConvertSpec`)
@@ -286,7 +290,7 @@ theorem yes_spec {P : Program} {c : ℕ} (h : P.HasAt c (convFuns c)) (G H : Sim
     have a3 := wt_nat_le 1
     have a4 : (Val.list ([.nat 1] ++ (List.ofFn (proj x)).map .nat)).wt ≤ (Val.list ((List.ofFn (proj x)).map .nat)).wt + 2 * 3 + 2 := by
       have := wt_list_cons_le (.nat 1) ((List.ofFn (proj x)).map .nat)
-      simpa using this
+      simpa [show (Val.nat 1).wt = 3 from rfl] using this
     have := mul_pow_le (show n + 1 ≤ 1 * Y ^ 1 by omega)
       (show (Val.list [.list [.nat 1], (Val.list ((List.ofFn (proj x)).map .nat))]).wt + n +
         (Val.list ([.nat 1] ++ (List.ofFn (proj x)).map .nat)).wt + 1 ≤ 30 * Y ^ 2 by omega)
@@ -353,7 +357,7 @@ theorem yes_spec {P : Program} {c : ℕ} (h : P.HasAt c (convFuns c)) (G H : Sim
   have a4 : (Val.list ([.nat 1] ++ (List.ofFn (proj x)).map .nat)).wt ≤
       (Val.list ((List.ofFn (proj x)).map .nat)).wt + 2 * 3 + 2 := by
     have := wt_list_cons_le (.nat 1) ((List.ofFn (proj x)).map .nat)
-    simpa using this
+    simpa [show (Val.nat 1).wt = 3 from rfl] using this
   have wn' : (Val.nat n).wt ≤ 2 * Y := by omega
   have wnn : (Val.nat (n * n)).wt ≤ 2 * Y ^ 2 + 2 := by omega
   clear hids hsig hPM hAP hcat' hPMd hAPd d1 d2 d3 d4 d5 d6 d7 gx

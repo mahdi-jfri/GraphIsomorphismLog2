@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCmpMoves
-import Workspace.Impl.AggCacheProg
+module
+
+public import Workspace.Impl.AggCmpMoves
+public import Workspace.Impl.AggCacheProg
+
+@[expose] public section
 
 /-!
 # The pick cache lookup, in `GI.Lang`
@@ -174,10 +178,10 @@ theorem cmFind_spec (h : Membership) {P : Program} {b jm : ℕ} (hb : P.HasAt b 
       (cmFindCost h M) := by
   have hfind : P.HasAt b (findFuns b (b + 3)) := hb.left.left.left.left
   have htest : P.funs[b + 3]? = some (cmTestF (b + 4) (b + 9) (b + 21) jm) := by
-    simpa using hb.left.left.left.right.single
-  have hle : P.HasAt (b + 4) (leFuns (b + 4) jm) := by simpa using hb.left.left.right
+    simpa [findFuns, loopFuns] using hb.left.left.left.right.single
+  have hle : P.HasAt (b + 4) (leFuns (b + 4) jm) := by simpa [findFuns, loopFuns] using hb.left.left.right
   have hinv : P.HasAt (b + 9) (invFuns (b + 9)) := by
-    simpa [leFuns, allFuns, loopFuns, Nat.add_assoc] using hb.left.right
+    simpa [findFuns, leFuns, allFuns, loopFuns, Nat.add_assoc] using hb.left.right
   have hcomp : P.HasAt (b + 21) (composeFuns (b + 21)) := by
     simpa [leFuns, allFuns, loopFuns, invFuns, mapFuns, rangeFuns, findFuns, Nat.add_assoc]
       using hb.right

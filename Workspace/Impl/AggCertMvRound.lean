@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertMvEnd
+module
+
+public import Workspace.Impl.AggCertMvEnd
+
+@[expose] public section
 
 /-!
 # The move program: the start of a round
@@ -136,7 +140,7 @@ theorem cp_round_spec {Pg : Program} {b jp jpre jm : ℕ} (hat : CpMvAt Pg b jp 
   · -- `t = n`: the end of the string
     intro hne
     have ht : σ.t = Fintype.card S.dom := by
-      by_contra hc; simp [BinOp.eval, hc] at hne
+      by_contra hc; simp only [BinOp.eval, hc, if_false, ne_eq, not_true_eq_false] at hne
     refine (CpEB.call (CpEB.det (Det.rv (P := Pg) (env := [.list [.list ks, u]]) (i := 0) rfl hwW)
       le_rfl hwW (Q := fun v => v = .list [.list ks, u]) rfl)
       (Cb := 2 * cpG hst hpre hm W + 1100 * (W + 20)) fun v hv _ => ?_).mono
@@ -148,7 +152,8 @@ theorem cp_round_spec {Pg : Program} {b jp jpre jm : ℕ} (hat : CpMvAt Pg b jp 
     intro heq
     have ht : σ.t < Fintype.card S.dom := by
       have := h.t_le
-      have : σ.t ≠ Fintype.card S.dom := by intro hc; simp [BinOp.eval, hc] at heq
+      have : σ.t ≠ Fintype.card S.dom := by
+        intro hc; simp only [BinOp.eval, hc, if_true, one_ne_zero] at heq
       omega
     obtain ⟨os, hnd, hos, hosP⟩ := h.os
     have hosl : os.length ≤ k := cp_os_length_le e hnd

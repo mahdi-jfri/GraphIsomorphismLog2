@@ -1,8 +1,12 @@
-import Workspace.Impl.NClPreMath
-import Workspace.Lang.Lib.Schreier
-import Workspace.Lang.Lib.LinIntTake
-import Workspace.Lang.Prims.BlockHom
-import Workspace.Lang.Lib.NatList
+module
+
+public import Workspace.Impl.NClPreMath
+public import Workspace.Lang.Lib.Schreier
+public import Workspace.Lang.Lib.LinIntTake
+public import Workspace.Lang.Prims.BlockHom
+public import Workspace.Lang.Lib.NatList
+
+@[expose] public section
 
 /-!
 # The preimage as a program (layout, points, selection)

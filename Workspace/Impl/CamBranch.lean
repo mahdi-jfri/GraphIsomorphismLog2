@@ -1,6 +1,10 @@
-import Workspace.Impl.CamHalf
-import Workspace.Impl.CamSmallM
-import Workspace.Lang.Prims.Other
+module
+
+public import Workspace.Impl.CamHalf
+public import Workspace.Impl.CamSmallM
+public import Workspace.Lang.Prims.Other
+
+@[expose] public section
 
 /-!
 # The normal form of a Maróti structure, and the two large-order answers

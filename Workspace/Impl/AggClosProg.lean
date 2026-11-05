@@ -1,5 +1,9 @@
-import Workspace.Impl.AggClos
-import Workspace.Impl.AggPre
+module
+
+public import Workspace.Impl.AggClos
+public import Workspace.Impl.AggPre
+
+@[expose] public section
 
 /-!
 # The new stage of a round, in `GI.Lang`

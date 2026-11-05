@@ -1,6 +1,10 @@
-import Workspace.Impl.LinObjectLiftGroup
-import Workspace.MulticosetTransport
-import Workspace.Impl.TermGlue
+module
+
+public import Workspace.Impl.LinObjectLiftGroup
+public import Workspace.MulticosetTransport
+public import Workspace.Impl.TermGlue
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Multicoset

@@ -10,8 +10,12 @@ processed when the orbit has at most `B` points, because the points of a good li
 orbit and are distinct. Then the points of the list are closed under the generators, so they
 form the whole orbit (`orbitPairs_spec`).
 -/
-import Workspace.Lang.Lib.OrbitMath
-import Mathlib.Data.Set.Card
+module
+
+public import Workspace.Lang.Lib.OrbitMath
+public import Mathlib.Data.Set.Card
+
+@[expose] public section
 
 namespace GI.Lang
 

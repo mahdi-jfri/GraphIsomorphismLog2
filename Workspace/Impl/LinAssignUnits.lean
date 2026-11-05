@@ -1,5 +1,9 @@
-import Workspace.Impl.LinIntBasis
-import Workspace.Impl.LinCoordinateSlp
+module
+
+public import Workspace.Impl.LinIntBasis
+public import Workspace.Impl.LinCoordinateSlp
+
+@[expose] public section
 
 /-! Append the first i unit exponent vectors to an already encoded table. -/
 namespace GI.Impl
@@ -90,8 +94,7 @@ theorem linAssignUnit_spec {P : Program} {b basis t : ℕ}
       rw [List.getElem_finRange]
       congr 1
     refine dn.post fun cost hc => ⟨?_, ?_⟩
-    · dsimp only
-      rw [htake, List.append_assoc]
+    · rw [htake, List.append_assoc]
     · have wn := wt_nat_le k
       have wa := wt_list3_le a (.nat k) (.list (xs ++ us.take k))
       have wcur := wacc k hk.le

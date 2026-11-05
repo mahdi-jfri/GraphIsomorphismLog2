@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJHMain
+module
+
+public import Workspace.Impl.TermJHMain
+
+@[expose] public section
 
 /-!
 # The transporter of one label: the specification

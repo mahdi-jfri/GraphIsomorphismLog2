@@ -12,8 +12,12 @@ pointers, so it can be placed at any address and copied cell by cell:
 The tag in the first cell and the counts in the header fix where every value ends, so the cells
 determine the value. The count `S` lets a program skip an entry without reading it.
 -/
-import Workspace.Cited.Algorithm
-import Mathlib.GroupTheory.Perm.Basic
+module
+
+public import Workspace.Cited.Algorithm
+public import Mathlib.GroupTheory.Perm.Basic
+
+@[expose] public section
 
 namespace GI.Cited
 
@@ -44,7 +48,7 @@ instance is the number of cells of `enc x`.
 
 The requirements of `GI.Cited.Task` become: every number inside `enc x` is at most a polynomial in
 the number of cells of `enc x`, and for every instance `x` some `v` with `Correct x v` has a number
-of cells polynomial in that size. A reader checks both for each task that appears in an axiom. -/
+of cells polynomial in that size. Lean does not check these two requirements. -/
 def Task.ofVal {α : Type} (enc : α → Val) (Correct : α → Val → Prop) : Task α where
   size x := (enc x).cells.length
   Input x b mem := ValAt mem b (enc x)

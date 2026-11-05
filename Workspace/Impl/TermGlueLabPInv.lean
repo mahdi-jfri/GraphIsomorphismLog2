@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabQ
-import Workspace.Impl.TermGlueLabQInv
+module
+
+public import Workspace.Impl.TermGlueLabQ
+public import Workspace.Impl.TermGlueLabQInv
+
+@[expose] public section
 
 /-!
 # The inverse of `V` by one Hermite call

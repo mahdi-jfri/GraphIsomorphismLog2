@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosBig4
+module
+
+public import Workspace.Impl.SCosBig4
+
+@[expose] public section
 
 /-!
 # Function 5 (`bigF`), the specification

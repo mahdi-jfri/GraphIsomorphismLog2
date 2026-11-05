@@ -1,4 +1,8 @@
-import Workspace.Impl.VsPCtxP
+module
+
+public import Workspace.Impl.VsPCtxP
+
+@[expose] public section
 
 /-!
 # The sizes of step 4

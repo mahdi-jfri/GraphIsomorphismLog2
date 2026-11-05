@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojBal
-import Workspace.Impl.AggItemCiSojTP
+module
+
+public import Workspace.Impl.AggItemCiSojBal
+public import Workspace.Impl.AggItemCiSojTP
+
+@[expose] public section
 
 /-!
 # Constructing the source fiber list

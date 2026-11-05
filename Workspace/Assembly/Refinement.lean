@@ -1,5 +1,9 @@
-import Workspace.Assembly.Encoding
-import Workspace.Lang.Lib.Graph
+module
+
+public import Workspace.Assembly.Encoding
+public import Workspace.Lang.Lib.Graph
+
+@[expose] public section
 
 /-!
 # What a stage 2 program must do

@@ -1,6 +1,10 @@
-import Workspace.Impl.AggCertHand
-import Workspace.Impl.AggImg
-import Workspace.Impl.AggCertMvInd
+module
+
+public import Workspace.Impl.AggCertHand
+public import Workspace.Impl.AggImg
+public import Workspace.Impl.AggCertMvInd
+
+@[expose] public section
 
 /-!
 # The graph forms of the certificate groups: the mathematics

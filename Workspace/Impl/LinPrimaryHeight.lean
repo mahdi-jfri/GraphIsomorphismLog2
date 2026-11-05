@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimaryTransport
-import Workspace.Lang.Lib.NatList
+module
+
+public import Workspace.Impl.LinPrimaryTransport
+public import Workspace.Lang.Lib.NatList
+
+@[expose] public section
 
 /-! The numeric number of primary levels is bounded by the bit weight of the
 stored cyclic orders. Compute it by a bounded list maximum. -/

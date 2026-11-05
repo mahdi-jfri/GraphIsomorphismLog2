@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgP
+module
+
+public import Workspace.Impl.AggItemCiCfgP
+
+@[expose] public section
 
 /-!
 # The configuration query: the pair colors as a program

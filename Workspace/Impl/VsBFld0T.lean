@@ -1,8 +1,12 @@
-import Workspace.Impl.VsBFld0
-import Workspace.Impl.VsBSolve
-import Workspace.Impl.VsQChunk
-import Workspace.Impl.VsWProgMC
-import Workspace.Impl.VsWProgComp
+module
+
+public import Workspace.Impl.VsBFld0
+public import Workspace.Impl.VsBSolve
+public import Workspace.Impl.VsQChunk
+public import Workspace.Impl.VsWProgMC
+public import Workspace.Impl.VsWProgComp
+
+@[expose] public section
 
 /-!
 # Building `τ` in the case `T = 0`

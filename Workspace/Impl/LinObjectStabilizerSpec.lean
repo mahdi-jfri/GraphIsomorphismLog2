@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectStabilizerCompose
+module
+
+public import Workspace.Impl.LinObjectStabilizerCompose
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -38,7 +42,7 @@ theorem linObjectStabilizer_spec {P : Program} {b jsci jder jmem jm jh n r : ℕ
     {Q : Type*} [CommGroup Q] (as ns : List (Equiv.Perm (Fin n))) (π : gens as →* Q)
     (hπ : Function.Surjective π) (hf : Function.Surjective (linObjectLiftCoord as π))
     (Y : List (TmRiO n)) (hok : TmRecObjOK Y.length Y)
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : TmRiListNorm (gens as) Y) (hNA : gens ns ≤ gens as)
     (H : Subgroup (Equiv.Perm (Fin n))) (hAH : gens as ≤ H)
     (hA : GI.Multicoset.Normalizes H (gens as)) (hN : GI.Multicoset.Normalizes H (gens ns))
     (hcomm : ∀ a ∈ gens as, ∀ b ∈ gens as, a*b*a⁻¹*b⁻¹ ∈ gens ns)
@@ -94,7 +98,7 @@ theorem linObjectStabilizer_spec {P : Program} {b jsci jder jmem jm jh n r : ℕ
     omega
   have hk : FunAll P (b+320) (.list [encGroup as,.list groups])
       (fun v cost => GroupValC n v (Aut (gens as) (tmGlMs Y)) ∧ cost ≤ KB) :=
-    (linObjectKernel_aut_spec h.kernel as Y groups hgroups hsol hal).mono fun out cost hout =>
+    (linObjectKernel_aut_spec h.kernel as Y groups hgroups ns hNA hcomm hfix hal).mono fun out cost hout =>
       ⟨hout.1,hout.2.trans (linPolyEnvelope_bound (linObjectKernelCost_poly hs)
         hnB hkArg (Nat.zero_le _))⟩
   have hp : W+MB+KB+AB+1 ≤ (W+MB+KB+AB+1)^2 := Nat.le_self_pow (by decide) _

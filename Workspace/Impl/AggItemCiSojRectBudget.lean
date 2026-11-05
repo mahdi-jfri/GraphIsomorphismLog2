@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojRectRun
-import Workspace.Impl.AggItemCiSojInputBudget
+module
+
+public import Workspace.Impl.AggItemCiSojRectRun
+public import Workspace.Impl.AggItemCiSojInputBudget
+
+@[expose] public section
 
 /-! # The full certified rectangle controller's common global cost -/
 

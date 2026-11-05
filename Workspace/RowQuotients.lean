@@ -1,5 +1,9 @@
-import Workspace.RowZeroSum
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+module
+
+public import Workspace.RowZeroSum
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+
+@[expose] public section
 
 /-! Group-level quotients induced by the concrete row-coordinate subgroups. -/
 namespace GI

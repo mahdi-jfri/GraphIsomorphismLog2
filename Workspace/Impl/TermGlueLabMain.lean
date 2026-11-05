@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabGroup
-import Workspace.Impl.TermCosetMath
+module
+
+public import Workspace.Impl.TermGlueLabGroup
+public import Workspace.Impl.TermCosetMath
+
+@[expose] public section
 
 /-!
 # Local transporters and the empty case of the label step
@@ -27,7 +31,7 @@ theorem tmGL_exists_perm {α : Type} {q : ℕ} {f g : Fin q → α}
     have := congrArg (Multiset.count c) h
     rw [Multiset.count_map, Multiset.count_map] at this
     rw [Fintype.card_subtype, Fintype.card_subtype]
-    simpa [Finset.filter_val, eq_comm] using this
+    simpa [Finset.card_def, Finset.filter_val, eq_comm] using this
   exact ⟨Equiv.ofFiberEquiv fun c => Fintype.equivOfCardEq (hc c), Equiv.ofFiberEquiv_map _⟩
 
 section RT
@@ -48,7 +52,7 @@ abbrev tmGLY : I.B × Fin L.q → C := tmGLStr (rowTuple I.e S.y)
 theorem tmGL_res_N {r : Perm I.B} (hr : r ∈ I.Hb) {h n : Perm I.B} (hh : h ∈ tmGlRes I r)
     (hn : n ∈ I.Nb) : h * n ∈ tmGlRes I r := by
   obtain ⟨⟨hhH, hT⟩, x, hx, rfl⟩ := hh
-  have hNR := (radicalPreimage_spec I.Nb_le I.normalizes).2.1
+  have hNR := I.Nb_le_rad
   have hT' : (types I.Nb (rowTuple I.e S.x) : Multiset (Set (I.B → C))) ↼ (x * r * n) =
       types I.Nb (rowTuple I.e S.y) := by
     rw [← act_act, hT, multiset_act_def]

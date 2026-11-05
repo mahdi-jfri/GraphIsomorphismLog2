@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectCorrectedAut
-import Workspace.Impl.LinObjectCorrectMapObject
+module
+
+public import Workspace.Impl.LinObjectCorrectedAut
+public import Workspace.Impl.LinObjectCorrectMapObject
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Multicoset
@@ -43,7 +47,7 @@ theorem linObjectCorrectedList_eq {n : ℕ} (H A : Subgroup (Equiv.Perm (Fin n))
       exact List.get_mem _ _
     · intro hk'
       obtain ⟨i,hi⟩ := List.mem_iff_get.mp hk'
-      exact ⟨i.cast hk.length_eq.symm,by simpa only [corr,Fin.cast_cast,Fin.cast_refl] using hi⟩
+      exact ⟨i.cast hk.length_eq.symm,by simpa only [corr,Fin.cast_cast,Fin.cast_refl,id_eq] using hi⟩
   rwa [he] at hr
 
 end GI.Impl

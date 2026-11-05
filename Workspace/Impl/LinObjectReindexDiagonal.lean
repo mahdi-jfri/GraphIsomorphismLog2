@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectIndexed
-import Workspace.Impl.LinObjectDiagonalCriterion
+module
+
+public import Workspace.Impl.LinObjectIndexed
+public import Workspace.Impl.LinObjectDiagonalCriterion
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Multicoset

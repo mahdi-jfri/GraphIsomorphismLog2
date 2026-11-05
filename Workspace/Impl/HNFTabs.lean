@@ -1,4 +1,8 @@
-import Workspace.Impl.HNFSize
+module
+
+public import Workspace.Impl.HNFSize
+
+@[expose] public section
 
 /-!
 # The three tables of the Hermite program

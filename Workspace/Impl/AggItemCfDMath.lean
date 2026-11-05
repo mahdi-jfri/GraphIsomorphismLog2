@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCfSpec
-import Workspace.Impl.AggStructDesMath
+module
+
+public import Workspace.Impl.AggItemCfSpec
+public import Workspace.Impl.AggStructDesMath
+
+@[expose] public section
 
 /-!
 # Reading the design object from lists

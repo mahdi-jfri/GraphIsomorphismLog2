@@ -2,14 +2,18 @@
 69cb972f587a3ecc035e092253167ff2e303c962, file
 CFSG/Permutation/AlternatingAutomorphism/Conjugation.lean.
 Licensed under the Apache License 2.0; see `licenses/CFSG-Apache-2.0.txt`.
-Modified for this project: module names, and changes to build with Lean v4.30.0-rc2 and
-mathlib 2f9133a. The SHA-256 of the original file is in `licenses/AltAut-provenance.json`. -/
+Modified for this project: module names, and proof changes for the Lean and mathlib versions
+used here. The SHA-256 of the original file is in `licenses/AltAut-provenance.json`. -/
 
-import Mathlib.GroupTheory.SpecificGroups.Alternating
-import Workspace.AltAutJohnsonGraphAction
-import Workspace.AltAutJohnsonGraphIso
-import Workspace.AltAutThreeCycle
-import Workspace.AltAutThreeCyclesPreserved
+module
+
+public import Mathlib.GroupTheory.SpecificGroups.Alternating
+public import Workspace.AltAutJohnsonGraphAction
+public import Workspace.AltAutJohnsonGraphIso
+public import Workspace.AltAutThreeCycle
+public import Workspace.AltAutThreeCyclesPreserved
+
+@[expose] public section
 
 namespace GI
 
@@ -45,7 +49,7 @@ theorem exists_perm_conj (hα : Fintype.card α = 5 ∨ 7 ≤ Fintype.card α)
   have := hsupp (c := g * c * g⁻¹) (by simpa using isThreeCycle_conj hc g)
   simp only [map_mul, map_inv, Subgroup.coe_mul, Subgroup.coe_inv, support_conj, hsupp hc,
     map_map] at this
-  convert this using 2
+  convert this using 2 <;> ext x <;> rfl
 
 theorem exists_perm_conj_of_degree_eq_five_or_seven_le {n : ℕ} (hn : n = 5 ∨ 7 ≤ n)
     (f : MulAut (alternatingGroup (Fin n))) :

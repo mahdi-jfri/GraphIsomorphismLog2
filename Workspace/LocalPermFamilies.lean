@@ -1,5 +1,9 @@
-import Workspace.CertificateEndpoint
-import Workspace.AlternatingSimple
+module
+
+public import Workspace.CertificateEndpoint
+public import Workspace.AlternatingSimple
+
+@[expose] public section
 
 /-!
 # The local permutation families `Q_T`, `P_T`, `J_T`
@@ -93,7 +97,8 @@ noncomputable def restrictQ : Qgrp G π T →* Perm T where
     simp [lab_one]
   map_mul' a b := by
     ext c
-    simp [lab_mul a.2.1 b.2.1]
+    change lab G π (a * b) c = (lab G π a * lab G π b) c
+    rw [lab_mul a.2.1 b.2.1]
 
 /-- `P_T = {g ∈ Q_T : sgn(π(g)|_T) = 1}`. -/
 noncomputable def Pgrp : Subgroup (Perm Ω) :=

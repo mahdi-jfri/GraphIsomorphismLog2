@@ -1,12 +1,16 @@
-import Workspace.Lang.Prims.Reduce
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Lang.Prims.Reduce
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-! Polynomial subgroup inclusion and equality tests for arbitrary encoded
 permutation generator lists. These normalize the orbit-color interface. -/
 namespace GI.Impl
 open GI.Cited GI.Lang
 
-private noncomputable def linPermRead (n : ℕ) (v : Val) : Equiv.Perm (Fin n) := by
+noncomputable def linPermRead (n : ℕ) (v : Val) : Equiv.Perm (Fin n) := by
   classical
   exact if h : ∃ x : Equiv.Perm (Fin n), encPerm x = v then h.choose else 1
 

@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.Loop
+module
+
+public import Workspace.Lang.Lib.Loop
+
+@[expose] public section
 
 /-! A bounded-accumulator loop with an explicit initialization cost. The
 primary loop computes its iteration count by a polynomial-time maximum. -/

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJProgAut
+module
+
+public import Workspace.Impl.TermJProgAut
+
+@[expose] public section
 
 /-!
 # The labels and their transporters (program)

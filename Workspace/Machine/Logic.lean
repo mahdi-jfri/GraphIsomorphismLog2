@@ -15,7 +15,11 @@ and a decreasing measure.
 A typical proof applies the rules backwards (`refine WP.seq' _ ?_ ?_`), lets `simp` evaluate the
 expressions, and proves the cost bound with `omega` or `nlinarith`.
 -/
-import Workspace.Machine.Expr
+module
+
+public import Workspace.Machine.Expr
+
+@[expose] public section
 
 namespace GI.Machine
 

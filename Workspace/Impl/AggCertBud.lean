@@ -1,7 +1,11 @@
-import Workspace.Impl.AggCertWt
-import Workspace.Impl.AggKerRed
-import Workspace.Impl.AggWinProg
-import Workspace.Lang.Prims.BlockHom
+module
+
+public import Workspace.Impl.AggCertWt
+public import Workspace.Impl.AggKerRed
+public import Workspace.Impl.AggWinProg
+public import Workspace.Lang.Prims.BlockHom
+
+@[expose] public section
 
 /-!
 # Evaluation with a weight bound and a cost budget

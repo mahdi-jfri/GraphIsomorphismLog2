@@ -1,6 +1,10 @@
-import Workspace.Impl.LinIntSlpValid
-import Workspace.Impl.LinIntSolver
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Impl.LinIntSlpValid
+public import Workspace.Impl.LinIntSolver
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-! Uniform polynomial envelopes for the explicit integer-program costs. -/
 namespace GI.Impl

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojStart
-import Workspace.Impl.AggItemCiSojACount
+module
+
+public import Workspace.Impl.AggItemCiSojStart
+public import Workspace.Impl.AggItemCiSojACount
+
+@[expose] public section
 
 /-! # The actual first-rectangle source dispatch -/
 

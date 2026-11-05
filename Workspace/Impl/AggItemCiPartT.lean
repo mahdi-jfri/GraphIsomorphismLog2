@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiPartF
-import Workspace.Impl.AggItemC1Prog
+module
+
+public import Workspace.Impl.AggItemCiPartF
+public import Workspace.Impl.AggItemC1Prog
+
+@[expose] public section
 
 /-!
 # The colored-partition item: the function table and the item

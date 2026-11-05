@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJGlueAut
+module
+
+public import Workspace.Impl.TermJGlueAut
+
+@[expose] public section
 
 /-!
 # Glue of the `J`-step: one label

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggReadProg
+module
+
+public import Workspace.Impl.AggReadProg
+
+@[expose] public section
 
 /-!
 # The reading: reading the input and building the result

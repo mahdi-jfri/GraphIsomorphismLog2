@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJData
-import Workspace.Impl.TermCosetRel
+module
+
+public import Workspace.Impl.TermJData
+public import Workspace.Impl.TermCosetRel
+
+@[expose] public section
 
 /-!
 # A pair as a permutation of `Fin (m q)` (program)

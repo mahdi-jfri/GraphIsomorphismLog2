@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQA2T
+module
+
+public import Workspace.Impl.VsQA2T
+
+@[expose] public section
 
 /-!
 # Two or more pieces

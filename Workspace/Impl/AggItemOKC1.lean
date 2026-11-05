@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemStepC1
-import Workspace.Impl.AggItemOK
+module
+
+public import Workspace.Impl.AggItemStepC1
+public import Workspace.Impl.AggItemOK
+
+@[expose] public section
 
 /-!
 # The bound of the Case 1 contract is polynomial

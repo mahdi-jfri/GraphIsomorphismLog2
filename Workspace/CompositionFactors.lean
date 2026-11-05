@@ -1,14 +1,18 @@
-import Workspace.Cited.CompositionFactors
-import Mathlib.GroupTheory.QuotientGroup.Basic
-import Mathlib.GroupTheory.Solvable
-import Mathlib.GroupTheory.Coset.Card
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Fintype.Option
-import Mathlib.Algebra.Group.Pi.Lemmas
-import Mathlib.Tactic.Ring
-import Mathlib.Algebra.Group.Subgroup.Finite
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Data.Finite.Prod
+module
+
+public import Workspace.Cited.CompositionFactors
+public import Mathlib.GroupTheory.QuotientGroup.Basic
+public import Mathlib.GroupTheory.Solvable
+public import Mathlib.GroupTheory.Coset.Card
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Data.Fintype.Option
+public import Mathlib.Algebra.Group.Pi.Lemmas
+public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.Group.Subgroup.Finite
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Data.Finite.Prod
+
+@[expose] public section
 
 /-!
 # Jordan-Hölder for the products `a(X)` and `b(X)`
@@ -162,25 +166,26 @@ theorem mul_eq_card {a b : ℕ} (h : CompositionProducts X a b) : a * b = Nat.ca
     ring
 
 /-- In a solvable group every composition factor is abelian. -/
-theorem b_eq_one_of_solvable {a b : ℕ} (h : CompositionProducts X a b) (hX : IsSolvable X) :
+theorem b_eq_one_of_solvable {a b : ℕ} (h : CompositionProducts X a b) (hX : Group.IsSolvable X) :
     b = 1 := by
   induction h with
   | trivial X => rfl
   | abelianTop X K a b hs hc hK ih =>
-    exact ih (solvable_of_solvable_injective K.subtype_injective)
+    haveI := hX
+    exact ih inferInstance
   | nonabelianTop X K a b hs hc hK ih =>
     exfalso
     haveI := hs
-    haveI : IsSolvable (X ⧸ K) := solvable_quotient_of_solvable K
+    haveI := hX
     exact hc (IsSimpleGroup.comm_iff_isSolvable.mpr inferInstance)
 
 /-- A simple group `K` with `X/K` simple-quotient criterion: if `X/K` is simple then `K` is a
 maximal normal subgroup. -/
 theorem eq_or_eq_top_of_simple {K M : Subgroup X} [K.Normal] [M.Normal]
     (hs : IsSimpleGroup (X ⧸ K)) (hKM : K ≤ M) : M = K ∨ M = ⊤ := by
-  have hn : (M.map (QuotientGroup.mk' K)).Normal :=
+  haveI : (M.map (QuotientGroup.mk' K)).Normal :=
     Subgroup.Normal.map inferInstance _ (QuotientGroup.mk'_surjective K)
-  rcases hs.eq_bot_or_eq_top_of_normal _ hn with h | h
+  rcases hs.eq_bot_or_eq_top_of_normal (M.map (QuotientGroup.mk' K)) with h | h
   · left
     refine le_antisymm (fun x hx => ?_) hKM
     have : (QuotientGroup.mk' K x) ∈ M.map (QuotientGroup.mk' K) := ⟨x, hx, rfl⟩
@@ -486,7 +491,7 @@ theorem bFac_ker_range {Y : Type v} [Group Y] [Finite Y] (f : X →* Y) :
   rw [bFac_mul f.ker, bFac_congr (QuotientGroup.quotientKerEquivRange f)]
 
 /-- `b` of a solvable group is `1`. -/
-theorem bFac_of_solvable [IsSolvable X] : bFac X = 1 :=
+theorem bFac_of_solvable [Group.IsSolvable X] : bFac X = 1 :=
   b_eq_one_of_solvable (spec X) inferInstance
 
 omit [Finite X] in

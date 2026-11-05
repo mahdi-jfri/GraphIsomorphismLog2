@@ -1,5 +1,9 @@
-import Workspace.Impl.AggWin
-import Workspace.Impl.FreshColor
+module
+
+public import Workspace.Impl.AggWin
+public import Workspace.Impl.FreshColor
+
+@[expose] public section
 
 /-!
 # The colors of a window call, in `GI.Lang`

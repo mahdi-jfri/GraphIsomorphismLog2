@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectDataTail
+module
+
+public import Workspace.Impl.LinObjectDataTail
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -12,7 +16,7 @@ theorem linObjectData_spec (ho : GroupOrder) (hh : HermiteFullRank) (hn : SmithN
     (hjo : P.prims[jo]? = some (groupOrderPrim ho)) (hjm : P.prims[jm]? = some (linMembershipPrim hc))
     (hjh : P.prims[jh]? = some (linHermitePrim hh)) (hjs : P.prims[js]? = some (linSmithPrim hn))
     {Q : Type*} [CommGroup Q] (as ns : List (Equiv.Perm (Fin n))) (π : gens as →* Q)
-    (X Y : List (TmRiO n)) (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (X Y : List (TmRiO n)) (hsol : TmRiListNorm (gens as) Y) (hNA : gens ns ≤ gens as)
     (hNn : GI.Multicoset.Normalizes (gens as) (gens ns))
     (hcomm : ∀ a ∈ gens as, ∀ b ∈ gens as, a * b * a⁻¹ * b⁻¹ ∈ gens ns)
     (hal : as.length ≤ n ^ 2) (hYlen : Y.length ≤ M)

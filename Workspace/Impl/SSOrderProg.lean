@@ -1,4 +1,8 @@
-import Workspace.Impl.SSOrderCnt
+module
+
+public import Workspace.Impl.SSOrderCnt
+
+@[expose] public section
 
 /-!
 # The order wrapper

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojFinish
+module
+
+public import Workspace.Impl.AggItemCiSojFinish
+
+@[expose] public section
 
 /-! # The nonempty branch of the rectangle finalizer -/
 

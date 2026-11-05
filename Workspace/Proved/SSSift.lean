@@ -1,4 +1,8 @@
-import Workspace.Proved.SSTable
+module
+
+public import Workspace.Proved.SSTable
+
+@[expose] public section
 
 /-!
 # Sifting as a loop over the levels, and what it returns

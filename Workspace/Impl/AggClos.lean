@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCosets
-import Workspace.Impl.ScriptCont
+module
+
+public import Workspace.Impl.AggCosets
+public import Workspace.Impl.ScriptCont
+
+@[expose] public section
 
 /-!
 # The new stage of a round: the coset closure `A_{t+1}`

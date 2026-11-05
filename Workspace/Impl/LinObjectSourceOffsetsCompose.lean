@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectSourceOffsets
-import Workspace.Impl.LinObjectEvalBound
+module
+
+public import Workspace.Impl.LinObjectSourceOffsets
+public import Workspace.Impl.LinObjectEvalBound
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

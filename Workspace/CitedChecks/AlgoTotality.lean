@@ -1,8 +1,12 @@
-import Workspace.CitedChecks.AlgoChecks
-import Workspace.Cited.AlgoCameron
-import Workspace.Cited.AlgoLinear
-import Workspace.Cited.AlgoDesign
-import Workspace.Cited.AlgoRefinement
+module
+
+public import Workspace.CitedChecks.AlgoChecks
+public import Workspace.Cited.AlgoCameron
+public import Workspace.Cited.AlgoLinear
+public import Workspace.Cited.AlgoDesign
+public import Workspace.Cited.AlgoRefinement
+
+@[expose] public section
 
 /-!
 # Totality of the algorithm tasks
@@ -37,7 +41,7 @@ theorem groupOrder_total (I : GroupInst) : ∃ v : Val, v = .nat (Nat.card (gens
 
 /-- **Totality of the tasks whose output is one subgroup** (`PointwiseStabTask`,
 `NormalClosureTask`, `DerivedSubgroupTask`, `NormalizedIntersectionTask`,
-`QuotientCentralizerTask`, `VectorStabilizerTask`): each asks for `GensOf H` of a subgroup `H`,
+`VectorStabilizerTask`): each asks for `GensOf H` of a subgroup `H`,
 which exists by `exists_gensOf`. -/
 theorem pointwiseStab_total (I : PointsInst) : ∃ v, GensOf (pointwiseStab (gens I.gs) I.S) v :=
   exists_gensOf _
@@ -51,9 +55,6 @@ theorem derivedSubgroup_total (I : GroupInst) : ∃ v, GensOf ⁅gens I.gs, gens
 
 theorem normalizedIntersection_total (I : NormalizedInst) :
     ∃ v, GensOf (gens I.gs ⊓ gens I.ns) v :=
-  exists_gensOf _
-
-theorem quotientCentralizer_total (I : QuotCentInst) : ∃ v, GensOf (quotCentralizer I) v :=
   exists_gensOf _
 
 theorem vectorStabilizer_total (I : VecStabInst) :
@@ -190,23 +191,6 @@ theorem compositionSeries_total (G : Subgroup (Perm (Fin n))) :
   refine seriesOf_of_list _ (series_length_le hch) ⟨rfl, hlast, fun i hi => ?_⟩
   exact List.isChain_iff_getElem.mp hch i hi
 
-/-- **Totality of `ChiefSeriesTask`.** Series of `SeriesStep` steps where each term is
-normalized by `G` are chief series; the first term `G` is normalized by itself. -/
-theorem chiefSeries_total (G : Subgroup (Perm (Fin n))) :
-    ∃ v, SeriesOf (IsChiefSeries G) v := by
-  obtain ⟨rest, hch, hlast⟩ := exists_series
-    (fun _ M => ∀ x ∈ G, ∀ y ∈ M, x * y * x⁻¹ ∈ M)
-    (fun A x _ y hy => by rw [Subgroup.mem_bot] at hy ⊢; simp [hy]) G
-  have hstep := List.isChain_iff_getElem.mp hch
-  refine seriesOf_of_list _ (series_length_le hch) ⟨rfl, hlast, ?_, fun i hi => ?_⟩
-  · intro H hH
-    obtain ⟨j, hj, rfl⟩ := List.mem_iff_getElem.mp hH
-    rcases j with _ | i
-    · intro x hx y hy
-      exact G.mul_mem (G.mul_mem hx hy) (G.inv_mem hx)
-    · exact (hstep i hj).2.1
-  · exact ⟨(hstep i hi).1, fun N h1 h2 h3 => (hstep i hi).2.2 N h1 h2 h3⟩
-
 end Series
 
 /-! ### Minimal block systems -/
@@ -299,52 +283,6 @@ theorem minimalBlocks_total (I : TransitiveInst) : ∃ v, LabelsOf (IsMinimalBlo
   exact ⟨_, fun i => rep i, rfl, fun i => (rep i).isLt, isMinimalBlocks_congr he hmin⟩
 
 end Blocks
-
-/-! ### Sylow subgroups -/
-
-/-- **Totality of `SylowTask`.** A Sylow `p`-subgroup of `G` exists (`Sylow.nonempty`), and its
-image in `Sym(n)` has index prime to `p` (`Sylow.not_dvd_index`). -/
-theorem sylow_total (I : SylowInst) : ∃ v, ∃ S, GensOf S v ∧ IsSylowOf I.p (gens I.gs) S := by
-  haveI : Fact I.p.Prime := ⟨I.prime⟩
-  obtain ⟨P⟩ : Nonempty (Sylow I.p (gens I.gs)) := inferInstance
-  set S := (P : Subgroup (gens I.gs)).map (gens I.gs).subtype
-  have hS : S.subgroupOf (gens I.gs) = P :=
-    Subgroup.comap_map_eq_self_of_injective (gens I.gs).subtype_injective _
-  obtain ⟨v, hv⟩ := exists_gensOf S
-  refine ⟨v, S, hv, Subgroup.map_subtype_le _, P.isPGroup'.map _, ?_⟩
-  rw [hS]
-  exact Sylow.not_dvd_index P
-
-
-/-- A subgroup `P ≤ G` with `IsSylowOf p G P`, as a Sylow subgroup of `G`. -/
-noncomputable def toSylowOf {n p : ℕ} [Fact p.Prime] {G P : Subgroup (Perm (Fin n))}
-    (h : IsSylowOf p G P) : Sylow p G :=
-  IsPGroup.toSylow (h.2.1.of_equiv (Subgroup.subgroupOfEquivOfLe h.1).symm) h.2.2
-
-/-- **Totality of `SylowConjugateTask`**, by Sylow's conjugacy theorem: `G` acts transitively
-by conjugation on its Sylow `p`-subgroups (`MulAction.exists_smul_eq`). -/
-theorem sylowConjugate_total (I : SylowConjInst) : ∃ v, ∃ g ∈ gens I.gs, v = encPerm g ∧
-      ∀ x, x ∈ gens I.P₂ ↔ g * x * g⁻¹ ∈ gens I.P₁ := by
-  haveI : Fact I.p.Prime := ⟨I.prime⟩
-  obtain ⟨h, hh⟩ := MulAction.exists_smul_eq (gens I.gs) (toSylowOf I.syl₁) (toSylowOf I.syl₂)
-  refine ⟨_, (h : Perm (Fin I.n))⁻¹, (gens I.gs).inv_mem h.2, rfl, fun x => ?_⟩
-  have key : ∀ z : gens I.gs, z ∈ (toSylowOf I.syl₂ : Subgroup (gens I.gs)) ↔
-      h⁻¹ * z * h ∈ (toSylowOf I.syl₁ : Subgroup (gens I.gs)) := by
-    intro z
-    rw [← hh, Sylow.coe_subgroup_smul, Subgroup.mem_pointwise_smul_iff_inv_smul_mem]
-    simp
-  constructor
-  · intro hx
-    have hxG : x ∈ gens I.gs := I.syl₂.1 hx
-    have := (key ⟨x, hxG⟩).mp hx
-    simpa [toSylowOf, Subgroup.mem_subgroupOf] using this
-  · intro hx
-    have hy : (h : Perm (Fin I.n))⁻¹ * x * (h : Perm (Fin I.n))⁻¹⁻¹ ∈ gens I.gs := I.syl₁.1 hx
-    have hxG : x ∈ gens I.gs := by
-      have := (gens I.gs).mul_mem ((gens I.gs).mul_mem h.2 hy) ((gens I.gs).inv_mem h.2)
-      simpa [mul_assoc] using this
-    have := (key ⟨x, hxG⟩).mpr (by simpa [toSylowOf, Subgroup.mem_subgroupOf] using hx)
-    simpa [toSylowOf, Subgroup.mem_subgroupOf] using this
 
 /-! ### Design Lemma witnesses -/
 

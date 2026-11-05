@@ -1,4 +1,8 @@
-import Workspace.Proved.VsWEigMath
+module
+
+public import Workspace.Proved.VsWEigMath
+
+@[expose] public section
 
 /-!
 # The pieces of `vsFEigL` are few and small

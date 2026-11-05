@@ -1,6 +1,10 @@
-import Workspace.Algorithm.Interfaces
-import Workspace.Paper.SupportThresholds
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+module
+
+public import Workspace.Algorithm.Interfaces
+public import Workspace.Paper.SupportThresholds
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+
+@[expose] public section
 
 /-!
 # Why the cases cover every large action (Section 6.2)
@@ -99,12 +103,12 @@ theorem choose_three_gt {α : ℝ} (hα : 1 / 3 < α) :
 
 /-- **"Also `q` exceeds the logarithmic transitive-kernel threshold."** For large `N`,
 every `q > N^α` satisfies `q ≥ 201` (the threshold `m₀` of Lemma A.24) and
-`q > max(8, 2 + log₂ s)` for every `s ≤ N` (the threshold of Lemma A.15). -/
+`q > max(63, 12 log₂ s)` for every `s ≤ N` (the threshold of Lemma A.15). -/
 theorem log_threshold_lt {α : ℝ} (hα : 0 < α) :
     ∃ N₁ : ℕ, ∀ N : ℕ, N₁ ≤ N → ∀ s : ℕ, s ≤ N → ∀ q : ℕ, (N : ℝ) ^ α < q →
-      201 ≤ q ∧ max 8 (2 + Real.logb 2 s) < (q : ℝ) := by
+      201 ≤ q ∧ max 63 (12 * Real.logb 2 s) < (q : ℝ) := by
   have hlog := (isLittleO_log_rpow_atTop hα).bound
-    (show 0 < Real.log 2 / 2 by have := Real.log_pos (one_lt_two (α := ℝ)); linarith)
+    (show 0 < Real.log 2 / 24 by have := Real.log_pos (one_lt_two (α := ℝ)); linarith)
   have hlog' := (tendsto_natCast_atTop_atTop (R := ℝ)).eventually hlog
   obtain ⟨N₁, hN₁⟩ := Filter.eventually_atTop.mp hlog'
   obtain ⟨N₂, hN₂⟩ := eventually_rpow_ge hα 201
@@ -120,12 +124,12 @@ theorem log_threshold_lt {α : ℝ} (hα : 0 < α) :
   refine ⟨h200', ?_⟩
   have hl := hN₁ N hN1
   simp only [Real.norm_eq_abs] at hl
-  have hlogN : Real.log N ≤ Real.log 2 / 2 * (N : ℝ) ^ α := by
+  have hlogN : Real.log N ≤ Real.log 2 / 24 * (N : ℝ) ^ α := by
     have h1 : Real.log N = |Real.log N| := (abs_of_nonneg (Real.log_nonneg hNpos)).symm
     have h2 : |(N : ℝ) ^ α| = (N : ℝ) ^ α := abs_of_nonneg (Real.rpow_nonneg (by linarith) _)
     rw [h1]; rw [h2] at hl; exact hl
   have hlog2 : 0 < Real.log 2 := Real.log_pos one_lt_two
-  have hlogbN : Real.logb 2 N ≤ (N : ℝ) ^ α / 2 := by
+  have hlogbN : Real.logb 2 N ≤ (N : ℝ) ^ α / 24 := by
     rw [Real.logb, div_le_iff₀ hlog2]
     nlinarith
   have hlogbs : Real.logb 2 s ≤ Real.logb 2 N := by
@@ -144,7 +148,7 @@ unordered pairs of distinct labels (Corollary A.25); with fewer than `C(q,2)`
 positions only single labels remain. (Section 6.2: "The support classification
 therefore gives precisely the one-label and two-label cases. An action with
 transitive kernel on the whole active domain is excluded at this scale.") -/
-theorem large_giant_support_cases (hcite : GI.Cited.TransitiveAffected) {α : ℝ}
+theorem large_giant_support_cases {α : ℝ}
     (hα : 1 / 3 < α) :
     ∃ N₁ : ℕ, ∀ N : ℕ, N₁ ≤ N →
       ∀ {Ω Γ : Type} [Fintype Ω] [DecidableEq Ω] [Fintype Γ] [DecidableEq Γ]
@@ -159,7 +163,7 @@ theorem large_giant_support_cases (hcite : GI.Cited.TransitiveAffected) {α : �
   refine ⟨max N₁ N₂, fun N hN Ω Γ _ _ _ _ G _ φ hφ hΩ hΓ => ?_⟩
   have hc3 := h₁ N (le_trans (le_max_left _ _) hN) _ hΓ
   obtain ⟨h201, hlog⟩ := h₂ N (le_trans (le_max_right _ _) hN) _ hΩ _ hΓ
-  exact (GI.Paper.cor_physical_support_thresholds hcite G φ hφ h201 (by omega) hlog).1
+  exact (GI.Paper.cor_physical_support_thresholds G φ hφ h201 (by omega) hlog).1
 
 /-- **"`a = 1`."** A Johnson level `a` with `1 ≤ a ≤ q/2`, `q ≥ 4`, and exactly `q`
 blocks, `C(q, a) = q`, is the natural level. -/

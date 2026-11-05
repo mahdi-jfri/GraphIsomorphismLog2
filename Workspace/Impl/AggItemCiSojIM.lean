@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojPart
+module
+
+public import Workspace.Impl.AggItemCiSojPart
+
+@[expose] public section
 
 /-!
 # Rejecting a target whose interior component is a singleton

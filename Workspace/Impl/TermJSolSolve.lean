@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJSolProg
+module
+
+public import Workspace.Impl.TermJSolProg
+
+@[expose] public section
 
 /-!
 # The zero-sum solve (specification)

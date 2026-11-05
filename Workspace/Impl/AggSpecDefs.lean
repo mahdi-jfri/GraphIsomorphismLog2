@@ -1,5 +1,9 @@
-import Workspace.Impl.AggSpecExec
-import Workspace.Impl.AggSpecChild
+module
+
+public import Workspace.Impl.AggSpecExec
+public import Workspace.Impl.AggSpecChild
+
+@[expose] public section
 
 /-!
 # The aggregation round as a sequence of phases: the contracts

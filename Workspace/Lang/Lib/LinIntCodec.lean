@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.LinIntBits
+module
+
+public import Workspace.Lang.Lib.LinIntBits
+
+@[expose] public section
 
 /-! Conversion between the cited sign/bits integer encoding and a canonical pair
 of natural positive and negative parts. Natural parts support the arithmetic

@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosPaste3
+module
+
+public import Workspace.Impl.SCosPaste3
+
+@[expose] public section
 
 /-!
 # The paste function when some answer is nonempty

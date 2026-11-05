@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJLabHom
+module
+
+public import Workspace.Impl.TermJLabHom
+
+@[expose] public section
 
 /-!
 # Generators of `Aut_J(x)`

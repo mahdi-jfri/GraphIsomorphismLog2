@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemStepC1
-import Workspace.Impl.AggItemHvPc
+module
+
+public import Workspace.Impl.AggItemStepC1
+public import Workspace.Impl.AggItemHvPc
+
+@[expose] public section
 
 /-!
 # Case 2a: the item scripts of the rounds of the base set
@@ -112,6 +116,7 @@ theorem it_hv_items_some (hK : K.OK e c) {τ₀ t : Perm Ω} {Ag : Aggregation P
   rw [hal, htw, hcl]
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
 /-- **The halving data are valid** (`items_valid`). -/
 theorem it_hv_valid (hK : K.OK e c) {τ₀ t : Perm Ω} {Ag : Aggregation P₀ S L.toGiantLabels}
     (hAg : Ag ∈ itHvD K τ₀ t) (hc : K.case = .twoA) (hy : ItHvCond K) :

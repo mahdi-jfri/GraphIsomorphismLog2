@@ -1,5 +1,9 @@
-import Workspace.Impl.SSWrapStart
-import Workspace.Lang.Lib.Tabulate
+module
+
+public import Workspace.Impl.SSWrapStart
+public import Workspace.Lang.Lib.Tabulate
+
+@[expose] public section
 
 /-!
 # The layout of the wrapper programs
@@ -38,7 +42,7 @@ theorem ssWrapAt_of (extra : List Expr) : SsWrapAt (ssWrapProgram extra) := by
   rw [show 0 + (ssFuns 0).length = 47 from rfl] at h2
   have h3 := h2.right
   rw [show 47 + (rangeFuns 47).length = 50 from rfl] at h3
-  exact ⟨SsCoreAt.of_hasAt h1, h2.left, h3.left.single, by simpa using h3 1 (by simp)⟩
+  exact ⟨SsCoreAt.of_hasAt h1, h2.left, h3.left.single, by simpa [ssWrapProgram, List.append_assoc] using h3 1 (by simp)⟩
 
 theorem ssWrap_extra (extra : List Expr) : (ssWrapProgram extra).HasAt 52 extra := by
   have h := Program.hasAt_append (ssFuns 0 ++ ssCommonFuns) extra [] []

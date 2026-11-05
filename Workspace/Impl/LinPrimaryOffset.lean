@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimaryVector
-import Workspace.Impl.LinFiniteActionCost
+module
+
+public import Workspace.Impl.LinPrimaryVector
+public import Workspace.Impl.LinFiniteActionCost
+
+@[expose] public section
 
 /-! Extract the full stored translation column, then take its divided layer
 coordinates. This retains the signed full action between successive layers. -/

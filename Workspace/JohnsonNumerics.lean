@@ -1,8 +1,12 @@
-import Workspace.BinomialLower
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
+module
+
+public import Workspace.BinomialLower
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+
+@[expose] public section
 
 namespace GI.Johnson
 

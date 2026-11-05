@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCfDSplit
-import Workspace.Impl.AggStructDesHit
+module
+
+public import Workspace.Impl.AggItemCfDSplit
+public import Workspace.Impl.AggStructDesHit
+
+@[expose] public section
 
 namespace GI.Impl
 

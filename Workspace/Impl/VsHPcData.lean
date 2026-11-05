@@ -1,5 +1,9 @@
-import Workspace.Impl.VsHPcList
-import Workspace.Proved.VsHChainMath
+module
+
+public import Workspace.Impl.VsHPcList
+public import Workspace.Proved.VsHChainMath
+
+@[expose] public section
 
 /-!
 # The data of a pieces split
@@ -17,6 +21,8 @@ namespace GI.Impl
 open GI.Lang GI.Cited GI.Proved Equiv
 
 variable {I : VecStabInst} {s : VsQSt I} [Fact I.p.Prime]
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 /-- The pieces of `𝔽_p[Λ(L)]`. -/
 noncomputable def vsHPs (s : VsQSt I) (L : List (Perm (Fin I.n))) : List (List (List ℕ)) :=
@@ -93,7 +99,6 @@ theorem vsH_split_data (hs : VsQStOK s) {as gs : List (Perm (Fin I.n))} (has : g
           finrank (ZMod I.p) U) (ha i).1
         have h2 := congrArg (fun U : Submodule (ZMod I.p) (Fin (vsQD s) → ZMod I.p) =>
           finrank (ZMod I.p) U) e0
-        simp only at h1 h2
         exact h1.trans ((hdim (a i) (a ⟨0, hi0⟩) (ha i).2 (ha ⟨0, hi0⟩).2).trans h2.symm)
   · rw [eq_top_iff, ← vsFEig_iSup _ hB f hfB hfp]
     refine iSup_le fun b => ?_

@@ -1,6 +1,10 @@
-import Workspace.Impl.FreshMath
-import Workspace.Impl.ScriptRun
-import Workspace.Impl.ScriptCont
+module
+
+public import Workspace.Impl.FreshMath
+public import Workspace.Impl.ScriptRun
+public import Workspace.Impl.ScriptCont
+
+@[expose] public section
 
 /-!
 # The calls of the row terminal (T1)
@@ -120,6 +124,7 @@ theorem groupFin_refl (G : Subgroup (Perm (Fin m))) : groupFin (Equiv.refl (Fin 
   constructor
   · rintro ⟨h, hh, rfl⟩
     convert hh using 1
+    ext; rfl
   · intro hg
     exact ⟨g, hg, by ext; rfl⟩
 

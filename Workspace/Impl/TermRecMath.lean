@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlue
+module
+
+public import Workspace.Impl.TermGlue
+
+@[expose] public section
 
 /-!
 # One level of the recursion of Theorem A.20, in the form a program computes it (T5, mathematics)

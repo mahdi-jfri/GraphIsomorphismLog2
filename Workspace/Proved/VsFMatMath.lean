@@ -1,5 +1,9 @@
-import Workspace.Impl.VsFMatMul
-import Workspace.Proved.VStabLinMath
+module
+
+public import Workspace.Impl.VsFMatMul
+public import Workspace.Proved.VStabLinMath
+
+@[expose] public section
 
 /-!
 # What the matrix product program computes, over `ZMod p`
@@ -39,6 +43,6 @@ theorem vsFMat_rowMul (p : ℕ) (a : List ℕ) (Bm : List (List ℕ)) (z : List 
     (hB : ∀ r ∈ Bm, r.length ≤ z.length) :
     vsF p (vsFRowMul p a Bm z) = vsF p z +
       ∑ j ∈ Finset.range Bm.length, ((a.getD j 0 : ℕ) : ZMod p) • vsF p (Bm.getD j []) := by
-  simpa using vsFMat_rowMul_foldl p a Bm 0 z hB
+  simpa [vsFRowMul] using vsFMat_rowMul_foldl p a Bm 0 z hB
 
 end GI.Proved

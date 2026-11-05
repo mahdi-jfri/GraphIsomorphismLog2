@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
 
 /-!
 # Linear groups: invariant subspaces and restriction
@@ -84,8 +88,8 @@ noncomputable def palfyResGrp (H : Subgroup (Module.End K V)ˣ) (W : Submodule K
     (hW : palfyInv H W) : Subgroup (Module.End K W)ˣ :=
   (palfyRes H W hW).range
 
-theorem palfyResGrp_solvable (H : Subgroup (Module.End K V)ˣ) [IsSolvable H] (W : Submodule K V)
-    (hW : palfyInv H W) : IsSolvable (palfyResGrp H W hW) :=
+theorem palfyResGrp_solvable (H : Subgroup (Module.End K V)ˣ) [Group.IsSolvable H] (W : Submodule K V)
+    (hW : palfyInv H W) : Group.IsSolvable (palfyResGrp H W hW) :=
   solvable_of_surjective (palfyRes H W hW).rangeRestrict_surjective
 
 /-- A subspace of `W` invariant under the restricted group, viewed in `V`, is `H`-invariant. -/
@@ -143,6 +147,8 @@ theorem palfy_card_le_split [Finite V] {H : Subgroup (Module.End K V)ˣ} {W W' :
     intro a b hab
     simp only [Prod.mk.injEq, Subtype.mk.injEq] at hab
     obtain ⟨h1, h2⟩ := hab
+    have h1 := congrArg Subtype.val h1
+    have h2 := congrArg Subtype.val h2
     apply Subtype.ext
     apply Units.ext
     apply LinearMap.ext

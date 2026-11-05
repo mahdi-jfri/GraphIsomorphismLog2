@@ -1,6 +1,10 @@
-import Workspace.Impl.FreshPrep
-import Workspace.Impl.Floor
-import Workspace.Impl.Weights
+module
+
+public import Workspace.Impl.FreshPrep
+public import Workspace.Impl.Floor
+public import Workspace.Impl.Weights
+
+@[expose] public section
 
 /-!
 # A fresh phase of `Solve`

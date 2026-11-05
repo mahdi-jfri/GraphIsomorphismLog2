@@ -1,13 +1,19 @@
-import Workspace.Impl.TermGlue
-import Workspace.Impl.TermRecSpec
+module
+
+public import Workspace.Impl.TermGlue
+public import Workspace.Impl.TermRecSpec
+
+@[expose] public section
 
 /-!
 # One radical coset of the row terminal: the mathematics (T5 inside `TermCosetSpec`)
 
-Corollary A.22 solves the type multisets of the two strings inside one coset `R r` of the
-radical preimage `R`, by Theorem A.20 on a solvable supplement `S` of `N` in `R` (Lemma A.19).
+Corollary A.22 solves the type multisets of the two strings inside one coset `R' r` of the
+subgroup `R'` of Lemma A.21 (`N ≤ R' ≤ H`, `R'/N` solvable), by Theorem A.20 on `(R', N)`.
 Theorem A.20 works on coset objects (`CObj`), so the types (the `N`-orbits of the rows) must
-first be written as coset objects. This file proves that the objects a program builds from the
+first be written as coset objects. The lemmas below are stated for a group `H`; the coset
+program applies them to `R'` and the rebased table `Iso_{R'}(x_i, y_j^{r⁻¹})`
+(`Workspace/OutbRebMath.lean`). This file proves that the objects a program builds from the
 coset table `Iso_H(x_i, y_j)` have the same transporters as the types, and that the transporter
 inside `R r` is read off from the transporter in `S`.
 
@@ -23,7 +29,8 @@ from the generators of an entry (`tmCs_gens_aut`), and the coset representative 
 element. A row with no partner on the other side makes the transporter empty
 (`tmCs_partner_x`, `tmCs_partner_y`).
 
-**The radical coset** (`tmCs_res_eq`). With `R ⊴ H` (`tmCs_rad_normalizes`), `R = N S` and `N`
+**A normal subgroup** (`tmCs_res_eq`, not used by the coset program). With `R ⊴ H`
+(`tmCs_rad_normalizes`), `R = N S` and `N`
 fixing the objects: `Iso_H(X, Y) ∩ R r = r · Iso_S(X^r, Y) · N`. When `Iso_S(X^r, Y)` is the
 coset `x ⟨gs⟩`, this is the coset `(r x) ⟨gs, N⟩` (`tmCs_res_coset`). This is the paper's
 "restrict to `S` ... at the end, adjoining `N` recovers the full transporter".
@@ -492,6 +499,28 @@ theorem tmCs_res_main {q : ℕ} {H N R S : Subgroup (Perm (Fin n))} (hNH : N ≤
   refine tmCs_res_eq hRH hRn hSR hNR hcov hSN hr ?_ ?_
   · rw [hOX]; exact (hfix hDx (fixes_types N x)).act hn hr
   · rw [hOY]; exact hfix hDy (fixes_types N y)
+
+/-- **The `R`-transporter of the listed objects equals the `R`-transporter of the types**:
+if the listed objects are the coset objects `tmCsF R N y'` of the types and every row of `x`
+has an `R`-partner in `y'`, then `Iso R (tmGlMs OX) (tmGlMs OY) = Iso R (types N x) (types N y')`. -/
+theorem tmCs_iso_objs_eq {q : ℕ} {R N : Subgroup (Perm (Fin n))} (hNR : N ≤ R)
+    (hRN : Normalizes R N) {x y' : Fin q → Ω}
+    {OX OY : List (ℕ × List (Perm (Fin n)) × Perm (Fin n))}
+    (hOX : tmGlMs OX = (types N x).map (tmCsF R N y'))
+    (hOY : tmGlMs OY = (types N y').map (tmCsF R N y'))
+    (hpart : ∀ i, ∃ j, (Iso R (x i) (y' j)).Nonempty) :
+    Iso R (tmGlMs OX) (tmGlMs OY) = Iso R (types N x) (types N y') := by
+  have hDx : ∀ t ∈ types N x, t ∈ tmCsD R N y' := by
+    intro t ht
+    obtain ⟨i, -, rfl⟩ := Multiset.mem_map.1 ht
+    obtain ⟨j, hj⟩ := hpart i
+    exact ⟨j, (tmCs_in_iff hNR (x i) j).2 hj⟩
+  have hDy : ∀ t ∈ types N y', t ∈ tmCsD R N y' := by
+    intro t ht
+    obtain ⟨j, -, rfl⟩ := Multiset.mem_map.1 ht
+    exact ⟨j, (tmCs_in_iff hNR (y' j) j).2 ⟨1, R.one_mem, act_one _⟩⟩
+  rw [hOX, hOY]
+  exact tmCs_iso_map (H := R) (tmCsD_act hRN) (tmCsF_act hRN) tmCsF_inj hDx hDy
 
 end Objs
 

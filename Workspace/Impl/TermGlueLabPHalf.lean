@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPHalfA
+module
+
+public import Workspace.Impl.TermGlueLabPHalfA
+
+@[expose] public section
 
 /-!
 # The offset vector of one element (step 5, program)

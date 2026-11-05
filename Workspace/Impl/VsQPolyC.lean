@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQFinal
+module
+
+public import Workspace.Impl.VsQFinal
+
+@[expose] public section
 
 /-!
 # The costs are polynomial

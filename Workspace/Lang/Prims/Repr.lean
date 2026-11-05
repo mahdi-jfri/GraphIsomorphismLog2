@@ -22,9 +22,13 @@ generators (`size_encGroup`, `wt_encGroup_le`). The output formats have weights 
 polynomial in `n` alone (`GensVal.wt_le`, `labels_wt_le`, `SeriesVal.wt_le`), because the tasks
 bound the number of generators and the labels.
 -/
-import Workspace.Lang.Lib.Orbit
-import Workspace.Cited.AlgoPermGroups
-import Workspace.CitedChecks.AlgoChecks
+module
+
+public import Workspace.Lang.Lib.Orbit
+public import Workspace.Cited.AlgoPermGroups
+public import Workspace.CitedChecks.AlgoChecks
+
+@[expose] public section
 
 namespace GI.Lang
 

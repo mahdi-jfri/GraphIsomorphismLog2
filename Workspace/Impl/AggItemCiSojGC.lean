@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojGuard
+module
+
+public import Workspace.Impl.AggItemCiSojGuard
+
+@[expose] public section
 
 /-! # Comparing rectangle sides by their literal three-color counts -/
 

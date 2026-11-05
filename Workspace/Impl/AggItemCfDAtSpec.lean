@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCfDPrograms
+module
+
+public import Workspace.Impl.AggItemCfDPrograms
+
+@[expose] public section
 
 namespace GI.Impl
 

@@ -1,5 +1,10 @@
-import Workspace.Impl.TermGlueLabRT
-import Workspace.Lang.Lib.LinIntVector
+module
+
+public import Workspace.Impl.AddEquivGroup
+public import Workspace.Impl.TermGlueLabRT
+public import Workspace.Lang.Lib.LinIntVector
+
+@[expose] public section
 
 /-!
 # The contract of the finite abelian affine transporter procedure
@@ -98,7 +103,7 @@ affine compatibility condition"), as the function `j` of `Pg`. -/
 def TmGLAffineSpec (Pg : Program) (K D j : ℕ) : Prop :=
   ∀ {n d : ℕ} (gs : List (Perm (Fin n))) (m : Fin d → ℕ)
     (ρ : gens gs →* (tmGLVec m ≃+ tmGLVec m)) (c : gens gs → tmGLVec m) (v w : tmGLVec m),
-    IsSolvable (gens gs) →
+    IsSolvable ρ.range →
     (∀ i, 0 < m i) →
     -- "the invariant factors ... have no prime divisors above `b`" (with the orientation
     -- factor, `p ≤ max {b, 2}`)

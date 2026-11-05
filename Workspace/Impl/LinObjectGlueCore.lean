@@ -1,12 +1,16 @@
-import Workspace.Impl.LinObjectSourceCoordinateSpec
-import Workspace.Impl.LinObjectSourceCorrectSpec
-import Workspace.Impl.LinObjectStabilizerSpec
-import Workspace.Impl.LinObjectCallerSpec
-import Workspace.Impl.LinObjectCanonicalPrime
-import Workspace.Impl.LinObjectAffineCosetGroup
-import Workspace.Impl.LinObjectProfileMath
-import Workspace.Impl.LinAffineLeftSpec
-import Workspace.Impl.LinObjectGluePlans
+module
+
+public import Workspace.Impl.LinObjectSourceCoordinateSpec
+public import Workspace.Impl.LinObjectSourceCorrectSpec
+public import Workspace.Impl.LinObjectStabilizerSpec
+public import Workspace.Impl.LinObjectCallerSpec
+public import Workspace.Impl.LinObjectCanonicalPrime
+public import Workspace.Impl.LinObjectAffineCosetGroup
+public import Workspace.Impl.LinObjectProfileMath
+public import Workspace.Impl.LinAffineLeftSpec
+public import Workspace.Impl.LinObjectGluePlans
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojRel
-import Workspace.Impl.AggItemCiSojDone
+module
+
+public import Workspace.Impl.AggItemCiSojRel
+public import Workspace.Impl.AggItemCiSojDone
+
+@[expose] public section
 
 /-! # The actual queue's finalizing step satisfies the full item postcondition -/
 

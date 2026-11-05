@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojAskFrame
-import Workspace.Impl.AggItemCiSojStartScalar
+module
+
+public import Workspace.Impl.AggItemCiSojAskFrame
+public import Workspace.Impl.AggItemCiSojStartScalar
+
+@[expose] public section
 
 /-! # The actual initial request fits the global item and frame budgets -/
 

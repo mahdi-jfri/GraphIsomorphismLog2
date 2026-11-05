@@ -1,5 +1,9 @@
-import Workspace.SocleFactorAction
-import Workspace.ProjectionEnvelope
+module
+
+public import Workspace.SocleFactorAction
+public import Workspace.ProjectionEnvelope
+
+@[expose] public section
 
 namespace GI.PrimitiveCartesian
 
@@ -45,7 +49,10 @@ theorem intrinsicCoordinateAut_single
   apply (intrinsicProductEquiv radicalFree hsoc).injective
   change intrinsicProductEquiv radicalFree hsoc
       ((intrinsicProductEquiv radicalFree hsoc).symm
-        (e (intrinsicProductEquiv radicalFree hsoc (Pi.mulSingle M x)))) = _
+        (e (intrinsicProductEquiv radicalFree hsoc (Pi.mulSingle M x)))) =
+      intrinsicProductEquiv radicalFree hsoc
+        (Pi.mulSingle (M := fun L : MinimalNormals G => L.val)
+          (minimalNormalPerm e M) (show (minimalNormalPerm e M).val from e.subgroupMap M.val x))
   rw [MulEquiv.apply_symm_apply, intrinsicProductEquiv_single,
     intrinsicProductEquiv_single]
   rfl
@@ -73,14 +80,17 @@ theorem intrinsicCoordinateAut_apply
       e.subgroupMap M.val (Pi.mulSingle (M := fun L : MinimalNormals G => L.val) L z M)
     rw [intrinsicCoordinateAut_single]
     change Pi.mulSingle (M := fun L : MinimalNormals G => L.val)
-      (p L) (e.subgroupMap L.val z) (p M) =
+      (p L) (show (p L).val from e.subgroupMap L.val z) (p M) =
         e.subgroupMap M.val (Pi.mulSingle (M := fun L : MinimalNormals G => L.val) L z M)
     by_cases hLM : L = M
     · subst L
       simp only [Pi.mulSingle_eq_same]
+      exact Pi.mulSingle_eq_same (M := fun L : MinimalNormals G => L.val)
+        (p M) (e.subgroupMap M.val z)
     · have hp : p L ≠ p M := fun he => hLM (p.injective he)
-      simp only [Pi.mulSingle_eq_of_ne' hLM, Pi.mulSingle_eq_of_ne' hp, map_one]
-      rfl
+      simp only [Pi.mulSingle_eq_of_ne' hLM, map_one]
+      exact Pi.mulSingle_eq_of_ne' (M := fun L : MinimalNormals G => L.val) hp
+        (e.subgroupMap L.val z)
   exact DFunLike.congr_fun h x
 
 theorem intrinsicCoordinateAut_fibers
@@ -101,11 +111,3 @@ theorem intrinsic_projectionEnvelope_map_eq
     (minimalNormalPerm e) (intrinsicCoordinateAut_fibers radicalFree hsoc e) preserves
 
 end GI.PrimitiveCartesian
-
-#print axioms GI.PrimitiveCartesian.intrinsicProductEquiv
-#print axioms GI.PrimitiveCartesian.intrinsicProductEquiv_single
-#print axioms GI.PrimitiveCartesian.intrinsicCoordinateAut
-#print axioms GI.PrimitiveCartesian.intrinsicCoordinateAut_single
-#print axioms GI.PrimitiveCartesian.intrinsicCoordinateAut_apply
-#print axioms GI.PrimitiveCartesian.intrinsicCoordinateAut_fibers
-#print axioms GI.PrimitiveCartesian.intrinsic_projectionEnvelope_map_eq

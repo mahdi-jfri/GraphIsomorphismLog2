@@ -1,6 +1,10 @@
-import Workspace.Impl.LinObjectNormal
-import Workspace.Impl.LinObjectNormalMath
-import Workspace.Impl.TermGlueLabQ
+module
+
+public import Workspace.Impl.LinObjectNormal
+public import Workspace.Impl.LinObjectNormalMath
+public import Workspace.Impl.TermGlueLabQ
+
+@[expose] public section
 
 /-! Assemble the product of local quotients and compute its finite abelian normal
 form. The zero-column case is direct and makes no cited normal-form call. -/

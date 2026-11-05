@@ -8,7 +8,11 @@ Small tools for the wrapper of Algorithm 1 (`Workspace/Assembly/Build.lean`,
 * `FunDet.wt_lt`, `Det.wt_lt`: the weight of a result is below its cost bound.
 * `mul_pow_le`, `pow_le_pow_of_le`: arithmetic for cost bounds of the form `C * (n + 1) ^ d`.
 -/
-import Workspace.Lang.Lib.Graph
+module
+
+public import Workspace.Lang.Lib.Graph
+
+@[expose] public section
 
 namespace GI.Lang
 

@@ -1,5 +1,9 @@
-import Workspace.Proved.SNFSize
-import Workspace.Proved.SNFMath
+module
+
+public import Workspace.Proved.SNFSize
+public import Workspace.Proved.SNFMath
+
+@[expose] public section
 
 /-!
 # One bit bound for every state of the Smith form algorithm

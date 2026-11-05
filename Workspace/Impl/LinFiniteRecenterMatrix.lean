@@ -1,5 +1,9 @@
-import Workspace.Impl.LinFiniteRecenter
-import Workspace.Impl.LinFiniteHomogeneous
+module
+
+public import Workspace.Impl.LinFiniteRecenter
+public import Workspace.Impl.LinFiniteHomogeneous
+
+@[expose] public section
 
 namespace GI.Impl
 open scoped BigOperators

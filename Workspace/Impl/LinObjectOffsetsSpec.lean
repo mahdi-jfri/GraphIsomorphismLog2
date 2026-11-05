@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectOffsetsTail
+module
+
+public import Workspace.Impl.LinObjectOffsetsTail
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -11,7 +15,7 @@ theorem linObjectOffsets_spec {P : Program} {b jsci jder jmem jm n M : ℕ}
     {Q : Type*} [CommGroup Q] (as ns : List (Equiv.Perm (Fin n))) (π : gens as →* Q)
     (Y Z : Multiset (CObj ℕ (Equiv.Perm (Fin n)))) (hZ : Conf (gens as) Y Z)
     (refs targets : List (List (TmRiO n)))
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : TmRiListNorm (gens as) (refs ++ targets).flatten) (hNA : gens ns ≤ gens as)
     (hNn : GI.Multicoset.Normalizes (gens as) (gens ns))
     (hcomm : ∀ a ∈ gens as, ∀ b ∈ gens as, a * b * a⁻¹ * b⁻¹ ∈ gens ns)
     (hal : as.length ≤ n ^ 2) (hPs : ∀ S ∈ refs ++ targets, TmRiPc as ns M S)
@@ -53,7 +57,7 @@ theorem linObjectOffsets_spec {P : Program} {b jsci jder jmem jm n M : ℕ}
     omega
   have hab : FunDet P (b + 1) (.list [.list (refs.map tmGlObjsVal), .list (targets.map tmGlObjsVal)])
       (.list (all.map tmGlObjsVal)) AB := by
-    simpa only [all, List.map_append] using
+    simpa only [AB, linObjectOffsetsAppendBudget, all, List.map_append] using
       (linAppend_spec h.append (refs.map tmGlObjsVal) (targets.map tmGlObjsVal)).mono
         (linPolyEnvelope_bound linObjectOffsetsAppendPoly (Nat.zero_le _) habarg (Nat.zero_le _))
   have wall : (Val.list (all.map tmGlObjsVal)).wt ≤ AB := hab.wt_lt.le
@@ -110,7 +114,7 @@ theorem linObjectOffsets_spec {P : Program} {b jsci jder jmem jm n M : ℕ}
     nlinarith
   have hslice : FunDet P (b + 102) (.list [.nat 0, .nat refs.length, tv])
       (.list (selected.map Val.list)) SB := by
-    simpa only [List.drop_zero, ← List.map_take] using
+    simpa only [SB, linObjectOffsetsSliceBudget, tv, selected, List.drop_zero, ← List.map_take] using
       (linSlice_spec h.slice (allrows.map Val.list) 0 refs.length (by simpa using hTablen)).mono
         (linPolyEnvelope_bound linSliceCost_poly (Nat.zero_le _) hsliceArg (Nat.zero_le _))
   have wselected : (Val.list (selected.map Val.list)).wt ≤ SB := hslice.wt_lt.le

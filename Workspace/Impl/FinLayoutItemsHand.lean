@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCmpRun
-import Workspace.Impl.AggItemOKHand
+module
+
+public import Workspace.Impl.AggCmpRun
+public import Workspace.Impl.AggItemOKHand
+
+@[expose] public section
 
 /-!
 # The comparison phase hands over `ItHandB`
@@ -7,7 +11,7 @@ import Workspace.Impl.AggItemOKHand
 The items need the lengths of the graph pairs `ps, fx, fy` of the hand-over to be bounded
 (`ItHandB`, `AggItemStepSpec.lean`). So the hand-over `asHandImpl` of the final program uses
 `ItHandB` for the items. `cm_asCompOK` (`AggCmpRun.lean`) asks that `ItHand` imply the relation
-of the items, which no longer holds. `fitm_cmAsCompOKB` is the same result for a hand-over whose
+of the items, which is false for this hand-over. `fitm_cmAsCompOKB` is the same result for a hand-over whose
 relation of the items contains `ItHandB`: it is `cm_runOK` followed by `itS_asCompOK_of_runB`
 in place of `asCompOK_of_run`.
 -/

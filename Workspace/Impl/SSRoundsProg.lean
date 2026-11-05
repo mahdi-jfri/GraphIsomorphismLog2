@@ -1,4 +1,8 @@
-import Workspace.Impl.SSRoundProg
+module
+
+public import Workspace.Impl.SSRoundProg
+
+@[expose] public section
 
 /-!
 # Rounds of pair steps, as programs

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojSourceLib
-import Workspace.Impl.AggItemCiSojInputBudget
+module
+
+public import Workspace.Impl.AggItemCiSojSourceLib
+public import Workspace.Impl.AggItemCiSojInputBudget
+
+@[expose] public section
 
 /-! # The source-dispatch scan, certificate and wrapper costs -/
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.TermRepsMath
-import Workspace.Impl.FreshPrep
+module
+
+public import Workspace.Impl.TermRepsMath
+public import Workspace.Impl.FreshPrep
+
+@[expose] public section
 
 /-!
 # A loop over a growing list (T3)

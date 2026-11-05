@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepDW
+module
+
+public import Workspace.Impl.AggRectRepDW
+
+@[expose] public section
 
 /-!
 # The tests and lookups of the representation program

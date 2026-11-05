@@ -1,6 +1,10 @@
-import Workspace.Impl.LinFinitePair
-import Workspace.Impl.LinFiniteActionWeight
-import Workspace.Impl.LinGroupSlp
+module
+
+public import Workspace.Impl.LinFinitePair
+public import Workspace.Impl.LinFiniteActionWeight
+public import Workspace.Impl.LinGroupSlp
+
+@[expose] public section
 
 /-! Executable full affine group operations and shared-entry SLP evaluation. -/
 namespace GI.Impl

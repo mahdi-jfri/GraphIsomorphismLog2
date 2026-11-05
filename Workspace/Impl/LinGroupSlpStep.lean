@@ -1,5 +1,9 @@
-import Workspace.Impl.LinIntSlpTrace
-import Workspace.Impl.LinMapEncoded
+module
+
+public import Workspace.Impl.LinIntSlpTrace
+public import Workspace.Impl.LinMapEncoded
+
+@[expose] public section
 
 /-! A shared-entry SLP interpreter for any group with encoded multiplication
 and inversion programs. Full affine transformations are one application. -/

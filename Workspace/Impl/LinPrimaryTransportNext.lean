@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryTransport
+module
+
+public import Workspace.Impl.LinPrimaryTransport
+
+@[expose] public section
 
 /-! The executable field answer has precisely the next-fiber meaning needed
 by the primary loop, including a proved failure branch. -/
@@ -6,19 +10,20 @@ namespace GI.Impl
 open GI.Cited GI.Lang
 
 theorem linPrimaryLayerTarget_mem {n p d : ℕ} (gs : List (Equiv.Perm (Fin n)))
-    (hs : IsSolvable (gens gs)) (hp : p.Prime) (hpn : p ≤ n) (ν : Fin d → ℕ) (level : ℕ)
+    (hp : p.Prime) (hpn : p ≤ n) (ν : Fin d → ℕ) (level : ℕ)
     (ρ : gens gs →* (linFiniteVec (linPrimaryOrders p ν) ≃+ linFiniteVec (linPrimaryOrders p ν)))
+    (hs : IsSolvable ρ.range)
     (c : gens gs → linFiniteVec (linPrimaryOrders p ν))
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g)
     (hf : ∀ g, linPrimaryFiber p ν level (c g)) (x : linFiniteVec (linPrimaryOrders p ν))
     (g : gens gs) :
-    let I := linPrimaryLayerInst gs hs hp hpn ν level ρ x
+    let I := linPrimaryLayerInst gs hp hpn ν level ρ hs x
     let c' : gens I.gs → Fin I.d → ZMod I.p := fun g => linPrimaryCoord p ν level (c g)
-    let hc' := linPrimaryLayer_cocycle gs hs hp hpn ν level ρ c hc hf x
+    let hc' := linPrimaryLayer_cocycle gs hp hpn ν level ρ hs c hc hf x
     g.val ∈ linAffineTargetSub I c' hc' 0 ↔ linPrimaryFiber p ν (level + 1) (c g) := by
-  let I := linPrimaryLayerInst gs hs hp hpn ν level ρ x
+  let I := linPrimaryLayerInst gs hp hpn ν level ρ hs x
   let c' : gens I.gs → Fin I.d → ZMod I.p := fun g => linPrimaryCoord p ν level (c g)
-  let hc' := linPrimaryLayer_cocycle gs hs hp hpn ν level ρ c hc hf x
+  let hc' := linPrimaryLayer_cocycle gs hp hpn ν level ρ hs c hc hf x
   have hh := linAffineTargetSub_mem I c' hc' 0 (g : gens I.gs)
   change g.val ∈ linAffineTargetSub I c' hc' 0 ↔ _
   refine hh.trans ?_
@@ -26,15 +31,16 @@ theorem linPrimaryLayerTarget_mem {n p d : ℕ} (gs : List (Equiv.Perm (Fin n)))
   exact linPrimaryCoord_zero_iff p hp.pos ν level (c g) (hf g)
 
 theorem linPrimaryTransportOut_next {n p d : ℕ} (gs : List (Equiv.Perm (Fin n)))
-    (hs : IsSolvable (gens gs)) (hp : p.Prime) (hpn : p ≤ n) (ν : Fin d → ℕ) (level : ℕ)
+    (hp : p.Prime) (hpn : p ≤ n) (ν : Fin d → ℕ) (level : ℕ)
     (ρ : gens gs →* (linFiniteVec (linPrimaryOrders p ν) ≃+ linFiniteVec (linPrimaryOrders p ν)))
+    (hs : IsSolvable ρ.range)
     (c : gens gs → linFiniteVec (linPrimaryOrders p ν))
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g)
     (hf : ∀ g, linPrimaryFiber p ν level (c g))
     (x : linFiniteVec (linPrimaryOrders p ν)) (hx : linPrimaryFiber p ν level x) (out : Val) :
-    let I := linPrimaryLayerInst gs hs hp hpn ν level ρ x
+    let I := linPrimaryLayerInst gs hp hpn ν level ρ hs x
     let c' : gens I.gs → Fin I.d → ZMod I.p := fun g => linPrimaryCoord p ν level (c g)
-    let hc' := linPrimaryLayer_cocycle gs hs hp hpn ν level ρ c hc hf x
+    let hc' := linPrimaryLayer_cocycle gs hp hpn ν level ρ hs c hc hf x
     linAffineTransportOut I c' hc' 0 out →
       (out = .list [] ∧ ¬∃ g : gens gs, linPrimaryFiber p ν (level + 1) (ρ g x + c g)) ∨
       ∃ (g : gens gs) (sv : Val), out = .list [encPerm g.val, sv] ∧

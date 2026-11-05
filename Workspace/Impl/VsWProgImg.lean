@@ -1,4 +1,8 @@
-import Workspace.Impl.VsWProgBas
+module
+
+public import Workspace.Impl.VsWProgBas
+
+@[expose] public section
 
 /-!
 # Images and cuts as programs
@@ -128,7 +132,7 @@ theorem vsWKer_length_le {p N d : ℕ} (hp1 : 1 < p) (hpN : p ≤ N) (hdN : d �
     obtain ⟨h1, h2, h3, h4⟩ := hok xt hxt
     exact ⟨⟨h1, h2, by omega, by omega⟩, h3, h4⟩
   have := (vsInsertAll_fits (by omega) hpN hL).nrels
-  simpa [vsUnitPairs] using this
+  simpa [vsUnitPairs, vsWKer] using this
 
 /-- The cut, on `[p, d, us, A]`: the images of the relations among the images of `us`. -/
 def vsWCutF (img ker : ℕ) : Expr :=

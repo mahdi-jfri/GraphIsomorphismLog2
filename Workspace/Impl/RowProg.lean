@@ -1,5 +1,9 @@
-import Workspace.Impl.RowWin
-import Workspace.Impl.AggStab
+module
+
+public import Workspace.Impl.RowWin
+public import Workspace.Impl.AggStab
+
+@[expose] public section
 
 /-!
 # Lifting a window, as a program
@@ -56,6 +60,8 @@ theorem fstStep_spec {P : Program} {f : ℕ} (hf : P.funs[f]? = some fstStepF)
     rfl
   have e5 : (Val.list [encPerm p.1, encPerm p.2]).wt = (pairV p).wt := rfl
   have e6 : (Val.list [encPerm (1 : Perm (Fin q)), pairV p]).wt = inp.wt := rfl
+  clear g0 g1 ga d hf
+  clear_value inp
   omega
 
 /-- `map fstStep` at `b` (four functions). -/
@@ -96,6 +102,7 @@ def grpK : ℕ := 1000000000000
 theorem wt_encGroup_pairs_le (ps : List (Perm (Fin k) × Perm (Fin q))) :
     (encGroup (ps.map encPair)).wt ≤ 40 * pM k q ps ^ 4 := by
   set M := pM k q ps with hM
+  clear_value M
   have sGD2 : ((ps.map encPair).length + 2) * (k + q + 1) ≤ M ^ 2 := by
     have := Nat.mul_le_mul (show (ps.map encPair).length + 2 ≤ M by
         simp only [List.length_map, hM, pM]; omega)
@@ -125,6 +132,7 @@ theorem grp_spec {P : Program} {f en mk : ℕ} (hf : P.funs[f]? = some (grpF en 
   rw [eE] at hG2
   have d2 := Det.call (Det.mk2 (Det.arith' (op := .add) (gk []) (gq []) (z := k + q) rfl) d1) hG2
   refine FunDet.intro hf (d2.mono ?_)
+  clear gk gq d1 hG2 eE d2 hf hen hmk
   -- the cost
   have bps : (Val.list (ps.map pairV)).wt ≤ 50 * pM k q ps ^ 3 := wt_pairList_le ps
   have bGD : (encGroup (ps.map encPair)).wt ≤ 40 * pM k q ps ^ 4 := wt_encGroup_pairs_le ps
@@ -382,7 +390,6 @@ theorem winLift_of_fixPos {rl : List ℕ} (hrl : RowLabs e S label rl) {t : List
     rw [e.symm_apply_apply] at this
     exact e.injective this
 
-set_option maxHeartbeats 1600000 in
 /-- **The window lift.** For a window `t` without repeats that has some lift, `liftWinF`
 returns a lift. It calls **PointwiseStab** once and **NormalizedFactor** once. -/
 theorem liftWin_spec (hst : PointwiseStab) (hfac : NormalizedFactor) {P : Program} {b jp jf : ℕ}
@@ -440,6 +447,8 @@ theorem liftWin_spec (hst : PointwiseStab) (hfac : NormalizedFactor) {P : Progra
     have h1 : v.wt < ctx.wt := wt_le_wt_list hv
     have h2 : ctx.wt < inp.wt := wt_le_wt_list (by simp [hinp])
     have h3 : (Val.list [ctx, rowsV t]).wt = inp.wt := rfl
+    clear hb hjp hjf hA hB hentry hcyc hcs hfd hfi hot hgs hen hmk hfm hll hsp hgr hsh d
+    clear_value σ X ctx inp cl
     omega
   -- step 1: the cycle
   have hc1 := cycTab_spec hcyc hcs hfd t hnd ht
@@ -470,7 +479,10 @@ theorem liftWin_spec (hst : PointwiseStab) (hfac : NormalizedFactor) {P : Progra
     (EvalAll.call_funAll a3 fun v ca h => ?_) fun w3 c3 h3 => ?_
   · obtain ⟨rfl, hca⟩ := h
     exact (graphStabL_spec hst hgs hjp ps X).mono fun w c ⟨qs, h1, h2, h3, h4⟩ =>
-      ⟨qs, h1, h2, h3, by omega⟩
+      ⟨qs, h1, h2, h3, by
+        clear hb hjp hjf hA hB hentry hcyc hcs hfd hfi hot hgs hen hmk hfm hll hsp hgr hsh rd d1 ho d2 a3
+        clear_value σ X ctx inp cl A3 STB
+        omega⟩
   obtain ⟨qs, rfl, hql, hqs, hc3⟩ := h3
   -- step 4: the lift
   set env4 : List Val := [inp, encPerm σ, encPts X, .list (qs.map pairV)] with henv4
@@ -497,9 +509,10 @@ theorem liftWin_spec (hst : PointwiseStab) (hfac : NormalizedFactor) {P : Progra
   obtain ⟨g, hg, ⟨-, hgX⟩, h1, h2'⟩ := (mem_graphOf e L).1 ha
   refine ⟨g, winLift_of_fixPos hrl hg hgX h2', by rw [hw, h1], ?_⟩
   -- the cost
-  clear dH dF dN d4 dkq v3 a3 d2 d1 ho hσex hgX ha h1 h2' hpg hqs
+  clear hb hjp hjf hA hB hentry hcyc hcs hfd hfi hot hgs hen hmk hfm hll hsp hgr hsh rd
+  clear dH dF dN d4 dkq v3 a3 d2 d1 ho hσex hgX ha h1 h2' hpg hqs hps hex hg cl hcl env4 henv4
   have hlo : (onePairs qs).length = qs.length := List.length_map _
-  have hX : X.length ≤ k := length_outPts rl σ
+  have hXlen : X.length ≤ k := length_outPts rl σ
   have eI : (Val.list [ctx, rowsV t]).wt = inp.wt := rfl
   have eX : encPts (outPts (n := k) rl σ) = encPts X := rfl
   have eσ : encPerm t.formPerm = encPerm σ := rfl
@@ -511,6 +524,7 @@ theorem liftWin_spec (hst : PointwiseStab) (hfac : NormalizedFactor) {P : Progra
   have hIc := wt_winCtx_le hrl.1 hrl.le ps
   rw [hpM] at hIc
   set M := k + L.q + ps.length + 2 with hM
+  clear_value M
   have hM2 : 2 ≤ M := by omega
   have hkqM : k + L.q + 1 ≤ M := by omega
   have p12 : M ≤ M ^ 2 := Nat.le_self_pow (by norm_num) _
@@ -529,6 +543,7 @@ theorem liftWin_spec (hst : PointwiseStab) (hfac : NormalizedFactor) {P : Progra
   have hIc' : ctx.wt ≤ 300 * M ^ 3 := hIc
   have hI : inp.wt ≤ 1000 * M ^ 3 := by
     have := wt_list2_le ctx (rowsV t)
+    clear_value σ X ctx inp A3 STB
     omega
   have hctxI : ctx.wt < inp.wt := wt_le_wt_list (by simp)
   have hrlc : (natList rl).wt < ctx.wt := wt_le_wt_list (by simp [hctx, winCtx])
@@ -549,27 +564,36 @@ theorem liftWin_spec (hst : PointwiseStab) (hfac : NormalizedFactor) {P : Progra
   have s2a := wt_list2_le (natList rl) (encPerm σ)
   have s2b := wt_list2_le (Val.list [natList rl, encPerm σ]) (encPerm (1 : Perm (Fin k)))
   have s2c : (Val.list [Val.list [natList rl, encPerm σ], encPerm (1 : Perm (Fin k))]).wt + L.q + 1
-      ≤ 5000 * M ^ 3 := by omega
+      ≤ 5000 * M ^ 3 := by
+    clear_value σ X ctx inp A3 STB
+    omega
   have s2d : outFK * ((Val.list [Val.list [natList rl, encPerm σ], encPerm (1 : Perm (Fin k))]).wt +
       L.q + 1) ^ 2 ≤ outFK * (25000000 * M ^ 6) := by
     apply Nat.mul_le_mul_left
     calc _ ≤ (5000 * M ^ 3) ^ 2 := Nat.pow_le_pow_left s2c 2
       _ = 25000000 * M ^ 6 := by ring
-  have s2e : (encPts X).wt ≤ 3 * M ^ 2 + 4 := (wt_encPts_le' hX).trans (by omega)
+  have s2e : (encPts X).wt ≤ 3 * M ^ 2 + 4 := (wt_encPts_le' hXlen).trans (by omega)
   -- step 3
   have s3a : A3.wt ≤ 2 * ((Val.list [.nat k, .nat L.q]).wt + (Val.list (ps.map pairV)).wt +
       (encPts X).wt) + 7 := wt_list3_le _ _ _
   have s3b : STB ≤ (pointwiseStabPrim hst).c * (100 * M ^ 4 + 2) ^ (pointwiseStabPrim hst).k +
       graphStabK * (256 * M ^ 8) := by
-    have g1 : (encGroup (ps.map encPair)).wt ≤ 40 * M ^ 4 := wt_encGroup_pairs_le ps
+    have g1 : (encGroup (ps.map encPair)).wt ≤ 40 * M ^ 4 := by
+      have := wt_encGroup_pairs_le ps
+      rwa [hpM] at this
     have g2 := wt_list2_le (encGroup (ps.map encPair)) (encPts X)
     have g3 := prim_bound_le_wt (pointwiseStabPrim hst)
-      (show (Val.list [encGroup (ps.map encPair), encPts X]).wt ≤ 100 * M ^ 4 by omega)
+      (show (Val.list [encGroup (ps.map encPair), encPts X]).wt ≤ 100 * M ^ 4 by
+        clear_value σ X ctx inp A3 STB; omega)
     have g4 : graphStabK * stabM k L.q ps X ^ 8 ≤ graphStabK * (256 * M ^ 8) := by
       apply Nat.mul_le_mul_left
       calc stabM k L.q ps X ^ 8 ≤ (2 * M) ^ 8 := Nat.pow_le_pow_left (by unfold stabM; omega) 8
         _ = 256 * M ^ 8 := by ring
-    rw [hSTB]; omega
+    rw [hSTB]
+    clear_value σ X ctx inp A3 STB
+    omega
+  clear hσ hX hctx hinp hA3 hSTB
+  clear_value σ X ctx inp A3 STB
   have hq2 : qs.length ≤ M ^ 2 := hql.trans (Nat.pow_le_pow_left (by omega) 2)
   have hpq : pM k L.q qs ≤ 2 * M ^ 2 := by unfold pM; omega
   have hpo : pM k L.q (onePairs qs) ≤ 2 * M ^ 2 := by unfold pM; omega

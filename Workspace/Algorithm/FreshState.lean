@@ -1,5 +1,9 @@
-import Workspace.Algorithm.DomainRestriction
-import Workspace.Algorithm.HierInv
+module
+
+public import Workspace.Algorithm.DomainRestriction
+public import Workspace.Algorithm.HierInv
+
+@[expose] public section
 
 /-!
 # The state of a fresh phase

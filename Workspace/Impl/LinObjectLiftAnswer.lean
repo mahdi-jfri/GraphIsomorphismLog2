@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectLiftCost
+module
+
+public import Workspace.Impl.LinObjectLiftCost
+
+@[expose] public section
 
 /-! The observable answer of the common-translation lift. Failure rules
 out every common abelian translation; success supplies an actual cover

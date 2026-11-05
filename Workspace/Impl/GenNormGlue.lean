@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.Tabulate
+module
+
+public import Workspace.Lang.Lib.Tabulate
+
+@[expose] public section
 
 /-!
 # Reading and composing the normalization stages
@@ -70,7 +74,7 @@ theorem normPack_det {Pg : Program} {env : List Val} {T : ℕ} (ps : List (Expr 
       obtain ⟨v, hv, rfl⟩ := List.mem_map.mp hw'
       obtain ⟨p, hp, rfl⟩ := List.mem_map.mp hv
       exact hw p hp)
-    simpa only [List.length_map] using h
+    simpa only [List.length_map, Nat.nsmul_eq_mul] using h
   simp only [List.length_map] at wo
   have hp : ps.length * T ≤ 20 * T := Nat.mul_le_mul_right _ hlen
   have hT : T + 1 ≤ (T + 1) ^ 2 := Nat.le_self_pow (by norm_num) _

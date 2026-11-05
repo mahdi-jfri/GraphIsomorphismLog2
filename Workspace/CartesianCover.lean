@@ -1,5 +1,9 @@
-import Workspace.ActionOrbitKernel
-import Workspace.BlockChain
+module
+
+public import Workspace.ActionOrbitKernel
+public import Workspace.BlockChain
+
+@[expose] public section
 
 namespace GI
 

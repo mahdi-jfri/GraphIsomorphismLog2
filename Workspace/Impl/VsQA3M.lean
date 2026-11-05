@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQCentP
+module
+
+public import Workspace.Impl.VsQCentP
+
+@[expose] public section
 
 /-!
 # Facts on the centralizer of `A`
@@ -113,6 +117,7 @@ theorem vsQAb_of_comm (hs : VsQStOK s) {K : Subgroup (Perm (Fin I.n))} (hK : K �
   convert this using 1
   simp only [mulVec_add]
   abel
+  rfl
 
 /-- The test of the program: the stored local matrices of `gh` and `hg` agree. -/
 theorem vsQ_comm_of_test (hs : VsQStOK s) {ks : List (Perm (Fin I.n))} (hK : gens ks ≤ gens s.hs)
@@ -151,7 +156,6 @@ theorem vsQ_nab_of_test (hs : VsQStOK s) {ks : List (Perm (Fin I.n))} (hK : gens
   rw [vsPRho_of hs (mul_mem hg' hh'), vsPRho_of hs (mul_mem hh' hg')] at e1
   have e2 := congrArg (fun u : (Module.End (ZMod I.p) (Fin (vsQD s) → ZMod I.p))ˣ =>
     (u : Module.End (ZMod I.p) (Fin (vsQD s) → ZMod I.p))) e1
-  simp only at e2
   rw [vsQRho_eq_toLin' hs (mul_mem hg' hh'), vsQRho_eq_toLin' hs (mul_mem hh' hg')] at e2
   exact Matrix.toLin'.injective e2
 

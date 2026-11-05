@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosPaste2
+module
+
+public import Workspace.Impl.SCosPaste2
+
+@[expose] public section
 
 /-!
 # Pasting the answers of the children, the program

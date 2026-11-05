@@ -1,6 +1,10 @@
-import Workspace.PrimitiveTwoNormalDegree
-import Workspace.SocleFactorKernel
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+module
+
+public import Workspace.PrimitiveTwoNormalDegree
+public import Workspace.SocleFactorKernel
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+@[expose] public section
 
 namespace GI.RadicalSocle
 
@@ -23,7 +27,7 @@ theorem minimalNormal_count_pow_le_card
   calc
     2 ^ Fintype.card (MinimalNormals G) = ∏ _N : MinimalNormals G, 2 := by simp
     _ ≤ ∏ N : MinimalNormals G, Nat.card N.val :=
-      Finset.prod_le_prod (fun _ _ => Nat.zero_le _) (fun N _ => minimalNormal_card_two_le N)
+      Finset.prod_le_prod (fun N _ => minimalNormal_card_two_le N)
 
 theorem socle_intrinsic_count_pow_le_card
     (radicalFree : ∀ N : Subgroup G, N.Normal → IsSolvable N → N = ⊥) :

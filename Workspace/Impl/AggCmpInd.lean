@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCmpWin
-import Workspace.Impl.AggCertMvInd
+module
+
+public import Workspace.Impl.AggCmpWin
+public import Workspace.Impl.AggCertMvInd
+
+@[expose] public section
 
 /-!
 # Indicators of lists of numbers

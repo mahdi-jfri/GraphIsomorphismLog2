@@ -1,6 +1,10 @@
-import Workspace.Impl.LinIntPad
-import Workspace.Impl.LinIntTri
-import Workspace.Lang.Lib.LinIntRowMul
+module
+
+public import Workspace.Impl.LinIntPad
+public import Workspace.Impl.LinIntTri
+public import Workspace.Lang.Lib.LinIntRowMul
+
+@[expose] public section
 
 /-! Lifting a Hermite-block answer through the unimodular row multiplier. -/
 namespace GI.Impl

@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.LinIntCodec
+module
+
+public import Workspace.Lang.Lib.LinIntCodec
+
+@[expose] public section
 
 /-! Arithmetic on canonical natural parts. These are ordinary GI.Lang expressions,
 with no arithmetic primitive hypotheses. All bounds use the weights of natural
@@ -272,7 +276,6 @@ theorem linIntNegParts_spec {P : Program} {f : ℕ}
   simp only [linIntParts, neg_neg]
   apply FunDet.intro hf
   refine (Det.mk2 dn dp).mono ?_
-  simp only [linIntParts] at *
   omega
 
 /-- Compare integers by moving the negative parts to the opposite side. -/

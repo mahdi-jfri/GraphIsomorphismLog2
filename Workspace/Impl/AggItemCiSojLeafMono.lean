@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojBudget
+module
+
+public import Workspace.Impl.AggItemCiSojBudget
+
+@[expose] public section
 
 /-! # Monotonicity of the actual fixed-stage own-cost formulas -/
 
@@ -8,9 +12,14 @@ open GI.Lang
 /-- Increasing the size parameters increases the proved front bound. -/
 theorem itcs_front_cost_mono {q B q' B' : ℕ} (hq : q ≤ q') (hB : B ≤ B') :
     itcsFrontC q B ≤ itcsFrontC q' B' := by
-  simp only [itcsFrontC, itcsFindC, itcsFiberC, itcsTestC, itcsSizeC, itcsCompTotal,
-    itcsCompC, itcsSqMapC, itcsCompW, itcsBalW, itCfObjB, itcsGenW, loopModK,
-    countK, mapK, orbitK]
+  have hcw : itcsCompW q B ≤ itcsCompW q' B' := by
+    simp only [itcsCompW, itCfObjB, itcsGenW]; gcongr
+  have hct : itcsCompTotal q B ≤ itcsCompTotal q' B' := by
+    simp only [itcsCompTotal, itcsCompC, itcsSqMapC, itcsGenW]; gcongr
+  have hsz : itcsSizeC q B ≤ itcsSizeC q' B' :=
+    Nat.add_le_add (Nat.add_le_add (Nat.mul_le_mul_left 30 (Nat.add_le_add_right hcw 1)) hct)
+      (Nat.mul_le_mul_left (countK + 1000) (Nat.pow_le_pow_left (Nat.add_le_add_right hq 1) 3))
+  simp only [itcsFrontC, itcsFindC, itcsFiberC, itcsTestC, itcsBalW, itCfObjB]
   gcongr
 
 /-- Increasing the size parameters increases the proved bal test bound. -/
@@ -28,8 +37,11 @@ theorem itcs_bal_part_cost_mono {q B q' B' : ℕ} (hq : q ≤ q') (hB : B ≤ B'
 /-- Increasing the size parameters increases the proved imp part bound. -/
 theorem itcs_imp_part_cost_mono {q B q' B' : ℕ} (hq : q ≤ q') (hB : B ≤ B') :
     itcsImpPartC q B ≤ itcsImpPartC q' B' := by
-  simp only [itcsImpPartC, itcsImpPartW, itcsMinC, itcsMinW, itC1C, itcsCompTotal,
-    itcsCompC, itcsSqMapC, itcsCompW, itCfObjB, itcsGenW, countK, mapK, orbitK, loopModK]
+  have hcw : itcsCompW q B ≤ itcsCompW q' B' := by
+    simp only [itcsCompW, itCfObjB, itcsGenW]; gcongr
+  have hct : itcsCompTotal q B ≤ itcsCompTotal q' B' := by
+    simp only [itcsCompTotal, itcsCompC, itcsSqMapC, itcsGenW]; gcongr
+  simp only [itcsImpPartC, itcsImpPartW, itcsMinC, itcsMinW, itC1C, itCfObjB]
   gcongr
 
 /-- Increasing the size parameters increases the proved side bound. -/

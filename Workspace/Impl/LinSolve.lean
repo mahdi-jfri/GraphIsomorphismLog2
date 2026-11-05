@@ -1,5 +1,9 @@
-import Workspace.Lang.Prims.LinNormal
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+module
+
+public import Workspace.Lang.Prims.LinNormal
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+
+@[expose] public section
 
 /-! Integer row equations used after Hermite reduction in A.20.
 Rows are relations throughout. These mathematical reductions do not introduce a

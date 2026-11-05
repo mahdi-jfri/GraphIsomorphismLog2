@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHCProg
+module
+
+public import Workspace.Impl.VsHCProg
+
+@[expose] public section
 
 namespace GI.Impl
 
@@ -143,7 +147,7 @@ theorem vsHC_spec {I : VecStabInst} [Fact I.p.Prime] {P : Program} {x : VsHContX
   by_cases ht : ∀ g ∈ 1 :: ks, ∀ h ∈ 1 :: ks,
       vsPLocL I s.ws' (vsQCs s) (g * h) = vsPLocL I s.ws' (vsQCs s) (h * g)
   · have hx : xb = 1 := by
-      have he : Val.nat xb = .nat 1 := by simpa only [b, decide_eq_true ht] using hxb
+      have he : Val.nat xb = .nat 1 := by dsimp [b] at hxb; rw [decide_eq_true ht] at hxb; exact hxb
       exact Val.nat.inj he
     subst xb
     rw [if_neg one_ne_zero]
@@ -168,7 +172,7 @@ theorem vsHC_spec {I : VecStabInst} [Fact I.p.Prime] {P : Program} {x : VsHContX
     rw [eCQ]
     omega
   · have hx : xb = 0 := by
-      have he : Val.nat xb = .nat 0 := by simpa only [b, decide_eq_false ht] using hxb
+      have he : Val.nat xb = .nat 0 := by dsimp [b] at hxb; rw [decide_eq_false ht] at hxb; exact hxb
       exact Val.nat.inj he
     subst xb
     rw [if_pos rfl]

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJGlueMath
+module
+
+public import Workspace.Impl.TermJGlueMath
+
+@[expose] public section
 
 /-!
 # Glue of the `J`-step: the generators of `Aut_J(x)`

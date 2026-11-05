@@ -1,5 +1,9 @@
-import Workspace.Proved.VsPStep4Math
-import Workspace.Impl.VsPCtxP
+module
+
+public import Workspace.Proved.VsPStep4Math
+public import Workspace.Impl.VsPCtxP
+
+@[expose] public section
 
 /-!
 # The dimension of `L` is the number of echelon rows
@@ -13,6 +17,8 @@ open Matrix
 namespace GI.Proved
 
 open GI.Impl GI.Cited GI.Lang Equiv Module
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 variable {p : ℕ}
 

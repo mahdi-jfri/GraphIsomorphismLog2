@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojMK
-import Workspace.Impl.AggItemCiSojFG
+module
+
+public import Workspace.Impl.AggItemCiSojMK
+public import Workspace.Impl.AggItemCiSojFG
+
+@[expose] public section
 
 /-! # Constructing the pointwise-fixing marker coloring -/
 

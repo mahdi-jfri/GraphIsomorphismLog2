@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.LinIntOps
+module
+
+public import Workspace.Lang.Lib.LinIntOps
+
+@[expose] public section
 
 /-! Euclidean signed quotient and remainder. The negative-dividend quotient uses
 (n-1)/b+1, so exact divisibility and a nonzero remainder are both handled correctly. -/

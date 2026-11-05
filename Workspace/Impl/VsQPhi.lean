@@ -1,7 +1,11 @@
-import Workspace.Impl.VsQGL
-import Workspace.Impl.LinMembership
-import Workspace.Impl.LinGroupSlp
-import Workspace.Proved.VsQProb
+module
+
+public import Workspace.Impl.VsQGL
+public import Workspace.Impl.LinMembership
+public import Workspace.Impl.LinGroupSlp
+public import Workspace.Proved.VsQProb
+
+@[expose] public section
 
 /-!
 # The matrix of a group element
@@ -218,7 +222,6 @@ theorem vsQPhi_spec (hcm : ConstructiveMembership) {P : Program} {b j gl N : ℕ
     have w0 : (Val.nat 0).wt = 2 := rfl
     have hri : (Val.list [Val.nat 1, Val.list (List.map encSlpInstr prog)]).wt = r.wt := rfl
     unfold vsQPhiCost
-    simp only [List.getElem_cons_zero, List.getElem_cons_succ] at *
     have hvw : vsQW N = 100 * (N + 1) ^ 3 := rfl
     omega
 

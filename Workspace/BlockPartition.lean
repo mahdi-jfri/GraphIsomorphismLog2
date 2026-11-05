@@ -1,5 +1,9 @@
-import Workspace.BlockHereditary
-import Mathlib.Data.Quot
+module
+
+public import Workspace.BlockHereditary
+public import Mathlib.Data.Quot
+
+@[expose] public section
 
 namespace GI
 

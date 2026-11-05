@@ -1,9 +1,13 @@
-import Workspace.Impl.TermGlueLabNSet
-import Workspace.Impl.TermGlueLabNM6
-import Workspace.Impl.TermGlueLabNCmp
-import Workspace.Impl.TermGlueLabPPolyO
-import Workspace.Impl.TermGlueLabSVPoly
-import Workspace.Impl.TermGlueLabSPoly
+module
+
+public import Workspace.Impl.TermGlueLabNSet
+public import Workspace.Impl.TermGlueLabNM6
+public import Workspace.Impl.TermGlueLabNCmp
+public import Workspace.Impl.TermGlueLabPPolyO
+public import Workspace.Impl.TermGlueLabSVPoly
+public import Workspace.Impl.TermGlueLabSPoly
+
+@[expose] public section
 
 /-!
 # The label driver: the costs of the callees are polynomial

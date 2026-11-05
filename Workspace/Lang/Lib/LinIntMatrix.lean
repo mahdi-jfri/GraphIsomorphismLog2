@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.LinIntRowMul
+module
+
+public import Workspace.Lang.Lib.LinIntRowMul
+
+@[expose] public section
 
 /-! Dense integer matrix multiplication. The map context stores the column count
 and the right matrix. Each left row runs the proved row-times-matrix program. -/

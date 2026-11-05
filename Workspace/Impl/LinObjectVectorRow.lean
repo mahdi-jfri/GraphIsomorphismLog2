@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectBlockPresentation
-import Workspace.Impl.LinObjectBlockSpec
+module
+
+public import Workspace.Impl.LinObjectBlockPresentation
+public import Workspace.Impl.LinObjectBlockSpec
+
+@[expose] public section
 
 /-! Extract one local vector from the interleaved coordinates used by
 the block presentation. The order is piece + p * coordinate. -/

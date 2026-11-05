@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectRelations
-import Mathlib.LinearAlgebra.Span.Basic
+module
+
+public import Workspace.Impl.LinObjectRelations
+public import Mathlib.LinearAlgebra.Span.Basic
+
+@[expose] public section
 
 /-! Coordinate rows generate exactly the image of a local stabilizer.
 This bridges the permutation-group output to the integer presentation. -/

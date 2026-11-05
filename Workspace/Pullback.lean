@@ -1,4 +1,8 @@
-import Workspace.Transport
+module
+
+public import Workspace.Transport
+
+@[expose] public section
 
 namespace GI
 

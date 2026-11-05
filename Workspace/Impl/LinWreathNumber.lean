@@ -1,5 +1,9 @@
-import Workspace.Impl.LinWreathGenerators
-import Workspace.Lang.Prims.Graph
+module
+
+public import Workspace.Impl.LinWreathGenerators
+public import Workspace.Lang.Prims.Graph
+
+@[expose] public section
 
 /-! Number the explicit two-copy cover with the first copy followed by the
 second. This is the layout read and written by the transporter programs. -/

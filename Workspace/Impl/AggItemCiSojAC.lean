@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojAut
-import Workspace.Impl.GenEnum
+module
+
+public import Workspace.Impl.AggItemCiSojAut
+public import Workspace.Impl.GenEnum
+
+@[expose] public section
 
 /-!
 # The subgroup encoded by a nonempty canonical rectangle answer

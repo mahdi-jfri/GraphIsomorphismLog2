@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojMin
+module
+
+public import Workspace.Impl.AggItemCiSojMin
+
+@[expose] public section
 
 /-! # The complete check of target component sizes -/
 
@@ -85,7 +89,7 @@ theorem itcs_min_prog {Pg : Program} {all f fb sz cnt B : ℕ}
       (q * (200 * (itcsMinW q B + 1) + (countK + 1000) * (q + 1) ^ 3) +
         loopModK * (q + 1) * ((Val.list [ctx, .list ((List.finRange q).map fun a => Val.nat a.val)]).wt + q + 4)) := by
     simpa only [List.map_map, Function.comp_def, List.map_const', List.sum_replicate,
-      List.length_map, List.length_finRange] using hh
+      List.length_map, List.length_finRange, smul_eq_mul] using hh
   rw [← it_range_eq] at hdet
   exact hdet.mono (Nat.add_le_add_left (Nat.mul_le_mul_left _ (by rw [it_range_eq]; omega)) _)
 

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinFiniteAction
+module
+
+public import Workspace.Impl.LinFiniteAction
+
+@[expose] public section
 
 /-! Uniform bit-weight bounds on every full affine transformation, regardless
 of the size of the cover group or the length of the word representing it. -/
@@ -53,11 +57,11 @@ theorem linFiniteHomogeneous_wt {d : ℕ} (m : Fin d → ℕ) (hm : ∀ i, 0 < m
     have hh := linWtList (vs := (List.finRange (d + 1)).map fun j => encInt (linFiniteHomogeneous m f u i j))
       (B := linFiniteScalarBudget W) (by
         intro v hv; obtain ⟨j, hj, rfl⟩ := List.mem_map.mp hv; exact he i j)
-    simpa only [List.length_map, List.length_finRange, linVectorAccWt] using hh
+    simpa only [linVecVal, List.length_map, List.length_finRange, linVectorAccWt] using hh
   have hh := linWtList (vs := (List.finRange (d + 1)).map fun i => linVecVal (linFiniteHomogeneous m f u i))
     (B := linVectorAccWt (d + 1) (linFiniteScalarBudget W)) (by
       intro v hv; obtain ⟨i, hi, rfl⟩ := List.mem_map.mp hv; exact hrow i)
-  simpa only [List.length_map, List.length_finRange, linFiniteActionMatrixWeight, linVectorAccWt] using hh
+  simpa only [encIntMatrix, linVecVal, List.length_map, List.length_finRange, linFiniteActionMatrixWeight, linVectorAccWt, W] using hh
 
 theorem linFiniteModuli_wt {d : ℕ} (m : Fin d → ℕ) :
     (linVecVal (linFiniteModuli m)).wt ≤ (linVecVal (fun i => (m i : ℤ))).wt + 100 := by

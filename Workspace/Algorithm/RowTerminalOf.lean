@@ -1,7 +1,11 @@
-import Workspace.Algorithm.DomainRestriction
-import Workspace.Paper.RadicalFreeOrder
-import Workspace.Paper.RowNormalFormDefs
-import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+module
+
+public import Workspace.Algorithm.DomainRestriction
+public import Workspace.Paper.RadicalFreeOrder
+public import Workspace.Paper.RowNormalFormDefs
+public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+
+@[expose] public section
 
 /-!
 # Row coordinates, and the group `G = K R₀` of Theorem A.23 from the row normal form

@@ -1,6 +1,10 @@
-import Workspace.Impl.AggStructDesMath
-import Workspace.Impl.AggStructDC
-import Workspace.Lang.Lib.Loop
+module
+
+public import Workspace.Impl.AggStructDesMath
+public import Workspace.Impl.AggStructDC
+public import Workspace.Lang.Lib.Loop
+
+@[expose] public section
 
 /-!
 # The Case 3 test as a program: the colors of padded tuples

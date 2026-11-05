@@ -1,4 +1,8 @@
-import Workspace.Impl.AggImg
+module
+
+public import Workspace.Impl.AggImg
+
+@[expose] public section
 
 /-!
 # The window increment from orders of images

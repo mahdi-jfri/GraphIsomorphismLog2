@@ -1,4 +1,8 @@
-import Workspace.Proved.VsMStatements
+module
+
+public import Workspace.Proved.VsMStatements
+
+@[expose] public section
 
 /-!
 # Basic facts on the scalars `S` and on commutators
@@ -172,7 +176,7 @@ theorem vsM_cyclic_of_hom [FiniteDimensional (ZMod p) V] [Nontrivial V] {A : Sub
     [Finite G] (f : G →* vsTAlg A) (hf : Function.Injective f) : IsCyclic G := by
   classical
   haveI : IsMulCommutative (vsTAlg A) :=
-    Algebra.isMulCommutative_adjoin (ZMod p) (vsTSet_comm hA)
+    Algebra.isMulCommutative_adjoin (ZMod p) (fun x hx y hy _ => vsTSet_comm hA x hx y hy)
   haveI : Nontrivial (vsTAlg A) := by
     refine ⟨⟨0, 1, fun h => ?_⟩⟩
     have h1 : ((0 : (vsTAlg A)) : 𝔼) = ((1 : (vsTAlg A)) : 𝔼) := congrArg Subtype.val h

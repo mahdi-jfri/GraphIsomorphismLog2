@@ -1,4 +1,8 @@
-import Workspace.Impl.LinTabulate
+module
+
+public import Workspace.Impl.LinTabulate
+
+@[expose] public section
 
 /-! Build a dense table from a proved scalar program. Explicit row and
 column lists in the input pay for the dimensions, including empty tables. -/

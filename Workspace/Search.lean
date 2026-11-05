@@ -1,5 +1,9 @@
-import Workspace.GraphReduction
-import Mathlib.Data.Fintype.Perm
+module
+
+public import Workspace.GraphReduction
+public import Mathlib.Data.Fintype.Perm
+
+@[expose] public section
 
 /-! A finite exhaustive reference solver, with correctness proofs. It is NOT the paper's
 algorithm and is NOT claimed to have quasipolynomial running time. -/

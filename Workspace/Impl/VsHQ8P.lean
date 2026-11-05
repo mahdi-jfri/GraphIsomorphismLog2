@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHY0
+module
+
+public import Workspace.Impl.VsHY0
+
+@[expose] public section
 
 /-!
 # The `Q₈` branch

@@ -1,7 +1,11 @@
-import Workspace.Impl.AggGraph
-import Workspace.Impl.GenChild
-import Workspace.Impl.SmallInv
-import Mathlib.Algebra.Order.Floor.Semifield
+module
+
+public import Workspace.Impl.AggGraph
+public import Workspace.Impl.GenChild
+public import Workspace.Impl.SmallInv
+public import Mathlib.Algebra.Order.Floor.Semifield
+
+@[expose] public section
 
 /-!
 # `LiftAndContinue` of an aggregation round: the mathematics

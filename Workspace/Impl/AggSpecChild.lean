@@ -1,4 +1,8 @@
-import Workspace.Impl.AggBodyRun
+module
+
+public import Workspace.Impl.AggBodyRun
+
+@[expose] public section
 
 /-!
 # The continuations of a round are allowed calls

@@ -1,4 +1,8 @@
-import Workspace.Algorithm.Correctness
+module
+
+public import Workspace.Algorithm.Correctness
+
+@[expose] public section
 
 /-!
 # The recursion tree of a run, and the facts it gives for Lemma 7.1

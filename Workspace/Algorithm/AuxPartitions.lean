@@ -1,4 +1,8 @@
-import Workspace.Algorithm.AuxConfig
+module
+
+public import Workspace.Algorithm.AuxConfig
+
+@[expose] public section
 
 /-!
 # Balanced colored partitions of a configuration branch
@@ -97,11 +101,11 @@ theorem reach_smul (σ : Perm (Fin q)) (P : PairCfg q) (v : ℕ) (a b : Fin q) :
     (σ • P).reach v a b ↔ P.reach v (σ⁻¹ a) (σ⁻¹ b) := by
   constructor
   · intro h
-    exact Relation.ReflTransGen.lift (fun x => σ⁻¹ x) (fun x y hxy => (edge_smul σ P v x y).1 hxy) h
+    exact Relation.ReflTransGen.lift (fun x => σ⁻¹ x) (fun x y hxy => (edge_smul σ P v x y).1 hxy) _ _ h
   · intro h
     have h' := Relation.ReflTransGen.lift (fun x => σ x)
-      (fun x y hxy => (edge_smul σ P v (σ x) (σ y)).2 (by simpa using hxy)) h
-    simpa using h'
+      (fun x y hxy => (edge_smul σ P v (σ x) (σ y)).2 (by simpa using hxy)) _ _ h
+    simpa [Function.onFun, reach] using h'
 
 open Classical in
 /-- The component of `a` for the color `v`. -/
@@ -213,14 +217,16 @@ theorem balPart_cap {P : PairCfg q} {x₀ : Fin q} {δ η β : ℝ}
       have e : (Finset.univ.filter fun a => (P.balPart x₀).col a = 0) =
           Finset.univ.filter fun a : Fin q => a ∉ P.fiber := by
         ext a
-        simp only [balPart, Finset.mem_filter, Finset.mem_univ, true_and]
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+        simp only [balPart]
         split_ifs with h <;> simp [h]
       rw [e]
       exact card_compl_le hδ hδβ
     · have e : (Finset.univ.filter fun a => (P.balPart x₀).col a = c) ⊆
           P.fiber.filter fun a => P.col x₀ a = (c - 1) / 2 := by
         intro a ha
-        simp only [balPart, Finset.mem_filter, Finset.mem_univ, true_and] at ha
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha
+        simp only [balPart] at ha
         split_ifs at ha with h
         · exact Finset.mem_filter.2 ⟨h, by omega⟩
         · exact absurd ha.symm hc
@@ -270,17 +276,20 @@ theorem impPart_cap {P : PairCfg q} {v : ℕ} {δ β : ℝ}
       refine two_mul_card_le _ (fun B hB B' hB' hne => ?_) (fun B hB => ?_) (fun B hB => ?_)
       · obtain ⟨a, ha, rfl⟩ := Finset.mem_image.1 hB
         obtain ⟨a', ha', rfl⟩ := Finset.mem_image.1 hB'
-        simp only [impPart, Finset.mem_filter, Finset.mem_univ, true_and] at ha ha' hne ⊢
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha ha'
+        simp only [impPart] at ha ha' hne ⊢
         split_ifs at ha ha' hne ⊢ with h h' <;> simp at ha ha'
         rw [Finset.disjoint_left]
         intro z hz hz'
         exact hne ((comp_eq_of_mem hz).symm.trans (comp_eq_of_mem hz'))
       · obtain ⟨a, ha, rfl⟩ := Finset.mem_image.1 hB
-        simp only [impPart, Finset.mem_filter, Finset.mem_univ, true_and] at ha ⊢
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha
+        simp only [impPart] at ha ⊢
         split_ifs at ha ⊢ with h
         intro z hz; exact reach_mem (mem_comp.1 hz) h
       · obtain ⟨a, ha, rfl⟩ := Finset.mem_image.1 hB
-        simp only [impPart, Finset.mem_filter, Finset.mem_univ, true_and] at ha ⊢
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha
+        simp only [impPart] at ha ⊢
         split_ifs at ha ⊢ with h
         exact (hsz a h).1
     · refine Finset.card_image_le.trans (Nat.le_floor ?_)
@@ -289,14 +298,15 @@ theorem impPart_cap {P : PairCfg q} {v : ℕ} {δ β : ℝ}
         have e : (Finset.univ.filter fun a => (P.impPart v).col a = 0) =
             Finset.univ.filter fun a : Fin q => a ∉ P.fiber := by
           ext a
-          simp only [impPart, Finset.mem_filter, Finset.mem_univ, true_and]
+          simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+          simp only [impPart]
           split_ifs with h <;> simp [h]
         rw [e]
         exact card_compl_le hδ hδβ
       · have e : (Finset.univ.filter fun a => (P.impPart v).col a = c) = ∅ := by
           ext a
-          simp only [impPart, Finset.mem_filter, Finset.mem_univ, true_and,
-            Finset.notMem_empty, iff_false]
+          simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.notMem_empty, iff_false]
+          simp only [impPart]
           split_ifs <;> omega
         rw [e]
         simp only [Finset.card_empty, Nat.cast_zero]

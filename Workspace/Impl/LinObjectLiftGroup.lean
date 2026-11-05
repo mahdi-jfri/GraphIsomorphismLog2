@@ -1,5 +1,9 @@
-import Mathlib.Algebra.Group.Subgroup.Lattice
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Group.Subgroup.Lattice
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-! Correct every generator of the liftable preimage and retain the
 kernel. Equality of quotient images then proves that no automorphisms

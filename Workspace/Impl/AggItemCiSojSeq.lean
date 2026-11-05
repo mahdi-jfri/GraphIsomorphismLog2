@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojModelOut
+module
+
+public import Workspace.Impl.AggItemCiSojModelOut
+
+@[expose] public section
 
 /-! # The exact continuation of the model's ordered rectangle queries -/
 

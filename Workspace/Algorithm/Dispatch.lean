@@ -1,7 +1,11 @@
-import Workspace.Algorithm.CitedInstances
-import Workspace.Algorithm.HierInv
-import Workspace.CameronRange
-import Mathlib.Data.Fintype.Powerset
+module
+
+public import Workspace.Algorithm.CitedInstances
+public import Workspace.Algorithm.HierInv
+public import Workspace.CameronRange
+public import Mathlib.Data.Fintype.Powerset
+
+@[expose] public section
 
 /-!
 # The dispatcher from a primitive quotient and Maróti's theorem
@@ -128,6 +132,7 @@ theorem kSetPerm_one (A : KSet m k) : GI.Cited.kSetPerm (1 : Perm (Fin m)) A = A
   apply Subtype.ext
   ext x
   simp [GI.Cited.kSetPerm]
+  rfl
 
 /-- `g` acts in the product action as `(σ, h)`: `e(g x)_i = h_i (e(x)_{σ i})`. -/
 def IsProd (e : Fin n ≃ (Fin r → KSet m k)) (g : Perm (Fin n)) (σ : Perm (Fin r))
@@ -326,7 +331,7 @@ theorem d_le_size [Finite Ω] : Q.d ≤ S.size := by
     simp only [hfi] at this
     exact this
   have := Nat.card_le_card_of_injective _ hinj
-  simpa using this
+  simpa [State.size] using this
 
 /-- The block kernel `ker ρ`, as a subgroup of `Sym(Ω)`. -/
 def kernel : Subgroup (Perm Ω) := Q.ρ.ker.map S.G.subtype

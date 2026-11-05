@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHMem
+module
+
+public import Workspace.Impl.VsHMem
+
+@[expose] public section
 
 /-!
 # A basis of `Ȳ` modulo `S`
@@ -9,6 +13,8 @@ A pass over `ys` keeps `y` when `ȳ ∉ ⟨kept⟩ S` (`vsHMem`). The kept list 
 * `vsHBStepE`, `vsHBStep_spec`: one step, on `[[ctx, r], kept, y]`.
 * `vsHBasE`, `vsHBas_prog`: the pass, on `[[ctx, r], ys]`.
 -/
+
+set_option backward.isDefEq.respectTransparency false
 
 namespace GI.Impl
 

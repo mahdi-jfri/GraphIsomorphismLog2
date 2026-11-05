@@ -1,5 +1,9 @@
-import Workspace.Proved.VStabLinKer
-import Workspace.Impl.VStabLinUnit
+module
+
+public import Workspace.Proved.VStabLinKer
+public import Workspace.Impl.VStabLinUnit
+
+@[expose] public section
 
 /-!
 # Kernels and coordinates with unit tags

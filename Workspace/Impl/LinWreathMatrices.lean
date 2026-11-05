@@ -1,7 +1,11 @@
-import Workspace.Impl.LinWreathMatrixItem
-import Workspace.Impl.LinZeroModMatrix
-import Workspace.Impl.LinListWeight
-import Workspace.Lang.Lib.LinIntTail
+module
+
+public import Workspace.Impl.LinWreathMatrixItem
+public import Workspace.Impl.LinZeroModMatrix
+public import Workspace.Impl.LinListWeight
+public import Workspace.Lang.Lib.LinIntTail
+
+@[expose] public section
 
 /-! Construct all dense generator images for one two-copy vector task. -/
 namespace GI.Impl

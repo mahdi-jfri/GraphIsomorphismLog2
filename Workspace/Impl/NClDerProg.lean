@@ -1,5 +1,9 @@
-import Workspace.Impl.NClDerMath
-import Workspace.Lang.Prims.Reduce
+module
+
+public import Workspace.Impl.NClDerMath
+public import Workspace.Lang.Prims.Reduce
+
+@[expose] public section
 
 /-!
 # The derived subgroup as a program

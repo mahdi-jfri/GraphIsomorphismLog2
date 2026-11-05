@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecProgProf
+module
+
+public import Workspace.Impl.TermRecProgProf
+
+@[expose] public section
 
 /-!
 # T5, the profiles of one side

@@ -1,4 +1,8 @@
-import Workspace.Impl.VsFMatMul
+module
+
+public import Workspace.Impl.VsFMatMul
+
+@[expose] public section
 
 /-!
 # The `p`-th power of a matrix modulo `p`

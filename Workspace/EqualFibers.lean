@@ -1,8 +1,12 @@
-import Mathlib.GroupTheory.GroupAction.Basic
-import Mathlib.Data.Fintype.Sigma
-import Mathlib.Logic.Equiv.Set
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.SetTheory.Cardinal.Finite
+module
+
+public import Mathlib.GroupTheory.GroupAction.Basic
+public import Mathlib.Data.Fintype.Sigma
+public import Mathlib.Logic.Equiv.Set
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.SetTheory.Cardinal.Finite
+
+@[expose] public section
 
 namespace GI
 

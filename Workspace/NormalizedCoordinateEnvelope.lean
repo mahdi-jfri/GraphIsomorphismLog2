@@ -1,5 +1,9 @@
-import Workspace.ProjectionEnvelope
-import Workspace.StabilizerEnvelope
+module
+
+public import Workspace.ProjectionEnvelope
+public import Workspace.StabilizerEnvelope
+
+@[expose] public section
 
 namespace GI.PrimitiveCartesian
 
@@ -81,7 +85,3 @@ theorem primitive_projectionEnvelope_eq [MulAction G V] [Nontrivial V]
   exact hR
 
 end GI.PrimitiveCartesian
-
-#print axioms GI.PrimitiveCartesian.normalizes_image_of_intertwining
-#print axioms GI.PrimitiveCartesian.stabilizer_coordinates_preserved
-#print axioms GI.PrimitiveCartesian.primitive_projectionEnvelope_eq

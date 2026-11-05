@@ -1,6 +1,10 @@
-import Workspace.Impl.VsPStep4Sz
-import Workspace.Proved.VsPS1Math
-import Workspace.Impl.VsHContain
+module
+
+public import Workspace.Impl.VsPStep4Sz
+public import Workspace.Proved.VsPS1Math
+public import Workspace.Impl.VsHContain
+
+@[expose] public section
 
 /-!
 # The output, and the last stage program
@@ -12,6 +16,8 @@ import Workspace.Impl.VsHContain
 -/
 
 open Matrix
+
+set_option backward.isDefEq.respectTransparency false
 
 namespace GI.Impl
 

@@ -1,6 +1,10 @@
-import Mathlib.GroupTheory.GroupAction.Primitive
-import Mathlib.GroupTheory.GroupAction.ConjAct
-import Workspace.BudgetInductionRegular
+module
+
+public import Mathlib.GroupTheory.GroupAction.Primitive
+public import Mathlib.GroupTheory.GroupAction.ConjAct
+public import Workspace.BudgetInductionRegular
+
+@[expose] public section
 
 namespace GI.PrimitiveStructure
 
@@ -18,7 +22,8 @@ theorem normal_pretransitive [MulAction.IsPreprimitive G V]
   apply eq_of_smul_eq_smul (α := V)
   intro v
   have hv : v ∈ MulAction.fixedPoints N V := by rw [hfixed]; trivial
-  simpa only [one_smul] using (MulAction.mem_fixedPoints.mp hv ⟨n, hn⟩)
+  rw [one_smul]
+  exact MulAction.mem_fixedPoints.mp hv ⟨n, hn⟩
 
 /-- A faithful transitive abelian action is regular: agreement at any one
 point forces agreement everywhere. -/
@@ -60,10 +65,3 @@ theorem abelian_normal_card [MulAction.IsPreprimitive G V]
   Nat.card_congr (abelianNormalPointEquiv N hne comm a)
 
 end GI.PrimitiveStructure
-
-#print axioms GI.PrimitiveStructure.normal_pretransitive
-#print axioms GI.PrimitiveStructure.abelian_transitive_free
-#print axioms GI.PrimitiveStructure.abelian_transitive_bijective
-#print axioms GI.PrimitiveStructure.abelian_normal_regular
-#print axioms GI.PrimitiveStructure.abelianNormalPointEquiv
-#print axioms GI.PrimitiveStructure.abelian_normal_card

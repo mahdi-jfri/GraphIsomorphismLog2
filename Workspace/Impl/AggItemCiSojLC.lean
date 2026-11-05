@@ -1,7 +1,11 @@
-import Workspace.Impl.AggItemHvLift
-import Workspace.Impl.RowKer
-import Workspace.Impl.GenNormPoly
-import Workspace.Impl.AggItemCiSojWt
+module
+
+public import Workspace.Impl.AggItemHvLift
+public import Workspace.Impl.RowKer
+public import Workspace.Impl.GenNormPoly
+public import Workspace.Impl.AggItemCiSojWt
+
+@[expose] public section
 
 /-!
 # Constructing the stored context for physical-to-label projection

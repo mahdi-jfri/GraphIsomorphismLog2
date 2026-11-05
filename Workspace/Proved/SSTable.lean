@@ -1,4 +1,8 @@
-import Workspace.Cited.AlgoTerminal
+module
+
+public import Workspace.Cited.AlgoTerminal
+
+@[expose] public section
 
 /-!
 # The Sims table and sifting

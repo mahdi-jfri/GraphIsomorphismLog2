@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJProgLocPi
+module
+
+public import Workspace.Impl.TermJProgLocPi
+
+@[expose] public section
 
 /-!
 # The local transporter of a class (program, part 3: rows and local elements)

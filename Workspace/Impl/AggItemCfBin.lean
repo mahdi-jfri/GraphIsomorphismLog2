@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCfLk
-import Workspace.Impl.AggStructCol
+module
+
+public import Workspace.Impl.AggItemCfLk
+public import Workspace.Impl.AggStructCol
+
+@[expose] public section
 
 /-!
 # Case 2b: the objects of a branch, with one binary refinement call

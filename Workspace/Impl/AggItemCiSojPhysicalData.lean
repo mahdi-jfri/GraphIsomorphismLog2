@@ -1,7 +1,11 @@
-import Workspace.Impl.AggItemCiSojColorsState
-import Workspace.Impl.AggItemCiSojGP
-import Workspace.Impl.AggItemCiSojDW
-import Workspace.Impl.AggItemCiSojLC
+module
+
+public import Workspace.Impl.AggItemCiSojColorsState
+public import Workspace.Impl.AggItemCiSojGP
+public import Workspace.Impl.AggItemCiSojDW
+public import Workspace.Impl.AggItemCiSojLC
+
+@[expose] public section
 
 /-! # Building the physical group, inherited domain, and stored projection context -/
 

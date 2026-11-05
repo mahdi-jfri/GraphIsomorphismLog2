@@ -1,6 +1,10 @@
-import Workspace.Impl.VStabLinInsert
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.LinearAlgebra.Span.Defs
+module
+
+public import Workspace.Impl.VStabLinInsert
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.LinearAlgebra.Span.Defs
+
+@[expose] public section
 
 /-!
 # The mathematics of the echelon rows

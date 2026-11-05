@@ -1,4 +1,8 @@
-import Workspace.Impl.GenEnum
+module
+
+public import Workspace.Impl.GenEnum
+
+@[expose] public section
 
 /-!
 # `CombineExact` of an aggregation round

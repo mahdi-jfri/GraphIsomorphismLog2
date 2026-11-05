@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCmpProg
-import Workspace.Impl.AggCertMvEnd
+module
+
+public import Workspace.Impl.AggCmpProg
+public import Workspace.Impl.AggCertMvEnd
+
+@[expose] public section
 
 /-!
 # The move program: stage `j` without a call
@@ -125,7 +129,7 @@ theorem cm_stage_spec {Pg : Program} {b jm : ℕ} (hat : CmMvAt0 Pg b jm)
     (by omega)
   by_cases hjE : σ.j = Fintype.card S.dom
   · -- the end of the pair
-    have dc := Det.arith' (op := .eq) dj dn (z := 1) (by simp [GI.Machine.BinOp.eval, hjE])
+    have dc := Det.arith' (op := .eq) dj dn (z := 1) (by simp only [GI.Machine.BinOp.eval, hjE, ite_true])
     obtain ⟨l, hl, hb⟩ := cm_oV_length σ.o
     set σ' : CmSt k := { σ with acc := σ.acc ++ [σ.o.isSome], fl := 0 } with hσ'
     have hw' : (Val.list [σ'.val par, .list []]).wt ≤ Bw := by
@@ -189,7 +193,7 @@ theorem cm_stage_spec {Pg : Program} {b jm : ℕ} (hat : CmMvAt0 Pg b jm)
       have hjn' : j = Fintype.card S.dom := by omega
       subst hjn'
       exact cm_stage_end_rep hm hmf hM hc hF hlen hacc hdrop ho hw'
-  · have dc := Det.arith' (op := .eq) dj dn (z := 0) (by simp [GI.Machine.BinOp.eval, hjE])
+  · have dc := Det.arith' (op := .eq) dj dn (z := 0) (by simp only [GI.Machine.BinOp.eval, hjE, if_false])
     have hjlt : j < Fintype.card S.dom := by omega
     obtain ⟨l, hl, -⟩ := cm_oV_length σ.o
     have doV := cp_rdK (P := Pg) (h0 []) hwW (j := 2) (v := cmOV σ.o) rfl (by omega)

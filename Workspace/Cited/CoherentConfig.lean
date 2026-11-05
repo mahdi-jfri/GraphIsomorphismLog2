@@ -1,7 +1,11 @@
-import Mathlib.Data.Fintype.Card
-import Mathlib.Data.Fintype.Pi
-import Mathlib.Logic.Equiv.Defs
-import Mathlib.Algebra.Group.End
+module
+
+public import Mathlib.Data.Fintype.Card
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Logic.Equiv.Defs
+public import Mathlib.Algebra.Group.End
+
+@[expose] public section
 
 /-!
 # `k`-ary configurations and coherent configurations ([H, Sections 2.3–2.4])

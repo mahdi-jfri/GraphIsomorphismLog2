@@ -1,4 +1,8 @@
-import Workspace.Impl.Cases
+module
+
+public import Workspace.Impl.Cases
+
+@[expose] public section
 
 /-!
 # The threshold step of `Continue`

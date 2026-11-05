@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosTop4
+module
+
+public import Workspace.Impl.SCosTop4
+
+@[expose] public section
 
 /-!
 # The top level, part 5 (the entry and the bridge)

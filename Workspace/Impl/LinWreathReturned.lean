@@ -1,4 +1,8 @@
-import Workspace.Impl.LinWreathVector
+module
+
+public import Workspace.Impl.LinWreathVector
+
+@[expose] public section
 
 /-! Correctness of scanning the generating list returned by VectorStabilizer.
 Both success and failure are justified in the original permutation cover. -/
@@ -22,7 +26,7 @@ theorem linWreathReturned_map (I : VecStabInst) [Nonempty (Fin I.n)]
   have he := linIntoSubgroup_map (gens (linWreathCoverGenerators I.gs)) hs
     (fun x hx => hle (Subgroup.subset_closure hx))
   simpa only [linWreathReturned, List.map_map, Function.comp_def,
-    ← linWreathCoverEquiv_val, MulEquiv.apply_symm_apply] using he
+    ← linWreathCoverEquiv_val, MulEquiv.apply_symm_apply, Subgroup.subtype_apply] using he
 
 /-- Every lifted generator fixes the pair, because the primitive returns the
 whole vector stabilizer, not only a subgroup of it. -/

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojQuery
-import Workspace.Impl.AggItemC1Dat
+module
+
+public import Workspace.Impl.AggItemCiSojQuery
+public import Workspace.Impl.AggItemC1Dat
+
+@[expose] public section
 
 /-!
 # The inherited query domain on the original positions

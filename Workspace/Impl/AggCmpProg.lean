@@ -1,6 +1,10 @@
-import Workspace.Impl.AggCmpFind
-import Workspace.Impl.AggCmpWt
-import Workspace.Impl.AggCertMvBase
+module
+
+public import Workspace.Impl.AggCmpFind
+public import Workspace.Impl.AggCmpWt
+public import Workspace.Impl.AggCertMvBase
+
+@[expose] public section
 
 /-!
 # The move program of the comparison phase: the moves without new groups

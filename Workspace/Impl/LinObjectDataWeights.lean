@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectDataCost
+module
+
+public import Workspace.Impl.LinObjectDataCost
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,4 +1,8 @@
-import Workspace.Impl.VStabLinAll
+module
+
+public import Workspace.Impl.VStabLinAll
+
+@[expose] public section
 
 /-!
 # Unit tags

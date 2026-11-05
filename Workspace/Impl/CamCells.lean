@@ -1,6 +1,10 @@
-import Workspace.Lang.Bridge
-import Workspace.Lang.Glue
-import Workspace.Cited.AlgoPermGroups
+module
+
+public import Workspace.Lang.Bridge
+public import Workspace.Lang.Glue
+public import Workspace.Cited.AlgoPermGroups
+
+@[expose] public section
 
 /-!
 # The cells of a group encoding are at most its size

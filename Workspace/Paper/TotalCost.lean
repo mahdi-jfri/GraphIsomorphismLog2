@@ -1,5 +1,9 @@
-import Workspace.Algorithm.PhaseTree
-import Workspace.Paper.RunningTime
+module
+
+public import Workspace.Algorithm.PhaseTree
+public import Workspace.Paper.RunningTime
+
+@[expose] public section
 
 /-!
 # The total cost of a run (Section 7.4)

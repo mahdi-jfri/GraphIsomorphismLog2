@@ -12,8 +12,12 @@ overhead, so a bound of the form `exp (O ((log n) ^ 2))` means the same in both 
 Calls pass single numbers in and out. Memory is shared and never copied, so a call does no
 hidden work, and every call costs at least one.
 -/
-import Mathlib.Logic.Function.Basic
-import Mathlib.Data.List.GetD
+module
+
+public import Mathlib.Logic.Function.Basic
+public import Mathlib.Data.List.GetD
+
+@[expose] public section
 
 namespace GI.Machine
 

@@ -1,6 +1,10 @@
-import Workspace.Impl.VsPOrdP
-import Workspace.Proved.VsPDerMath
-import Workspace.Lang.Prims.Ops
+module
+
+public import Workspace.Impl.VsPOrdP
+public import Workspace.Proved.VsPDerMath
+public import Workspace.Lang.Prims.Ops
+
+@[expose] public section
 
 /-!
 # The derived series of `C`
@@ -478,15 +482,23 @@ theorem vsPDer_spec (hd : DerivedSubgroup) {P : Program}
   · rintro va ca vb cb ⟨hinv, hc⟩ ⟨rfl, hcb⟩
     obtain ⟨cur, last, j, rfl, h1, h2, hcur, hlast, hjK, hj, hgood⟩ := hinv
     refine ⟨[encGroup cur, encGroup last], 1, rfl, rfl, by simp, last, j, rfl, h2, hlast, hj, ?_, ?_⟩
-    · -- `j < K` because the term `K` is trivial
-      have hbot := vsPDer_bot I.solvable hC
+    · -- `j < K` because the term `K` has trivial linear image
+      have hK_le : vsPDer G K ≤ Sp := by
+        intro g hg
+        have hgG : g ∈ G := vsPDer_le G K hg
+        have h1 : I.φ ⟨g, hC hgG⟩ = 1 := vsPDer_map_bot I.φ I.solvable hC hg
+        have hphi_eq : vsQPhi I g = vsQPhi I 1 := by
+          rw [vsQPhi_of_mem (hC hgG), h1, Units.val_one, vsQPhi_one]
+        have hin_eq : vsPInLB I ws' cs rows g = vsPInLB I ws' cs rows 1 := by
+          unfold vsPInLB vsPLocL; rw [hphi_eq]
+        exact (hSp g hgG).1 (hin_eq.trans ((hSp 1 (one_mem G)).2 (one_mem Sp)))
       have hjK' : j < K := by
         rcases Nat.lt_or_ge j K with h | h
         · exact h
         · exfalso
           have : j = K := by omega
           subst this
-          exact hj (by rw [hbot]; exact bot_le)
+          exact hj hK_le
       exact hgood (j + 1) (by omega) (by omega)
     · have wl := wt_encGroup_le_sq h2
       have hsum : ∑ i ∈ Finset.range K, vsPDStepCost hd Cφ N W ≤

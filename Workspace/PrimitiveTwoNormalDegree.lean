@@ -1,6 +1,10 @@
-import Workspace.PrimitiveRegularSocle
-import Workspace.PrimitiveSolvableNormal
-import Workspace.RadicalSocleHomogeneous
+module
+
+public import Workspace.PrimitiveRegularSocle
+public import Workspace.PrimitiveSolvableNormal
+public import Workspace.RadicalSocleHomogeneous
+
+@[expose] public section
 
 namespace GI.PrimitiveStructure
 
@@ -32,7 +36,7 @@ theorem two_minimal_radical_free [Finite G] {M N : Subgroup G}
   intro R hR hsolv
   by_contra hRne
   letI := hR
-  letI := hsolv
+  letI : Group.IsSolvable R := hsolv
   obtain ⟨K, hK, _, comm⟩ := exists_abelian_normal_of_solvable_normal R hRne
   rcases minimalNormal_eq_one_of_pair hM hN hne hK a with rfl | rfl
   · obtain ⟨x, y, hxy⟩ := minimalNormal_nonabelian_of_pair hM hN hne a
@@ -58,7 +62,3 @@ theorem two_minimal_degree_simple_power [Finite G] {M N : Subgroup G}
   rw [two_minimal_socle_card_eq_degree_sq hM hN hne a, hd, ← pow_mul, Nat.mul_comm]
 
 end GI.PrimitiveStructure
-
-#print axioms GI.PrimitiveStructure.minimalNormal_nonabelian_of_pair
-#print axioms GI.PrimitiveStructure.two_minimal_radical_free
-#print axioms GI.PrimitiveStructure.two_minimal_degree_simple_power

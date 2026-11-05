@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHQ
+module
+
+public import Workspace.Impl.VsHQ
+
+@[expose] public section
 
 /-!
 # `c ^ k` by iteration

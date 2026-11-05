@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormIH
-import Workspace.Impl.GenNormInput
+module
+
+public import Workspace.Impl.GenNormIH
+public import Workspace.Impl.GenNormInput
+
+@[expose] public section
 
 /-! # The normalization specification under the measured recursive induction hypothesis -/
 namespace GI.Impl

@@ -1,5 +1,9 @@
-import Workspace.Assembly.FinalContracts
-import Workspace.Impl.FinLayoutSoj
+module
+
+public import Workspace.Assembly.FinalContracts
+public import Workspace.Impl.FinLayoutSoj
+
+@[expose] public section
 
 /-!
 # Stage 2 from the object glue
@@ -18,7 +22,7 @@ contract `hgl` (`TermGlueObjSpec`).
 
 namespace GI.Assembly
 
-open GI.Algorithm GI.Lang GI.Paper GI.Impl GI.Axioms
+open GI.Algorithm GI.Lang GI.Paper GI.Impl
 
 /-- **The list of the first-rectangle item**: its table at its final base. -/
 noncomputable def fc11SojF : List Expr := fc11Conc (fitC23Idx + 101000)
@@ -51,9 +55,9 @@ theorem fc11_prog_parts {gObjF sojF : List Expr}
     rcR_fits itHvHvIF_fits (fc23_fits fc23ObF_length hprF)
   obtain ⟨_, _, _, _, _, _, _, hit⟩ := fag_hasAt (hst := GI.Proved.pointwiseStab) (hm := GI.Proved.membership)
     (hpre := GI.Proved.preimage) (hfac := GI.Proved.normalizedFactor) (hmb := GI.Proved.minimalBlocks) (hO := GI.Proved.groupOrder)
-    (hC := finCam GI.Proved.johnsonIdentification GI.Proved.groupOrder chiefSeriesAlgo quotientCentralizer)
-    (hcs := chiefSeriesAlgo) (hder := GI.Proved.derivedSubgroup) (hqc := quotientCentralizer)
-    (hni := GI.Proved.normalizedIntersection) (hsy := sylowAlgo) (hsc := sylowConjugate)
+    (hC := finCam GI.Proved.johnsonIdentification GI.Proved.groupOrder)
+    (hder := GI.Proved.derivedSubgroup)
+    (hni := GI.Proved.normalizedIntersection)
     (hnc := GI.Proved.normalClosure)
     (ext := finExt GI.Proved.solvableCosetIntersection GI.Proved.hermiteFullRank GI.Proved.smithNonsingular
       GI.Proved.constructiveMembership GI.Proved.vectorStabilizer GI.Proved.karyRefinement64 GI.Proved.karyRefinement2)
@@ -65,8 +69,9 @@ theorem fc11_prog_parts {gObjF sojF : List Expr}
     rcR_fit_repSpec_final GI.Proved.karyRefinement64 hF ⟨fcr_fits, fcm_fits⟩ itHvHvIF_fits
       (fc23_fits fc23ObF_length hprF)⟩
   have hc : (fc10Conc (fitC23Idx + 100000)).length ≤ 1000 := by rw [fc10Conc_length]; decide
-  unfold fc10PrF at hpr
-  simpa only [length_asmPad hc, Nat.add_assoc] using hpr.right
+  have hpr' := hpr.right
+  rw [length_asmPad hc, Nat.add_assoc] at hpr'
+  exact hpr'
 
 /-- **The table of the first-rectangle item is installed** in the final program, for every
 object glue `gObjF` that fits its room. -/
@@ -86,7 +91,7 @@ theorem fc11_sojSpec (I : Iface) (F : Funs) {gObjF : List Expr}
 
 /-- **Stage 2 from the object glue.**
 
-Every cited algorithm task is a proved theorem or an axiom, and the first-rectangle item is the concrete table
+Every cited algorithm task is a proved theorem, and the first-rectangle item is the concrete table
 `fc11SojF`. The only hypotheses are the object glue `gObjF`, with its length bound `hgo` and
 its contract `hgl` (`TermGlueObjSpec` at constants `Kg Dg`). -/
 theorem final_modulo_glueObj

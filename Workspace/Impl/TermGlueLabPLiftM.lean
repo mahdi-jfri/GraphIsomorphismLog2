@@ -1,5 +1,9 @@
-import Workspace.Impl.RowA18Link
-import Workspace.Impl.AggPairs
+module
+
+public import Workspace.Impl.RowA18Link
+public import Workspace.Impl.AggPairs
+
+@[expose] public section
 
 /-!
 # The lifts `k(s)` of the label step: the mathematics

@@ -1,5 +1,9 @@
-import Workspace.Impl.TermRecProgTest
-import Workspace.CitedChecks.AlgoDetermined
+module
+
+public import Workspace.Impl.TermRecProgTest
+public import Workspace.CitedChecks.AlgoDetermined
+
+@[expose] public section
 
 /-!
 # T5, the pieces of a list of objects
@@ -73,7 +77,8 @@ theorem tmRi_sum_const {α : Type} (l : List α) (B : α → ℕ) {K : ℕ} (h :
 theorem tmRi_objP_vals {P : Program} {b jsci jder jmem gObj : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hmem : Membership}
     (hP : TmRiAt P b jsci jder jmem gObj hsci hder hmem) {gs : List (Perm (Fin n))}
-    (hsol : IsSolvable (gens gs)) (hgl : gs.length ≤ n ^ 2) {C : ℕ} {L : List (TmRiO n)}
+    {C : ℕ} {L : List (TmRiO n)} (hsol : TmRiListNorm (gens gs) L)
+    (hgl : gs.length ≤ n ^ 2)
     (hok : TmRiOK C L) {z : Val} (hz : z ∈ L.map tmGlObjVal) :
     ∀ x ∈ L.map tmGlObjVal, FunDet P (b + 3) (.list [.list [encGroup gs, z], x])
       (boolVal (tmRiQ (gens gs) z x)) (tmRiObjPC (solvableCosetIntersectionPrim hsci) n C) := by
@@ -82,7 +87,7 @@ theorem tmRi_objP_vals {P : Program} {b jsci jder jmem gObj : ℕ}
   obtain ⟨o', ho', rfl⟩ := List.mem_map.1 hx
   have h1 := hok o ho
   have h2 := hok o' ho'
-  have := tmRi_objP_spec hP hsol hgl h1.1 h2.1 (h1.2.2 o' ho') h1.2.1 h2.2.1
+  have := tmRi_objP_spec hP (hsol o ho) hgl h1.1 h2.1 (h1.2.2 o' ho') h1.2.1 h2.2.1
   convert this using 2
   simp only [tmRiQ, tmRiDec_val, decide_eq_decide]
 
@@ -93,7 +98,7 @@ def tmRiPcsStepC (OP E : ℕ) : ℕ := 2 * E * OP + 10 ^ 6 * (E + 1) ^ 2
 theorem tmRi_pcsStep_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hmem : Membership}
     (hP : TmRiAt P b jsci jder jmem gObj hsci hder hmem) {gs : List (Perm (Fin n))}
-    (hsol : IsSolvable (gens gs)) (hgl : gs.length ≤ n ^ 2) {C : ℕ} {L : List (TmRiO n)}
+    {C : ℕ} {L : List (TmRiO n)} (hsol : TmRiListNorm (gens gs) L) (hgl : gs.length ≤ n ^ 2)
     (hok : TmRiOK C L) {i : ℕ} (hi : i < L.length) {acc : List Val} {E : ℕ}
     (hE : (Val.list [encGroup gs, .list (L.map tmGlObjVal)]).wt ≤ E)
     (hacc : (Val.list acc).wt ≤ 4 * (E + 1) ^ 2) :
@@ -238,7 +243,7 @@ def tmRiPcsC (OP E : ℕ) : ℕ := E * tmRiPcsStepC OP E + 10 ^ 5 * (E + 1) ^ 3
 theorem tmRi_pcs_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hmem : Membership}
     (hP : TmRiAt P b jsci jder jmem gObj hsci hder hmem) {gs : List (Perm (Fin n))}
-    (hsol : IsSolvable (gens gs)) (hgl : gs.length ≤ n ^ 2) {C : ℕ} {L : List (TmRiO n)}
+    {C : ℕ} {L : List (TmRiO n)} (hsol : TmRiListNorm (gens gs) L) (hgl : gs.length ≤ n ^ 2)
     (hok : TmRiOK C L) {E : ℕ}
     (hE : (Val.list [encGroup gs, .list (L.map tmGlObjVal)]).wt ≤ E) :
     FunDet P (b + 6) (.list [encGroup gs, .list (L.map tmGlObjVal)])

@@ -1,5 +1,9 @@
-import Workspace.BudgetInductionAffine
-import Workspace.BudgetInductionAlternatives
+module
+
+public import Workspace.BudgetInductionAffine
+public import Workspace.BudgetInductionAlternatives
+
+@[expose] public section
 
 namespace GI.BudgetInduction
 

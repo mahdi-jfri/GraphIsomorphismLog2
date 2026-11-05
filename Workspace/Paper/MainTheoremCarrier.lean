@@ -1,5 +1,9 @@
-import Workspace.Paper.MainTheoremAgg
-import Workspace.Paper.ScriptCalls
+module
+
+public import Workspace.Paper.MainTheoremAgg
+public import Workspace.Paper.ScriptCalls
+
+@[expose] public section
 
 /-!
 # The main theorems without the aggregation data
@@ -13,7 +17,7 @@ the labels above the retained columns (`Constituent.kills`), by `CarrierData.ofS
 `thm_main_string_stage1_built`, `thm_main_graph_stage1_built`) take only
 
 * the cited results of the aggregation round (`KaryCoherentRefinement`,
-  `SixTransitiveContainsAlt`, `DesignLemma`) and of the earlier versions;
+  `DesignLemma`) and of the earlier versions;
 * parameter conditions (`Params.Aggregates`, `Params.RowThreshold`, and those of
   `run_exists_agg`).
 
@@ -75,7 +79,7 @@ invariant, the parameter conditions, the cited results and the carrier data. -/
 noncomputable def _root_.GI.Algorithm.AggregationData.ofLabels {Ω C : Type} [Finite Ω] {S : State Ω C}
     (L : SuppliedLabels S) (hinv : S.HierInv) (hN : P.N₀ < S.N) (hsN : S.size ≤ S.N)
     (htr : S.Transitive) (hq : P.q₀ < L.q) (hA : P.Aggregates)
-    (hK : GI.Cited.KaryCoherentRefinement) (h6 : GI.Cited.SixTransitiveContainsAlt)
+    (hK : GI.Cited.KaryCoherentRefinement)
     (hD : GI.Cited.DesignLemma) (hrow : ¬ RowCase P.α S L.toGiantLabels) :
     AggregationData P S L.toGiantLabels where
   sel := L.sel
@@ -92,19 +96,19 @@ noncomputable def _root_.GI.Algorithm.AggregationData.ofLabels {Ω C : Type} [Fi
   N_large := hN
   con := L.con
   hK := JointFn.ofRefine (RefineFn.ofCited hK)
-  h6 := h6
   hD := hD
   hnot := hrow
 
 /-- **The aggregation round of a state**: the data of `AggregationData.ofLabels` with the
 default source tuple and rectangle representations (`AggregationData.toAgg`). -/
-noncomputable def _root_.GI.Algorithm.Aggregation.ofLabels {Ω C : Type} [Finite Ω] {S : State Ω C}
+noncomputable def _root_.GI.Algorithm.Aggregation.ofLabels
+    {Ω C : Type} [Finite Ω] {S : State Ω C}
     (L : SuppliedLabels S) (hinv : S.HierInv) (hN : P.N₀ < S.N) (hsN : S.size ≤ S.N)
     (htr : S.Transitive) (hq : P.q₀ < L.q) (hA : P.Aggregates)
-    (hK : GI.Cited.KaryCoherentRefinement) (h6 : GI.Cited.SixTransitiveContainsAlt)
+    (hK : GI.Cited.KaryCoherentRefinement)
     (hD : GI.Cited.DesignLemma) (hrow : ¬ RowCase P.α S L.toGiantLabels) :
     Aggregation P S L.toGiantLabels :=
-  (AggregationData.ofLabels L hinv hN hsN htr hq hA hK h6 hD hrow).toAgg
+  (AggregationData.ofLabels L hinv hN hsN htr hq hA hK hD hrow).toAgg
 
 /-- An aggregation call whose fresh `Solve` calls are on finite sets is on a finite set: its
 `Continue` calls are on the parent positions. -/
@@ -145,42 +149,44 @@ noncomputable def carrierSupply (P : Params) : CarrierSupply P :=
 
 /-- **The aggregation data**, built from the supplied labels, the parameter conditions and the
 cited results. -/
-noncomputable def AggSupply.ofCited (hA : P.Aggregates) (hK : GI.Cited.KaryCoherentRefinement)
-    (h6 : GI.Cited.SixTransitiveContainsAlt) (hD : GI.Cited.DesignLemma) : AggSupply P :=
+noncomputable def AggSupply.ofCited
+    (hA : P.Aggregates) (hK : GI.Cited.KaryCoherentRefinement)
+    (hD : GI.Cited.DesignLemma) : AggSupply P :=
   fun S hinv hN hsN htr _ L hq hrow =>
-    let I := Aggregation.ofLabels L hinv hN hsN htr hq hA hK h6 hD hrow
+    let I := Aggregation.ofLabels L hinv hN hsN htr hq hA hK hD hrow
     ⟨I, I.calls_finite⟩
 
 /-- **The aggregation data from the carrier data.** The carrier data are not used any more: the
 aggregation round builds them (`Aggregation.carrierData`). -/
-noncomputable def AggSupply.ofCarrier (hA : P.Aggregates) (hK : GI.Cited.KaryCoherentRefinement)
-    (h6 : GI.Cited.SixTransitiveContainsAlt) (hD : GI.Cited.DesignLemma)
+noncomputable def AggSupply.ofCarrier
+    (hA : P.Aggregates) (hK : GI.Cited.KaryCoherentRefinement)
+    (hD : GI.Cited.DesignLemma)
     (_cs : CarrierSupply P) : AggSupply P :=
-  AggSupply.ofCited hA hK h6 hD
+  AggSupply.ofCited hA hK hD
 
 /-- **The recursion terminates on every input, given the carrier data.** The hypotheses are
 those of `run_exists_agg`, with the carrier data, the cited results of the aggregation round and
 `Params.Aggregates` in place of `AggSupply P`. -/
 theorem run_exists_carrier (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
-    (hcite : GI.Cited.TransitiveAffected) (hT : P.RowThreshold)
+    (hT : P.RowThreshold)
     (ha : 128 ≤ P.a) (hγ : 0 ≤ P.γ) (hE : P.EnumeratesBounded) (hA : P.Aggregates)
-    (hK : GI.Cited.KaryCoherentRefinement) (h6 : GI.Cited.SixTransitiveContainsAlt)
+    (hK : GI.Cited.KaryCoherentRefinement)
     (hD : GI.Cited.DesignLemma) (cs : CarrierSupply P)
     {Ω C : Type} [Finite Ω] (S : State Ω C) :
     Nonempty (Run P .solve S none S.answer) ∧
       ∀ {A : Set (Equiv.Perm Ω)}, Run P .solve S none A →
         A = {g | g ∈ S.G ∧ ∀ v ∈ S.dom, S.y (g v) = S.x v} :=
-  run_exists_agg hP hM hcite hT ha hγ hE (AggSupply.ofCarrier hA hK h6 hD cs) S
+  run_exists_agg hP hM hT ha hγ hE (AggSupply.ofCarrier hA hK hD cs) S
 
 /-- **Theorem 1.2 at stage 1, for every run, given the carrier data** (`thm:main-string`).
 The hypotheses are those of `thm_main_string_stage1_agg`, with the carrier data, the cited
 results of the aggregation round and `Params.Aggregates` in place of `AggSupply P`. -/
-theorem thm_main_string_stage1_carrier (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
-    (hcite : GI.Cited.TransitiveAffected) (hT : P.RowThreshold)
+theorem thm_main_string_stage1_carrier
+    (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
+    (hT : P.RowThreshold)
     (ha128 : 128 ≤ P.a) (hE : P.EnumeratesBounded) (hA : P.Aggregates)
-    (hK : GI.Cited.KaryCoherentRefinement) (h6 : GI.Cited.SixTransitiveContainsAlt)
-    (hD : GI.Cited.DesignLemma) (cs : CarrierSupply P)
-    (hAut : GI.Cited.AutCardLeSq) (hLie : GI.Cited.SimpleValuationDegree) (hκ : 64 ≤ P.κ)
+    (hK : GI.Cited.KaryCoherentRefinement)
+    (hD : GI.Cited.DesignLemma) (cs : CarrierSupply P) (hκ : 64 ≤ P.κ)
     {cc : ChargingConstants} (hc : Compat P cc) (hαγ : 2 * P.α ≤ P.γ) (hbase : AboveBase P cc)
     {w : Node P → ℝ} {cw : ℝ} (hw : NodeBound' w cw) (hcw : 0 ≤ cw) (ha : P.a + 1 ≤ cc.a) :
     ∃ C' : ℝ, ∀ {Ω C : Type} [Finite Ω] (S : State Ω C),
@@ -189,18 +195,18 @@ theorem thm_main_string_stage1_carrier (hP : P.Terminating) (hM : GI.Cited.Marot
         (A = {g | g ∈ S.G ∧ ∀ v ∈ S.dom, S.y (g v) = S.x v} ∧
           (A = ∅ ∨ ∃ t ∈ S.G, A = t • (autGroup S.G S.dom S.dom_inv S.x : Set (Perm Ω)))) ∧
         r.total w ≤ Real.exp (C' * Real.log ((S.size : ℝ) + 2) ^ 2) :=
-  thm_main_string_stage1_agg hP hM hcite hT ha128 hE (AggSupply.ofCarrier hA hK h6 hD cs) hAut
-    hLie hκ hc hαγ hbase hw hcw ha
+  thm_main_string_stage1_agg hP hM hT ha128 hE (AggSupply.ofCarrier hA hK hD cs)
+    hκ hc hαγ hbase hw hcw ha
 
 /-- **Theorem 1.1 at stage 1, for every run, given the carrier data** (`thm:main-graph`).
 The hypotheses are those of `thm_main_graph_stage1_agg`, with the carrier data, the cited
 results of the aggregation round and `Params.Aggregates` in place of `AggSupply P`. -/
-theorem thm_main_graph_stage1_carrier (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
-    (hcite : GI.Cited.TransitiveAffected) (hT : P.RowThreshold)
+theorem thm_main_graph_stage1_carrier
+    (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
+    (hT : P.RowThreshold)
     (ha128 : 128 ≤ P.a) (hE : P.EnumeratesBounded) (hA : P.Aggregates)
-    (hK : GI.Cited.KaryCoherentRefinement) (h6 : GI.Cited.SixTransitiveContainsAlt)
-    (hD : GI.Cited.DesignLemma) (cs : CarrierSupply P)
-    (hAut : GI.Cited.AutCardLeSq) (hLie : GI.Cited.SimpleValuationDegree) (hκ : 64 ≤ P.κ)
+    (hK : GI.Cited.KaryCoherentRefinement)
+    (hD : GI.Cited.DesignLemma) (cs : CarrierSupply P) (hκ : 64 ≤ P.κ)
     {cc : ChargingConstants} (hc : Compat P cc) (hαγ : 2 * P.α ≤ P.γ) (hbase : AboveBase P cc)
     {w : Node P → ℝ} {cw : ℝ} (hw : NodeBound' w cw) (hcw : 0 ≤ cw) (ha : P.a + 1 ≤ cc.a) :
     ∃ C' : ℝ, ∀ (n : ℕ) (X Y : SimpleGraph (Fin n)) [DecidableRel X.Adj] [DecidableRel Y.Adj],
@@ -211,30 +217,30 @@ theorem thm_main_graph_stage1_carrier (hP : P.Terminating) (hM : GI.Cited.Maroti
         (∀ σ : X ≃g Y, diagonalHom (Fin n) ⁻¹' A =
           (σ.toEquiv : Perm (Fin n)) • (GI.Statement.autGroup X : Set (Perm (Fin n)))) ∧
         r.total w ≤ Real.exp (C' * Real.log ((n : ℝ) + 2) ^ 2) :=
-  thm_main_graph_stage1_agg hP hM hcite hT ha128 hE (AggSupply.ofCarrier hA hK h6 hD cs) hAut
-    hLie hκ hc hαγ hbase hw hcw ha
+  thm_main_graph_stage1_agg hP hM hT ha128 hE (AggSupply.ofCarrier hA hK hD cs)
+    hκ hc hαγ hbase hw hcw ha
 
 /-- **The recursion terminates on every input** (`run_exists_carrier` with the carrier data
 built, `carrierSupply`). -/
 theorem run_exists_built (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
-    (hcite : GI.Cited.TransitiveAffected) (hT : P.RowThreshold)
+    (hT : P.RowThreshold)
     (ha : 128 ≤ P.a) (hγ : 0 ≤ P.γ) (hE : P.EnumeratesBounded) (hA : P.Aggregates)
-    (hK : GI.Cited.KaryCoherentRefinement) (h6 : GI.Cited.SixTransitiveContainsAlt)
+    (hK : GI.Cited.KaryCoherentRefinement)
     (hD : GI.Cited.DesignLemma)
     {Ω C : Type} [Finite Ω] (S : State Ω C) :
     Nonempty (Run P .solve S none S.answer) ∧
       ∀ {A : Set (Equiv.Perm Ω)}, Run P .solve S none A →
         A = {g | g ∈ S.G ∧ ∀ v ∈ S.dom, S.y (g v) = S.x v} :=
-  run_exists_carrier hP hM hcite hT ha hγ hE hA hK h6 hD (carrierSupply P) S
+  run_exists_carrier hP hM hT ha hγ hE hA hK hD (carrierSupply P) S
 
 /-- **Theorem 1.2 at stage 1, for every run** (`thm:main-string`):
 `thm_main_string_stage1_carrier` with the carrier data built (`carrierSupply`). -/
-theorem thm_main_string_stage1_built (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
-    (hcite : GI.Cited.TransitiveAffected) (hT : P.RowThreshold)
+theorem thm_main_string_stage1_built
+    (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
+    (hT : P.RowThreshold)
     (ha128 : 128 ≤ P.a) (hE : P.EnumeratesBounded) (hA : P.Aggregates)
-    (hK : GI.Cited.KaryCoherentRefinement) (h6 : GI.Cited.SixTransitiveContainsAlt)
-    (hD : GI.Cited.DesignLemma)
-    (hAut : GI.Cited.AutCardLeSq) (hLie : GI.Cited.SimpleValuationDegree) (hκ : 64 ≤ P.κ)
+    (hK : GI.Cited.KaryCoherentRefinement)
+    (hD : GI.Cited.DesignLemma) (hκ : 64 ≤ P.κ)
     {cc : ChargingConstants} (hc : Compat P cc) (hαγ : 2 * P.α ≤ P.γ) (hbase : AboveBase P cc)
     {w : Node P → ℝ} {cw : ℝ} (hw : NodeBound' w cw) (hcw : 0 ≤ cw) (ha : P.a + 1 ≤ cc.a) :
     ∃ C' : ℝ, ∀ {Ω C : Type} [Finite Ω] (S : State Ω C),
@@ -243,17 +249,17 @@ theorem thm_main_string_stage1_built (hP : P.Terminating) (hM : GI.Cited.MarotiP
         (A = {g | g ∈ S.G ∧ ∀ v ∈ S.dom, S.y (g v) = S.x v} ∧
           (A = ∅ ∨ ∃ t ∈ S.G, A = t • (autGroup S.G S.dom S.dom_inv S.x : Set (Perm Ω)))) ∧
         r.total w ≤ Real.exp (C' * Real.log ((S.size : ℝ) + 2) ^ 2) :=
-  thm_main_string_stage1_carrier hP hM hcite hT ha128 hE hA hK h6 hD (carrierSupply P) hAut
-    hLie hκ hc hαγ hbase hw hcw ha
+  thm_main_string_stage1_carrier hP hM hT ha128 hE hA hK hD (carrierSupply P)
+    hκ hc hαγ hbase hw hcw ha
 
 /-- **Theorem 1.1 at stage 1, for every run** (`thm:main-graph`):
 `thm_main_graph_stage1_carrier` with the carrier data built (`carrierSupply`). -/
-theorem thm_main_graph_stage1_built (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
-    (hcite : GI.Cited.TransitiveAffected) (hT : P.RowThreshold)
+theorem thm_main_graph_stage1_built
+    (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
+    (hT : P.RowThreshold)
     (ha128 : 128 ≤ P.a) (hE : P.EnumeratesBounded) (hA : P.Aggregates)
-    (hK : GI.Cited.KaryCoherentRefinement) (h6 : GI.Cited.SixTransitiveContainsAlt)
-    (hD : GI.Cited.DesignLemma)
-    (hAut : GI.Cited.AutCardLeSq) (hLie : GI.Cited.SimpleValuationDegree) (hκ : 64 ≤ P.κ)
+    (hK : GI.Cited.KaryCoherentRefinement)
+    (hD : GI.Cited.DesignLemma) (hκ : 64 ≤ P.κ)
     {cc : ChargingConstants} (hc : Compat P cc) (hαγ : 2 * P.α ≤ P.γ) (hbase : AboveBase P cc)
     {w : Node P → ℝ} {cw : ℝ} (hw : NodeBound' w cw) (hcw : 0 ≤ cw) (ha : P.a + 1 ≤ cc.a) :
     ∃ C' : ℝ, ∀ (n : ℕ) (X Y : SimpleGraph (Fin n)) [DecidableRel X.Adj] [DecidableRel Y.Adj],
@@ -264,7 +270,7 @@ theorem thm_main_graph_stage1_built (hP : P.Terminating) (hM : GI.Cited.MarotiPr
         (∀ σ : X ≃g Y, diagonalHom (Fin n) ⁻¹' A =
           (σ.toEquiv : Perm (Fin n)) • (GI.Statement.autGroup X : Set (Perm (Fin n)))) ∧
         r.total w ≤ Real.exp (C' * Real.log ((n : ℝ) + 2) ^ 2) :=
-  thm_main_graph_stage1_carrier hP hM hcite hT ha128 hE hA hK h6 hD (carrierSupply P) hAut
-    hLie hκ hc hαγ hbase hw hcw ha
+  thm_main_graph_stage1_carrier hP hM hT ha128 hE hA hK hD (carrierSupply P)
+    hκ hc hαγ hbase hw hcw ha
 
 end GI.Paper

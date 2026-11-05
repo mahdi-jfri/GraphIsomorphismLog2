@@ -1,5 +1,9 @@
-import Workspace.Impl.LinCoordinateCollect
-import Workspace.Impl.LinIntRelations
+module
+
+public import Workspace.Impl.LinCoordinateCollect
+public import Workspace.Impl.LinIntRelations
+
+@[expose] public section
 
 /-! Convert the collected order/coefficient pairs to the relation assembler's input. -/
 namespace GI.Impl

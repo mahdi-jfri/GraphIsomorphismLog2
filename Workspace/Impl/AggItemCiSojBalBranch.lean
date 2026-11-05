@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojImpBranch
+module
+
+public import Workspace.Impl.AggItemCiSojImpBranch
+
+@[expose] public section
 
 /-! # The exact balanced branch of the first-rectangle item -/
 

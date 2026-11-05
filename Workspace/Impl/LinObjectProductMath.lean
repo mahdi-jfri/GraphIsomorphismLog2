@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectNormalMath
+module
+
+public import Workspace.Impl.LinObjectNormalMath
+
+@[expose] public section
 
 /-! Finite coordinates for W before quotienting by the diagonal. These
 coordinates retain the full offset needed for the final correction lift. -/

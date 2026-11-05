@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.NatList
+module
+
+public import Workspace.Lang.Lib.NatList
+
+@[expose] public section
 
 /-!
 # Step 9 of `camProg`: the transpose of the columns

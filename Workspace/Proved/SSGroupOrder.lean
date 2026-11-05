@@ -1,4 +1,8 @@
-import Workspace.Impl.SSOrderWrap
+module
+
+public import Workspace.Impl.SSOrderWrap
+
+@[expose] public section
 
 /-!
 # The order of a group in polynomial time

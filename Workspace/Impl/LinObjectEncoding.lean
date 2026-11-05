@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectMath
+module
+
+public import Workspace.Impl.LinObjectMath
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

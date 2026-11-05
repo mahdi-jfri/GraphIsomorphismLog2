@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPOffL
+module
+
+public import Workspace.Impl.TermGlueLabPOffL
+
+@[expose] public section
 
 /-!
 # Reading the transporters for one `h`

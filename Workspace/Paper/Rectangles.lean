@@ -1,11 +1,15 @@
-import Workspace.RectangleCaps
-import Workspace.RectangleOutput
-import Workspace.Paper.SupportThresholds
-import Workspace.CoherentRectangleCertificate
-import Workspace.CoherentComponentPartition
-import Workspace.Parameters
-import Workspace.RectangleLeftCap
-import Workspace.SideParity
+module
+
+public import Workspace.RectangleCaps
+public import Workspace.RectangleOutput
+public import Workspace.Paper.SupportThresholds
+public import Workspace.CoherentRectangleCertificate
+public import Workspace.CoherentComponentPartition
+public import Workspace.Parameters
+public import Workspace.RectangleLeftCap
+public import Workspace.SideParity
+
+@[expose] public section
 
 /-!
 # Paper statements: Lemma A.27 (`lem:inherited-support-two-rectangle`)

@@ -1,4 +1,8 @@
-import Workspace.CleanComplementConjugates
+module
+
+public import Workspace.CleanComplementConjugates
+
+@[expose] public section
 
 /-! Build the compatible extra cycle from a pure old cycle and one localized
 lift. All CleanExtension fields, including the old return map, are proved. -/
@@ -80,7 +84,7 @@ theorem extra_clean : CleanBlockCycle A.label (some a) none (some b) (extraCycle
     d.localized (some a) (top_meet d hab hbc)
   have hg : (cleanCycle a b c).optionCongr (some a) = some b :=
     congrArg some (old_cycle_first hab hbc)
-  simpa only [d.sends, hg] using hc
+  simpa only [extraCycle, d.sends, hg] using hc
 
 include hlabel hab hbc in
 theorem extra_extension : CleanExtension a b (extraCycle d) where

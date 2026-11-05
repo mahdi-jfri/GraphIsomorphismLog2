@@ -1,5 +1,9 @@
-import Workspace.BudgetInductionBasic
-import Workspace.MatrixValuationAffine
+module
+
+public import Workspace.BudgetInductionBasic
+public import Workspace.MatrixValuationAffine
+
+@[expose] public section
 
 namespace GI.BudgetInduction
 

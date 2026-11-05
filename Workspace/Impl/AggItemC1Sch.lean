@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemC1G
-import Workspace.Impl.AggItemC1Par
+module
+
+public import Workspace.Impl.AggItemC1G
+public import Workspace.Impl.AggItemC1Par
+
+@[expose] public section
 
 /-!
 # Case 1 as a program: the Schreier generators of the even part

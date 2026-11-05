@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQPoly
+module
+
+public import Workspace.Impl.VsQPoly
+
+@[expose] public section
 
 /-!
 # Sizes in terms of the input weight

@@ -1,4 +1,8 @@
-import Workspace.CleanComplementReindex
+module
+
+public import Workspace.CleanComplementReindex
+
+@[expose] public section
 
 /-! From the paper's hypotheses of Theorem A.17 (a block labelling, a block
 action with image `Alt(m)`, a block kernel transitive on each block, and
@@ -37,7 +41,7 @@ theorem cleanBlockActionOf_ker (G : Subgroup (Perm V)) (label : V → I)
 /-- A clean complement exists for every block action satisfying the
 hypotheses of Theorem A.17. Odd `m = 2r + 1`: the odd completion. Even
 `m = 2r + 2`: the even completion. -/
-theorem pureComplement_nonempty_log [Fintype V] (hcite : GI.Cited.TransitiveAffected)
+theorem pureComplement_nonempty_log [Fintype V]
     {G : Subgroup (Perm V)} (A : CleanBlockAction G I) (hker : A.KernelTransitive)
     {k : ℕ} (hthr : A.BelowLogThreshold k) (hodd : Odd k)
     (hm : 2 * k - 1 ≤ Fintype.card I) : Nonempty (PureComplement A) := by
@@ -49,13 +53,13 @@ theorem pureComplement_nonempty_log [Fintype V] (hcite : GI.Cited.TransitiveAffe
       simp only [Fintype.card_option, Fintype.card_prod, Fintype.card_fin, Fintype.card_bool]
       omega
     let σ := Fintype.equivOfCardEq hc
-    exact ⟨(logEvenComplement hcite (A.reindex σ) (hker.reindex A σ) (hthr.reindex A σ)
+    exact ⟨(logEvenComplement (A.reindex σ) (hker.reindex A σ) (hthr.reindex A σ)
       hodd (by rw [← hc]; exact hm)).ofReindex⟩
   · have hc : Fintype.card I = Fintype.card (Option (Fin r × Bool)) := by
       simp only [Fintype.card_option, Fintype.card_prod, Fintype.card_fin, Fintype.card_bool]
       omega
     let σ := Fintype.equivOfCardEq hc
-    exact ⟨(logOddComplement hcite (A.reindex σ) (hker.reindex A σ) (hthr.reindex A σ)
+    exact ⟨(logOddComplement (A.reindex σ) (hker.reindex A σ) (hthr.reindex A σ)
       hodd (by rw [← hc]; exact hm)).ofReindex⟩
 
 namespace PureComplement

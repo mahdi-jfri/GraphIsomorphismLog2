@@ -1,4 +1,8 @@
-import Workspace.Impl.LinIntTriCost
+module
+
+public import Workspace.Impl.LinIntTriCost
+
+@[expose] public section
 
 /-! Recursive triangular substitution in GI.Lang. The control flow follows
 linUpperSolve: exact pivot division, a smaller residual system, and a lifted

@@ -1,9 +1,13 @@
-import Workspace.PrimitiveAbelianExponent
-import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import Mathlib.RingTheory.Finiteness.Basic
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.Algebra.Group.Equiv.TypeTags
-import Mathlib.Algebra.Group.TypeTags.Finite
+module
+
+public import Workspace.PrimitiveAbelianExponent
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.RingTheory.Finiteness.Basic
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Algebra.Group.Equiv.TypeTags
+public import Mathlib.Algebra.Group.TypeTags.Finite
+
+@[expose] public section
 
 namespace GI.PrimitiveStructure
 
@@ -38,6 +42,3 @@ theorem abelian_normal_coordinates {G V : Type*} [Group G] [Finite G]
   exact ⟨p, hp, coordinates_of_prime_exponent comm hp hexp⟩
 
 end GI.PrimitiveStructure
-
-#print axioms GI.PrimitiveStructure.coordinates_of_prime_exponent
-#print axioms GI.PrimitiveStructure.abelian_normal_coordinates

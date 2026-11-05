@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgFin
+module
+
+public import Workspace.Impl.AggItemCiCfgFin
+
+@[expose] public section
 
 /-!
 # The configuration branch: the program table

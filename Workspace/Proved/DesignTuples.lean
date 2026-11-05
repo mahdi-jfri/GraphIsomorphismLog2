@@ -1,7 +1,11 @@
-import Workspace.Cited.CoherentConfig
-import Mathlib.Data.Fintype.Card
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Fin.Tuple.Basic
+module
+
+public import Workspace.Cited.CoherentConfig
+public import Mathlib.Data.Fintype.Card
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Data.Fin.Tuple.Basic
+
+@[expose] public section
 
 /-!
 # Tuples and counts for the Design Lemma

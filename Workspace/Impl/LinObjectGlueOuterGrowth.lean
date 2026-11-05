@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectGlueRaw
+module
+
+public import Workspace.Impl.LinObjectGlueRaw
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

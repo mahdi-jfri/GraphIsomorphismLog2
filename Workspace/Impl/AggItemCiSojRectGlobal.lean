@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojRectBudget
+module
+
+public import Workspace.Impl.AggItemCiSojRectBudget
+
+@[expose] public section
 
 /-! # The certified rectangle branch at the common global cost -/
 

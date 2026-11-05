@@ -1,7 +1,11 @@
-import Workspace.Impl.CamPFac
-import Workspace.Impl.CamPTrans
-import Workspace.Impl.CamReindex
-import Workspace.Impl.CamBranch
+module
+
+public import Workspace.Impl.CamPFac
+public import Workspace.Impl.CamPTrans
+public import Workspace.Impl.CamReindex
+public import Workspace.Impl.CamBranch
+
+@[expose] public section
 
 /-!
 # Step 10 of `camProg`: putting the coordinates together
@@ -50,7 +54,7 @@ theorem cam_assemble {G : Subgroup (Perm (Fin n))}
   have hj : ∀ j : Fin r, CamFacOut e (τ j) x₀ (cols.get (Fin.cast hlc.symm j)) := by
     intro j
     have := hcols.get (i := j) (by omega) (by omega)
-    simpa [camTau_apply] using this
+    simpa [τ, camTau_apply] using this
   choose O ts' ι hinj hν hH hι F hF hv using hj
   set e₀ := camReindex e τ with he₀
   have hν' : ∀ j y, (∃ w, (O j).get w = y) ↔ ∀ j', j' ≠ j → e₀ y j' = e₀ x₀ j' := by

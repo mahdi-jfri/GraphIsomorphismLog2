@@ -1,5 +1,9 @@
-import Workspace.Impl.RowA18Link
-import Workspace.Impl.FreshColor
+module
+
+public import Workspace.Impl.RowA18Link
+public import Workspace.Impl.FreshColor
+
+@[expose] public section
 
 /-!
 # The row-`0` part of a generator, in `GI.Lang`

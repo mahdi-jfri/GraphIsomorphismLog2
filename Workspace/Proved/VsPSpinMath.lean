@@ -1,5 +1,9 @@
-import Workspace.Proved.VsPPairMath
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+module
+
+public import Workspace.Proved.VsPPairMath
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+
+@[expose] public section
 
 /-!
 # Spins seen through keys

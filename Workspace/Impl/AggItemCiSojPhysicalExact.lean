@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojPhysicalData
+module
+
+public import Workspace.Impl.AggItemCiSojPhysicalData
+
+@[expose] public section
 
 /-! # Exact physical data of the model's inherited rectangle query -/
 

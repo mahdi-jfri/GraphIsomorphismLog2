@@ -1,5 +1,9 @@
-import Workspace.Algorithm.PhaseTree
-import Workspace.Paper.RunningTime
+module
+
+public import Workspace.Algorithm.PhaseTree
+public import Workspace.Paper.RunningTime
+
+@[expose] public section
 
 /-!
 # Lemma 7.1 for the runs of the recursion

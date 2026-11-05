@@ -1,4 +1,8 @@
-import Workspace.Impl.KRefRoundV
+module
+
+public import Workspace.Impl.KRefRoundV
+
+@[expose] public section
 
 /-!
 # The modules of one round

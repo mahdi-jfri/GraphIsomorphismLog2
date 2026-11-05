@@ -1,5 +1,9 @@
-import Workspace.BudgetInductionBlocks
-import Mathlib.GroupTheory.Index
+module
+
+public import Workspace.BudgetInductionBlocks
+public import Mathlib.GroupTheory.Index
+
+@[expose] public section
 
 namespace GI.BlockCover
 

@@ -1,7 +1,11 @@
-import Workspace.Compat
-import Workspace.CleanCompletion
-import Workspace.LocalCommutator
-import Workspace.OrbitBudget
+module
+
+public import Workspace.Compat
+public import Workspace.CleanCompletion
+public import Workspace.LocalCommutator
+public import Workspace.OrbitBudget
+
+@[expose] public section
 
 /-! Coordinates constructed from actual clean cycles sharing one central block. -/
 namespace GI

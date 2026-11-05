@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHQ8P
+module
+
+public import Workspace.Impl.VsHQ8P
+
+@[expose] public section
 
 /-!
 # What the `Q₈` branch returns
@@ -46,6 +50,7 @@ theorem vsHQ8_cover (hs : VsQStOK s) {ccs B ks : List (Perm (Fin I.n))} (hcc : g
     rw [hα.mul _ (inv_mem (hcc hu')) _ (hcc hc), ← hq1, ← hu1,
       ← hα.mul _ (inv_mem (hcc hu')) _ (hcc hu'), inv_mul_cancel, hα.one]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- **The stabilizer is the centralizer of `Ȳ` in `C`.** -/
 theorem vsHQ8_stab [Fact I.p.Prime] (hs : VsQStOK s) {as ccs B : List (Perm (Fin I.n))}
     (hB : ∀ b ∈ B, b ∈ gens s.hs) (hcc : gens ccs ≤ gens s.hs)

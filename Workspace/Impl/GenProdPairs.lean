@@ -1,4 +1,8 @@
-import Workspace.Impl.GenProdGroup
+module
+
+public import Workspace.Impl.GenProdGroup
+
+@[expose] public section
 
 /-!
 # The product refinement: maps over the pairs

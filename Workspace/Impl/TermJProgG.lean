@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJGMath
-import Workspace.Impl.TermJProgWr
+module
+
+public import Workspace.Impl.TermJGMath
+public import Workspace.Impl.TermJProgWr
+
+@[expose] public section
 
 /-!
 # Generators of `G|_dom` on `Fin (m q)` (program)
@@ -68,7 +72,6 @@ theorem tmJGList_gens (e : Ω ≃ Fin k) (S : State Ω C) {m q : ℕ} (E : Fin m
     · exact Subgroup.subset_closure hg
   · exact Subgroup.closure_mono fun g hg => List.mem_cons_of_mem _ hg
 
-set_option maxHeartbeats 2000000 in
 theorem tmJ_g_spec {P : Program} {f dom mpc cj cp : ℕ} (hA : TmJGAt P f dom mpc cj cp)
     (e : Ω ≃ Fin k) (c : C → ℕ) {S : State Ω C} {sv : Val} (hsv : Canon e c sv S) {m q : ℕ}
     (E : Fin m × Fin q ≃ S.dom) (hs : (domFin e S.dom).length = m * q) :
@@ -124,7 +127,7 @@ theorem tmJ_g_spec {P : Program} {f dom mpc cj cp : ℕ} (hA : TmJGAt P f dom mp
     (v := .list ((1 :: gs).map fun g => encPerm (restrP e S.G S.dom S.dom_inv g))) rfl
   have hM := mapList_spec hA.hmpc (1 :: gs) (fun g => encPerm (restrP e S.G S.dom S.dom_inv g))
     (fun g => encPerm (toFin (tmCsRho e E).symm (restrP e S.G S.dom S.dom_inv g)))
-    (c := .list [encPerm ρ⁻¹, encPerm ρ⁻¹⁻¹]) (fun a _ a' _ he => by simp only; rw [encPerm_injective he])
+    (c := .list [encPerm ρ⁻¹, encPerm ρ⁻¹⁻¹]) (fun a _ a' _ he => by rw [encPerm_injective he])
     (fun g _ => by
       have := tmCs_conj_spec hA.hcj hA.hcp ρ⁻¹
         ((finCongr hs).permCongr (restrP e S.G S.dom S.dom_inv g))
@@ -136,9 +139,13 @@ theorem tmJ_g_spec {P : Program} {f dom mpc cj cp : ℕ} (hA : TmJGAt P f dom mp
     simp [tmJGList, Function.comp_def]
   rw [hval]
   refine (Det.letE c1 (Det.letE c2 (Det.letE c3 c4))).mono ?_
+  clear a0 c1 b0 v1 c2 b0' w1 w2 gl c3 d1 t1 t0 v3 hM c4 henv2 env2 henv3 env3
   -- the cost
   set X := (Val.list [sv, .list [encPerm ρ, encPerm ρ⁻¹]]).wt + k with hX
   set Y := X + 1 with hY
+  have hK : tmJGK X = 10 ^ 17 * Y ^ 21 := rfl
+  rw [hK]
+  clear_value X Y
   have hY1 : 1 ≤ Y := by omega
   have hkY : k + 1 ≤ Y := by omega
   have hmq : m * q ≤ k := hs ▸ length_domFin_le
@@ -153,6 +160,7 @@ theorem tmJ_g_spec {P : Program} {f dom mpc cj cp : ℕ} (hA : TmJGAt P f dom mp
   have wind := wl (indVal e S.dom) (by simp [hsvl])
   have wkk := wl (.nat k) (by simp [hsvl])
   have wgs := wl (encGroup gs) (by simp [hsvl])
+  clear_value ρ svl
   have wgl : (Val.list ((1 :: gs).map encPerm)).wt < (encGroup gs).wt :=
     wt_le_wt_list (by simp [encGroup, encPerms])
   have wdn := wt_domNat_le e S.dom
@@ -189,7 +197,9 @@ theorem tmJ_g_spec {P : Program} {f dom mpc cj cp : ℕ} (hA : TmJGAt P f dom mp
     have : (1 :: gs).length * (2 * (4 * (k + 1) ^ 2) + 1) ≤ (k ^ 2 + 1) * (8 * (k + 1) ^ 2 + 1) :=
       Nat.mul_le_mul wlen (by omega)
     omega
-  have hk2 : k ^ 2 + 1 ≤ Y ^ 2 := by nlinarith
+  have hk2 : k ^ 2 + 1 ≤ Y ^ 2 := by
+    calc k ^ 2 + 1 ≤ (k + 1) ^ 2 := by ring_nf; omega
+      _ ≤ Y ^ 2 := hk 2
   have hL : (k ^ 2 + 1) * (8 * (k + 1) ^ 2 + 1) ≤ 9 * Y ^ 4 := by
     calc (k ^ 2 + 1) * (8 * (k + 1) ^ 2 + 1) ≤ Y ^ 2 * (9 * Y ^ 2) :=
           Nat.mul_le_mul hk2 (by have := hk 2; have := hpow 0 2 (by norm_num); simp at this; omega)
@@ -252,8 +262,6 @@ theorem tmJ_g_spec {P : Program} {f dom mpc cj cp : ℕ} (hA : TmJGAt P f dom mp
   have hk2' := (hk 2).trans h2
   have wtx : (Val.list [sv, .list [encPerm ρ, encPerm ρ⁻¹]]).wt + 1 ≤ Y := by omega
   have hY121 : Y ≤ Y ^ 21 := by exact Nat.le_self_pow (by norm_num) _
-  have hK : tmJGK X = 10 ^ 17 * Y ^ 21 := rfl
-  rw [hK]
   have wq1 := wt_list2_le (natList (domNat e S.dom)) (Val.nat k)
   have wq2 := wt_list2_le (Val.list [natList (domNat e S.dom), posVal e S.dom])
     (Val.list ((1 :: gs).map encPerm))

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectAffineAction
-import Workspace.Impl.LinDescendAction
+module
+
+public import Workspace.Impl.LinObjectAffineAction
+public import Workspace.Impl.LinDescendAction
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Multicoset

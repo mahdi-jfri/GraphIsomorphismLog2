@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemHvInitP
-import Workspace.Impl.AggItemOKC1
-import Workspace.Impl.AggBodyKr
+module
+
+public import Workspace.Impl.AggItemHvInitP
+public import Workspace.Impl.AggItemOKC1
+public import Workspace.Impl.AggBodyKr
+
+@[expose] public section
 
 /-!
 # Case 2a: the bounds are polynomial

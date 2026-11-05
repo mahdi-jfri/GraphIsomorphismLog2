@@ -1,7 +1,10 @@
-import Workspace.CleanComplementPaper
-import Workspace.CleanRowNormalForm
-import Workspace.Paper.RowNormalFormDefs
-import Workspace.Cited.TransitiveAffected
+module
+
+public import Workspace.CleanComplementPaper
+public import Workspace.CleanRowNormalForm
+public import Workspace.Paper.RowNormalFormDefs
+
+@[expose] public section
 
 /-!
 # Paper statements: Theorems A.17 and A.18
@@ -32,13 +35,13 @@ variable {V : Type} [Fintype V] {I : Type} [Fintype I] [DecidableEq I]
 /-- The common first part of the proofs of A.17 and A.18: the paper's data
 form a `CleanBlockAction`, and (LG2) with the odd and even completions give a
 clean complement for it. -/
-theorem exists_clean_complement (hcite : GI.Cited.TransitiveAffected)
+theorem exists_clean_complement
     (G : Subgroup (Perm V)) (label : V → I) (f : ℕ)
     (hsize : ∀ i, Fintype.card {x : V // label x = i} = f) (hf : 0 < f)
     (φ : G →* Perm I) (hφ : ∀ (g : G) (x : V), label (g.val x) = φ g (label x))
     (hAlt : φ.range = alternatingGroup I)
     (htrans : ∀ x y : V, label x = label y → ∃ g : G, g ∈ φ.ker ∧ g.val x = y)
-    (k : ℕ) (hodd : Odd k) (hLG1 : max 8 (2 + Real.logb 2 f) < (k : ℝ))
+    (k : ℕ) (hodd : Odd k) (hLG1 : max 63 (12 * Real.logb 2 f) < (k : ℝ))
     (hm : 2 * k - 1 ≤ Fintype.card I) :
     ∃ (A : CleanBlockAction G I), A.label = label ∧ A.top.ker = φ.ker ∧
       Nonempty (PureComplement A) := by
@@ -59,40 +62,39 @@ theorem exists_clean_complement (hcite : GI.Cited.TransitiveAffected)
     exact hg'
   have hthr : A.BelowLogThreshold k := by
     intro i
-    change max 8 (2 + Real.logb 2 (Fintype.card {x : V // label x = i})) < (k : ℝ)
+    change max 63 (12 * Real.logb 2 (Fintype.card {x : V // label x = i})) < (k : ℝ)
     rw [hsize i]
     exact hLG1
   -- The odd and even completions of the paper, after (LG2) from Lemma A.15.
-  exact ⟨A, rfl, hkerA, pureComplement_nonempty_log hcite A hker hthr hodd hm⟩
+  exact ⟨A, rfl, hkerA, pureComplement_nonempty_log A hker hthr hodd hm⟩
 
 /-- **Theorem A.17** (Logarithmic-threshold clean complement).
 
 Let `G ≤ Sym(V)` have a block system of `m = |I|` blocks, each of size `f`.
 Suppose the block action `φ` has image `Alt(m)` and its kernel `K` is
 transitive on each block. Let `k` be odd with
-`k > max {8, 2 + log₂ f}` and `2k - 1 ≤ m` (LG1). Then there is an
+`k > max {63, 12 log₂ f}` and `2k - 1 ≤ m` (LG1). Then there is an
 identification `e : B × I ≃ V` with `|B| = f` (block `i` is `B × {i}`) and an
 injective homomorphism `s : Alt(m) → G` such that `s p` acts only on the
 block index, `(b, i) ↦ (b, p i)`. Its image `R = s(Alt(m)) ≅ Alt(m)` is a
 complement to `K` in `G`: `G = KR` and `K ∩ R = 1`.
 
 The paper's `R` is `s.range`; `IsComplement'` says that every element of
-`G` is uniquely a product of an element of `K` and an element of `R`.
-The cited input `hcite` is Lemma 4.3(a) of [H], used through Lemma A.15. -/
-theorem thm_logarithmic_clean_complement (hcite : GI.Cited.TransitiveAffected)
+`G` is uniquely a product of an element of `K` and an element of `R`. -/
+theorem thm_logarithmic_clean_complement
     (G : Subgroup (Perm V)) (label : V → I) (f : ℕ)
     (hsize : ∀ i, Fintype.card {x : V // label x = i} = f) (hf : 0 < f)
     (φ : G →* Perm I) (hφ : ∀ (g : G) (x : V), label (g.val x) = φ g (label x))
     (hAlt : φ.range = alternatingGroup I)
     (htrans : ∀ x y : V, label x = label y → ∃ g : G, g ∈ φ.ker ∧ g.val x = y)
-    (k : ℕ) (hodd : Odd k) (hLG1 : max 8 (2 + Real.logb 2 f) < (k : ℝ))
+    (k : ℕ) (hodd : Odd k) (hLG1 : max 63 (12 * Real.logb 2 f) < (k : ℝ))
     (hm : 2 * k - 1 ≤ Fintype.card I) :
     ∃ (B : Type) (_ : Fintype B) (e : B × I ≃ V) (s : alternatingGroup I →* G),
       Fintype.card B = f ∧ (∀ b i, label (e (b, i)) = i) ∧
       Function.Injective s ∧ (∀ p b i, (s p).val (e (b, i)) = e (b, p.val i)) ∧
       φ.ker.IsComplement' s.range := by
   classical
-  obtain ⟨A, hAl, hkerA, ⟨c⟩⟩ := exists_clean_complement hcite G label f hsize hf φ hφ hAlt
+  obtain ⟨A, hAl, hkerA, ⟨c⟩⟩ := exists_clean_complement G label f hsize hf φ hφ hAlt
     htrans k hodd hLG1 hm
   subst hAl
   obtain ⟨i0⟩ : Nonempty I := Fintype.card_pos_iff.mp (by have := hodd.pos; omega)
@@ -105,12 +107,12 @@ theorem thm_logarithmic_clean_complement (hcite : GI.Cited.TransitiveAffected)
     exact c.isComplement
 
 /-- The remark after Theorem A.17: "a threshold `m = O(log(f+2))` suffices".
-If `m ≥ 2 max {8, 2 + log₂ f} + 3`, an odd `k` satisfying (LG1) exists. -/
+If `m ≥ 2 max {63, 12 log₂ f} + 3`, an odd `k` satisfying (LG1) exists. -/
 theorem thm_logarithmic_clean_complement_threshold (f m : ℕ)
-    (hm : 2 * max 8 (2 + Real.logb 2 f) + 3 ≤ (m : ℝ)) :
-    ∃ k : ℕ, Odd k ∧ max 8 (2 + Real.logb 2 f) < (k : ℝ) ∧ 2 * k - 1 ≤ m := by
-  set x : ℝ := max 8 (2 + Real.logb 2 f)
-  have hx8 : (8 : ℝ) ≤ x := le_max_left _ _
+    (hm : 2 * max 63 (12 * Real.logb 2 f) + 3 ≤ (m : ℝ)) :
+    ∃ k : ℕ, Odd k ∧ max 63 (12 * Real.logb 2 f) < (k : ℝ) ∧ 2 * k - 1 ≤ m := by
+  set x : ℝ := max 63 (12 * Real.logb 2 f)
+  have hx63 : (63 : ℝ) ≤ x := le_max_left _ _
   set k0 : ℕ := ⌊x⌋₊ + 1
   have hk0 : x < k0 := by
     have := Nat.lt_floor_add_one x
@@ -150,13 +152,13 @@ The proof is the paper's: (LG3) by the commutator computation
 pairs of rows, the diagonal property from a pure 3-cycle conjugate, and the
 zero-sum description from concentrating the total in one coordinate.
 It uses `m ≥ 5`, which (LG1) supplies: `m ≥ 2k - 1 ≥ 17`. -/
-theorem thm_logarithmic_gat_normal_form (hcite : GI.Cited.TransitiveAffected)
+theorem thm_logarithmic_gat_normal_form
     (G : Subgroup (Perm V)) (label : V → I) (f : ℕ)
     (hsize : ∀ i, Fintype.card {x : V // label x = i} = f) (hf : 0 < f)
     (φ : G →* Perm I) (hφ : ∀ (g : G) (x : V), label (g.val x) = φ g (label x))
     (hAlt : φ.range = alternatingGroup I)
     (htrans : ∀ x y : V, label x = label y → ∃ g : G, g ∈ φ.ker ∧ g.val x = y)
-    (k : ℕ) (hodd : Odd k) (hLG1 : max 8 (2 + Real.logb 2 f) < (k : ℝ))
+    (k : ℕ) (hodd : Odd k) (hLG1 : max 63 (12 * Real.logb 2 f) < (k : ℝ))
     (hm : 2 * k - 1 ≤ Fintype.card I) :
     ∃ (B : Type) (_ : Fintype B) (e : B × I ≃ V) (s : alternatingGroup I →* G),
       Fintype.card B = f ∧ (∀ b i, label (e (b, i)) = i) ∧
@@ -165,13 +167,13 @@ theorem thm_logarithmic_gat_normal_form (hcite : GI.Cited.TransitiveAffected)
       ∀ i0 : I, ∃ (N Nstar : Subgroup (cleanLocalGroup G e i0)) (_ : N.Normal)
         (_ : Nstar.Normal), IsRowNormalForm G φ.ker e i0 s N Nstar := by
   classical
-  obtain ⟨A, hAl, hkerA, ⟨c⟩⟩ := exists_clean_complement hcite G label f hsize hf φ hφ hAlt
+  obtain ⟨A, hAl, hkerA, ⟨c⟩⟩ := exists_clean_complement G label f hsize hf φ hφ hAlt
     htrans k hodd hLG1 hm
   subst hAl
   -- (LG1) gives `m ≥ 2k - 1 ≥ 17`, in particular `m ≥ 5`.
   have hk9 : 9 ≤ k := by
-    have h8 : (8 : ℝ) < k := lt_of_le_of_lt (le_max_left _ _) hLG1
-    have : 8 < k := by exact_mod_cast h8
+    have h63 : (63 : ℝ) < k := lt_of_le_of_lt (le_max_left _ _) hLG1
+    have : 63 < k := by exact_mod_cast h63
     omega
   have h5 : 5 ≤ Fintype.card I := by omega
   obtain ⟨j0⟩ : Nonempty I := Fintype.card_pos_iff.mp (by omega)

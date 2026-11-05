@@ -1,7 +1,11 @@
-import Workspace.SmallDegreeBudget
-import Workspace.NaturalGiantMarks
-import Workspace.JohnsonNumerics
-import Mathlib.GroupTheory.GroupAction.Primitive
+module
+
+public import Workspace.SmallDegreeBudget
+public import Workspace.NaturalGiantMarks
+public import Workspace.JohnsonNumerics
+public import Mathlib.GroupTheory.GroupAction.Primitive
+
+@[expose] public section
 
 namespace GI.BudgetInduction
 

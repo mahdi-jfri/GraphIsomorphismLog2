@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojRectStart
-import Workspace.Impl.AggItemCiSojACount
+module
+
+public import Workspace.Impl.AggItemCiSojRectStart
+public import Workspace.Impl.AggItemCiSojACount
+
+@[expose] public section
 
 /-! # Evaluating the certified first-rectangle controller -/
 

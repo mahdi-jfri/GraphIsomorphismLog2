@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojModelRows
-import Workspace.Impl.AggItemCiSojAnswers
-import Workspace.Impl.AggItemCiSojGFRows
+module
+
+public import Workspace.Impl.AggItemCiSojModelRows
+public import Workspace.Impl.AggItemCiSojAnswers
+public import Workspace.Impl.AggItemCiSojGFRows
+
+@[expose] public section
 
 /-! # Full source generators from the first nonempty processed occurrence -/
 

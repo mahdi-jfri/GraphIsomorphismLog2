@@ -1,7 +1,11 @@
-import Workspace.Impl.LinObjectCallSteps
-import Workspace.Impl.LinObjectGlueProblem
-import Workspace.Impl.LinObjectGlueAffineSpec
-import Workspace.Impl.LinObjectGlueCoordinateSpec
+module
+
+public import Workspace.Impl.LinObjectCallSteps
+public import Workspace.Impl.LinObjectGlueProblem
+public import Workspace.Impl.LinObjectGlueAffineSpec
+public import Workspace.Impl.LinObjectGlueCoordinateSpec
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset

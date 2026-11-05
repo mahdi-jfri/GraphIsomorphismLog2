@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecProgShift
+module
+
+public import Workspace.Impl.TermRecReb
+
+@[expose] public section
 
 /-!
 # T5, one point of the pairwise step
@@ -7,9 +11,8 @@ import Workspace.Impl.TermRecProgShift
 `y ∈ S`, the function `b + 11` returns a piece `(t, a)` of the combination whose set
 `t • accSet a` is the part `{h ∈ Iso_H(S, T) : x^{h⁻¹} = y}` (`tmRiPart`). It uses the
 recursion at fuel `ℓ'` as a hypothesis (`TmRiIH`), with the preconditions of the recursive call
-checked: the group `H_x = Aut_H(x)` is solvable, `A ∩ H_x` is normal in it, the fuel drops
-(`relDerived_mono`), and `A ∩ H_x` fixes `S^{τ⁻¹}` and `T` (`tmRec_pair_fix`, with the roles of
-`S` and `T` swapped).
+checked: `A ∩ H_x` is normal in `H_x = Aut_H(x)`, the fuel drops (`relDerived_mono`), and
+`A ∩ H_x` fixes `S^{τ⁻¹}` and `T` (`tmRec_pair_fix`, with the roles of `S` and `T` swapped).
 -/
 
 namespace GI.Impl
@@ -21,80 +24,6 @@ open GI.Cited (Val encPerm encGroup gens SolvableCosetIntersection DerivedSubgro
 
 variable {n : ℕ}
 
-/-- **The recursion at fuel `ℓ`, as a hypothesis**: `TermRecSpec` at one fuel, with the
-answer as a coset of `Perm (Fin n)` and a cost bound `T`. -/
-def TmRiIH (P : Program) (b n M ℓ T : ℕ) : Prop :=
-  ∀ (σH σN : List (Perm (Fin n))) (X Y : List (TmRiO n)),
-    IsSolvable (gens σH) → gens σN ≤ gens σH → GI.Multicoset.Normalizes (gens σH) (gens σN) →
-    relDerived (gens σH) (gens σN) ℓ ≤ gens σN → ℓ ≤ n ^ 2 + 5 →
-    Fixes (gens σN) (tmGlMs X) → Fixes (gens σN) (tmGlMs Y) →
-    σH.length ≤ n ^ 2 → σN.length ≤ n ^ 2 → X.length ≤ M → Y.length ≤ M →
-    TmRecObjOK M (X ++ Y) →
-    FunAll P b (tmRecIn ℓ σH σN X Y) (fun u cost =>
-      CosetC n u (Iso (gens σH) (tmGlMs X) (tmGlMs Y)) ∧ cost ≤ T)
-
-/-- `letE` with additive cost bounds. -/
-theorem tmRi_letE {P : Program} {env : List Val} {e body : Expr} {Ra : Val → ℕ → Prop}
-    {R : Val → Prop} {Ka Wo B : ℕ} (ha : EvalAll P env e Ra) (hKa : ∀ v ca, Ra v ca → ca ≤ Ka)
-    (hb : ∀ v ca, Ra v ca →
-      EvalAll P (env ++ [v]) body (fun w cb => R w ∧ w.wt ≤ Wo ∧ cb ≤ B)) :
-    EvalAll P env (.letE e body) (fun w c => R w ∧ w.wt ≤ Wo ∧ c ≤ Ka + B + Wo + 1) :=
-  EvalAll.letE ha fun v ca h => (hb v ca h).mono fun w cb hw =>
-    ⟨hw.1, hw.2.1, by have := hKa v ca h; omega⟩
-
-theorem tmRi_letD {P : Program} {env : List Val} {e body : Expr} {v : Val} {ca : ℕ}
-    {R : Val → Prop} {Wo B : ℕ} (ha : Det P env e v ca)
-    (hb : EvalAll P (env ++ [v]) body (fun w cb => R w ∧ w.wt ≤ Wo ∧ cb ≤ B)) :
-    EvalAll P env (.letE e body) (fun w c => R w ∧ w.wt ≤ Wo ∧ c ≤ ca + B + Wo + 1) :=
-  tmRi_letE ha (fun _ _ h => h.2) fun v' ca' h => by obtain ⟨rfl, -⟩ := h; exact hb
-
-/-- `letE` with a cost budget. -/
-theorem tmRi_letB {P : Program} {env : List Val} {e body : Expr} {Ra : Val → ℕ → Prop}
-    {R : Val → Prop} {Ka Wo Bud : ℕ} (ha : EvalAll P env e Ra)
-    (hKa : ∀ v ca, Ra v ca → ca ≤ Ka) (hB : Ka + Wo + 1 ≤ Bud)
-    (hb : ∀ v ca, Ra v ca →
-      EvalAll P (env ++ [v]) body (fun w cb => R w ∧ w.wt ≤ Wo ∧ cb ≤ Bud - Ka - Wo - 1)) :
-    EvalAll P env (.letE e body) (fun w c => R w ∧ w.wt ≤ Wo ∧ c ≤ Bud) :=
-  EvalAll.letE ha fun v ca h => (hb v ca h).mono fun w cb hw =>
-    ⟨hw.1, hw.2.1, by have := hKa v ca h; omega⟩
-
-/-- `ite` with a cost budget. -/
-theorem tmRi_iteB {P : Program} {env : List Val} {c t e : Expr} {x cc : ℕ}
-    {R : Val → Prop} {Wo Bud : ℕ} (hc : Det P env c (.nat x) cc) (hB : cc + Wo + 1 ≤ Bud)
-    (ht : x ≠ 0 → EvalAll P env t (fun w cb => R w ∧ w.wt ≤ Wo ∧ cb ≤ Bud - cc - Wo - 1))
-    (he : x = 0 → EvalAll P env e (fun w cb => R w ∧ w.wt ≤ Wo ∧ cb ≤ Bud - cc - Wo - 1)) :
-    EvalAll P env (.ite c t e) (fun w c => R w ∧ w.wt ≤ Wo ∧ c ≤ Bud) :=
-  (sup_ite hc ht he).mono fun w c' ⟨ce, ⟨h1, h2, h3⟩, h4⟩ => ⟨h1, h2, by omega⟩
-
-/-- A final deterministic step with a cost budget. -/
-theorem tmRi_detB {P : Program} {env : List Val} {e : Expr} {v : Val} {cv : ℕ}
-    {R : Val → Prop} {Wo Bud : ℕ} (h : Det P env e v cv) (hR : R v) (hw : v.wt ≤ Wo)
-    (hc : cv ≤ Bud) : EvalAll P env e (fun w c => R w ∧ w.wt ≤ Wo ∧ c ≤ Bud) :=
-  h.post fun c' hc' => ⟨hR, hw, by omega⟩
-
-theorem TmRecObjOK.of_same {M : ℕ} {L L' : List (TmRiO n)} (h : TmRecObjOK M L)
-    (h' : ∀ o ∈ L', ∃ o₀ ∈ L, o.1 = o₀.1 ∧ o.2.1 = o₀.2.1) : TmRecObjOK M L' := by
-  intro o ho
-  obtain ⟨o₀, ho₀, e1, e2⟩ := h' o ho
-  obtain ⟨h1, h2, h3⟩ := h o₀ ho₀
-  refine ⟨e2 ▸ h1, e1 ▸ h2, fun o' ho' hc => ?_⟩
-  obtain ⟨o₁, ho₁, e1', e2'⟩ := h' o' ho'
-  rw [e2, e2']
-  exact h3 o₁ ho₁ (by rw [← e1, ← e1', hc])
-
-theorem tmRi_wt_ansC {u : Val} {C : Set (Perm (Fin n))} (h : CosetC n u C) :
-    u.wt ≤ 700 * (n + 1) ^ 6 := by
-  have h26 : (n + 1) ^ 2 ≤ (n + 1) ^ 6 := Nat.pow_le_pow_right (by omega) (by omega)
-  rcases h with ⟨rfl, -⟩ | ⟨x, hs, rfl, hl, -⟩
-  · have : (Val.list []).wt ≤ 5 := by decide
-    have : 1 ≤ (n + 1) ^ 6 := Nat.one_le_pow _ _ (by omega)
-    omega
-  · have := wt_list2_le (encPerm x) (encGroup hs)
-    have := wt_encPerm_le x
-    have := wt_encGroup_le_sq hl
-    have : 1 ≤ (n + 1) ^ 6 := Nat.one_le_pow _ _ (by omega)
-    omega
-
 /-- The universal bound used for the small steps of `tmRiYE`, for an argument of weight `W`. -/
 def tmRiK0 (n W : ℕ) : ℕ := 10 ^ 9 * (W + (n + 1) ^ 9 + 1) ^ 3
 
@@ -104,24 +33,31 @@ variable {G : Type} [Group G] {Ω : Type} [RAct G Ω]
 
 open scoped commutatorElement in
 /-- **The preconditions of the recursive call of the pairwise step.** -/
-theorem tmRi_y_pre {H N : Subgroup G} {ℓ : ℕ} (hsol : IsSolvable H) (hNH : N ≤ H)
-    (hNn : GI.Multicoset.Normalizes H N) (hfuel : relDerived H N (ℓ + 1) ≤ N)
+theorem tmRi_y_pre {H N : Subgroup G} {ℓ : ℕ} (hNH : N ≤ H)
+    (hNn : GI.Multicoset.Normalizes H N)
     {S T : Multiset Ω}
+    (hfuel : relDerived H N (ℓ + 1) ≤ N ∨ ((∀ s ∈ S, ∀ s' ∈ S, s = s') ∧ (∀ t ∈ T, ∀ t' ∈ T, t = t')))
     (hS : ∀ s ∈ S, ∀ s' ∈ S, SameOrb (relDerived H N ℓ) s s')
     (hT : ∀ t ∈ T, ∀ t' ∈ T, SameOrb (relDerived H N ℓ) t t') (hNT : Fixes N T) {x : Ω}
     (hx : x ∈ T) {τ : G} (hτ : τ ∈ H) (hy : x ↼ τ ∈ S) :
-    IsSolvable (Aut H x) ∧ relDerived H N ℓ ⊓ Aut H x ≤ Aut H x ∧
+    relDerived H N ℓ ⊓ Aut H x ≤ Aut H x ∧
       GI.Multicoset.Normalizes (Aut H x) (relDerived H N ℓ ⊓ Aut H x) ∧
       relDerived (Aut H x) (relDerived H N ℓ ⊓ Aut H x) ℓ ≤ relDerived H N ℓ ⊓ Aut H x ∧
       Fixes (relDerived H N ℓ ⊓ Aut H x) (S ↼ τ⁻¹) ∧ Fixes (relDerived H N ℓ ⊓ Aut H x) T := by
   set A := relDerived H N ℓ
   have hAH : A ≤ H := relDerived_le hNH ℓ
   have hAn : GI.Multicoset.Normalizes H A := relDerived_normalizes hNn ℓ
-  have hcomm : ∀ a ∈ A, ∀ b ∈ A, a * b * a⁻¹ * b⁻¹ ∈ N := fun a ha b hb => by
-    simpa [commutatorElement_def] using relDerived_commutator_mem hfuel ha hb
-  have hfix := tmRec_pair_fix hNn hAH hAn hcomm hT hS hNT hx hτ hy
-  refine ⟨?_, inf_le_right, ?_, ?_, hfix.2, hfix.1⟩
-  · exact solvable_of_solvable_injective (Subgroup.inclusion_injective (aut_le H x))
+  have hfix : Fixes (A ⊓ Aut H x) T ∧ Fixes (A ⊓ Aut H x) (S ↼ τ⁻¹) := by
+    rcases hfuel with hfuel | ⟨hS1, hT1⟩
+    · have hcomm : ∀ a ∈ A, ∀ b ∈ A, a * b * a⁻¹ * b⁻¹ ∈ N := fun a ha b hb => by
+        simpa [commutatorElement_def] using relDerived_commutator_mem hfuel ha hb
+      exact tmRec_pair_fix hNn hAH hAn hcomm hT hS hNT hx hτ hy
+    · refine ⟨fun g hg t ht => ?_, fun g hg z hz => ?_⟩
+      · rw [hT1 t ht x hx, hg.2.2]
+      · rw [multiset_act_def] at hz
+        obtain ⟨s, hs, rfl⟩ := Multiset.mem_map.1 hz
+        rw [hS1 s hs (x ↼ τ) hy, act_act_inv, hg.2.2]
+  refine ⟨inf_le_right, ?_, ?_, hfix.2, hfix.1⟩
   · intro h hh k hk
     exact ⟨hAn h (aut_le H x hh) k hk.1, (Aut H x).mul_mem ((Aut H x).mul_mem hh hk.2)
       ((Aut H x).inv_mem hh)⟩
@@ -154,10 +90,17 @@ theorem tmRi_y_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hmem : Membership}
     (hP : TmRiAt P b jsci jder jmem gObj hsci hder hmem) {M ℓ T : ℕ} (ih : TmRiIH P b n M ℓ T)
     {σH σN σA : List (Perm (Fin n))} {Pl : Val} {Sl Tl : List (TmRiO n)} {ox oy : TmRiO n}
-    (hsol : IsSolvable (gens σH)) (hHl : σH.length ≤ n ^ 2) (hAl : σA.length ≤ n ^ 2)
+    {Kg Dg T' : ℕ} (hsol : TmRiListNorm (gens σH) (Sl ++ Tl))
+    (hReb : (ℓ = 0 ∧ T ≤ T') ∨
+      (TmRiListIn (gens σH) (Sl ++ Tl) ∧ P.HasAt (b + 96) (tmRiRebFuns b gObj) ∧
+        Iface.TermGlueObjSpec P Kg Dg gObj ∧
+        T + tmRiRebC (solvableCosetIntersectionPrim hsci) hmem Kg Dg n M ≤ T'))
+    (hHl : σH.length ≤ n ^ 2) (hAl : σA.length ≤ n ^ 2)
     (hNH : gens σN ≤ gens σH) (hNn : GI.Multicoset.Normalizes (gens σH) (gens σN))
     (hA : gens σA = relDerived (gens σH) (gens σN) ℓ)
-    (hfuel : relDerived (gens σH) (gens σN) (ℓ + 1) ≤ gens σN) (hℓ : ℓ ≤ n ^ 2 + 5)
+    (hfuel : relDerived (gens σH) (gens σN) (ℓ + 1) ≤ gens σN ∨
+      (ℓ = 0 ∧ (∀ s ∈ tmGlMs Sl, ∀ s' ∈ tmGlMs Sl, s = s') ∧
+        (∀ t ∈ tmGlMs Tl, ∀ t' ∈ tmGlMs Tl, t = t'))) (hℓ : ℓ ≤ n ^ 2 + 5)
     (hSo : ∀ s ∈ tmGlMs Sl, ∀ s' ∈ tmGlMs Sl, SameOrb (gens σA) s s')
     (hTo : ∀ t ∈ tmGlMs Tl, ∀ t' ∈ tmGlMs Tl, SameOrb (gens σA) t t')
     (hNT : Fixes (gens σN) (tmGlMs Tl)) (hSl : Sl.length ≤ M) (hTl : Tl.length ≤ M)
@@ -167,7 +110,7 @@ theorem tmRi_y_spec {P : Program} {b jsci jder jmem gObj : ℕ}
       (∃ t a, w = encPiece (t, a) ∧
         t • accSet a = tmRiPart (gens σH) (tmGlMs Sl) (tmGlMs Tl) (tmRiObj ox) (tmRiObj oy) ∧
         ∀ c gs, a = some (c, gs) → gs.length ≤ n ^ 2) ∧
-      cost ≤ T + tmRiYC (solvableCosetIntersectionPrim hsci) n M W) := by
+      cost ≤ T' + tmRiYC (solvableCosetIntersectionPrim hsci) n M W) := by
   set c : Val := .list [.nat ℓ, encGroup σH, encGroup σA, Pl] with hc
   set SV := tmGlObjsVal Sl with hSV
   set TV := tmGlObjsVal Tl with hTV
@@ -203,8 +146,8 @@ theorem tmRi_y_spec {P : Program} {b jsci jder jmem gObj : ℕ}
       ∀ c gs, a = some (c, gs) → gs.length ≤ n ^ 2 with hR
   set Wo := 2000 * (n + 1) ^ 6 with hWo
   set K0 := 10 ^ 7 * V ^ 2 with hK0
-  set Bud := T + tmRiYC (solvableCosetIntersectionPrim hsci) n M W with hBud
-  have hBud' : Bud = T + tmRiTestC (solvableCosetIntersectionPrim hsci) n (2 * M) +
+  set Bud := T' + tmRiYC (solvableCosetIntersectionPrim hsci) n M W with hBud
+  have hBud' : Bud = T' + tmRiTestC (solvableCosetIntersectionPrim hsci) n (2 * M) +
       (solvableCosetIntersectionPrim hsci).boundSize (10 ^ 4 * (n + 1) ^ 6) +
       tmRiMapShC n (2 * M) M + 10 ^ 12 * V ^ 3 := by
     rw [hBud]; unfold tmRiYC; rw [← hV]; ring
@@ -258,7 +201,7 @@ theorem tmRi_y_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     (Q := fun w cw => TmRiTestOut (gens σH) ox oy w ∧ cw ≤ 30 * W + 300 + tmRiTestC (solvableCosetIntersectionPrim hsci) n (2 * M) +
       40 * (n + 1) ^ 6) fun v ca hv => by
     obtain ⟨rfl, hca⟩ := hv
-    refine FunAll.mono (tmRi_test_spec hP hsol hHl hokx.1 hoky.1
+    refine FunAll.mono (tmRi_test_spec hP (hsol ox (by simp [hox])) hHl hokx.1 hoky.1
       (hokx.2.2 oy (by simp [hy])) (C := 2 * M) (by omega) (by omega)) fun w cb h => ⟨h.1, ?_⟩
     have := h.1.wt_le
     have := wt_list3_le (encGroup σH) (tmGlObjVal ox) (tmGlObjVal oy)
@@ -338,9 +281,10 @@ theorem tmRi_y_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     set e5 : List Val := e4 ++ [encGroup hs] with he5
     have dgA := Det.get' (dYc e5) (Det.nat 2) (v := encGroup σA) rfl
     have dv4 := Det.var' (P := P) (env := .list vs :: e5) (i := 4) (v := encGroup hs) rfl
-    have hsolA : IsSolvable (gens σA) := by
-      rw [hA]
-      exact solvable_of_solvable_injective (Subgroup.inclusion_injective (relDerived_le hNH ℓ))
+    have hnormA : GI.Lang.Normalizes (gens hs) (gens σA) := by
+      rw [hgs, hA]
+      intro h hh a ha
+      exact relDerived_normalizes hNn ℓ h (aut_le (gens σH) (tmRiObj ox) hh) a ha
     have hwA := wt_encGroup_le_sq hAl
     have hsz : (Val.list [encGroup σA, encGroup hs, encPerm (1 : Perm (Fin n))]).size ≤
         10 ^ 4 * (n + 1) ^ 6 := by
@@ -349,7 +293,7 @@ theorem tmRi_y_spec {P : Program} {b jsci jder jmem gObj : ℕ}
       exact (Val.size_le_wt _).trans (by omega)
     have hbd := (solvableCosetIntersectionPrim hsci).bound_le hsz
     have hsci' := (solvableCosetIntersection_call hsci hP.sci (Det.mk3 dgA dv4 (d1 e5))
-      ⟨σA, rfl, rfl⟩ hsolA (H := gens hs) ⟨hs, rfl, rfl⟩ (x := 1)).mono
+      ⟨σA, rfl, rfl⟩ hnormA (H := gens hs) ⟨hs, rfl, rfl⟩ (x := 1)).mono
       (Q' := fun w cw => CosetIntOut (gens σA) (gens hs) 1 w ∧ cw ≤ K0 +
         (solvableCosetIntersectionPrim hsci).boundSize (10 ^ 4 * (n + 1) ^ 6) + 40 * V + 1)
       fun w cw h => ⟨h.1, by
@@ -404,10 +348,9 @@ theorem tmRi_y_spec {P : Program} {b jsci jder jmem gObj : ℕ}
       simp only [tmGlMs, Multiset.mem_coe, List.mem_map]; exact ⟨ox, hox, rfl⟩
     have hyS : tmRiObj ox ↼ τ ∈ tmGlMs Sl := by
       rw [hxy]; simp only [tmGlMs, Multiset.mem_coe, List.mem_map]; exact ⟨oy, hy, rfl⟩
-    obtain ⟨p1, -, p3, p4, p5, p6⟩ := tmRi_y_pre hsol hNH hNn hfuel (hA ▸ hSo) (hA ▸ hTo) hNT
-      hxT hz hyS
+    obtain ⟨-, p3, p4, p5, p6⟩ := tmRi_y_pre hNH hNn
+      (hfuel.imp id fun h => h.2) (hA ▸ hSo) (hA ▸ hTo) hNT hxT hz hyS
     rw [← hA, ← hgs, ← hgk] at p3 p4 p5 p6
-    rw [← hgs] at p1
     have hkle : gens hk ≤ gens hs := by rw [hgk]; exact inf_le_right
     rw [← tmRi_ms_shift] at p5
     have hokR : TmRecObjOK M (Sl.map (tmRiSh τ⁻¹) ++ Tl) := hok.of_same fun o ho => by
@@ -415,33 +358,10 @@ theorem tmRi_y_spec {P : Program} {b jsci jder jmem gObj : ℕ}
       · obtain ⟨o₀, ho₀, rfl⟩ := List.mem_map.1 ho
         exact ⟨o₀, by simp [ho₀], rfl, rfl⟩
       · exact ⟨o, by simp [ho], rfl, rfl⟩
-    have hrec := ih hs hk (Sl.map (tmRiSh τ⁻¹)) Tl p1 hkle p3 p4 hℓ p5 p6 hsl hkl
-      (by simpa using hSl) hTl hokR
     set e8 : List Val := e7 ++ [tmGlObjsVal (Sl.map (tmRiSh τ⁻¹))] with he8
     have dl := Det.get' (dYc e8) (Det.nat 0) (v := .nat ℓ) rfl
+    have dgA8 := Det.get' (dYc e8) (Det.nat 2) (v := encGroup σA) rfl
     set K1 := 6 * W + 400 * (n + 1) ^ 6 + (tmGlObjsVal (Sl.map (tmRiSh τ⁻¹))).wt + 50 with hK1
-    have dml := Det.mkList (P := P) (env := .list vs :: e8) (c := K1)
-      [(.get tmRiYc (.nat 0), .nat ℓ), (.var 4, encGroup hs), (.var 6, encGroup hk),
-        (.var 7, tmGlObjsVal (Sl.map (tmRiSh τ⁻¹))), (tmRiYT, .list (Tl.map tmGlObjVal))]
-      (by
-        intro p hp
-        simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
-        have := wt_encGroup_le_sq hsl
-        have := wt_encGroup_le_sq hkl
-        have : (Val.nat ℓ).wt < c.wt := w9
-        rcases hp with rfl | rfl | rfl | rfl | rfl
-        · exact dl.mono (by omega)
-        · exact (Det.var' (P := P) (env := .list vs :: e8) (i := 4) rfl).mono (by omega)
-        · exact (Det.var' (P := P) (env := .list vs :: e8) (i := 6) rfl).mono (by omega)
-        · exact (Det.var' (P := P) (env := .list vs :: e8) (i := 7) rfl).mono (by omega)
-        · exact (dYT e8).mono (by omega))
-    have hcall := EvalAll.call_funAll (f := b) dml (Q := fun u cu =>
-      CosetC n u (Iso (gens hs) (tmGlMs (Sl.map (tmRiSh τ⁻¹))) (tmGlMs Tl)) ∧
-        cu ≤ 5 * (K1 + (Val.list [.nat ℓ, encGroup hs, encGroup hk, tmGlObjsVal (Sl.map (tmRiSh τ⁻¹)),
-          .list (Tl.map tmGlObjVal)]).wt + 1) + 5 + T +
-          700 * (n + 1) ^ 6 + 1) fun v ca hv => by
-      obtain ⟨rfl, hca⟩ := hv
-      exact hrec.mono fun u cu h => ⟨h.1, by have := tmRi_wt_ansC h.1; simp at hca; omega⟩
     have hS'w : (tmGlObjsVal (Sl.map (tmRiSh τ⁻¹))).wt ≤ 2010 * V ^ 2 + 4 := by
       have h1 := tmRi_wt_objs (tmRiOK_shift hokS τ⁻¹)
       rw [List.length_map] at h1
@@ -460,7 +380,102 @@ theorem tmRi_y_spec {P : Program} {b jsci jder jmem gObj : ℕ}
       have : (Val.nat ℓ).wt < c.wt := w9
       have : (Val.list (Tl.map tmGlObjVal)).wt < cST.wt := w4
       omega
-    refine tmRi_letB hcall (fun _ _ h => h.2) ?_ fun ans c8 h8 => ?_
+    have hRw6 : (Val.list [.nat ℓ, encGroup σA, encGroup hs, encGroup hk,
+        tmGlObjsVal (Sl.map (tmRiSh τ⁻¹)), .list (Tl.map tmGlObjVal)]).wt ≤
+        6000 * V ^ 2 + 3000 * V + 200 := by
+      have := wt_list_le [.nat ℓ, encGroup σA, encGroup hs, encGroup hk,
+        tmGlObjsVal (Sl.map (tmRiSh τ⁻¹)), .list (Tl.map tmGlObjVal)]
+      simp only [List.map_cons, List.map_nil, List.sum_cons, List.sum_nil, List.length_cons,
+        List.length_nil] at this
+      have := wt_encGroup_le_sq hsl
+      have := wt_encGroup_le_sq hkl
+      have : (Val.nat ℓ).wt < c.wt := w9
+      have : (Val.list (Tl.map tmGlObjVal)).wt < cST.wt := w4
+      omega
+    have dml := Det.mkList (P := P) (env := .list vs :: e8) (c := K1)
+      [(.get tmRiYc (.nat 0), .nat ℓ), (.var 4, encGroup hs), (.var 6, encGroup hk),
+        (.var 7, tmGlObjsVal (Sl.map (tmRiSh τ⁻¹))), (tmRiYT, .list (Tl.map tmGlObjVal))]
+      (by
+        intro p hp
+        simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
+        have := wt_encGroup_le_sq hsl
+        have := wt_encGroup_le_sq hkl
+        have : (Val.nat ℓ).wt < c.wt := w9
+        rcases hp with rfl | rfl | rfl | rfl | rfl
+        · exact dl.mono (by omega)
+        · exact (Det.var' (P := P) (env := .list vs :: e8) (i := 4) rfl).mono (by omega)
+        · exact (Det.var' (P := P) (env := .list vs :: e8) (i := 6) rfl).mono (by omega)
+        · exact (Det.var' (P := P) (env := .list vs :: e8) (i := 7) rfl).mono (by omega)
+        · exact (dYT e8).mono (by omega))
+    have dml6 := Det.mkList (P := P) (env := .list vs :: e8) (c := K1)
+      [(.get tmRiYc (.nat 0), .nat ℓ), (.get tmRiYc (.nat 2), encGroup σA),
+        (.var 4, encGroup hs), (.var 6, encGroup hk),
+        (.var 7, tmGlObjsVal (Sl.map (tmRiSh τ⁻¹))), (tmRiYT, .list (Tl.map tmGlObjVal))]
+      (by
+        intro p hp
+        simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
+        have := wt_encGroup_le_sq hsl
+        have := wt_encGroup_le_sq hkl
+        have : (Val.nat ℓ).wt < c.wt := w9
+        rcases hp with rfl | rfl | rfl | rfl | rfl | rfl
+        · exact dl.mono (by omega)
+        · exact dgA8.mono (by omega)
+        · exact (Det.var' (P := P) (env := .list vs :: e8) (i := 4) rfl).mono (by omega)
+        · exact (Det.var' (P := P) (env := .list vs :: e8) (i := 6) rfl).mono (by omega)
+        · exact (Det.var' (P := P) (env := .list vs :: e8) (i := 7) rfl).mono (by omega)
+        · exact (dYT e8).mono (by omega))
+    have hite := (sup_ite dl (R := fun u cu =>
+        CosetC n u (Iso (gens hs) (tmGlMs (Sl.map (tmRiSh τ⁻¹))) (tmGlMs Tl)) ∧
+        cu ≤ 6 * (K1 + (6000 * V ^ 2 + 3000 * V + 200) + 1) + 6 + T' +
+          700 * (n + 1) ^ 6 + 1)
+      (fun hne => by
+        rcases hReb with ⟨he0, -⟩ | ⟨hIn, hRebAt, hglue, hT'⟩
+        · exact absurd he0 hne
+        have hoxIn : tmRiStab ox ≤ gens σH := hIn ox (by simp [hox])
+        have hInS'T : TmRiListIn (gens σH) (Sl.map (tmRiSh τ⁻¹) ++ Tl) := by
+          intro o ho
+          rcases List.mem_append.1 ho with ho | ho
+          · obtain ⟨o₀, ho₀, rfl⟩ := List.mem_map.1 ho
+            exact tmRiStab_le_of_sameOrb (hIn o₀ (by simp [ho₀])) ((gens σH).inv_mem hz)
+              (by simp [tmRiSh, tmRi_obj_act])
+          · exact hIn o (by simp [ho])
+        have hS'o : ∀ o ∈ Sl.map (tmRiSh τ⁻¹), SameOrb (gens σA) (tmRiObj ox) (tmRiObj o) := by
+          intro o ho
+          obtain ⟨o₀, ho₀, rfl⟩ := List.mem_map.1 ho
+          have ho₀S : tmRiObj o₀ ∈ tmGlMs Sl := by
+            simp only [tmGlMs, Multiset.mem_coe, List.mem_map]; exact ⟨o₀, ho₀, rfl⟩
+          have h1 := (sameOrb_act_iff (hA ▸ relDerived_normalizes hNn ℓ) ((gens σH).inv_mem hz)).2
+            (hSo (tmRiObj ox ↼ τ) hyS (tmRiObj o₀) ho₀S)
+          have h2 : tmRiObj (tmRiSh τ⁻¹ o₀) = tmRiObj o₀ ↼ τ⁻¹ := by
+            simp [tmRiSh, tmRiObj, tmRi_obj_act]
+          rwa [act_act_inv, ← h2] at h1
+        have hTo' : ∀ o ∈ Tl, SameOrb (gens σA) (tmRiObj ox) (tmRiObj o) := by
+          intro o ho
+          exact hTo (tmRiObj ox) hxT (tmRiObj o) (by
+            simp only [tmGlMs, Multiset.mem_coe, List.mem_map]; exact ⟨o, ho, rfl⟩)
+        have hreb := tmRi_reb_spec hP hRebAt hglue ih hInS'T hoxIn hHl hAl hsl hkl hNH hNn hA
+          (hfuel.resolve_right fun h => hne h.1) hℓ hgs (hgs ▸ hgk) p5 p6 hS'o hTo' hNT hT0
+          (by simpa using hSl) hTl hokR
+        refine EvalAll.call_funAll (f := b + 96) dml6 fun v ca hv => ?_
+        obtain ⟨hv, hca⟩ := hv
+        simp only [List.map_cons, List.map_nil, List.length_cons, List.length_nil] at hv hca
+        subst hv
+        exact hreb.mono fun u cu h => ⟨h.1, by have := tmRi_wt_ansC h.1; omega⟩)
+      (fun heq => by
+        have hrec := ih hs hk (Sl.map (tmRiSh τ⁻¹)) Tl
+          (fun hpos => absurd heq (Nat.ne_of_gt hpos)) hkle p3 p4 hℓ p5 p6 hsl hkl
+          (by simpa using hSl) hTl hokR
+        have hT' : T ≤ T' := by rcases hReb with ⟨-, h⟩ | ⟨-, -, -, h⟩ <;> omega
+        refine EvalAll.call_funAll (f := b) dml fun v ca hv => ?_
+        obtain ⟨hv, hca⟩ := hv
+        simp only [List.map_cons, List.map_nil, List.length_cons, List.length_nil] at hv hca
+        subst hv
+        exact hrec.mono fun u cu h => ⟨h.1, by have := tmRi_wt_ansC h.1; omega⟩)).mono
+      (Q' := fun u cu => CosetC n u (Iso (gens hs) (tmGlMs (Sl.map (tmRiSh τ⁻¹))) (tmGlMs Tl)) ∧
+        cu ≤ 6 * (K1 + (6000 * V ^ 2 + 3000 * V + 200) + 1) + 6 + T' +
+          1400 * (n + 1) ^ 6 + 2 + (5 * W + 40))
+      fun u cu ⟨ce, ⟨h1, h2⟩, h3⟩ => ⟨h1, by have := tmRi_wt_ansC h1; omega⟩
+    refine tmRi_letB hite (fun _ _ h => h.2) ?_ fun ans c8 h8 => ?_
     · omega
     -- the piece
     have dfin := Det.mk2 (Det.var' (P := P) (env := .list vs :: (e8 ++ [ans])) (i := 3)

@@ -1,5 +1,9 @@
-import Workspace.Impl.KRefStep
-import Workspace.Impl.KRefStable
+module
+
+public import Workspace.Impl.KRefStep
+public import Workspace.Impl.KRefStable
+
+@[expose] public section
 
 /-!
 # The whole program
@@ -60,7 +64,7 @@ def krefProg (k : ℕ) : Program := ⟨krefFuns k, []⟩
 
 theorem krefProg_at (k : ℕ) : (krefProg k).HasAt 0 (krefFuns k) := by
   have h := Program.hasAt_append [] (krefFuns k) [] []
-  simpa using h
+  simpa [krefProg] using h
 
 theorem kref_hasAt_shift {P : Program} {b a b' : ℕ} {A B : List Expr} (h : P.HasAt b (A ++ B))
     (ha : A.length = a) (hb : b + a = b') : P.HasAt b' B := by

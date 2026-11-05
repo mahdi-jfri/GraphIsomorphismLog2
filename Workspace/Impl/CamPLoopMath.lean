@@ -1,6 +1,10 @@
-import Workspace.Impl.CamXFactors
-import Workspace.Impl.CamXParams
-import Workspace.Lang.Prims.Repr
+module
+
+public import Workspace.Impl.CamXFactors
+public import Workspace.Impl.CamXParams
+public import Workspace.Lang.Prims.Repr
+
+@[expose] public section
 
 /-!
 # Step 3 of `camProg`: the invariant of the factor loop

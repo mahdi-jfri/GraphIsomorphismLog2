@@ -1,4 +1,8 @@
-import Workspace.Impl.JohnC
+module
+
+public import Workspace.Impl.JohnC
+
+@[expose] public section
 
 /-!
 # One step over the pairs

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimaryCoordinates
-import Workspace.Impl.LinPrimaryLayers
+module
+
+public import Workspace.Impl.LinPrimaryCoordinates
+public import Workspace.Impl.LinPrimaryLayers
+
+@[expose] public section
 
 /-! The explicit divided coordinates have exactly the next primary layer as
 kernel. This identifies the field test with the paper's filtration step. -/

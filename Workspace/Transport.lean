@@ -1,5 +1,9 @@
-import Mathlib.GroupTheory.Perm.Fin
-import Mathlib.Algebra.Group.Subgroup.Basic
+module
+
+public import Mathlib.GroupTheory.Perm.Fin
+public import Mathlib.Algebra.Group.Subgroup.Basic
+
+@[expose] public section
 
 /-! Exact string transporters. Mathlib permutations compose as functions:
 `(p * q) v = p (q v)`. Thus a source-automorphism coset is written `t * a`,

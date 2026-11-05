@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJData
+module
+
+public import Workspace.Impl.TermJData
+
+@[expose] public section
 
 /-!
 # Few generators of `N ≀ Sym(q)`

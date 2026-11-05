@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.LinIntDiv
+module
+
+public import Workspace.Lang.Lib.LinIntDiv
+
+@[expose] public section
 
 namespace GI.Lang
 open GI.Cited (Val encInt)

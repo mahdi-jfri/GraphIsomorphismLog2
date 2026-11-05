@@ -1,5 +1,9 @@
-import Workspace.PrimitiveAbelianExponent
-import Workspace.RadicalSocleStructure
+module
+
+public import Workspace.PrimitiveAbelianExponent
+public import Workspace.RadicalSocleStructure
+
+@[expose] public section
 
 namespace GI.PrimitiveStructure
 
@@ -59,10 +63,3 @@ theorem centralizer_card_le_degree [Finite V] (N : Subgroup G)
   Nat.card_le_card_of_injective _ (centralizer_transitive_free N a)
 
 end GI.PrimitiveStructure
-
-#print axioms GI.PrimitiveStructure.commuting_transitive_free
-#print axioms GI.PrimitiveStructure.centralizer_transitive_free
-#print axioms GI.PrimitiveStructure.commuting_transitive_regular
-#print axioms GI.PrimitiveStructure.centralizer_eq_of_commuting_transitive
-#print axioms GI.PrimitiveStructure.centralizer_eq_one_of_fixing_point
-#print axioms GI.PrimitiveStructure.centralizer_card_le_degree

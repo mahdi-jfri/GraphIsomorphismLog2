@@ -1,6 +1,10 @@
-import Workspace.Impl.TermJ
-import Workspace.Lang.Lib.Orbit
-import Workspace.Lang.Lib.Tabulate
+module
+
+public import Workspace.Impl.TermJ
+public import Workspace.Lang.Lib.Orbit
+public import Workspace.Lang.Lib.Tabulate
+
+@[expose] public section
 
 /-!
 # Relabeling a pair answer to the domain positions

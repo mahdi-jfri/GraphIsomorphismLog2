@@ -1,5 +1,9 @@
-import Workspace.Impl.VsHHardHyp
-import Workspace.Impl.VsHCData
+module
+
+public import Workspace.Impl.VsHHardHyp
+public import Workspace.Impl.VsHCData
+
+@[expose] public section
 
 namespace GI.Impl
 

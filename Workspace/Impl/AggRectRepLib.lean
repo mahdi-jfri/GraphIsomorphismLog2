@@ -1,6 +1,10 @@
-import Workspace.Impl.AggRectRepProg
-import Workspace.Impl.GenProdSq
-import Workspace.Impl.AggRectCertC
+module
+
+public import Workspace.Impl.AggRectRepProg
+public import Workspace.Impl.GenProdSq
+public import Workspace.Impl.AggRectCertC
+
+@[expose] public section
 
 /-!
 # Library facts for the representation program

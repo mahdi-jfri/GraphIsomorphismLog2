@@ -1,6 +1,10 @@
-import Workspace.CertificateTermination
-import Workspace.SupportIndexGap
-import Workspace.Paper.HereditaryBudgetBasic
+module
+
+public import Workspace.CertificateTermination
+public import Workspace.SupportIndexGap
+public import Workspace.Paper.HereditaryBudgetBasic
+
+@[expose] public section
 
 /-!
 # The two recursive call types of the endpoint procedure

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertStep
+module
+
+public import Workspace.Impl.AggCertStep
+
+@[expose] public section
 
 /-!
 # The positions of one endpoint loop, along the exact answers

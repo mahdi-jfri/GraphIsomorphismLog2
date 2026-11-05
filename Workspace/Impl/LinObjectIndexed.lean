@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectPieceIndex
-import Workspace.Impl.LinObjectProductMath
+module
+
+public import Workspace.Impl.LinObjectPieceIndex
+public import Workspace.Impl.LinObjectProductMath
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Multicoset GI.Lang

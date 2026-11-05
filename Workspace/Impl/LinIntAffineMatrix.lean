@@ -1,5 +1,9 @@
-import Workspace.Impl.LinIntAffineRows
-import Workspace.Impl.LinFiniteHomogeneous
+module
+
+public import Workspace.Impl.LinIntAffineRows
+public import Workspace.Impl.LinFiniteHomogeneous
+
+@[expose] public section
 
 /-! Signed homogeneous matrices for the retained finite-abelian action. -/
 namespace GI.Impl

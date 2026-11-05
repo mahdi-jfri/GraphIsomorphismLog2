@@ -1,4 +1,8 @@
-import Workspace.Impl.KRefRound
+module
+
+public import Workspace.Impl.KRefRound
+
+@[expose] public section
 
 /-!
 # The signature code of one tuple

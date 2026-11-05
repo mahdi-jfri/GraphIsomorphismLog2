@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojQueryProg
+module
+
+public import Workspace.Impl.AggItemCiSojQueryProg
+
+@[expose] public section
 
 /-! # The complete installed query pipeline within the common polynomial budget -/
 

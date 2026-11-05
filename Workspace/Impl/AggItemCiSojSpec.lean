@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiDisp
-import Workspace.Impl.AggItemCfObW
+module
+
+public import Workspace.Impl.AggItemCiDisp
+public import Workspace.Impl.AggItemCfObW
+
+@[expose] public section
 
 /-!
 # The contract of the first-rectangle pair branch

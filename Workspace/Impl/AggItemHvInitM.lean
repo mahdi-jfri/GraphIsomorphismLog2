@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemHvInitO
+module
+
+public import Workspace.Impl.AggItemHvInitO
+
+@[expose] public section
 
 /-!
 # Case 2a init program, part 3: the two cited calls in between

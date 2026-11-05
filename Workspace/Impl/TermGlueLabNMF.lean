@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabNDis
-import Workspace.Impl.TermGlueLabNDis2
+module
+
+public import Workspace.Impl.TermGlueLabNDis
+public import Workspace.Impl.TermGlueLabNDis2
+
+@[expose] public section
 
 /-!
 # The label driver: the front module
@@ -73,11 +77,11 @@ theorem tmGLN_front_parts {P : Program} {b jp jm jf sup : ℕ}
 
 /-- **The front module meets the contracts of the first stages.** -/
 theorem tmGLN_front_ok (hst : PointwiseStab) (hm : Membership) (hfac : NormalizedFactor)
-    {P : Program} {b jp jm jf sup Ks Ds : ℕ} (h : P.HasAt b (tmGLNFrontFuns b jp jm jf sup))
+    {P : Program} {b jp jm jf sup : ℕ} (Ks Ds : ℕ) (h : P.HasAt b (tmGLNFrontFuns b jp jm jf sup))
     (hjp : P.prims[jp]? = some (pointwiseStabPrim hst))
     (hjm : P.prims[jm]? = some (membershipPrim hm))
     (hjf : P.prims[jf]? = some (normalizedFactorPrim hfac))
-    (hsup : Iface.TermSupSpec P Ks Ds sup) :
+    (hsup : P.HasAt sup (tailFuns sup)) :
     Iface.TmGLNMkOK P b (fun B => mkGroupK * ((B + 2) * (B + 1)) ^ 3) ∧
       Iface.TmGLNLcOK P (b + 7) (fun B => tmGLPLcC hst (3 * B + 2)) ∧
       Iface.TmGLNL1OK P (b + 7 + 1) (fun B => tmGLPL1C (normalizedFactorPrim hfac) (4 * B + 2)) ∧
@@ -88,6 +92,6 @@ theorem tmGLN_front_ok (hst : PointwiseStab) (hm : Membership) (hfac : Normalize
   have hL := tmGLPLiftAt_of hl
   exact ⟨tmGLN_mk_ok hmg, tmGLN_lc_ok hst hL hjp, tmGLN_l1_ok hfac hL hjf, tmGLN_x_ok hx,
     tmGLN_y_ok hm hfac hy hfd (tmGLPRelAt_of hr) hjm hjf,
-    tmGLN_sup_ok hsf hinv hcp hcj hmc hsup, tmGLN_bs_ok hbs⟩
+    tmGLN_sup_ok Ks Ds hsf hinv hcp hcj hmc hsup, tmGLN_bs_ok hbs⟩
 
 end GI.Impl

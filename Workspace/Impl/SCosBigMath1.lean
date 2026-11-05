@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosSpec
+module
+
+public import Workspace.Impl.SCosSpec
+
+@[expose] public section
 
 /-!
 # The mathematics of `bigF` (function 5), part 1
@@ -196,6 +200,7 @@ theorem scosBM_mem_range {σ : Perm (Fin (scosBMk Φ))} :
 theorem scosBM_solvable (hsol : IsSolvable (𝒢.map (MonoidHom.fst (Perm (Fin n)) (Perm (Fin n))))) :
     IsSolvable
       (restrK (Equiv.refl _) (𝒢.map nintSum) (scosPhiF Φ) (scosBM_invariant 𝒢 Φ hinv)).range := by
+  haveI : Group.IsSolvable (𝒢.map (MonoidHom.fst (Perm (Fin n)) (Perm (Fin n)))) := hsol
   rw [scosBM_range 𝒢 Φ hinv]
   exact solvable_of_surjective (scosBMPsi 𝒢 Φ hinv).rangeRestrict_surjective
 

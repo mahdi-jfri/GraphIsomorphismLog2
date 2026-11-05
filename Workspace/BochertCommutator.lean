@@ -9,12 +9,16 @@ Authors: Yawara Ishida
 CFSG/ThirdParty/OddOrder/Isaacs/PermutationGroups/CycleCommutators.lean.
 Licensed under the Apache License 2.0; see `licenses/CFSG-Apache-2.0.txt`.
 The original copyright notice above is kept.
-Modified for this project: module names, and changes to build with Lean v4.30.0-rc2 and
-mathlib 2f9133a. -/
+Modified for this project: module names, and proof changes for the Lean and mathlib versions
+used here. -/
 
-import Mathlib.Algebra.Group.Commutator
-import Mathlib.GroupTheory.Perm.Cycle.Basic
-import Mathlib.GroupTheory.Perm.Cycle.Type
+module
+
+public import Mathlib.Algebra.Group.Commutator
+public import Mathlib.GroupTheory.Perm.Cycle.Basic
+public import Mathlib.GroupTheory.Perm.Cycle.Type
+
+@[expose] public section
 
 open scoped commutatorElement
 
@@ -183,5 +187,3 @@ theorem support_commutator_of_unique_common_moved {x y : Perm α} {a : α}
 end Bochert
 
 end GI
-
-

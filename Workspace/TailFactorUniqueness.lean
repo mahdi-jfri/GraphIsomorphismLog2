@@ -1,5 +1,9 @@
-import Workspace.SubdirectGraphProjection
-import Workspace.CoordinateFactors
+module
+
+public import Workspace.SubdirectGraphProjection
+public import Workspace.CoordinateFactors
+
+@[expose] public section
 
 namespace GI.PrimitiveProducts
 
@@ -55,6 +59,3 @@ theorem at_most_one_full_tail_factor (H : Subgroup (S × (I → S)))
   exact hxy hc
 
 end GI.PrimitiveProducts
-
-#print axioms GI.PrimitiveProducts.projection_factor_surjective
-#print axioms GI.PrimitiveProducts.at_most_one_full_tail_factor

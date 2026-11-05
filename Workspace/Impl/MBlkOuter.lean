@@ -1,4 +1,8 @@
-import Workspace.Impl.MBlkClos
+module
+
+public import Workspace.Impl.MBlkClos
+
+@[expose] public section
 
 /-!
 # The outer rounds, as a program

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojBal
+module
+
+public import Workspace.Impl.AggItemCiSojBal
+
+@[expose] public section
 
 /-!
 # The balanced-color test in raw vertex labels

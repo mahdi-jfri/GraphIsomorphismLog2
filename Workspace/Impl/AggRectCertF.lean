@@ -1,5 +1,9 @@
-import Workspace.Impl.AggRectCertQ
-import Workspace.Impl.AggStructDesSplit
+module
+
+public import Workspace.Impl.AggRectCertQ
+public import Workspace.Impl.AggStructDesSplit
+
+@[expose] public section
 
 /-!
 # The certificate search as a program

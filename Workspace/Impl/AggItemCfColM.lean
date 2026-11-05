@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCfDeg
-import Workspace.Impl.AggTup
-import Workspace.Impl.AggStructRel
+module
+
+public import Workspace.Impl.AggItemCfDeg
+public import Workspace.Impl.AggTup
+public import Workspace.Impl.AggStructRel
+
+@[expose] public section
 
 /-!
 # The orbital coloring of Case 2b: the facts the program uses

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinAffineCallerSpec
+module
+
+public import Workspace.Impl.LinAffineCallerSpec
+
+@[expose] public section
 
 /-! The shared finite abelian affine procedure is implemented from the cited
 permutation membership, constructive membership and vector stabilizer tasks. -/

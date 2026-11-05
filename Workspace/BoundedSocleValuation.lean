@@ -1,5 +1,9 @@
-import Workspace.SocleOuterBudget
-import Workspace.BudgetInductionAlternatives
+module
+
+public import Workspace.SocleOuterBudget
+public import Workspace.BudgetInductionAlternatives
+
+@[expose] public section
 
 namespace GI.RadicalSocle
 

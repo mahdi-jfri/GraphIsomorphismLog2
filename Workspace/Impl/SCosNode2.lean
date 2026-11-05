@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosNode1
+module
+
+public import Workspace.Impl.SCosNode1
+
+@[expose] public section
 
 /-!
 # Functions 2 (`splitF`) and 3 (`transF`)

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepSupp
+module
+
+public import Workspace.Impl.AggRectRepSupp
+
+@[expose] public section
 
 /-!
 # The kernel-orbit quotient from one point

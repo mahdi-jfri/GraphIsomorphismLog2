@@ -1,4 +1,8 @@
-import Workspace.Paper.Caps
+module
+
+public import Workspace.Paper.Caps
+
+@[expose] public section
 
 /-!
 # Lemma A.12 with an explicit label threshold

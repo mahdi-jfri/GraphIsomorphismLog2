@@ -1,4 +1,8 @@
-import Workspace.Proved.SSBuild
+module
+
+public import Workspace.Proved.SSBuild
+
+@[expose] public section
 
 /-!
 # A straight-line program for a member

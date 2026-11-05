@@ -1,7 +1,11 @@
-import Workspace.Impl.TermJGroup
-import Workspace.Impl.TermJCoset
-import Workspace.Impl.TermJYoung
-import Workspace.Impl.TermJMatch
+module
+
+public import Workspace.Impl.TermJGroup
+public import Workspace.Impl.TermJCoset
+public import Workspace.Impl.TermJYoung
+public import Workspace.Impl.TermJMatch
+
+@[expose] public section
 
 /-!
 # The `J`-step as an algorithm on mathematical values
@@ -132,7 +136,6 @@ theorem tmJ_local_iff {h : Perm I.B} {a j : Fin L.q} {g : Perm I.B}
     have : h⁻¹ * (g * s) = n⁻¹ := by
       have : g * s = h * n⁻¹ := by
         have := congrArg (g * ·) he
-        simp only at this
         rw [mul_inv_cancel_left] at this
         rw [this]; group
       rw [this]; group
@@ -226,8 +229,8 @@ theorem tmJ_alg [Nonempty I.B] {r : Perm I.B} (hr : r ∈ I.Hb) (h0 : Perm I.B)
       (tmJW I.Nb ⊓ tmJStab (tmJStr (rowTuple I.e S.x))) ⊓ tmJJ I) :
     tmJP '' tmCosetT I r = (t h0 * ·) '' (Subgroup.closure
       ({a | ∃ u ∈ U, a = (t h0)⁻¹ * t (h0 * u)} ∪ {k | k ∈ ks}) : Set (Perm (I.B × Fin L.q))) := by
-  have hNR : I.Nb ≤ tmRad I := (radicalPreimage_spec I.Nb_le I.normalizes).2.1
-  have hRH : tmRad I ≤ I.Hb := (radicalPreimage_spec I.Nb_le I.normalizes).1
+  have hNR : I.Nb ≤ tmRad I := I.Nb_le_rad
+  have hRH : tmRad I ≤ I.Hb := I.rad_le
   have h0L : h0 ∈ tmGlLab I r := by rw [hLab]; exact ⟨1, Subgroup.one_mem _, mul_one h0⟩
   have huL : ∀ u ∈ U, h0 * u ∈ tmGlLab I r := fun u hu => by
     rw [hLab]; exact ⟨u, Subgroup.subset_closure hu, rfl⟩

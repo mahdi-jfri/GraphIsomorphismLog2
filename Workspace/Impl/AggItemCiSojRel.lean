@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojFrameBudget
-import Workspace.Impl.AggItemCiSojInit
-import Workspace.Impl.AggItemCiSojBudgetCtx
+module
+
+public import Workspace.Impl.AggItemCiSojFrameBudget
+public import Workspace.Impl.AggItemCiSojInit
+public import Workspace.Impl.AggItemCiSojBudgetCtx
+
+@[expose] public section
 
 /-! # The two reachable states of the first-rectangle item protocol -/
 

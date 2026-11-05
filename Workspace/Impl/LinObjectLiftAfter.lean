@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectLiftAnswer
+module
+
+public import Workspace.Impl.LinObjectLiftAnswer
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

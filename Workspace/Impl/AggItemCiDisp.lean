@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiObj
+module
+
+public import Workspace.Impl.AggItemCiObj
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3: the item stage from its pair part

@@ -1,4 +1,8 @@
-import Workspace.Proved.PalfyBasic
+module
+
+public import Workspace.Proved.PalfyBasic
+
+@[expose] public section
 
 /-!
 # The statement of LM Theorem 5.1 for solvable groups

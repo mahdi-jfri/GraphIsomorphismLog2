@@ -1,6 +1,10 @@
-import Workspace.Impl.GenNormInc
-import Workspace.Impl.GenCase
-import Workspace.Lang.Lib.NatList
+module
+
+public import Workspace.Impl.GenNormInc
+public import Workspace.Impl.GenCase
+public import Workspace.Lang.Lib.NatList
+
+@[expose] public section
 
 /-!
 # The incidence test as a program

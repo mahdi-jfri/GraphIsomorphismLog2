@@ -1,5 +1,9 @@
-import Workspace.Proved.VsBFldMath
-import Workspace.Impl.VsBDesc
+module
+
+public import Workspace.Proved.VsBFldMath
+public import Workspace.Impl.VsBDesc
+
+@[expose] public section
 
 /-!
 # The λ-chain as a descent

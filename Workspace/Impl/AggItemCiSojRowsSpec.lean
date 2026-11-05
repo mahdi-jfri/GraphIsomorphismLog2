@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojIndexed
-import Workspace.Impl.AggItemCiSojAnswersB
+module
+
+public import Workspace.Impl.AggItemCiSojIndexed
+public import Workspace.Impl.AggItemCiSojAnswersB
+
+@[expose] public section
 
 /-! # The proved complete saved-answer builder contract -/
 

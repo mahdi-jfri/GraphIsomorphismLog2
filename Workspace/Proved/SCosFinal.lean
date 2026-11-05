@@ -1,8 +1,12 @@
-import Workspace.Impl.SCosFinal
-import Workspace.Proved.Palfy
-import Workspace.Proved.SSPointwiseStab
-import Workspace.Proved.NClPreimage
-import Workspace.Proved.MBlk
+module
+
+public import Workspace.Impl.SCosFinal
+public import Workspace.Proved.Palfy
+public import Workspace.Proved.SSPointwiseStab
+public import Workspace.Proved.NClPreimage
+public import Workspace.Proved.MBlk
+
+@[expose] public section
 
 /-!
 # Solvable coset intersection, proved

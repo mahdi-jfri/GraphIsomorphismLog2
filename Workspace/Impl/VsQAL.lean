@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQA4
+module
+
+public import Workspace.Impl.VsQA4
+
+@[expose] public section
 
 /-!
 # The A-loop
@@ -16,6 +20,8 @@ namespace GI.Impl
 open GI.Lang GI.Cited GI.Proved Equiv
 
 variable {I : VecStabInst}
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 /-- The A-loop, on `[lc, encGroup as]`. -/
 def vsQALE (s2a s3 s4 al : ℕ) : Expr :=

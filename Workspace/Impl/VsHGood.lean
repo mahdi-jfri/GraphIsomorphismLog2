@@ -1,6 +1,10 @@
-import Workspace.Impl.VsHBas
-import Workspace.Proved.VsHGoodMath
-import Workspace.Proved.VsHDimMath
+module
+
+public import Workspace.Impl.VsHBas
+public import Workspace.Proved.VsHGoodMath
+public import Workspace.Proved.VsHDimMath
+
+@[expose] public section
 
 /-!
 # The goodness test
@@ -219,6 +223,7 @@ section Meaning
 
 variable {s : VsQSt I} [Fact I.p.Prime]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- **What the goodness test means.** -/
 theorem vsHGB_iff (hs : VsQStOK s) {as : List (Perm (Fin I.n))} (has : gens as ≤ gens s.hs)
     {Lb : List (List (List ℕ))} (hLb : ∀ M ∈ Lb, VsFSq I.p (vsQD s) M)

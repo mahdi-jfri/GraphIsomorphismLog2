@@ -1,4 +1,8 @@
-import Workspace.CleanComplementConjugates
+module
+
+public import Workspace.CleanComplementConjugates
+
+@[expose] public section
 
 /-! The odd construction on all but one block, with the remaining block fixed.
 This supplies the old pure subgroup needed by the even construction. -/
@@ -26,7 +30,7 @@ noncomputable def chosenCycle (j : J) : Equiv.Perm V :=
 theorem chosen_clean (j : J) : CleanBlockCycle A.label (some none)
     (some (some (j, false))) (some (some (j, true))) (chosenCycle d hcard j) := by
   obtain ⟨h0, h1, h2⟩ := conjugator_spec d hcard j
-  simpa only [h0, h1, h2] using d.clean.conjugate (conjugator d hcard j).val
+  simpa only [chosenCycle, h0, h1, h2] using d.clean.conjugate (conjugator d hcard j).val
     (A.top (conjugator d hcard j)).val (A.action (conjugator d hcard j))
 
 theorem chosen_mem (j : J) : chosenCycle d hcard j ∈ G :=

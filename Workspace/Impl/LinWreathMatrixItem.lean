@@ -1,5 +1,9 @@
-import Workspace.Impl.LinWreathBlockProg
-import Workspace.Lang.Prims.Other
+module
+
+public import Workspace.Impl.LinWreathBlockProg
+public import Workspace.Lang.Prims.Other
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

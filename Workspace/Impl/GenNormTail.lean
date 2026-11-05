@@ -1,4 +1,8 @@
-import Workspace.Impl.GenNormChildProg
+module
+
+public import Workspace.Impl.GenNormChildProg
+
+@[expose] public section
 
 /-! # The normalization children and their exact combination -/
 namespace GI.Impl

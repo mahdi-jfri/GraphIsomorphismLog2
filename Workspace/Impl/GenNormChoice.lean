@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormChild
-import Workspace.Impl.Weights
+module
+
+public import Workspace.Impl.GenNormChild
+public import Workspace.Impl.Weights
+
+@[expose] public section
 
 /-!
 # Choosing the one or two normalization cosets

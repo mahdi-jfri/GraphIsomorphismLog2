@@ -1,4 +1,8 @@
-import Workspace.Impl.VsBFld0C
+module
+
+public import Workspace.Impl.VsBFld0C
+
+@[expose] public section
 
 /-!
 # The case `T = 0`

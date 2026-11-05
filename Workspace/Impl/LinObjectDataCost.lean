@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectDataLocal
+module
+
+public import Workspace.Impl.LinObjectDataLocal
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

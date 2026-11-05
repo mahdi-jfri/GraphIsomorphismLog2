@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecProgPcs
+module
+
+public import Workspace.Impl.TermRecProgPcs
+
+@[expose] public section
 
 /-!
 # T5, the relative derived series

@@ -1,6 +1,10 @@
-import Workspace.Cited.AlgoTerminal
-import Mathlib.GroupTheory.Index
-import Mathlib.GroupTheory.OrderOfElement
+module
+
+public import Workspace.Cited.AlgoTerminal
+public import Mathlib.GroupTheory.Index
+public import Mathlib.GroupTheory.OrderOfElement
+
+@[expose] public section
 
 /-! The prefix chain and cyclic relations in A.20. Work in the group A itself.
 The commutator hypothesis is precisely the assertion that A/N is abelian.

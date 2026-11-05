@@ -1,10 +1,14 @@
-import Workspace.Impl.VsQTAct
-import Workspace.Impl.VsWProgKey
-import Workspace.Impl.VsWProgImg
-import Workspace.Impl.VsWProgKer
-import Workspace.Impl.VsWProgMC
-import Workspace.Impl.VsWProgEig
-import Workspace.Lang.Lib.LinIntTail
+module
+
+public import Workspace.Impl.VsQTAct
+public import Workspace.Impl.VsWProgKey
+public import Workspace.Impl.VsWProgImg
+public import Workspace.Impl.VsWProgKer
+public import Workspace.Impl.VsWProgMC
+public import Workspace.Impl.VsWProgEig
+public import Workspace.Lang.Lib.LinIntTail
+
+@[expose] public section
 
 /-!
 # The image of one subspace given by its key

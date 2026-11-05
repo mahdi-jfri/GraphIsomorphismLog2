@@ -1,4 +1,8 @@
-import Workspace.Impl.GenNormBudget
+module
+
+public import Workspace.Impl.GenNormBudget
+
+@[expose] public section
 
 /-! # Reading and packing the bounded records used by normalization -/
 

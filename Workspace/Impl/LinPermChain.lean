@@ -1,5 +1,9 @@
-import Workspace.Impl.LinCoordinateCertificate
-import Workspace.Impl.LinIntPrefix
+module
+
+public import Workspace.Impl.LinCoordinateCertificate
+public import Workspace.Impl.LinIntPrefix
+
+@[expose] public section
 
 /-! Relate the permutation prefix values to the chains inside A. This is needed
 because N is normal in A, not necessarily in the ambient symmetric group. -/

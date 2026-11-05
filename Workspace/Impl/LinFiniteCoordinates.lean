@@ -1,5 +1,9 @@
-import Workspace.Impl.LinModMatrix
-import Mathlib.Algebra.BigOperators.Pi
+module
+
+public import Workspace.Impl.LinModMatrix
+public import Mathlib.Algebra.BigOperators.Pi
+
+@[expose] public section
 
 /-! Finite abelian coordinates after Smith reduction. Matrices record the
 images of the coordinate generators, with entries reduced in their target
@@ -67,7 +71,7 @@ theorem linFiniteMatrix_compatible {d : ℕ} (m : Fin d → ℕ) (hm : ∀ i, 0 
   rw [map_nsmul, map_zero] at hh
   apply (ZMod.natCast_eq_zero_iff _ _).mp
   simpa only [Nat.cast_mul, linFiniteMatrix, ZMod.natCast_zmod_val, nsmul_eq_mul,
-    Pi.smul_apply, mul_comm] using hh
+    Pi.smul_apply, Pi.zero_apply, mul_comm] using hh
 
 /-- The reduced product formula used after every SLP multiplication. -/
 theorem linFiniteMatrix_comp {d : ℕ} (m : Fin d → ℕ) (hm : ∀ i, 0 < m i)

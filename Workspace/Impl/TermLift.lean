@@ -1,6 +1,10 @@
-import Workspace.Impl.TermLiftMath
-import Workspace.Impl.Fresh
-import Workspace.Impl.TermMain
+module
+
+public import Workspace.Impl.TermLiftMath
+public import Workspace.Impl.Fresh
+public import Workspace.Impl.TermMain
+
+@[expose] public section
 
 /-!
 # T7: the lift of the table transport to `Ω` and the cut to `G`

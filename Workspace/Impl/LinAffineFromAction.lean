@@ -1,5 +1,10 @@
-import Workspace.Impl.LinAffineHomogenize
-import Mathlib.Algebra.Group.Equiv.Basic
+module
+
+public import Workspace.Impl.LinAffineHomogenize
+public import Workspace.Impl.AddEquivGroup
+public import Mathlib.Algebra.Group.Equiv.Basic
+
+@[expose] public section
 
 /-! Recover the linear part and the translation cocycle from an action
 whose maps satisfy the affine addition identity. -/

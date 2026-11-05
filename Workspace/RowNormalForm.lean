@@ -1,8 +1,12 @@
-import Workspace.RowTransfers
-import Mathlib.GroupTheory.Commutator.Basic
-import Mathlib.GroupTheory.QuotientGroup.Defs
-import Mathlib.Algebra.Group.Submonoid.BigOperators
-import Mathlib.Data.Finset.Dedup
+module
+
+public import Workspace.RowTransfers
+public import Mathlib.GroupTheory.Commutator.Basic
+public import Mathlib.GroupTheory.QuotientGroup.Defs
+public import Mathlib.Algebra.Group.Submonoid.BigOperators
+public import Mathlib.Data.Finset.Dedup
+
+@[expose] public section
 
 open scoped commutatorElement
 

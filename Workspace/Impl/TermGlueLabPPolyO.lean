@@ -1,10 +1,14 @@
-import Workspace.Impl.TermGlueLabPGen
-import Workspace.Impl.TermGlueLabPOEps
-import Workspace.Impl.TermGlueLabPS5O
-import Workspace.Impl.TermGlueLabPSetZ
-import Workspace.Impl.TermGlueLabPBs
-import Workspace.Impl.TermGlueLabPXLab
-import Workspace.Impl.TermGlueLabPLiftS
+module
+
+public import Workspace.Impl.TermGlueLabPGen
+public import Workspace.Impl.TermGlueLabPOEps
+public import Workspace.Impl.TermGlueLabPS5O
+public import Workspace.Impl.TermGlueLabPSetZ
+public import Workspace.Impl.TermGlueLabPBs
+public import Workspace.Impl.TermGlueLabPXLab
+public import Workspace.Impl.TermGlueLabPLiftS
+
+@[expose] public section
 
 /-!
 # Polynomial bounds of step 5 of the label program

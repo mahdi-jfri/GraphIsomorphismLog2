@@ -1,4 +1,8 @@
-import Workspace.Impl.GenNormGraph
+module
+
+public import Workspace.Impl.GenNormGraph
+
+@[expose] public section
 
 /-!
 # Computing the alternating generators needed by the normalized preimage

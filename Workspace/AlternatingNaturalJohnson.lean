@@ -1,4 +1,8 @@
-import Workspace.PrimitiveSubsetCoordinates
+module
+
+public import Workspace.PrimitiveSubsetCoordinates
+
+@[expose] public section
 
 namespace GI.AlternatingActions
 

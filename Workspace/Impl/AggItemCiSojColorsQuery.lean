@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojColorsState
-import Workspace.Impl.AggItemCiSojPL
-import Workspace.Impl.AggItemCiSojQuery
+module
+
+public import Workspace.Impl.AggItemCiSojColorsState
+public import Workspace.Impl.AggItemCiSojPL
+public import Workspace.Impl.AggItemCiSojQuery
+
+@[expose] public section
 
 /-! # The table pipeline constructs the exact inherited rectangle query -/
 

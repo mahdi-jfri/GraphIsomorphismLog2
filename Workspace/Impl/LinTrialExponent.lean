@@ -1,5 +1,9 @@
-import Workspace.Impl.LinTrialPrimaryProg
-import Workspace.Impl.LinPrimaryDigit
+module
+
+public import Workspace.Impl.LinTrialPrimaryProg
+public import Workspace.Impl.LinPrimaryDigit
+
+@[expose] public section
 
 /-! Extract the primary exponent from a positive signed cyclic order. -/
 namespace GI.Impl

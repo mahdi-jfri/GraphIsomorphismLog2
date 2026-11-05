@@ -1,5 +1,9 @@
-import Workspace.Impl.VsQAna
-import Workspace.Impl.VsQDrv
+module
+
+public import Workspace.Impl.VsQAna
+public import Workspace.Impl.VsQDrv
+
+@[expose] public section
 
 /-!
 # The initial state

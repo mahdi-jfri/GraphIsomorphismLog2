@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectGlueCore
+module
+
+public import Workspace.Impl.LinObjectGlueCore
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset

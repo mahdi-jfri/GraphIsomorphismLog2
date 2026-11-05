@@ -1,5 +1,9 @@
-import Workspace.Assembly.FinalGlue
-import Workspace.Impl.LinObjectGlueUniform
+module
+
+public import Workspace.Assembly.FinalGlue
+public import Workspace.Impl.LinObjectGlueUniform
+
+@[expose] public section
 
 /-!
 # Theorem 1.1: graph isomorphism in quasipolynomial time
@@ -16,11 +20,11 @@ final program the cited primitives sit at these indices (all checked by `rfl`):
 * the block `linA20Extra` at `14`: `SolvableCosetIntersection` at `14`, Hermite at `15`,
   Smith at `16`, constructive membership at `17`, `VectorStabilizer` at `18`.
 
-The trusted statement is `GI.Statement.GraphIsomorphismInQuasipolynomialTime`
+The statement is `GI.Statement.GraphIsomorphismInQuasipolynomialTime`
 (`Workspace/Statement/Main.lean`).
 -/
 
-open GI.Algorithm GI.Lang GI.Paper GI.Impl GI.Axioms GI.Assembly
+open GI.Algorithm GI.Lang GI.Paper GI.Impl GI.Assembly
 
 /-- The object glue list of the final program: `gObjF` at `flcRecIdx + tmRiGlueOff`, with the
 primitive indices of the final program. -/
@@ -42,7 +46,7 @@ theorem GI.Assembly.mainGObjF_hasAt :
 
 /-- **Theorem 1.1.** Graph isomorphism is decidable in quasipolynomial time, in the model of
 `Workspace/Statement/Main.lean`. -/
-theorem GI.graphIsomorphismInQuasipolynomialTime :
+theorem GI.Assembly.graphIsomorphismInQuasipolynomialTime :
     GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
   final_modulo_glueObj mainGObjF mainGObjF_fits
     (linObjectGlue_iface_fixed_of GI.Proved.solvableCosetIntersection GI.Proved.derivedSubgroup GI.Proved.membership

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinMapEncoded
+module
+
+public import Workspace.Impl.LinMapEncoded
+
+@[expose] public section
 
 /-! A bounded product loop for p^j. The cost is polynomial in j and the bit
 weight of the input; primary-layer indices are bounded by the stored bit data. -/

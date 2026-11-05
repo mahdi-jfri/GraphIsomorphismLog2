@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosSpec
+module
+
+public import Workspace.Impl.SCosSpec
+
+@[expose] public section
 
 /-!
 # The top level, part 1 (mathematics and small functions)

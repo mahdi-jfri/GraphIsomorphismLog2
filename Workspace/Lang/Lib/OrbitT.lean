@@ -15,8 +15,12 @@ The cost is at most `S² A + orbTK * S⁶`, where `A` bounds the cost of one cal
 `S` bounds `n + 1`, the number of generators plus one, `B + 1`, the weight of `ac`, and the weights
 of the points of the orbit.
 -/
-import Workspace.Lang.Lib.OrbitTMath
-import Workspace.Lang.Lib.Orbit
+module
+
+public import Workspace.Lang.Lib.OrbitTMath
+public import Workspace.Lang.Lib.Orbit
+
+@[expose] public section
 
 namespace GI.Lang
 

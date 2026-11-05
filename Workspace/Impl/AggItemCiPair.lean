@@ -1,9 +1,13 @@
-import Workspace.Impl.AggItemCiCfgD
-import Workspace.Impl.AggItemCiSojSpec
-import Workspace.Impl.AggItemStepWt
-import Workspace.Impl.AggItemSrcP
-import Workspace.Impl.GenNormPoly
-import Workspace.Impl.AggItemCfObW
+module
+
+public import Workspace.Impl.AggItemCiCfgD
+public import Workspace.Impl.AggItemCiSojSpec
+public import Workspace.Impl.AggItemStepWt
+public import Workspace.Impl.AggItemSrcP
+public import Workspace.Impl.GenNormPoly
+public import Workspace.Impl.AggItemCfObW
+
+@[expose] public section
 
 /-!
 # The pair part from its two branches

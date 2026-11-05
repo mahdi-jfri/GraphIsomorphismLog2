@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJProgNE
+module
+
+public import Workspace.Impl.TermJProgNE
+
+@[expose] public section
 
 /-!
 # The top function of the `J`-answer (program)

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojQueryWt
+module
+
+public import Workspace.Impl.AggItemCiSojQueryWt
+
+@[expose] public section
 
 /-! # Paid raw graph-pair bytes in a rectangle representation -/
 

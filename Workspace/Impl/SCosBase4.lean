@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosBase3
+module
+
+public import Workspace.Impl.SCosBase3
+
+@[expose] public section
 
 /-!
 # The base case, the search for `τ`

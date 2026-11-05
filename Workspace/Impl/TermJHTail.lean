@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJHLayout
-import Workspace.Impl.AggItemPartEven
+module
+
+public import Workspace.Impl.TermJHLayout
+public import Workspace.Impl.AggItemPartEven
+
+@[expose] public section
 
 /-!
 # The transporter of one label: the tail

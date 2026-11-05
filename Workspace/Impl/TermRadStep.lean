@@ -1,7 +1,12 @@
-import Workspace.Impl.TermRadMath
-import Workspace.Lang.Prims.Ops
-import Workspace.Lang.Prims.Blocks
-import Workspace.Lang.Lib.Fold
+module
+
+public import Workspace.Impl.TermRadMath
+public import Workspace.Impl.GMPFactorKernel
+public import Workspace.Lang.Prims.Ops
+public import Workspace.Lang.Prims.Blocks
+public import Workspace.Lang.Lib.Fold
+
+@[expose] public section
 
 /-!
 # T2, one factor: the step of the radical program
@@ -14,9 +19,9 @@ context `[gens H, gens N, chief series]` and the group `A` computed so far:
 2. the nonabelian test `⁅C_j, C_j⁆ ≤ V` (the cited **DerivedSubgroup**, then the subgroup test
    by **Membership**, `le_spec`); `⁅C_j, C_j⁆ ≤ N C_{j+1}` holds exactly when the factor
    `U/V` is abelian (`rad_comm_le_iff`);
-3. if the factor is nonabelian: the preimage `C` of `C_{H/V}(U/V)` (the cited
-   **QuotientCentralizer**, [LM, Lemma 3.2]) and `A ∩ C` (the cited **NormalizedIntersection**:
-   `C` is normal in `H ≥ A`).
+3. if the factor is nonabelian: the preimage `C` of `C_{H/V}(U/V)` (`GMPFactorKernel.lean`,
+   conjugation on the right cosets of `V` in `U`) and `A ∩ C` (the cited
+   **NormalizedIntersection**: `C` is normal in `H ≥ A`).
 So after step `j` the group is `{h | radCond H N Hs (j + 1) h}` (`radStep_spec`).
 -/
 
@@ -45,13 +50,13 @@ def radUnionE (ap : ℕ) (lE : Expr) : Expr :=
 /-- **The step on factor `i`.** Environment `[a, U, V, D, t, C, A ∩ C]`: the group values of
 `U = N C_i` and `V = N C_{i+1}`, generators of `D = ⁅C_i, C_i⁆`, the test `D ≤ V`, and, for a
 nonabelian factor, generators of the quotient centralizer `C` and of `A ∩ C`. -/
-def radStepBody (ap mg le jder jni jqc : ℕ) : Expr :=
+def radStepBody (ap mg le jder jni fk : ℕ) : Expr :=
   .letE (radUnionE ap (.get radCsE (arg 1)))
   (.letE (radUnionE ap (.get radCsE (.arith .add (arg 1) (.nat 1))))
   (.letE (.prim jder (.call mg (mk2 radNE (.get radCsE (arg 1)))))
   (.letE (.call le (mk2 (.var 2) (.call mg (mk2 radNE (.var 3)))))
   (.ite (.var 4) (arg 2)
-    (.letE (.prim jqc (mk4 radHvE (.var 2) radHvE (.var 1)))
+    (.letE (.call fk (mk3 radHvE (.var 1) (.var 2)))
     (.letE (.prim jni (mk2 (arg 2) (.call mg (mk2 radNE (.var 5)))))
       (.call mg (mk2 radNE (.var 6)))))))))
 

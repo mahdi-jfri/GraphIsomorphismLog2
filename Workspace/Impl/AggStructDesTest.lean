@@ -1,4 +1,8 @@
-import Workspace.Impl.AggStructDesHit
+module
+
+public import Workspace.Impl.AggStructDesHit
+
+@[expose] public section
 
 /-!
 # The Case 3 test as a program

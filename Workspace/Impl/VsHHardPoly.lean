@@ -1,5 +1,9 @@
-import Workspace.Impl.VsHHardHyp
-import Workspace.Impl.VsQPoly
+module
+
+public import Workspace.Impl.VsHHardHyp
+public import Workspace.Impl.VsQPoly
+
+@[expose] public section
 
 namespace GI.Impl
 

@@ -1,8 +1,12 @@
-import Workspace.Impl.LinPermZpow
-import Workspace.Impl.LinPermWordMath
-import Workspace.Lang.Prims.Repr
-import Workspace.Lang.Lib.LinIntVector
-import Workspace.Impl.LinFiniteActionCost
+module
+
+public import Workspace.Impl.LinPermZpow
+public import Workspace.Impl.LinPermWordMath
+public import Workspace.Lang.Prims.Repr
+public import Workspace.Lang.Lib.LinIntVector
+public import Workspace.Impl.LinFiniteActionCost
+
+@[expose] public section
 
 /-! Lift an integer vector to an ordered word in the supplied permutation
 generators. The loop uses signed binary powers, with no enumeration of

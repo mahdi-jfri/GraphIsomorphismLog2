@@ -1,6 +1,10 @@
-import Workspace.Impl.VsQABlkM
-import Workspace.Impl.VsQTItem
-import Workspace.Impl.VsQTKeyP
+module
+
+public import Workspace.Impl.VsQABlkM
+public import Workspace.Impl.VsQTItem
+public import Workspace.Impl.VsQTKeyP
+
+@[expose] public section
 
 /-!
 # The tables of the pieces

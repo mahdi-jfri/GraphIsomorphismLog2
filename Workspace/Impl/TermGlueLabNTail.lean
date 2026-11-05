@@ -1,6 +1,10 @@
-import Workspace.Impl.TermGlueLabNPev
-import Workspace.Impl.TermGlueLabNIn
-import Workspace.Impl.TermGlueLabN6
+module
+
+public import Workspace.Impl.TermGlueLabNPev
+public import Workspace.Impl.TermGlueLabNIn
+public import Workspace.Impl.TermGlueLabN6
+
+@[expose] public section
 
 /-!
 # The label driver: the last three stages
@@ -85,6 +89,11 @@ theorem tmGLN_tail {P : Program} {s5 vec s6 : ℕ} {F Fs5 Fvec Fs6 : ℕ → ℕ
     (h5F : ∀ B, Fs5 B ≤ F B) (hvF : ∀ B, Fvec B ≤ F B) (h6F : ∀ B, Fs6 B ≤ F B)
     (hs5 : Iface.TmGLNS5OK P s5 Fs5) (hvec : Iface.TmGLNVecOK P vec Fvec)
     (hs6 : Iface.TmGLNS6OK P s6 Fs6)
+    {R' : Subgroup (Perm (Fin m))}
+    (hRH : R' ≤ (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Hb)
+    (hNR : (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ≤ R')
+    (hsolv : ∃ ℓ, GI.Multicoset.relDerived R' (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ℓ ≤
+      (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb)
     {k : ℕ} (e : Ω ≃ Fin k) {sv lv rl : Val} {lvr : List Val} (hlv0 : lv = .list (.nat L.q :: lvr))
     {σH σN σS bs gs U : List (Perm (Fin m))} {us vs xl : List Val} {yl : Val}
     {ps' : List (Perm (Fin k) × Perm (Fin m))} {r τ : Perm (Fin m)} {y : Fin L.q → Perm (Fin m)}
@@ -100,22 +109,26 @@ theorem tmGLN_tail {P : Program} {s5 vec s6 : ℕ} {F Fs5 Fvec Fs6 : ℕ → ℕ
     (hcl : Subgroup.closure {p | p ∈ ps'} =
       (tmGLPχ e E hnat (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).e_label ⟨0, by omega⟩).range)
     (hgsl : gs.length ≤ m ^ 2)
-    (hgl : gens gs ⊔ gens σN = Aut (@id (Subgroup (Perm (Fin m))) (𝕀).Hb)
+    (hgl : gens gs ≤ Aut (@id (Subgroup (Perm (Fin m))) (𝕀).Hb)
       (types (@id (Subgroup (Perm (Fin m))) (𝕀).Nb) (@id (Fin L.q → Fin m → C)
-        (rowTuple (𝕀).e S.x))) ⊓ tmRad 𝕀)
-    (hτ : τ ∈ tmGlRes 𝕀 r) (hy : cleanRowPerm E y ∈ S.domGroup) (hy0 : y ⟨0, by omega⟩ = τ)
+        (rowTuple (𝕀).e S.x))))
+    (hτ : τ ∈ tmGlRes (tmGLSIWith P₀ hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv) r)
+    (hy : cleanRowPerm E y ∈ S.domGroup) (hy0 : y ⟨0, by omega⟩ = τ)
     (hyl : TmGLPYOut (gens σN) (fun i => tmRowStr S E (.inl i))
       (fun i => tmRowStr S E (.inr i) ↼ (y i)⁻¹) yl)
-    (hw : AnsC (Equiv.refl (Fin m)) (.list [encPerm τ, encGroup U]) (tmGlRes 𝕀 r))
+    (hw : AnsC (Equiv.refl (Fin m)) (.list [encPerm τ, encGroup U])
+      (tmGlRes (tmGLSIWith P₀ hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv) r))
     (hgl6 : gens gs ⊔ gens σN = gens (U.map fun x => τ * x * τ⁻¹))
-    (hsol : IsSolvable (gens gs)) :
+    (hsol : ∃ _ : ((gens σN).subgroupOf (gens gs)).Normal,
+      Group.IsSolvable ((gens gs) ⧸ (gens σN).subgroupOf (gens gs))) :
     EvalAll P [.list [.list [.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0, rl], .list us,
         .list vs], encPerm r, .list [encPerm τ, encGroup U]],
       encGroup σN, encGroup σS, liftLabCtx k m ps',
       .list ((List.finRange L.q).map fun i => encPerm (y i)), .list xl, yl,
       .list (gs.map encPerm), .list (bs.map encPerm)]
       (.letE (.call s5 tmGLNA9) (.letE (.call vec tmGLNA10) (.call s6 tmGLNA11)))
-      (fun u c => AnsC (Equiv.refl (Fin m)) u (tmGlLab 𝕀 r) ∧
+      (fun u c => AnsC (Equiv.refl (Fin m)) u
+        (tmGlLab (tmGLSIWith P₀ hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv) r) ∧
         c ≤ tmGLNTailC F (Val.list [.list [.list [.list [sv, lv, coordsVal e S E,
           a18Out σH σN σS 0, rl], .list us, .list vs], encPerm r,
           .list [encPerm τ, encGroup U]], encGroup σN, encGroup σS, liftLabCtx k m ps',
@@ -136,6 +149,7 @@ theorem tmGLN_tail {P : Program} {s5 vec s6 : ℕ} {F Fs5 Fvec Fs6 : ℕ → ℕ
   intro o5 ho5
   obtain ⟨hgs, U5, V, D, ws, hAt⟩ := ho5
   -- the vectors
+  have hτ0 : τ ∈ tmGlRes 𝕀 τ := ⟨hτ.1, 1, (tmRad 𝕀).one_mem, (one_mul τ).symm⟩
   have h10 : tmGLNPev ([.list [.list [.list [sv, .list (.nat L.q :: lvr), coordsVal e S E,
       a18Out σH σN σS 0, rl], .list us, .list vs], encPerm r, .list [encPerm τ, encGroup U]],
       encGroup σN, encGroup σS, liftLabCtx k m ps',
@@ -145,7 +159,7 @@ theorem tmGLN_tail {P : Program} {s5 vec s6 : ℕ} {F Fs5 Fvec Fs6 : ℕ → ℕ
   refine tmGLN_stage (R := fun u => ∃ vv ww : Val, u = .list [vv, ww] ∧
       TmGLNVecRes hnat hq h0 E hP htr hcard hsN hN hqα σN τ V D vv ww)
     (tmGLN_lastC_mono _ hF) h10
-    ((hvec hnat hq h0 E hP htr hcard hsN hN hqα σN gs r τ y U5 V D o5 (.list xl) yl hσN hτ hy hy0
+    ((hvec hnat hq h0 E hP htr hcard hsN hN hqα σN gs τ τ y U5 V D o5 (.list xl) yl hσN hτ0 hy hy0
       ⟨hgs, ws, hAt⟩ hxl hyl _ (tmGLN_pev_wt h10)).mono fun u c ⟨vv, ww, hu, hr, hc⟩ =>
         ⟨⟨vv, ww, hu, hr⟩, hc.trans (hvF _)⟩) ?_
   intro u10 hu10
@@ -158,7 +172,7 @@ theorem tmGLN_tail {P : Program} {s5 vec s6 : ℕ} {F Fs5 Fvec Fs6 : ℕ → ℕ
       .list (gs.map encPerm), .list (bs.map encPerm)] ++ [o5] ++ [.list [vv, ww]]) tmGLNA11 =
       some (.list [encGroup σN, encPerm τ, .list (gs.map encPerm), o5, vv, ww]) := rfl
   exact tmGLN_last h11
-    ((hs6 hnat hq h0 E hP htr hcard hsN hN hqα hσN hw hgl6 hsol hgsl U5 V D o5 vv ww
+    ((hs6 hnat hq h0 E hP htr hcard hsN hN hqα hRH hNR hsolv hσN hw hgl6 hsol hgsl U5 V D o5 vv ww
       ⟨hgs, ws, hAt⟩ hvr _ (tmGLN_pev_wt h11)).mono fun u c ⟨hu, hc⟩ => ⟨hu, hc.trans (h6F _)⟩)
 
 end Tail

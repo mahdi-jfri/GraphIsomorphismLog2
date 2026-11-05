@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectAffineFiber
+module
+
+public import Workspace.Impl.LinObjectAffineFiber
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

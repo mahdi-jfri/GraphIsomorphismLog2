@@ -1,5 +1,9 @@
-import Workspace.Impl.LinAssignUnits
-import Workspace.Impl.LinIntPad
+module
+
+public import Workspace.Impl.LinAssignUnits
+public import Workspace.Impl.LinIntPad
+
+@[expose] public section
 
 /-! Build the zero/unit assignment table consumed by the exponent interpreter. -/
 namespace GI.Impl

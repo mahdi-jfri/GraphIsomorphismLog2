@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecProgY
+module
+
+public import Workspace.Impl.TermRecProgY
+
+@[expose] public section
 
 /-!
 # T5, one entry of the table: `Iso_H(S, T)`
@@ -27,20 +31,6 @@ theorem tmRi_forall₂_pieces {α : Type} {Q : α → Perm (Fin n) × Acc n → 
   | _ :: _, _ :: _, List.Forall₂.cons ⟨p, hp, hq⟩ h =>
     let ⟨ps, e, h'⟩ := tmRi_forall₂_pieces h
     ⟨p :: ps, by rw [hp, e]; rfl, List.Forall₂.cons hq h'⟩
-
-theorem tmRi_forall₂_mem {α β : Type} {Q : α → β → Prop} :
-    ∀ {l₁ : List α} {l₂ : List β}, List.Forall₂ Q l₁ l₂ →
-      (∀ q ∈ l₂, ∃ a ∈ l₁, Q a q) ∧ ∀ a ∈ l₁, ∃ q ∈ l₂, Q a q
-  | [], [], _ => ⟨fun _ h => absurd h List.not_mem_nil, fun _ h => absurd h List.not_mem_nil⟩
-  | a :: l₁, q :: l₂, List.Forall₂.cons h hs => by
-    obtain ⟨h1, h2⟩ := tmRi_forall₂_mem hs
-    refine ⟨fun q' hq' => ?_, fun a' ha' => ?_⟩
-    · rcases List.mem_cons.1 hq' with rfl | hq'
-      · exact ⟨a, List.mem_cons_self .., h⟩
-      · obtain ⟨a', ha', h'⟩ := h1 q' hq'; exact ⟨a', List.mem_cons_of_mem _ ha', h'⟩
-    · rcases List.mem_cons.1 ha' with rfl | ha'
-      · exact ⟨q, List.mem_cons_self .., h⟩
-      · obtain ⟨q', hq', h'⟩ := h2 a' ha'; exact ⟨q', List.mem_cons_of_mem _ hq', h'⟩
 
 theorem tmRi_wt_piece (p : Perm (Fin n) × Acc n) (h : ∀ c gs, p.2 = some (c, gs) → gs.length ≤ n ^ 2) :
     (encPiece p).wt ≤ 900 * (n + 1) ^ 6 := by
@@ -73,10 +63,17 @@ theorem tmRi_pair_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hmem : Membership}
     (hP : TmRiAt P b jsci jder jmem gObj hsci hder hmem) {M ℓ T : ℕ} (ih : TmRiIH P b n M ℓ T)
     {σH σN σA : List (Perm (Fin n))} {Pl : Val} {Sl Tl : List (TmRiO n)} {ox : TmRiO n}
-    (hsol : IsSolvable (gens σH)) (hHl : σH.length ≤ n ^ 2) (hAl : σA.length ≤ n ^ 2)
+    {Kg Dg T' : ℕ} (hsol : TmRiListNorm (gens σH) (Sl ++ Tl))
+    (hReb : (ℓ = 0 ∧ T ≤ T') ∨
+      (TmRiListIn (gens σH) (Sl ++ Tl) ∧ P.HasAt (b + 96) (tmRiRebFuns b gObj) ∧
+        Iface.TermGlueObjSpec P Kg Dg gObj ∧
+        T + tmRiRebC (solvableCosetIntersectionPrim hsci) hmem Kg Dg n M ≤ T'))
+    (hHl : σH.length ≤ n ^ 2) (hAl : σA.length ≤ n ^ 2)
     (hNH : gens σN ≤ gens σH) (hNn : GI.Multicoset.Normalizes (gens σH) (gens σN))
     (hA : gens σA = relDerived (gens σH) (gens σN) ℓ)
-    (hfuel : relDerived (gens σH) (gens σN) (ℓ + 1) ≤ gens σN) (hℓ : ℓ ≤ n ^ 2 + 5)
+    (hfuel : relDerived (gens σH) (gens σN) (ℓ + 1) ≤ gens σN ∨
+      (ℓ = 0 ∧ (∀ s ∈ tmGlMs Sl, ∀ s' ∈ tmGlMs Sl, s = s') ∧
+        (∀ t ∈ tmGlMs Tl, ∀ t' ∈ tmGlMs Tl, t = t'))) (hℓ : ℓ ≤ n ^ 2 + 5)
     (hSo : ∀ s ∈ tmGlMs Sl, ∀ s' ∈ tmGlMs Sl, SameOrb (gens σA) s s')
     (hTo : ∀ t ∈ tmGlMs Tl, ∀ t' ∈ tmGlMs Tl, SameOrb (gens σA) t t')
     (hNT : Fixes (gens σN) (tmGlMs Tl)) (hSl : Sl.length ≤ M) (hTl : Tl.length ≤ M)
@@ -86,7 +83,7 @@ theorem tmRi_pair_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     FunAll P (b + 10) (.list [.list [.list [.nat ℓ, encGroup σH, encGroup σA, Pl],
         tmGlObjsVal Sl], tmGlObjsVal Tl])
       (fun u cost => CosetC n u (Iso (gens σH) (tmGlMs Sl) (tmGlMs Tl)) ∧
-        cost ≤ M * (T + tmRiYC (solvableCosetIntersectionPrim hsci) n M (4 * W + 10)) +
+        cost ≤ M * (T' + tmRiYC (solvableCosetIntersectionPrim hsci) n M (4 * W + 10)) +
           tmRiPairC hmem n M W) := by
   set c : Val := .list [.nat ℓ, encGroup σH, encGroup σA, Pl] with hc
   set ctx : Val := .list [.list [c, tmGlObjsVal Sl], tmGlObjsVal Tl] with hctx
@@ -102,7 +99,7 @@ theorem tmRi_pair_spec {P : Program} {b jsci jder jmem gObj : ℕ}
   -- the parts
   have hmap := map_spec hP.mapY (c := ctx) (xs := Sl.map tmGlObjVal)
     (R := fun x w => ∃ oy ∈ Sl, x = tmGlObjVal oy ∧ ∃ p : Perm (Fin n) × Acc n,
-      w = encPiece p ∧ Q oy p) (B := fun _ => T + YC) (fun x hx => by
+      w = encPiece p ∧ Q oy p) (B := fun _ => T' + YC) (fun x hx => by
       obtain ⟨oy, hy, rfl⟩ := List.mem_map.1 hx
       have hyw : (tmRiYArg ℓ σH σA Pl Sl Tl oy).wt ≤ 4 * W + 10 := by
         have h1 := wt_list2_le ctx (tmGlObjVal oy)
@@ -110,7 +107,7 @@ theorem tmRi_pair_spec {P : Program} {b jsci jder jmem gObj : ℕ}
           wt_le_wt_list (List.mem_map_of_mem hy)
         show (Val.list [ctx, tmGlObjVal oy]).wt ≤ _
         omega
-      refine FunAll.mono (tmRi_y_spec hP ih hsol hHl hAl hNH hNn hA hfuel hℓ hSo hTo hNT hSl hTl
+      refine FunAll.mono (tmRi_y_spec hP ih hsol hReb hHl hAl hNH hNn hA hfuel hℓ hSo hTo hNT hSl hTl
         hok hT0 hy hyw) fun w cw h => ⟨⟨oy, hy, rfl, ?_⟩, h.2⟩
       obtain ⟨t, a, rfl, h1, h2⟩ := h.1
       exact ⟨(t, a), rfl, h1, h2⟩)
@@ -128,7 +125,7 @@ theorem tmRi_pair_spec {P : Program} {b jsci jder jmem gObj : ℕ}
   have hcall := EvalAll.call_funAll (f := b + 72) dargs
     (Q := fun w cw => (∃ ps : List (Perm (Fin n) × Acc n), w = .list (ps.map encPiece) ∧
       List.Forall₂ Q Sl ps) ∧ w.wt ≤ B2 ∧
-      cw ≤ 20 * W + 50 + M * (T + YC) + mapK * (M + 1) * (5 * W + B2 + 10) + B2 + 1)
+      cw ≤ 20 * W + 50 + M * (T' + YC) + mapK * (M + 1) * (5 * W + B2 + 10) + B2 + 1)
     fun v ca hv => by
       obtain ⟨rfl, hca⟩ := hv
       refine hmap.mono fun w cw ⟨ws, hw, hR, hcw⟩ => ?_
@@ -151,10 +148,10 @@ theorem tmRi_pair_spec {P : Program} {b jsci jder jmem gObj : ℕ}
         have : (M + 1) * (1801 * (n + 1) ^ 6) ≤ 10 ^ 4 * (M + 1) * (n + 1) ^ 6 := by nlinarith
         omega
       refine ⟨⟨ps, hw, hps⟩, hw ▸ hwps, ?_⟩
-      have hs := tmRi_sum_const (Sl.map tmGlObjVal) (fun _ => T + YC) (K := T + YC)
+      have hs := tmRi_sum_const (Sl.map tmGlObjVal) (fun _ => T' + YC) (K := T' + YC)
         (fun _ _ => le_rfl)
       rw [List.length_map] at hs
-      have h1 : Sl.length * (T + YC) ≤ M * (T + YC) := Nat.mul_le_mul_right _ hSl
+      have h1 : Sl.length * (T' + YC) ≤ M * (T' + YC) := Nat.mul_le_mul_right _ hSl
       have h2 := wt_list2_le ctx (.list (Sl.map tmGlObjVal))
       have h3 : mapK * ((Sl.map tmGlObjVal).length + 1) * ((Val.list [ctx, .list (Sl.map tmGlObjVal)]).wt +
           w.wt + 1) ≤ mapK * (M + 1) * (5 * W + B2 + 10) := by
@@ -174,7 +171,7 @@ theorem tmRi_pair_spec {P : Program} {b jsci jder jmem gObj : ℕ}
   have hPC : tmRiPairC hmem n M W = mapK * (M + 1) * (5 * W + B2 + 10) + combCost n (3 * B2 + 30) +
       cosetNFCost hmem n accW + 100 * (W + B2 + accW) + 10 ^ 4 * (n + 1) ^ 6 := rfl
   refine FunAll.intro hP.pair (EvalAll.mono (Q := fun u c => CosetC n u (Iso H (tmGlMs Sl)
-    (tmGlMs Tl)) ∧ u.wt ≤ Wo ∧ c ≤ M * (T + YC) + tmRiPairC hmem n M W) ?_
+    (tmGlMs Tl)) ∧ u.wt ≤ Wo ∧ c ≤ M * (T' + YC) + tmRiPairC hmem n M W) ?_
     fun u c h => ⟨h.1, h.2.2⟩)
   refine tmRi_letB hcall (fun _ _ h => h.2.2) ?_ fun w1 c1 h1 => ?_
   · rw [hPC]; omega
@@ -234,7 +231,7 @@ theorem tmRi_pair_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     have := cosetNFCost_mono hmem n hacc
     have := h.2
     rw [hPC]
-    generalize M * (T + YC) = A at *
+    generalize M * (T' + YC) = A at *
     generalize mapK * (M + 1) * (5 * W + B2 + 10) = A2 at *
     generalize combCost n (3 * B2 + 30) = A3 at *
     generalize cosetNFCost hmem n accW = A4 at *

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermCosetMath
+module
+
+public import Workspace.Impl.TermCosetMath
+
+@[expose] public section
 
 /-!
 # The first nonempty entry of a row or a column of the coset table

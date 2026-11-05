@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemHvInitM
+module
+
+public import Workspace.Impl.AggItemHvInitM
+
+@[expose] public section
 
 /-!
 # Case 2a init program, part 4: the test of the halving item

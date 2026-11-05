@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiCfgC
-import Workspace.Impl.AggStructDC
+module
+
+public import Workspace.Impl.AggItemCiCfgC
+public import Workspace.Impl.AggStructDC
+
+@[expose] public section
 
 /-!
 # The configuration query: the generators as a program
@@ -158,7 +162,9 @@ theorem itcq_swV {n : ℕ} (i j : Fin n) :
     ((List.range (n * n)).map Val.nat).map (fun x => match x with
       | .nat t => .nat (itcqS i j (t % n) + n * itcqS i j (t / n))
       | _ => .nat 0) = (List.finRange (n * n)).map fun t => Val.nat (itciD n (swap i j) t) := by
-  rw [List.map_map, ← List.map_coe_finRange, List.map_map]
+  have hfr : (List.finRange (n * n)).map Fin.val = List.range (n * n) :=
+    List.ext_getElem (by simp) (by simp)
+  rw [List.map_map, ← hfr, List.map_map]
   refine List.map_congr_left fun t _ => ?_
   simp only [Function.comp_apply]
   rw [itcq_swE_val]
@@ -199,7 +205,8 @@ theorem itcq_genF_spec {f mp sw : ℕ} (hf : P.funs[f]? = some (itcqGenF mp))
     have htw := wt_nat_le t
     exact itcq_swF_spec hsw i.isLt j.isLt ht' (by omega)
   have hM := map_det hmp (c := .list [.nat n, .nat i, .nat j]) hin
-  rw [itcq_swV i j, ← encFun, ← encPerm_eq_encFun] at hM
+  erw [itcq_swV i j] at hM
+  rw [← encFun, ← encPerm_eq_encFun] at hM
   -- the body
   set A := Val.list [.list [.nat n, natList (List.range m)], .nat g]
   have hA1 : (Val.list [.nat n, natList (List.range m)]).wt ≤ A.wt := st_wt_mem (by simp [A])

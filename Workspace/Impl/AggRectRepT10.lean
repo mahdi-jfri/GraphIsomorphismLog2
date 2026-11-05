@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepT9
+module
+
+public import Workspace.Impl.AggRectRepT9
+
+@[expose] public section
 
 /-!
 # Shared facts for the two cases of the program

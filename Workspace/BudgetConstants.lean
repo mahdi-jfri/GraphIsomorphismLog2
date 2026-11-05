@@ -1,4 +1,8 @@
-import Workspace.JohnsonNumerics
+module
+
+public import Workspace.JohnsonNumerics
+
+@[expose] public section
 
 namespace GI
 

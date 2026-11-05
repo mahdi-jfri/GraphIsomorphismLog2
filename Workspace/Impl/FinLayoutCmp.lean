@@ -1,6 +1,10 @@
-import Workspace.Impl.FinLayoutCert
-import Workspace.Impl.AggCmpRun
-import Workspace.Impl.FinLayoutItemsHand
+module
+
+public import Workspace.Impl.FinLayoutCert
+public import Workspace.Impl.AggCmpRun
+public import Workspace.Impl.FinLayoutItemsHand
+
+@[expose] public section
 
 /-!
 # The comparison phase in the final program
@@ -37,8 +41,8 @@ namespace GI.Impl
 
 open GI.Algorithm GI.Assembly GI.Lang Equiv Equiv.Perm
 open GI.Cited (Val PointwiseStab Preimage NormalizedFactor Membership MinimalBlocks GroupOrder
-  CameronRecognition ChiefSeriesAlgo DerivedSubgroup QuotientCentralizer NormalizedIntersection
-  SylowAlgo SylowConjugate NormalClosure)
+  CameronRecognition DerivedSubgroup NormalizedIntersection
+  NormalClosure)
 
 set_option maxRecDepth 100000
 set_option linter.unusedSimpArgs false
@@ -148,9 +152,9 @@ theorem fcm_setAt {P : Program} {F : Funs} {hst : PointwiseStab} {hm : Membershi
 section Asm
 
 variable {hst : PointwiseStab} {hm : Membership} {hpre : Preimage} {hfac : NormalizedFactor}
-  {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition} {hcs : ChiefSeriesAlgo}
-  {hder : DerivedSubgroup} {hqc : QuotientCentralizer} {hni : NormalizedIntersection}
-  {hsy : SylowAlgo} {hsc : SylowConjugate} {hnc : NormalClosure}
+  {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition}
+  {hder : DerivedSubgroup} {hni : NormalizedIntersection}
+  {hnc : NormalClosure}
   {ext : List Prim} {recF labF jF : List Expr}
 
 /-- **The comparison phase in the final program.** For every interface `I`, the entry `fcmE` at
@@ -159,11 +163,11 @@ variable {hst : PointwiseStab} {hm : Membership} {hpre : Preimage} {hfac : Norma
 and `0`. -/
 theorem fag_asCompOK (I : Iface) (hF : FlcFits recF labF jF) {crE itE : Expr}
     {crF itF : List Expr} (hcr : crF.length ≤ fagCmOff - fagCrOff) :
-    AsCompOK I (fagProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc ext recF labF jF
+    AsCompOK I (fagProg hst hm hpre hfac hmb hO hC hder hni hnc ext recF labF jF
       crE fcmE itE crF fcmF itF) asmF asHandImpl (cmRunX hst hpre hm) (asb 3) := by
   obtain ⟨-, -, h3, -, -, -, hcm, -⟩ := fag_hasAt (hst := hst) (hm := hm) (hpre := hpre)
-    (hfac := hfac) (hmb := hmb) (hO := hO) (hC := hC) (hcs := hcs) (hder := hder) (hqc := hqc)
-    (hni := hni) (hsy := hsy) (hsc := hsc) (hnc := hnc) (ext := ext) hF (crE := crE)
+    (hfac := hfac) (hmb := hmb) (hO := hO) (hC := hC) (hder := hder)
+    (hni := hni) (hnc := hnc) (ext := ext) hF (crE := crE)
     (cmE := fcmE) (itE := itE) (itF := itF) ⟨hcr, fcm_fits⟩
   -- `fitm_cmAsCompOKB`: the hand-over of the items is `ItHandB` (`asHandImpl`)
   exact fitm_cmAsCompOKB I _ asmF hst hpre hm asHandImpl (fcm_setAt rfl h3 hcm rfl rfl)

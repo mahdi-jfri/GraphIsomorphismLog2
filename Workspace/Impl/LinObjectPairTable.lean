@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectLocal
+module
+
+public import Workspace.Impl.LinObjectLocal
+
+@[expose] public section
 
 /-! The pair table used to find coordinates in one abelian layer.
 Every recursive call has fuel zero. No object-glue hypothesis is used. -/
@@ -46,7 +50,7 @@ theorem linObjectPairTable_spec {P : Program} {b jsci jder jmem n M : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hm : Membership}
     (h : linObjectPairTableAt P b jsci jder jmem hsci hder hm)
     (as ns : List (Perm (Fin n))) (Ps : List (List (TmRiO n)))
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : TmRiListNorm (gens as) Ps.flatten) (hNA : gens ns ≤ gens as)
     (hNn : GI.Multicoset.Normalizes (gens as) (gens ns))
     (hc : ∀ a ∈ gens as, ∀ b ∈ gens as, a * b * a⁻¹ * b⁻¹ ∈ gens ns)
     (hal : as.length ≤ n ^ 2) (hPs : ∀ S ∈ Ps, TmRiPc as ns M S)
@@ -76,7 +80,7 @@ theorem linObjectPairTable_spec {P : Program} {b jsci jder jmem n M : ℕ}
     intro a ha b hb
     simpa only [commutatorElement_def] using hc a ha b hb
   have ht := tmRi_table_spec h.orbit.inner (linOrbitZero_spec h.orbit.inner)
-    hsol hal hal hNA hNn hA hFuel (by omega) hPs hok
+    hsol (Kg := 0) (Dg := 0) (Or.inl ⟨rfl, le_rfl⟩) hal hal hNA hNn hA (Or.inl hFuel) (by omega) hPs hok
     (fun S hS o ho => List.mem_flatten.mpr ⟨S, hS, ho⟩) hw
   have dA := Det.arg' (P := P) (vs := [encGroup as, encGroup ns, pv]) (rest := []) (j := 0) rfl
   have dP := Det.arg' (P := P) (vs := [encGroup as, encGroup ns, pv]) (rest := []) (j := 2) rfl

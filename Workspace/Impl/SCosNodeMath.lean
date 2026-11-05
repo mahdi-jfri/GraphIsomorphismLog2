@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosSpec
+module
+
+public import Workspace.Impl.SCosSpec
+
+@[expose] public section
 
 /-!
 # The mathematics of functions 0–3
@@ -32,7 +36,7 @@ theorem mem_scosPhiF {Φ : Finset (Fin n)} {i : Fin (n + n)} :
 open Classical in
 theorem scosNode_indF (Φ : Finset (Fin n)) (i : Fin (n + n)) :
     indF (Equiv.refl (Fin (n + n))) (scosPhiF Φ) i = if i ∈ scosPhiF Φ then 1 else 0 := by
-  simp [indF]
+  simp [indF]; congr
 
 theorem length_scosNodeL (Φ : Finset (Fin n)) : (scosNodeL Φ).length = n + n := by
   simp [scosNodeL]
@@ -71,9 +75,8 @@ theorem scosNode_findIdx {Φ : Finset (Fin n)} (hne : Φ.Nonempty) :
     simp [scosNodeL]
   rw [e1, scosNode_indF] at hget
   split_ifs at hget with h
-  · obtain ⟨a₀, ha₀, he⟩ := mem_scosPhiF.mp h
-    exact ⟨a₀, ha₀, by rw [he]⟩
-  · simp at hget
+  obtain ⟨a₀, ha₀, he⟩ := mem_scosPhiF.mp h
+  exact ⟨a₀, ha₀, by rw [he]⟩
 
 /-- `a ⊕ b` maps `Fin.castAdd n i` to `Fin.castAdd n (a i)`. -/
 theorem scosNode_nintSum_castAdd (p : ScosPair n) (i : Fin n) :
@@ -205,7 +208,8 @@ theorem scosNode_sub {Φ O : Finset (Fin n)} (hO : O ⊆ Φ) (i : Fin (n + n)) :
 /-- A subgroup of a solvable group of permutations is solvable. -/
 theorem scosNode_solv {𝒢 K : Subgroup (ScosPair n)} (hK : K ≤ 𝒢)
     (h : IsSolvable (𝒢.map (MonoidHom.fst (Perm (Fin n)) (Perm (Fin n))))) :
-    IsSolvable (K.map (MonoidHom.fst (Perm (Fin n)) (Perm (Fin n)))) :=
-  solvable_of_solvable_injective (Subgroup.inclusion_injective (Subgroup.map_mono hK))
+    IsSolvable (K.map (MonoidHom.fst (Perm (Fin n)) (Perm (Fin n)))) := by
+  haveI : Group.IsSolvable (𝒢.map (MonoidHom.fst (Perm (Fin n)) (Perm (Fin n)))) := h
+  exact solvable_of_solvable_injective (Subgroup.inclusion_injective (Subgroup.map_mono hK))
 
 end GI.Impl

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJPair
+module
+
+public import Workspace.Impl.TermJPair
+
+@[expose] public section
 
 /-!
 # A type matching read off from a 0/1 matrix (the matching of the `J`-step)

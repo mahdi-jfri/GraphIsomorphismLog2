@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertTrans
+module
+
+public import Workspace.Impl.AggCertTrans
+
+@[expose] public section
 
 /-!
 # The start of a round with a nonempty increment, on program data

@@ -1,5 +1,9 @@
-import Workspace.Impl.RowA18Link
-import Workspace.Lang.Lib.Orbit
+module
+
+public import Workspace.Impl.RowA18Link
+public import Workspace.Lang.Lib.Orbit
+
+@[expose] public section
 
 /-!
 # The case choice of the row step, in `GI.Lang`

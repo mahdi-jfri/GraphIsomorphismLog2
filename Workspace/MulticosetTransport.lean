@@ -1,21 +1,25 @@
-import Workspace.MulticosetSolvable
-import Workspace.MulticosetSupplement
-import Workspace.Cited.DixonDerivedLength
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.Complex.ExponentialBounds
+module
+
+public import Workspace.MulticosetSolvable
+public import Workspace.MulticosetSupplement
+public import Workspace.Cited.DixonDerivedLength
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.Complex.ExponentialBounds
+
+@[expose] public section
 
 /-!
-# Theorem A.20 at top level: supplement, recursion, final lift, and the bound
+# Theorem A.20 at top level: recursion and the derived-length bound via Lemma A.19
 
 `solvableTransport H N X Y` is the procedure of the proof of Theorem A.20:
-"Apply Lemma A.19, replace `(H, N)` by `(S, S ∩ N)`, and remember the old kernel for the
-final lift". The recursion `proc` runs with fuel the derived length of the acting quotient
-`S/(S ∩ N)` (`quotLength`), and the answer is multiplied by `N` ("adjoining `N` recovers the
-full transporter in `H`").
+the recursion `proc` runs on `(H, N)` with fuel the derived length of the acting quotient
+`H/N` (`quotLength H N`).
 
-The count of calls is at most `(4M³ + 2)^ℓ`, and Dixon's bound gives `ℓ ≤ 5 log₃ b + 1`
-(`GI.Cited.DixonDerivedLength`), so the count is `exp(O(log(b+M+2) log(b+2)))`.
+By Lemma A.19 (`exists_solvable_supplement_descent`), `H` has a solvable subgroup `S ≤ H`
+with `S N = H`, so `S` surjects onto `H/N`. The count of calls is at most `(4M³ + 2)^ℓ`,
+and Dixon's bound on `S` gives `ℓ ≤ 5 log₃ b + 1` (`GI.Cited.DixonDerivedLength`), so the
+count is `exp(O(log(b+M+2) log(b+2)))`.
 -/
 
 namespace GI.Multicoset
@@ -58,13 +62,13 @@ theorem derivedSeries_quot_le {H N : Subgroup G} [(N.subgroupOf H).Normal] :
 
 /-- "`H/N` is solvable" in the cover: some `relDerived H N ℓ ≤ N`. -/
 theorem isSolvable_quot_of_relDerived {H N : Subgroup G} [(N.subgroupOf H).Normal] {ℓ : ℕ}
-    (h : relDerived H N ℓ ≤ N) : IsSolvable (H ⧸ N.subgroupOf H) := by
+    (h : relDerived H N ℓ ≤ N) : Group.IsSolvable (H ⧸ N.subgroupOf H) := by
   refine ⟨⟨ℓ, eq_bot_iff.mpr ((derivedSeries_quot_le ℓ).trans ?_)⟩⟩
   rintro _ ⟨x, hx, rfl⟩
   exact (QuotientGroup.eq_one_iff _).mpr (h hx)
 
 theorem exists_relDerived_of_isSolvable {H N : Subgroup G} (hNH : N ≤ H)
-    [(N.subgroupOf H).Normal] [IsSolvable (H ⧸ N.subgroupOf H)] :
+    [(N.subgroupOf H).Normal] [Group.IsSolvable (H ⧸ N.subgroupOf H)] :
     ∃ ℓ, relDerived H N ℓ ≤ N :=
   ⟨_, relDerived_le_of_derivedSeries hNH (derivedSeries_derivedLength _)⟩
 
@@ -84,19 +88,17 @@ theorem quotLength_le {H N : Subgroup G} {k : ℕ} (h : relDerived H N k ≤ N) 
 
 /-- The solvable supplement of Lemma A.19 (any `S ≤ H`, solvable, with `S N = H`). -/
 noncomputable def supplement (H N : Subgroup G) : Subgroup G :=
-  if h : ∃ S : Subgroup G, S ≤ H ∧ IsSolvable S ∧ S ⊔ N = H then h.choose else H
+  if h : ∃ S : Subgroup G, S ≤ H ∧ Group.IsSolvable S ∧ S ⊔ N = H then h.choose else H
 
-/-- **The procedure of Theorem A.20.** Restrict to the solvable supplement `S`, run the
-recursion with kernel `S ∩ N`, and adjoin `N`. -/
+/-- **The procedure of Theorem A.20.** Run the recursion on `(H, N)` with fuel the derived
+length of `H/N`. -/
 noncomputable def solvableTransport {Ω : Type u} [RAct G Ω] (H N : Subgroup G)
     (X Y : Multiset Ω) : Out G :=
-  let S := supplement H N
-  let r := proc (quotLength S (S ⊓ N)) S (S ⊓ N) X Y
-  ⟨{h | ∃ n ∈ N, ∃ s ∈ r.set, h = n * s}, r.calls⟩
+  proc (quotLength H N) H N X Y
 
 theorem supplement_spec [Finite G] {H N : Subgroup G} (hNH : N ≤ H) (hn : Normalizes H N)
     (hsolv : ∃ ℓ, relDerived H N ℓ ≤ N) :
-    supplement H N ≤ H ∧ IsSolvable (supplement H N) ∧ supplement H N ⊔ N = H := by
+    supplement H N ≤ H ∧ Group.IsSolvable (supplement H N) ∧ supplement H N ⊔ N = H := by
   haveI := normal_of_normalizes hn
   obtain ⟨ℓ, hℓ⟩ := hsolv
   haveI := isSolvable_quot_of_relDerived hℓ
@@ -104,67 +106,61 @@ theorem supplement_spec [Finite G] {H N : Subgroup G} (hNH : N ≤ H) (hn : Norm
   rw [supplement, dif_pos hex]
   exact hex.choose_spec
 
-/-- The recursion on `(S, S ∩ N)` is set up correctly. -/
-theorem supplement_relDerived [Finite G] {H N : Subgroup G} (hNH : N ≤ H)
-    (hn : Normalizes H N) (hsolv : ∃ ℓ, relDerived H N ℓ ≤ N) :
-    relDerived (supplement H N) (supplement H N ⊓ N)
-      (quotLength (supplement H N) (supplement H N ⊓ N)) ≤ supplement H N ⊓ N := by
-  obtain ⟨hSH, _, _⟩ := supplement_spec hNH hn hsolv
-  apply quotLength_spec
-  obtain ⟨ℓ, hℓ⟩ := hsolv
-  refine ⟨ℓ, le_inf (relDerived_le inf_le_left ℓ) ?_⟩
-  exact (relDerived_mono hNH hSH (inf_le_right.trans (le_relDerived hNH ℓ)) ℓ le_rfl).trans hℓ
-
 /-- **Correctness of Theorem A.20's procedure**: it returns the full transporter
 `Iso_H(X, Y)`, for a kernel `N ◁ H` with `H/N` solvable fixing every listed object. -/
 theorem solvableTransport_set [Finite G] {Ω : Type u} [RAct G Ω] {H N : Subgroup G}
     (hNH : N ≤ H) (hn : Normalizes H N) (hsolv : ∃ ℓ, relDerived H N ℓ ≤ N)
     {X Y : Multiset Ω} (hX : Fixes N X) (hY : Fixes N Y) :
-    (solvableTransport H N X Y).set = Iso H X Y := by
-  obtain ⟨hSH, _, hSN⟩ := supplement_spec hNH hn hsolv
-  set S := supplement H N
-  have hrec := proc_set (quotLength S (S ⊓ N)) S (S ⊓ N) X Y inf_le_left
-    ((normalizes_self S).inf (hn.mono hSH)) (supplement_relDerived hNH hn hsolv)
-    (hX.mono inf_le_right) (hY.mono inf_le_right)
-  show {h | ∃ n ∈ N, ∃ s ∈ (proc (quotLength S (S ⊓ N)) S (S ⊓ N) X Y).set, h = n * s} = _
-  rw [hrec, iso_eq_kernel_mul_supplement hNH hSH
-    (exists_kernel_mul_of_sup_eq (hn.mono hSH) hSN) hX]
+    (solvableTransport H N X Y).set = Iso H X Y :=
+  proc_set (quotLength H N) H N X Y hNH hn (quotLength_spec hsolv) hX hY
 
 /-! ### The count -/
 
 /-- Derived series of a solvable group of permutations of any finite set, from Dixon's bound
 for `Fin n`. -/
 theorem dixon_perm (dixon : GI.Cited.DixonDerivedLength) {B : Type u} [Fintype B]
-    [DecidableEq B] (S : Subgroup (Equiv.Perm B)) [IsSolvable S] (k : ℕ)
+    [DecidableEq B] (S : Subgroup (Equiv.Perm B)) [Group.IsSolvable S] (k : ℕ)
     (hk : 5 * Real.logb 3 (Fintype.card B) ≤ k) : derivedSeries S k = ⊥ := by
   let e := (Fintype.equivFin B).permCongrHom
   let S' := S.map e.toMonoidHom
   let f : S ≃* S' := S.equivMapOfInjective e.toMonoidHom e.injective
-  haveI : IsSolvable S' := solvable_of_surjective (f := f.toMonoidHom) f.surjective
-  have h' := dixon (Fintype.card B) S' inferInstance k hk
+  have hS' : Group.IsSolvable S' := Group.isSolvable_of_surjective (f := f.toMonoidHom) f.surjective
+  have h' := dixon (Fintype.card B) S' hS' k hk
   have := map_derivedSeries_eq (f := f.symm.toMonoidHom) f.symm.surjective k
   rw [h', Subgroup.map_bot] at this
   exact this.symm
 
-theorem relDerived_le_of_solvable {S M : Subgroup G} (hMS : M ≤ S) (hn : Normalizes S M) {k : ℕ}
-    (h : derivedSeries S k = ⊥) : relDerived S M k ≤ M := by
+theorem relDerived_le_of_supplement {H N S : Subgroup G} (hNH : N ≤ H) (hSH : S ≤ H)
+    (hn : Normalizes H N) (hSN : S ⊔ N = H) {k : ℕ} (h : derivedSeries S k = ⊥) :
+    relDerived H N k ≤ N := by
   haveI := normal_of_normalizes hn
-  apply relDerived_le_of_derivedSeries hMS
-  rw [← map_derivedSeries_eq (QuotientGroup.mk'_surjective (M.subgroupOf S)) k, h,
-    Subgroup.map_bot]
+  apply relDerived_le_of_derivedSeries hNH
+  let ψ : S →* H ⧸ N.subgroupOf H :=
+    (QuotientGroup.mk' (N.subgroupOf H)).comp (Subgroup.inclusion hSH)
+  have hψ : Function.Surjective ψ := by
+    intro q
+    obtain ⟨⟨x, hx⟩, rfl⟩ := QuotientGroup.mk'_surjective (N.subgroupOf H) q
+    obtain ⟨n, hnN, s, hsS, rfl⟩ := exists_kernel_mul_of_sup_eq (hn.mono hSH) hSN x hx
+    refine ⟨⟨s, hsS⟩, ?_⟩
+    change QuotientGroup.mk' (N.subgroupOf H) ⟨s, hSH hsS⟩ =
+      QuotientGroup.mk' (N.subgroupOf H) ⟨n * s, hx⟩
+    have hmul : (⟨n * s, hx⟩ : H) = ⟨n, hNH hnN⟩ * ⟨s, hSH hsS⟩ := rfl
+    have hn1 : QuotientGroup.mk' (N.subgroupOf H) ⟨n, hNH hnN⟩ = 1 :=
+      (QuotientGroup.eq_one_iff _).mpr hnN
+    rw [hmul, map_mul, hn1, one_mul]
+  rw [← map_derivedSeries_eq hψ k, h, Subgroup.map_bot]
 
 /-- The recursion depth: `ℓ ≤ 5 log₃ b + 1`, from Dixon's bound for the solvable supplement. -/
 theorem solvableTransport_depth {B : Type u} [Fintype B] [DecidableEq B]
     (dixon : GI.Cited.DixonDerivedLength) {H N : Subgroup (Equiv.Perm B)} (hNH : N ≤ H)
     (hn : Normalizes H N) (hsolv : ∃ ℓ, relDerived H N ℓ ≤ N) :
-    (quotLength (supplement H N) (supplement H N ⊓ N) : ℝ) ≤
+    (quotLength H N : ℝ) ≤
       5 * Real.logb 3 (Fintype.card B) + 1 := by
-  obtain ⟨_, hS, _⟩ := supplement_spec hNH hn hsolv
+  obtain ⟨hSH, hS, hSN⟩ := supplement_spec hNH hn hsolv
   set k := ⌈5 * Real.logb 3 (Fintype.card B)⌉₊
   have hk := dixon_perm dixon (supplement H N) k (Nat.le_ceil _)
-  have hle := quotLength_le (relDerived_le_of_solvable inf_le_left
-    ((normalizes_self _).inf (hn.mono (supplement_spec hNH hn hsolv).1)) hk)
-  calc (quotLength (supplement H N) (supplement H N ⊓ N) : ℝ) ≤ k := by exact_mod_cast hle
+  have hle := quotLength_le (relDerived_le_of_supplement hNH hSH hn hSN hk)
+  calc (quotLength H N : ℝ) ≤ k := by exact_mod_cast hle
     _ ≤ _ := (Nat.ceil_lt_add_one (by
         have h0 : 0 ≤ Real.logb 3 (Fintype.card B : ℝ) := by
           rcases Nat.eq_zero_or_pos (Fintype.card B) with h | h

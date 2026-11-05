@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQTSplitM
+module
+
+public import Workspace.Impl.VsQTSplitM
+
+@[expose] public section
 
 /-!
 # The split program for a tuple of local subspaces

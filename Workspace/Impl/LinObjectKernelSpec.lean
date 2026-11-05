@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectKernelStep
-import Workspace.Impl.LinObjectKernelMath
+module
+
+public import Workspace.Impl.LinObjectKernelStep
+public import Workspace.Impl.LinObjectKernelMath
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -10,7 +14,9 @@ theorem linObjectKernel_spec {P : Program} {b jsci n : ℕ} {hs : SolvableCosetI
     (h : linObjectKernelAt P b jsci hs) (as : List (Equiv.Perm (Fin n)))
     (Bs : List (Subgroup (Equiv.Perm (Fin n)))) (groups : List Val)
     (hgroups : List.Forall₂ (fun B v => GroupValC n v B) Bs groups)
-    (hsol : IsSolvable (gens as)) (hal : as.length ≤ n ^ 2) :
+    (N : Subgroup (Equiv.Perm (Fin n))) (hNA : N ≤ gens as)
+    (hcomm : ∀ a ∈ gens as, ∀ b ∈ gens as, a * b * a⁻¹ * b⁻¹ ∈ N)
+    (hBsN : ∀ B ∈ Bs, N ≤ B) (hBsA : ∀ B ∈ Bs, B ≤ gens as) (hal : as.length ≤ n ^ 2) :
     let input := Val.list [encGroup as,.list groups]
     FunAll P b input (fun out cost =>
       GroupValC n out (linObjectKernelPrefix (gens as) Bs Bs.length) ∧ cost ≤ linObjectKernelCost hs n input.wt) := by
@@ -37,7 +43,8 @@ theorem linObjectKernel_spec {P : Program} {b jsci n : ℕ} {hs : SolvableCosetI
       have hget : groups[i]? = some bv := by simp [bv,j]
       have hs0 := linObjectKernel_step_spec h as groups acc bv
         (linObjectKernelPrefix (gens as) Bs i) (Bs.get j) hget hinv hbv
-        (linObjectKernelPrefix_solvable (gens as) hsol Bs i)
+        (linObjectKernelPrefix_normalizes N (gens as) Bs hNA hcomm hBsN i
+          (hBsA (Bs.get j) (List.get_mem _ _)))
       exact hs0.mono fun out cost hout => ⟨by
         change GroupValC n out (linObjectKernelPrefix (gens as) Bs (j.val + 1))
         rw [linObjectKernelPrefix_succ (gens as) Bs j]
@@ -54,14 +61,27 @@ theorem linObjectKernel_aut_spec {P : Program} {b jsci n : ℕ} {hs : SolvableCo
     (Y : List (TmRiO n)) (groups : List Val)
     (hgroups : List.Forall₂ (fun S v => GroupValC n v (GI.Multicoset.Aut (gens as) (tmGlMs S)))
       (tmRiPcsO (gens as) Y) groups)
-    (hsol : IsSolvable (gens as)) (hal : as.length ≤ n ^ 2) :
+    (ns : List (Equiv.Perm (Fin n))) (hNA : gens ns ≤ gens as)
+    (hcomm : ∀ a ∈ gens as, ∀ b ∈ gens as, a * b * a⁻¹ * b⁻¹ ∈ gens ns)
+    (hfix : GI.Multicoset.Fixes (gens ns) (tmGlMs Y)) (hal : as.length ≤ n ^ 2) :
     let input := Val.list [encGroup as,.list groups]
     FunAll P b input (fun out cost => GroupValC n out (GI.Multicoset.Aut (gens as) (tmGlMs Y)) ∧
       cost ≤ linObjectKernelCost hs n input.wt) := by
   have hBs : List.Forall₂ (fun B v => GroupValC n v B)
       ((tmRiPcsO (gens as) Y).map fun S => GI.Multicoset.Aut (gens as) (tmGlMs S)) groups := by
     simpa only [List.forall₂_map_left_iff] using hgroups
-  have hr := linObjectKernel_spec h as _ groups hBs hsol hal
+  have hBsN : ∀ B ∈ (tmRiPcsO (gens as) Y).map (fun S => GI.Multicoset.Aut (gens as) (tmGlMs S)),
+      gens ns ≤ B := by
+    intro B hB
+    obtain ⟨S, hS, rfl⟩ := List.mem_map.mp hB
+    have hfixS : GI.Multicoset.Fixes (gens ns) (tmGlMs S) := (tmRiPcsO_pc le_rfl hfix hS).1.2.2.2
+    exact fun g hg => ⟨hNA hg, hfixS.act_eq hg⟩
+  have hBsA : ∀ B ∈ (tmRiPcsO (gens as) Y).map (fun S => GI.Multicoset.Aut (gens as) (tmGlMs S)),
+      B ≤ gens as := by
+    intro B hB
+    obtain ⟨S, _, rfl⟩ := List.mem_map.mp hB
+    exact GI.Multicoset.aut_le (gens as) (tmGlMs S)
+  have hr := linObjectKernel_spec h as _ groups hBs (gens ns) hNA hcomm hBsN hBsA hal
   simpa only [List.length_map,linObjectKernel_aut_eq] using hr
 
 theorem linObjectKernel_uniform (hs : SolvableCosetIntersection) :

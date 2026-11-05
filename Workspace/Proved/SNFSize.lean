@@ -1,4 +1,8 @@
-import Workspace.Proved.SNFMath
+module
+
+public import Workspace.Proved.SNFMath
+
+@[expose] public section
 
 /-!
 # Sizes of the numbers in the Smith form algorithm
@@ -230,7 +234,7 @@ theorem snfFix_bits {E B : ℕ} (hE2 : 2 ≤ E) (hnE : n ≤ E) {A : _root_.Matr
     have := snf_diag_le hD' hpos' i j
     omega
   induction k with
-  | zero => exact ⟨hHE 0 hk, by simpa using hPB, by simpa using hQB⟩
+  | zero => exact ⟨hHE 0 hk, by simpa [snfFix] using hPB, by simpa [snfFix] using hQB⟩
   | succ k ih =>
     obtain ⟨-, hP1, hQ1⟩ := ih (by omega)
     obtain ⟨-, hpos', -, -⟩ := snfFix_inv hD hpos k (by omega)

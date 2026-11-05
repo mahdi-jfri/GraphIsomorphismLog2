@@ -1,6 +1,10 @@
-import Workspace.Impl.Cases
-import Workspace.Lang.Lib.NatList
-import Workspace.Lang.Prims.Ops
+module
+
+public import Workspace.Impl.Cases
+public import Workspace.Lang.Lib.NatList
+public import Workspace.Lang.Prims.Ops
+
+@[expose] public section
 
 /-!
 # A largest orbit, in `GI.Lang`

@@ -1,6 +1,10 @@
-import Workspace.CleanComplementOldRows
-import Workspace.CleanComplementEven
-import Workspace.CleanComplementTransport
+module
+
+public import Workspace.CleanComplementOldRows
+public import Workspace.CleanComplementEven
+public import Workspace.CleanComplementTransport
+
+@[expose] public section
 
 /-! Combine the old-block construction and the localized even extension in
 the original supplied group. The only local inputs are actual localized elements. -/

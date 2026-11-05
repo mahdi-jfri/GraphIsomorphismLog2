@@ -1,5 +1,9 @@
-import Workspace.RowNormalForm
-import Mathlib.GroupTheory.QuotientGroup.Basic
+module
+
+public import Workspace.RowNormalForm
+public import Mathlib.GroupTheory.QuotientGroup.Basic
+
+@[expose] public section
 
 open scoped commutatorElement
 

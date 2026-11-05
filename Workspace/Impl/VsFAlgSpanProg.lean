@@ -1,4 +1,8 @@
-import Workspace.Impl.VsFAlgSpanFold
+module
+
+public import Workspace.Impl.VsFAlgSpanFold
+
+@[expose] public section
 
 /-!
 # The algebra basis program
@@ -193,7 +197,7 @@ theorem vsFAlgSpan_spec {P : Program} {b : ℕ} (h : P.HasAt b (vsFAlgSpanFuns b
   have hs0' : s0 = vsFAInner p z I (([], []), []) I := rfl
   have hf0 : VsFAFits p N d 1 s0 := by
     have := vsFAFold_fits hp hpN hzb hzl hdN hI [I] 0 _ h0
-    simpa using this
+    simpa only [List.length_singleton, Nat.zero_add, List.foldl_cons, List.foldl_nil, hs0'] using this
   set A := vsFAlgSpanArg p gs z I
   have wz := wt_natList_le_sq (fun y hy => (hzb y hy).le.trans hpN) (hzl.trans_le hd)
   have wg := wt_vsFMatsVal_le hpN hd hgs (by omega)

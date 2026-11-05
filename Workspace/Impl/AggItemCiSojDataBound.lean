@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojRepWt
+module
+
+public import Workspace.Impl.AggItemCiSojRepWt
+
+@[expose] public section
 
 /-! # The physical-data call is bounded by the paid representation value -/
 

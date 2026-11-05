@@ -1,5 +1,9 @@
-import Workspace.CoherentValencies
-import Workspace.RegularMatrixIndependent
+module
+
+public import Workspace.CoherentValencies
+public import Workspace.RegularMatrixIndependent
+
+@[expose] public section
 
 namespace GI.PairRefinement
 

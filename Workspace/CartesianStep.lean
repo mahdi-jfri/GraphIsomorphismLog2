@@ -1,5 +1,9 @@
-import Workspace.ComponentLocalization
-import Workspace.QuotientImage
+module
+
+public import Workspace.ComponentLocalization
+public import Workspace.QuotientImage
+
+@[expose] public section
 
 namespace GI.CartesianCover
 
@@ -44,7 +48,7 @@ theorem visible_step_split {v : I → D} {k : ℕ}
     have hkilled : (c.rowProject v).ker ≤ q.ker := by
       intro h hh
       have hm : q h ∈ Kv.map q := Subgroup.mem_map_of_mem q hh
-      simpa only [hbot, Subgroup.mem_bot] using hm
+      simpa only [hbot, Subgroup.mem_bot, MonoidHom.mem_ker] using hm
     have z := QuotientImage.step (c.rowProject v) q N hq hk hkilled
     change AlternatingQuotientStep (c.rowProject v).range
       (((L.comap H.subtype).comap R.subtype).map (c.rowProject v)) k at z

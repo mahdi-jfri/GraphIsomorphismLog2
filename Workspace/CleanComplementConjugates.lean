@@ -1,6 +1,10 @@
-import Workspace.CleanComplementLocal
-import Workspace.CleanComplementSplit
-import Workspace.RowTransfers
+module
+
+public import Workspace.CleanComplementLocal
+public import Workspace.CleanComplementSplit
+public import Workspace.RowTransfers
+
+@[expose] public section
 
 /-! Lifted conjugation constructs each needed clean cycle from one actual local pair. -/
 namespace GI

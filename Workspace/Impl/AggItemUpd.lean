@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemSrcP
+module
+
+public import Workspace.Impl.AggItemSrcP
+
+@[expose] public section
 
 /-!
 # Updating the round's free choices during the items

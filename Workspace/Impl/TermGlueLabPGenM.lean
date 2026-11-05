@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPGen
+module
+
+public import Workspace.Impl.TermGlueLabPGen
+
+@[expose] public section
 
 /-!
 # The item of one generator is the contract's item (step 5, math link)

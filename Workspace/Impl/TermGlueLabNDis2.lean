@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabNS5C
-import Workspace.Impl.TermGlueLabPSup
+module
+
+public import Workspace.Impl.TermGlueLabNS5C
+public import Workspace.Impl.TermGlueLabPSup
+
+@[expose] public section
 
 /-!
 # The label driver: discharges of the group, lift and supplement contracts
@@ -77,14 +81,14 @@ theorem tmGLN_SupC_mono (K D : ℕ) {W W' : ℕ} (h : W ≤ W') : tmGLPSupC K D 
   unfold tmGLPSupC
   omega
 
-/-- **Step 4 meets its contract** (T4 at `sup`, cited through `TermSupSpec`). -/
-theorem tmGLN_sup_ok {P : Program} {f inv cp cj mc sup Ks Ds : ℕ}
+/-- **Step 4 meets its contract** (`tailFuns` at `sup`). -/
+theorem tmGLN_sup_ok {P : Program} {f inv cp cj mc sup : ℕ} (Ks Ds : ℕ)
     (hf : P.funs[f]? = some (tmGLPSupF inv mc sup)) (hinv : P.HasAt inv (invFuns inv))
     (hcp : P.HasAt cp (composeFuns cp)) (hcj : P.funs[cj]? = some (supConjF cp))
-    (hmc : P.HasAt mc (mapFuns mc cj)) (hsup : Iface.TermSupSpec P Ks Ds sup) :
+    (hmc : P.HasAt mc (mapFuns mc cj)) (htl : P.HasAt sup (tailFuns sup)) :
     Iface.TmGLNSupOK P f (tmGLPSupC Ks Ds) := by
   intro n σN U hU τ hNR _ hsol B hB
-  refine (tmGLPSup_spec hf hinv hcp hcj hmc hsup hU τ hNR hsol).mono
+  refine (tmGLPSup_spec Ks Ds hf hinv hcp hcj hmc htl hU τ hNR hsol).mono
     fun u c ⟨S, h1, h2, h3, h4, hc⟩ => ⟨S, h1, h2, h3, h4, hc.trans (tmGLN_SupC_mono Ks Ds hB)⟩
 
 end GI.Impl

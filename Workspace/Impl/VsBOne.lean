@@ -1,4 +1,8 @@
-import Workspace.Impl.VsBFld
+module
+
+public import Workspace.Impl.VsBFld
+
+@[expose] public section
 
 /-!
 # The bases `D = 0` and `D = 1`

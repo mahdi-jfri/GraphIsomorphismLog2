@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormOps
-import Workspace.Impl.GenNormCost
+module
+
+public import Workspace.Impl.GenNormOps
+public import Workspace.Impl.GenNormCost
+
+@[expose] public section
 
 /-!
 # One polynomial budget for every normalization preparation stage

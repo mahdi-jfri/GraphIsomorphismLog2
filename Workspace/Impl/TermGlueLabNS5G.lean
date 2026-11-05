@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabNS5
-import Workspace.Impl.TermGlueLabPGenM
+module
+
+public import Workspace.Impl.TermGlueLabNS5
+public import Workspace.Impl.TermGlueLabPGenM
+
+@[expose] public section
 
 /-!
 # The label driver: the facts step 5 needs for each generator of `S`

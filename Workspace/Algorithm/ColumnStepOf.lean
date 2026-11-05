@@ -1,5 +1,9 @@
-import Workspace.Algorithm.DomainRestriction
-import Workspace.Paper.NormalTranspose
+module
+
+public import Workspace.Algorithm.DomainRestriction
+public import Workspace.Paper.NormalTranspose
+
+@[expose] public section
 
 /-!
 # Tools for the column step (Lemma A.14 with Theorem A.18)

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggChoice
-import Workspace.Impl.AggClos
+module
+
+public import Workspace.Impl.AggChoice
+public import Workspace.Impl.AggClos
+
+@[expose] public section
 
 /-!
 # The cache of coset representatives

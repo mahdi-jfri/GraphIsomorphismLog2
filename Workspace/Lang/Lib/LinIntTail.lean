@@ -1,5 +1,9 @@
-import Workspace.Lang.Lib.LinIntMatrix
-import Workspace.Lang.Lib.SmallGroup
+module
+
+public import Workspace.Lang.Lib.LinIntMatrix
+public import Workspace.Lang.Lib.SmallGroup
+
+@[expose] public section
 
 namespace GI.Lang
 open GI.Cited (Val encInt encIntMatrix)

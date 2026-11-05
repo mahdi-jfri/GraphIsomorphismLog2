@@ -1,6 +1,10 @@
-import Workspace.Impl.AggStructMath
-import Workspace.Impl.AggCacheProg
-import Workspace.Lang.Prims.Other
+module
+
+public import Workspace.Impl.AggStructMath
+public import Workspace.Impl.AggCacheProg
+public import Workspace.Lang.Prims.Other
+
+@[expose] public section
 
 /-!
 # The tuple colorings of the two strings, as a program
@@ -181,8 +185,10 @@ theorem stMap_spec {Pg : Program} {b brel : ℕ} (hb : Pg.HasAt b (stColsFuns b 
       (.list [.list [cv, .list ((stTs q κ).map tv), .nat z], .list ((stTs q κ).map tv)])
       (encKColoring (stCz R z)) (stMapCost Bc M) := by
   have hmap : Pg.HasAt (b + 1) (mapFuns (b + 1) (b + 4)) := hb.left.left.right
-  have hf : Pg.funs[b + 4]? = some (stColF (b + 5)) := by simpa using hb.left.right.single
-  have hfind : Pg.HasAt (b + 5) (findFuns (b + 5) brel) := by simpa using hb.right
+  have hf : Pg.funs[b + 4]? = some (stColF (b + 5)) := by
+    simpa [mapFuns, loopFuns, Nat.add_assoc] using hb.left.right.single
+  have hfind : Pg.HasAt (b + 5) (findFuns (b + 5) brel) := by
+    simpa [mapFuns, loopFuns, Nat.add_assoc] using hb.right
   set tsV := (stTs q κ).map tv with htsV
   set c := Val.list [cv, .list tsV, .nat z] with hc
   have hwl := sum_wt_lt_wt_list [cv, .list tsV]

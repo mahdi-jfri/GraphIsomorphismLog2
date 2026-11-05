@@ -1,5 +1,9 @@
-import Workspace.Impl.VsQTKeyP
-import Workspace.Proved.VsQSplitC
+module
+
+public import Workspace.Impl.VsQTKeyP
+public import Workspace.Proved.VsQSplitC
+
+@[expose] public section
 
 /-!
 # The split from the tuple transporter

@@ -1,6 +1,10 @@
-import Workspace.SolvableSupplement
-import Mathlib.GroupTheory.Subgroup.Centralizer
-import Mathlib.GroupTheory.GroupAction.ConjAct
+module
+
+public import Workspace.SolvableSupplement
+public import Mathlib.GroupTheory.Subgroup.Centralizer
+public import Mathlib.GroupTheory.GroupAction.ConjAct
+
+@[expose] public section
 
 namespace GI.RadicalSocle
 

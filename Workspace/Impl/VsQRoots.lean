@@ -1,10 +1,14 @@
-import Workspace.Impl.VsQPoly
-import Workspace.Impl.VsBFld
-import Workspace.Impl.VsBOrb
-import Workspace.Impl.VsQApp
-import Workspace.Impl.VsQPaste
-import Workspace.Impl.VsQPhi
-import Workspace.Impl.VsQLink
+module
+
+public import Workspace.Impl.VsQPoly
+public import Workspace.Impl.VsBFld
+public import Workspace.Impl.VsBOrb
+public import Workspace.Impl.VsQApp
+public import Workspace.Impl.VsQPaste
+public import Workspace.Impl.VsQPhi
+public import Workspace.Impl.VsQLink
+
+@[expose] public section
 
 /-!
 # The layout of the whole program

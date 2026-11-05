@@ -1,4 +1,8 @@
-import Workspace.Impl.AggPre
+module
+
+public import Workspace.Impl.AggPre
+
+@[expose] public section
 
 /-!
 # The pointwise stabilizer on a list of label pairs, in `GI.Lang`

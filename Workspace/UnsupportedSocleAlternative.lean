@@ -1,6 +1,10 @@
-import Workspace.SocleSimpleAlternative
-import Workspace.PrimitiveSubdirectDegree
-import Workspace.PrimitiveTwoNormalDegree
+module
+
+public import Workspace.SocleSimpleAlternative
+public import Workspace.PrimitiveSubdirectDegree
+public import Workspace.PrimitiveTwoNormalDegree
+
+@[expose] public section
 
 namespace GI.BudgetInduction
 

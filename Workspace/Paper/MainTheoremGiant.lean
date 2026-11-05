@@ -1,6 +1,10 @@
-import Workspace.Algorithm.SupplyBuild
-import Workspace.Paper.RunExistence
-import Workspace.Paper.MainTheoremRoots
+module
+
+public import Workspace.Algorithm.SupplyBuild
+public import Workspace.Paper.RunExistence
+public import Workspace.Paper.MainTheoremRoots
+
+@[expose] public section
 
 /-!
 # The main theorems from the giant-step data alone
@@ -39,9 +43,9 @@ theorem run_exists_giant (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
 /-- **Theorem 1.2 at stage 1, for every run, given the giant-step data** (`thm:main-string`).
 The hypotheses are those of `thm_main_string_stage1'`, with `GiantSupply P` and
 `Params.EnumeratesBounded` in place of `Supply P`. -/
-theorem thm_main_string_stage1_giant (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
-    (ha128 : 128 ≤ P.a) (hE : P.EnumeratesBounded) (Gs : GiantSupply P)
-    (hAut : GI.Cited.AutCardLeSq) (hLie : GI.Cited.SimpleValuationDegree) (hκ : 64 ≤ P.κ)
+theorem thm_main_string_stage1_giant
+    (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
+    (ha128 : 128 ≤ P.a) (hE : P.EnumeratesBounded) (Gs : GiantSupply P) (hκ : 64 ≤ P.κ)
     {cc : ChargingConstants} (hc : Compat P cc) (hαγ : 2 * P.α ≤ P.γ) (hbase : AboveBase P cc)
     {w : Node P → ℝ} {cw : ℝ} (hw : NodeBound' w cw) (hcw : 0 ≤ cw) (ha : P.a + 1 ≤ cc.a) :
     ∃ C' : ℝ, ∀ {Ω C : Type} [Finite Ω] (S : State Ω C),
@@ -50,15 +54,15 @@ theorem thm_main_string_stage1_giant (hP : P.Terminating) (hM : GI.Cited.MarotiP
         (A = {g | g ∈ S.G ∧ ∀ v ∈ S.dom, S.y (g v) = S.x v} ∧
           (A = ∅ ∨ ∃ t ∈ S.G, A = t • (autGroup S.G S.dom S.dom_inv S.x : Set (Perm Ω)))) ∧
         r.total w ≤ Real.exp (C' * Real.log ((S.size : ℝ) + 2) ^ 2) :=
-  thm_main_string_stage1' hP hM ha128 (Supply.ofGiant hP (γ_nonneg_of hP hαγ) hE Gs) hAut hLie
+  thm_main_string_stage1' hP hM ha128 (Supply.ofGiant hP (γ_nonneg_of hP hαγ) hE Gs)
     hκ hc hαγ hbase hw hcw ha
 
 /-- **Theorem 1.1 at stage 1, for every run, given the giant-step data** (`thm:main-graph`).
 The hypotheses are those of `thm_main_graph_stage1'`, with `GiantSupply P` and
 `Params.EnumeratesBounded` in place of `Supply P`. -/
-theorem thm_main_graph_stage1_giant (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
-    (ha128 : 128 ≤ P.a) (hE : P.EnumeratesBounded) (Gs : GiantSupply P)
-    (hAut : GI.Cited.AutCardLeSq) (hLie : GI.Cited.SimpleValuationDegree) (hκ : 64 ≤ P.κ)
+theorem thm_main_graph_stage1_giant
+    (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
+    (ha128 : 128 ≤ P.a) (hE : P.EnumeratesBounded) (Gs : GiantSupply P) (hκ : 64 ≤ P.κ)
     {cc : ChargingConstants} (hc : Compat P cc) (hαγ : 2 * P.α ≤ P.γ) (hbase : AboveBase P cc)
     {w : Node P → ℝ} {cw : ℝ} (hw : NodeBound' w cw) (hcw : 0 ≤ cw) (ha : P.a + 1 ≤ cc.a) :
     ∃ C' : ℝ, ∀ (n : ℕ) (X Y : SimpleGraph (Fin n)) [DecidableRel X.Adj] [DecidableRel Y.Adj],
@@ -69,7 +73,7 @@ theorem thm_main_graph_stage1_giant (hP : P.Terminating) (hM : GI.Cited.MarotiPr
         (∀ σ : X ≃g Y, diagonalHom (Fin n) ⁻¹' A =
           (σ.toEquiv : Perm (Fin n)) • (GI.Statement.autGroup X : Set (Perm (Fin n)))) ∧
         r.total w ≤ Real.exp (C' * Real.log ((n : ℝ) + 2) ^ 2) :=
-  thm_main_graph_stage1' hP hM ha128 (Supply.ofGiant hP (γ_nonneg_of hP hαγ) hE Gs) hAut hLie
+  thm_main_graph_stage1' hP hM ha128 (Supply.ofGiant hP (γ_nonneg_of hP hαγ) hE Gs)
     hκ hc hαγ hbase hw hcw ha
 
 end GI.Paper

@@ -1,5 +1,9 @@
-import Workspace.Lang.Lib.Loop
-import Workspace.Machine.Len
+module
+
+public import Workspace.Lang.Lib.Loop
+public import Workspace.Machine.Len
+
+@[expose] public section
 
 /-!
 # Steps 4–5 of `camProg`: reading `m` and `k`

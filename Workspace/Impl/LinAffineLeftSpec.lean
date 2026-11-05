@@ -1,4 +1,8 @@
-import Workspace.Impl.LinAffineLeft
+module
+
+public import Workspace.Impl.LinAffineLeft
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,4 +1,8 @@
-import Workspace.Impl.VsBFld0E
+module
+
+public import Workspace.Impl.VsBFld0E
+
+@[expose] public section
 
 /-!
 # The field-line base

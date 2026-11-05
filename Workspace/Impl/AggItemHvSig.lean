@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemHvA
-import Workspace.Impl.AggItemC1Top
+module
+
+public import Workspace.Impl.AggItemHvA
+public import Workspace.Impl.AggItemC1Top
+
+@[expose] public section
 
 /-!
 # Case 2a: the even aligner and the paired transposition, on labels

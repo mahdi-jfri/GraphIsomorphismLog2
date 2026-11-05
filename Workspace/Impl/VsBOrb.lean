@@ -1,5 +1,9 @@
-import Workspace.Proved.VsBAff
-import Workspace.Impl.VsQDrvC
+module
+
+public import Workspace.Proved.VsBAff
+public import Workspace.Impl.VsQDrvC
+
+@[expose] public section
 
 /-!
 # A leaf answer from a small orbit

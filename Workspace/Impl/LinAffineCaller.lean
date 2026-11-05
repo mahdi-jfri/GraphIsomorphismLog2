@@ -1,10 +1,14 @@
-import Workspace.Impl.TermGlueLabAff
-import Workspace.Impl.LinRecenterContextSpec
-import Workspace.Impl.LinFiniteDifference
-import Workspace.Impl.LinZeroIntVector
-import Workspace.Impl.LinAffineLeftSpec
-import Workspace.Impl.LinMixedLoopSpec
-import Workspace.Lang.Prims.Reduce
+module
+
+public import Workspace.Impl.TermGlueLabAff
+public import Workspace.Impl.LinRecenterContextSpec
+public import Workspace.Impl.LinFiniteDifference
+public import Workspace.Impl.LinZeroIntVector
+public import Workspace.Impl.LinAffineLeftSpec
+public import Workspace.Impl.LinMixedLoopSpec
+public import Workspace.Lang.Prims.Reduce
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -26,9 +30,10 @@ theorem linTmGLAffIn_eq {n d : ℕ} (gs : List (Equiv.Perm (Fin n))) (m : Fin d 
   unfold linPrimaryGeneratorList at he
   have hm := congrArg (fun xs => xs.map (linPlainAffineVal m ρ c)) he
   simp only [List.map_map, Function.comp_def] at hm
-  simpa only [tmGLAffIn, linTmGLAffItem_eq, tmGLModZ, tmGLVecZ] using
-    congrArg (fun x => Val.list [encGroup gs, linVecVal (fun i => (m i : ℤ)), .list x,
+  have hv := congrArg (fun x => Val.list [encGroup gs, linVecVal (fun i => (m i : ℤ)), .list x,
       linVecVal (fun i => ((v i).val : ℤ)), linVecVal (fun i => ((w i).val : ℤ))]) hm
+  change tmGLAffIn gs m ρ c v w = _ at hv
+  exact hv
 
 def linAffineCallerIdentityE : Expr := .get (.get (arg 0) (.nat 1)) (.nat 0)
 

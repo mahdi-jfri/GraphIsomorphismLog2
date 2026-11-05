@@ -12,8 +12,12 @@ Expressions: notation, evaluation lemmas, and cost bounds.
   `Function.update_apply` rather than rewriting inside `Function.update f a v`: the value `v`
   depends on `a` in the type of `Function.update`, so `simp` cannot rewrite `a` there.
 -/
-import Workspace.Machine.Run
-import Workspace.Machine.Attr
+module
+
+public import Workspace.Machine.Run
+public import Workspace.Machine.Attr
+
+@[expose] public section
 
 namespace GI.Machine
 

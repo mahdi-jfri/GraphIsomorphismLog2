@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectReadPlan
+module
+
+public import Workspace.Impl.LinObjectReadPlan
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

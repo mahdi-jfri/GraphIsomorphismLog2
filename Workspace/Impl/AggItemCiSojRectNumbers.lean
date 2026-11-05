@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojLeafBudget
-import Workspace.Impl.AggItemCiSojRepBudget
+module
+
+public import Workspace.Impl.AggItemCiSojLeafBudget
+public import Workspace.Impl.AggItemCiSojRepBudget
+
+@[expose] public section
 
 /-! # Scalar and side-table bounds used at the rectangle's actual calls -/
 

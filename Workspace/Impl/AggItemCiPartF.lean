@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiPartP
+module
+
+public import Workspace.Impl.AggItemCiPartP
+
+@[expose] public section
 
 /-!
 # The colored-partition item as a program: the item

@@ -1,5 +1,10 @@
-import Workspace.Impl.HNFMain
-import Workspace.Impl.PolyBd
+module
+
+public import Workspace.Impl.HNFMain
+public import Workspace.Impl.PolyBd
+meta import Lean
+
+@[expose] public section
 
 /-!
 # The cost of the Hermite program is polynomial
@@ -13,7 +18,7 @@ namespace GI.Impl
 open GI.Lang
 
 open Lean Meta Elab Tactic in
-private partial def hnfPolyProof (vs : Array Lean.Expr) (b : Lean.Expr) : MetaM Lean.Expr := do
+private meta partial def hnfPolyProof (vs : Array Lean.Expr) (b : Lean.Expr) : MetaM Lean.Expr := do
   let b := b.consumeMData
   if let .letE _ _ v body _ := b then
     return ← hnfPolyProof vs (body.instantiate1 v)

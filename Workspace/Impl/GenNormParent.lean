@@ -1,13 +1,9 @@
-import Workspace.Impl.GenNormGraph
-import Workspace.Impl.GenExposeCand
+module
 
-/-!
-# Attaching Cameron point images to position generators
+public import Workspace.Impl.GenNormGraph
+public import Workspace.Impl.GenExposeCand
 
-The exposed class numbers and their ordered representatives compute each generator's block
-permutation. The incidence loops then recover its point permutation. The same program can
-be used after the normalized position generators are cut down to a canonical list.
--/
+@[expose] public section
 
 namespace GI.Impl
 
@@ -53,7 +49,8 @@ private theorem normParentGet {Pg : Program} {fields : List Val} {entry : Val} {
     exact wt_getElem_lt _ _ h
   exact (Det.get' (Det.arg' (j := 0) rfl) (Det.nat j) hj).mono (by omega)
 
-set_option maxHeartbeats 2000000 in
+private theorem spd_normParent_pow (Z : ℕ) : (10 * Z ^ 2) ^ 6 = 10 ^ 6 * Z ^ 12 := by ring
+
 /-- Attaching a point image is polynomial in the prepared context and the two degrees. -/
 theorem normParent_spec {Pg : Program} {f act bg recover point filter cand all test mem n m k : ℕ}
     (hf : Pg.funs[f]? = some (normParentF act recover))
@@ -148,12 +145,23 @@ theorem normParent_spec {Pg : Program} {f act bg recover point filter cand all t
   have wrc := wt_list4_le (encKSetTuples e) (encPerm x.1)
     (encPerm (1 : Perm (Fin Q.d))) (encPerm (1 : Perm (Fin m)))
   have wrr := wt_list2_le rc (encPerm (1 : Perm (Fin m)))
-  have wrcZ : rc.wt ≤ 20 * Z ^ 2 := by dsimp only [rc]; omega
+  have wrcZ : rc.wt ≤ 20 * Z ^ 2 := by
+    have : rc.wt = (Val.list [encKSetTuples e, encPerm x.1,
+      encPerm (1 : Perm (Fin Q.d)), encPerm (1 : Perm (Fin m))]).wt := rfl
+    clear d0 d1 d2 d3 d4 da dc dvar dl dr hrec hblock wfields
+    clear_value fields ctx inp Z x rc
+    omega
   have wrrZ : (Val.list [.list [encKSetTuples e, encPerm x.1,
       encPerm (1 : Perm (Fin Q.d)), encPerm (1 : Perm (Fin m))], encPerm (1 : Perm (Fin m))]).wt ≤
-      50 * Z ^ 2 := by change (Val.list [rc, encPerm (1 : Perm (Fin m))]).wt ≤ _; omega
+      50 * Z ^ 2 := by
+    have : (Val.list [.list [encKSetTuples e, encPerm x.1,
+      encPerm (1 : Perm (Fin Q.d)), encPerm (1 : Perm (Fin m))], encPerm (1 : Perm (Fin m))]).wt =
+      (Val.list [rc, encPerm (1 : Perm (Fin m))]).wt := rfl
+    clear d0 d1 d2 d3 d4 da dc dvar dl dr hrec hblock wfields
+    clear_value fields ctx inp Z x rc
+    omega
   have wx' : (encPerm (Q.ρ ⟨(toFin en).symm a, ha⟩)).wt ≤ 4 * Z ^ 2 := wx
-  have hpow : (10 * Z ^ 2) ^ 6 = 10 ^ 6 * Z ^ 12 := by ring
+  have hpow := spd_normParent_pow Z
   have hn6 : (n + 1) ^ 6 ≤ Z ^ 12 :=
     (Nat.pow_le_pow_left hnZ 6).trans (Nat.pow_le_pow_right (by omega) (by omega))
   have hm2 : (m + 1) ^ 2 ≤ Z ^ 2 := Nat.pow_le_pow_left hmZ 2
@@ -162,6 +170,8 @@ theorem normParent_spec {Pg : Program} {f act bg recover point filter cand all t
   have hZinp : inp.wt ≤ Z := by dsimp only [Z]; omega
   change _ ≤ 10 ^ 28 * Z ^ 12
   rw [hpow]
+  clear d0 d1 d2 d3 d4 da dc dvar dl dr hrec hblock wfields rsize
+  clear_value fields ctx inp Z x rc
   omega
 
 end GI.Impl

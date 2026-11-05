@@ -1,6 +1,10 @@
-import Workspace.MulticosetModel
-import Mathlib.GroupTheory.Solvable
-import Mathlib.GroupTheory.QuotientGroup.Basic
+module
+
+public import Workspace.MulticosetModel
+public import Mathlib.GroupTheory.Solvable
+public import Mathlib.GroupTheory.QuotientGroup.Basic
+
+@[expose] public section
 
 /-!
 # The derived series of an acting quotient `H/N`, inside the cover
@@ -109,18 +113,18 @@ theorem relDerived_mono {H N K M : Subgroup G} (hNH : N ≤ H) (hKH : K ≤ H) {
 
 open Classical in
 /-- The derived length of a solvable group: the least `n` with `G^{(n)} = 1`. -/
-noncomputable def derivedLength (Q : Type*) [Group Q] [h : IsSolvable Q] : ℕ :=
+noncomputable def derivedLength (Q : Type*) [Group Q] [h : Group.IsSolvable Q] : ℕ :=
   Nat.find h.solvable
 
 open Classical in
-theorem derivedSeries_derivedLength (Q : Type*) [Group Q] [IsSolvable Q] :
+theorem derivedSeries_derivedLength (Q : Type*) [Group Q] [Group.IsSolvable Q] :
     derivedSeries Q (derivedLength Q) = ⊥ :=
-  Nat.find_spec (IsSolvable.solvable (G := Q))
+  Nat.find_spec (Group.IsSolvable.solvable (G := Q))
 
 open Classical in
-theorem derivedLength_le_of_eq_bot {Q : Type*} [Group Q] [IsSolvable Q] {n : ℕ}
+theorem derivedLength_le_of_eq_bot {Q : Type*} [Group Q] [Group.IsSolvable Q] {n : ℕ}
     (h : derivedSeries Q n = ⊥) : derivedLength Q ≤ n :=
-  Nat.find_min' (IsSolvable.solvable (G := Q)) h
+  Nat.find_min' (Group.IsSolvable.solvable (G := Q)) h
 
 theorem comap_commutator_le {Q R : Type*} [Group Q] [Group R] (f : Q →* R) (A : Subgroup R) :
     ⁅A.comap f, A.comap f⁆ ≤ (⁅A, A⁆).comap f := by

@@ -1,5 +1,9 @@
-import Workspace.Algorithm.RowSteps
-import Workspace.Algorithm.CarrierKeep
+module
+
+public import Workspace.Algorithm.RowSteps
+public import Workspace.Algorithm.CarrierKeep
+
+@[expose] public section
 
 /-!
 # The column step sets the carrier invariant

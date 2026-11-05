@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecProg
+module
+
+public import Workspace.Impl.TermRecProg
+
+@[expose] public section
 
 /-!
 # T5, the object test and the orbit predicate
@@ -24,6 +28,86 @@ abbrev TmRiO (n : ℕ) := ℕ × List (Perm (Fin n)) × Perm (Fin n)
 
 /-- The coset object of a triple. -/
 abbrev tmRiObj (o : TmRiO n) : CObj ℕ (Perm (Fin n)) := tmGlObj o.1 o.2.1 o.2.2
+
+/-- The stabilizer `h⁻¹ L h` of the object `(c, σL, h)`. -/
+def tmRiStab (o : TmRiO n) : Subgroup (Perm (Fin n)) :=
+  gens (o.2.1.map fun x => o.2.2⁻¹ * x * o.2.2⁻¹⁻¹)
+
+/-- Every object stabilizer in `Z` normalizes `G`. -/
+def TmRiListNorm (G : Subgroup (Perm (Fin n))) (Z : List (TmRiO n)) : Prop :=
+  ∀ o ∈ Z, GI.Lang.Normalizes (tmRiStab o) G
+
+/-- Every object stabilizer in `Z` lies in `H`. -/
+def TmRiListIn (H : Subgroup (Perm (Fin n))) (Z : List (TmRiO n)) : Prop :=
+  ∀ o ∈ Z, tmRiStab o ≤ H
+
+theorem TmRiListNorm.bot (Z : List (TmRiO n)) : TmRiListNorm (gens ([] : List (Perm (Fin n)))) Z := by
+  intro o _ k _ g hg
+  have hbot : gens ([] : List (Perm (Fin n))) = ⊥ := by
+    simp [gens]
+  rw [hbot, Subgroup.mem_bot] at hg ⊢
+  simp [hg]
+
+theorem TmRiListNorm.sub {G : Subgroup (Perm (Fin n))} {Z Z' : List (TmRiO n)}
+    (h : TmRiListNorm G Z) (hs : ∀ o ∈ Z', o ∈ Z) : TmRiListNorm G Z' :=
+  fun o ho => h o (hs o ho)
+
+theorem TmRiListIn.sub {H : Subgroup (Perm (Fin n))} {Z Z' : List (TmRiO n)}
+    (h : TmRiListIn H Z) (hs : ∀ o ∈ Z', o ∈ Z) : TmRiListIn H Z' :=
+  fun o ho => h o (hs o ho)
+
+theorem TmRiListIn.norm_of {H A : Subgroup (Perm (Fin n))} {Z : List (TmRiO n)}
+    (hZ : TmRiListIn H Z) (hNA : GI.Multicoset.Normalizes H A) : TmRiListNorm A Z :=
+  fun o ho k hk g hg => hNA k (hZ o ho hk) g hg
+
+theorem TmRiListIn.norm_self {H : Subgroup (Perm (Fin n))} {Z : List (TmRiO n)}
+    (hZ : TmRiListIn H Z) : TmRiListNorm H Z :=
+  hZ.norm_of (fun _ hh _ hg => H.mul_mem (H.mul_mem hh hg) (H.inv_mem hh))
+
+theorem mem_tmRiStab_iff {o : TmRiO n} {g : Perm (Fin n)} :
+    g ∈ tmRiStab o ↔ tmRiObj o ↼ g = tmRiObj o := by
+  obtain ⟨c, σL, h⟩ := o
+  rw [tmRiStab, tmRiObj, tmRi_act_eq_iff (fun _ => rfl)]
+  simp
+
+theorem tmRiStab_le_of {H : Subgroup (Perm (Fin n))} {o : TmRiO n}
+    (hL : gens o.2.1 ≤ H) (hh : o.2.2 ∈ H) : tmRiStab o ≤ H := by
+  intro g hg
+  rw [tmRiStab, tmRi_mem_conj, inv_inv] at hg
+  have h1 : o.2.2 * g * o.2.2⁻¹ ∈ H := hL hg
+  have h2 : o.2.2⁻¹ * (o.2.2 * g * o.2.2⁻¹) * o.2.2 ∈ H :=
+    H.mul_mem (H.mul_mem (H.inv_mem hh) h1) hh
+  simpa [mul_assoc] using h2
+
+theorem tmRiStab_le_of_sameOrb {B : Subgroup (Perm (Fin n))} {o o' : TmRiO n}
+    (ho : tmRiStab o ≤ B) {a : Perm (Fin n)} (ha : a ∈ B) (hact : tmRiObj o ↼ a = tmRiObj o') :
+    tmRiStab o' ≤ B := by
+  intro g hg
+  rw [mem_tmRiStab_iff, ← hact, act_act] at hg
+  have h1 : tmRiObj o ↼ (a * g * a⁻¹) = tmRiObj o := by
+    have := congrArg (· ↼ a⁻¹) hg
+    simpa [act_act] using this
+  have h2 : a * g * a⁻¹ ∈ B := ho (mem_tmRiStab_iff.2 h1)
+  have h3 : a⁻¹ * (a * g * a⁻¹) * a ∈ B := B.mul_mem (B.mul_mem (B.inv_mem ha) h2) ha
+  simpa [mul_assoc] using h3
+
+theorem TmRiListNorm.append {G : Subgroup (Perm (Fin n))} {X Y : List (TmRiO n)}
+    (hX : TmRiListNorm G X) (hY : TmRiListNorm G Y) : TmRiListNorm G (X ++ Y) := by
+  intro o ho
+  rcases List.mem_append.1 ho with ho | ho
+  · exact hX o ho
+  · exact hY o ho
+
+theorem TmRiListIn.append {H : Subgroup (Perm (Fin n))} {X Y : List (TmRiO n)}
+    (hX : TmRiListIn H X) (hY : TmRiListIn H Y) : TmRiListIn H (X ++ Y) := by
+  intro o ho
+  rcases List.mem_append.1 ho with ho | ho
+  · exact hX o ho
+  · exact hY o ho
+
+theorem TmRiListIn.mono {H K : Subgroup (Perm (Fin n))} {Z : List (TmRiO n)}
+    (h : TmRiListIn H Z) (hHK : H ≤ K) : TmRiListIn K Z :=
+  fun o ho => (h o ho).trans hHK
 
 /-- The result of the object test. -/
 def TmRiTestOut (G : Subgroup (Perm (Fin n))) (o o' : TmRiO n) (w : Val) : Prop :=
@@ -73,7 +157,8 @@ open Classical in
 theorem tmRi_test_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hmem : Membership}
     (hP : TmRiAt P b jsci jder jmem gObj hsci hder hmem) {gs : List (Perm (Fin n))}
-    (hsol : IsSolvable (gens gs)) (hgl : gs.length ≤ n ^ 2) {o o' : TmRiO n}
+    {o o' : TmRiO n} (hsol : GI.Lang.Normalizes (tmRiStab o) (gens gs))
+    (hgl : gs.length ≤ n ^ 2)
     (hl : o.2.1.length ≤ n ^ 2) (hl' : o'.2.1.length ≤ n ^ 2)
     (hL : o.1 = o'.1 → gens o.2.1 = gens o'.2.1) {C : ℕ} (hC : o.1 ≤ C) (hC' : o'.1 ≤ C) :
     FunAll P (b + 5) (.list [encGroup gs, tmGlObjVal o, tmGlObjVal o'])
@@ -81,7 +166,7 @@ theorem tmRi_test_spec {P : Program} {b jsci jder jmem gObj : ℕ}
         cost ≤ tmRiTestC (solvableCosetIntersectionPrim hsci) n C) := by
   obtain ⟨c, σL, h⟩ := o
   obtain ⟨c', σL', h'⟩ := o'
-  simp only at hl hl' hL hC hC' ⊢
+  simp only [tmRiStab] at hl hl' hL hC hC' hsol ⊢
   set vs : List Val := [encGroup gs, tmGlObjVal (c, σL, h), tmGlObjVal (c', σL', h')] with hvs
   set W := (Val.list vs).wt with hW
   have hwG := wt_encGroup_le_sq hgl
@@ -256,7 +341,8 @@ open Classical in
 theorem tmRi_objP_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hmem : Membership}
     (hP : TmRiAt P b jsci jder jmem gObj hsci hder hmem) {gs : List (Perm (Fin n))}
-    (hsol : IsSolvable (gens gs)) (hgl : gs.length ≤ n ^ 2) {o o' : TmRiO n}
+    {o o' : TmRiO n} (hsol : GI.Lang.Normalizes (tmRiStab o) (gens gs))
+    (hgl : gs.length ≤ n ^ 2)
     (hl : o.2.1.length ≤ n ^ 2) (hl' : o'.2.1.length ≤ n ^ 2)
     (hL : o.1 = o'.1 → gens o.2.1 = gens o'.2.1) {C : ℕ} (hC : o.1 ≤ C) (hC' : o'.1 ≤ C) :
     FunDet P (b + 3) (.list [.list [encGroup gs, tmGlObjVal o], tmGlObjVal o'])

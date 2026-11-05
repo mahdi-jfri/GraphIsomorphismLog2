@@ -1,4 +1,8 @@
-import Workspace.Impl.LinAffineTransportMath
+module
+
+public import Workspace.Impl.LinAffineTransportMath
+
+@[expose] public section
 
 /-! One executable affine transporter over the prime field, using the
 homogeneous representation and the two-copy vector procedure. -/

@@ -1,6 +1,10 @@
-import Workspace.Impl.HNFRed
-import Workspace.Lang.Lib.Fold
-import Workspace.Lang.Lib.LinIntColumn
+module
+
+public import Workspace.Impl.HNFRed
+public import Workspace.Lang.Lib.Fold
+public import Workspace.Lang.Lib.LinIntColumn
+
+@[expose] public section
 
 /-!
 # Clearing one column, as a program

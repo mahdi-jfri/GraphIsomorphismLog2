@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojProg
-import Workspace.Impl.FinLayoutItemsOK
+module
+
+public import Workspace.Impl.AggItemCiSojProg
+public import Workspace.Impl.FinLayoutItemsOK
+
+@[expose] public section
 
 /-!
 # The room of the first-rectangle item

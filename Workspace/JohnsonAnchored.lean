@@ -1,4 +1,8 @@
-import Workspace.JohnsonChains
+module
+
+public import Workspace.JohnsonChains
+
+@[expose] public section
 
 namespace GI.Johnson
 

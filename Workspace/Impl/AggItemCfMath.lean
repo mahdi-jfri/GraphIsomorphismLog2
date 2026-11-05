@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCfSpec
-import Workspace.Impl.AggItemStepC1
+module
+
+public import Workspace.Impl.AggItemCfSpec
+public import Workspace.Impl.AggItemStepC1
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3: the rounds and the objects of a branch
@@ -165,7 +169,8 @@ variable {e : Ω ≃ Fin k} {c : C → ℕ} {K : ItSCtx k S L}
 
 /-- **The rounds of a good cache and a nonempty choice set exist**: `Ag₀` with the cache values
 set in its joint refinement and the choices of `E`. -/
-theorem itCfD_nonempty (hK : K.OK e c) {cache : List (ItCfEnt L.q)} (hc : ItCfCache K cache)
+theorem itCfD_nonempty
+    (hK : K.OK e c) {cache : List (ItCfEnt L.q)} (hc : ItCfCache K cache)
     {E : Set (ItCfCh S L.toGiantLabels)} (hE : E.Nonempty) : (itCfD K cache E).Nonempty := by
   obtain ⟨ch, hch⟩ := hE
   have hκ : P₀.κ ≠ 2 := by decide

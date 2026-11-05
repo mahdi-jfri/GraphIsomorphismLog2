@@ -1,7 +1,11 @@
-import Workspace.StablePairRefinement
-import Workspace.GraphReduction
-import Mathlib.GroupTheory.GroupAction.Basic
-import Mathlib.Data.Bool.Basic
+module
+
+public import Workspace.StablePairRefinement
+public import Workspace.GraphReduction
+public import Mathlib.GroupTheory.GroupAction.Basic
+public import Mathlib.Data.Bool.Basic
+
+@[expose] public section
 
 namespace GI.PairRefinement
 

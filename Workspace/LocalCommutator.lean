@@ -1,7 +1,11 @@
-import Mathlib.GroupTheory.Perm.Basic
-import Mathlib.Algebra.BigOperators.Group.List.Basic
-import Mathlib.Data.Finset.Dedup
-import Aesop
+module
+
+public import Mathlib.GroupTheory.Perm.Basic
+public import Mathlib.Algebra.BigOperators.Group.List.Basic
+public import Mathlib.Data.Finset.Dedup
+public import Aesop
+
+@[expose] public section
 
 /-! Lemma A.16: localization of a commutator whose two supports meet in A.
 The paper uses right point actions. In mathlib's function-composition convention,
@@ -294,7 +298,8 @@ theorem block_local_clean_commutator (g h : Equiv.Perm V) (A : Finset V)
   have sep := local_separated_of_supports g h (A : Set V) hA' hg hh
   apply local_commutator_cycle_product g h sep A.toList A.nodup_toList
   intro a
-  simpa only [Finset.mem_toList] using hA' a
+  rw [Finset.mem_toList]
+  exact hA a
 
 omit [DecidableEq V] in
 /-- The cycles in the preceding product are pairwise supported on disjoint triples. -/

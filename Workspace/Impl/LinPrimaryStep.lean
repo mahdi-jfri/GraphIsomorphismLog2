@@ -1,6 +1,10 @@
-import Workspace.Impl.LinPrimaryTransportNext
-import Workspace.Impl.LinAffineRestrict
-import Workspace.Impl.LinFinitePointApply
+module
+
+public import Workspace.Impl.LinPrimaryTransportNext
+public import Workspace.Impl.LinAffineRestrict
+public import Workspace.Impl.LinFinitePointApply
+
+@[expose] public section
 
 /-! One primary iteration: solve the field layer, apply the chosen full action,
 restrict the cover and its full dictionary, and accumulate the representative.

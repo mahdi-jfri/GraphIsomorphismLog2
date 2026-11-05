@@ -1,8 +1,12 @@
-import Workspace.Impl.GiantSelMath
-import Workspace.Impl.Lift
-import Workspace.Impl.ColsSplit
-import Workspace.Lang.Lib.Orbit
-import Workspace.Lang.Prims.Blocks
+module
+
+public import Workspace.Impl.GiantSelMath
+public import Workspace.Impl.Lift
+public import Workspace.Impl.ColsSplit
+public import Workspace.Lang.Lib.Orbit
+public import Workspace.Lang.Prims.Blocks
+
+@[expose] public section
 
 /-!
 # The natural-map test of `GiantStep`, in `GI.Lang`
@@ -158,6 +162,8 @@ theorem lbl_repOf (lbl : Fin k → ℕ) (i : Fin k) : lbl ⟨repOf lbl i, repOf_
   have := List.findIdx_getElem (w := hl)
   simp only [List.getElem_map, List.getElem_finRange, decide_eq_true_eq] at this
   convert this using 2
+  apply Fin.ext
+  simp [repOf, Fin.cast]
 
 /-- The value of the check step at `i`. -/
 def chkVal (lbl lab : Fin k → ℕ) (i : Fin k) : ℕ :=
@@ -502,7 +508,7 @@ theorem natTail_det {P : Program} {b jpre : ℕ} (hb : NatAt P b jpre) (e : Ω �
       · simp only [hi, dite_true]
         have := lblStep_some hb.lblStep hb.findEq hq
           (fun j : Fin L.q => if j ∈ J.p ⟨e.symm i, hi⟩ then 1 else 0)
-          (fun t => by dsimp only; split_ifs <;> omega)
+          (fun t => by split_ifs <;> omega)
         unfold lblOf; simp only [hi, dite_true]
         exact this
       · simp only [hi, dite_false]
@@ -764,7 +770,9 @@ theorem natTest_spec (hpre : GI.Cited.Preimage) {P : Program} {b jpre : ℕ} (hb
     omega
   have hds : (kerInst ps).ds.length = ps.length := by simp [kerInst]
   have hds' : ((kerInst ps).ds : List (Perm (Fin k ⊕ Fin L.q))).length = ps.length := hds
-  rw [← hgl', List.length_map] at hc2
+  rw [← hgl'] at hc2
+  set_option backward.isDefEq.respectTransparency false in
+    rw [List.length_map] at hc2
   erw [hds'] at hc2
   have wt0 : (Val.nat t).wt ≤ 3 := by have := wt_nat_le t; omega
   have wpairs : (Val.list (ps.map fun p => Val.list [encPerm p.1, encPerm p.2])).wt + 2 ≤ T := by
@@ -790,13 +798,15 @@ theorem natTest_spec (hpre : GI.Cited.Preimage) {P : Program} {b jpre : ℕ} (hb
     rwa [show (T ^ 3) ^ 2 = T ^ 6 by ring] at h2
   have wgg' : (encGroup (n := k + L.q) ((kerInst ps).ds.map sumToFin)).wt ≤ 40 * T ^ 6 := by
     have := wt_encGroup_le (n := k + L.q) ((kerInst ps).ds.map sumToFin)
-    rw [List.length_map] at this
+    set_option backward.isDefEq.respectTransparency false in
+      rw [List.length_map] at this
     erw [hds'] at this
     omega
   have wgg : gg.wt ≤ 40 * T ^ 6 := by
     rw [hgg]
     have := wt_encGroup_le ((kerInst ps).ds.map sumToFin)
-    rw [List.length_map] at this
+    set_option backward.isDefEq.respectTransparency false in
+      rw [List.length_map] at this
     erw [hds'] at this
     exact this.trans (Nat.mul_le_mul_left _ h6)
   have hm9 : ((ps.length + 2) * (k + L.q + 1)) ^ 3 ≤ T ^ 9 := by

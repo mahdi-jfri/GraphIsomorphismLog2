@@ -9,7 +9,11 @@ every cell below `b`; and it returns the address of its output.
 * `GI.Machine.PolyTimeAt.andThen` runs a program for one task and then a program for a second
   task on its output (`GI.Machine.Program.andThen`), and proves the result is polynomial.
 -/
-import Workspace.Machine.Link
+module
+
+public import Workspace.Machine.Link
+
+@[expose] public section
 
 namespace GI.Machine
 

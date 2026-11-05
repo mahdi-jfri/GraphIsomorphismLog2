@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQA3M
+module
+
+public import Workspace.Impl.VsQA3M
+
+@[expose] public section
 
 /-!
 # The program
@@ -16,6 +20,8 @@ namespace GI.Impl
 open GI.Lang GI.Cited GI.Proved Equiv
 
 variable {I : VecStabInst}
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 /-- Entry `k` of the state, inside the local context in argument 0. -/
 def vsQSx (k : ℕ) : Expr := .get (.get (arg 0) (.nat 0)) (.nat k)

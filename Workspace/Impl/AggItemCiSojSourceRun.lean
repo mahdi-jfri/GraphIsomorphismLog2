@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojSourceBudget
-import Workspace.Impl.AggItemCiSojCertFixed
-import Workspace.Impl.AggItemCiSojRawPost
+module
+
+public import Workspace.Impl.AggItemCiSojSourceBudget
+public import Workspace.Impl.AggItemCiSojCertFixed
+public import Workspace.Impl.AggItemCiSojRawPost
+
+@[expose] public section
 
 /-! # The full first-rectangle start contract -/
 
@@ -133,11 +137,11 @@ theorem itcs_source_run (I : Iface) {Pg : Program} {Funs₀ : Funs} {A : itcsSou
       (.nat g) (itcsBTC L.q (2*L.q^P₀.κ)) := by rw [←he]; exact btCall
   have run := itcs_start_prog hA.body K.v (stTv b) (.list []) xc yc rows fl j g v iovs povs
     (natList (List.range L.q)) (encFun (itcsBal X x₀)) rfl RR P frontCall
-    (fun h => by simpa only [flen] using pcCall (by simpa only [flen] using h))
+    (fun h => by simpa only [flen,fl,itcqFV,natList,rows,rcColVal] using pcCall (by simpa only [flen] using h))
     (fun h => impCall (by simpa only [flen] using h))
     (fun h => impPost (by simpa only [flen] using h))
     (by simpa only [rlen] using range_det hA.rect.query.rng L.q) balCall
-    (by simpa only [flen] using testCall)
+    (by simpa only [flen,fl,itcqFV,natList] using testCall)
     (fun hn hg => partCall (by simpa only [flen] using hn) hg)
     (fun hn hg => partPost (by simpa only [flen] using hn) hg)
     (fun hn hg => certCall (by simpa only [flen] using hn) hg)

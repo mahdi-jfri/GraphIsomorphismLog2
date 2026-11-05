@@ -1,6 +1,10 @@
-import Workspace.Impl.LinOrbitTransport
-import Workspace.Impl.LinObjectEncoding
-import Workspace.Impl.LinMapAll
+module
+
+public import Workspace.Impl.LinOrbitTransport
+public import Workspace.Impl.LinObjectEncoding
+public import Workspace.Impl.LinMapAll
+
+@[expose] public section
 
 /-! Collect the local stabilizers of the pieces using the abelian orbit
 transporter. Only the zero-fuel recursion is used, so this has no glue premise. -/
@@ -63,7 +67,7 @@ theorem linObjectLocalItem_spec {P : Program} {b jsci jder jmem n M : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hm : Membership}
     (h : linObjectLocalAt P b jsci jder jmem hsci hder hm)
     (as ns : List (Perm (Fin n))) (S : List (TmRiO n))
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : TmRiListNorm (gens as) S) (hNA : gens ns ≤ gens as)
     (hNn : GI.Multicoset.Normalizes (gens as) (gens ns))
     (hc : ∀ a ∈ gens as, ∀ b ∈ gens as, a * b * a⁻¹ * b⁻¹ ∈ gens ns)
     (hfix : Fixes (gens ns) (tmGlMs S)) (hal : as.length ≤ n ^ 2)
@@ -85,7 +89,7 @@ theorem linObjectLocalItem_spec {P : Program} {b jsci jder jmem n M : ℕ}
   have warg : oa.wt ≤ 100 * (W + 1) := by
     have hh := wt_list4_le (encGroup as) (encGroup ns) (tmGlObjsVal S) (tmGlObjsVal S)
     dsimp only [oa]; omega
-  have ho := linOrbitTransport_spec h.orbit as ns S S hsol hNA hNn hc hfix hal
+  have ho := linOrbitTransport_spec h.orbit as ns S S (hsol.append hsol) hNA hNn hc hfix hal
     horbit horbit hS hS hok ox hS0
   have ho' : FunAll P (b + 4) oa (fun out cost =>
       CosetC n out (Iso (gens as) (tmGlMs S) (tmGlMs S)) ∧ cost ≤ B) :=
@@ -135,7 +139,7 @@ theorem linObjectLocal_spec {P : Program} {b jsci jder jmem n M : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hm : Membership}
     (h : linObjectLocalAt P b jsci jder jmem hsci hder hm)
     (as ns : List (Perm (Fin n))) (Ps : List (List (TmRiO n)))
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : ∀ S ∈ Ps, TmRiListNorm (gens as) S) (hNA : gens ns ≤ gens as)
     (hNn : GI.Multicoset.Normalizes (gens as) (gens ns))
     (hc : ∀ a ∈ gens as, ∀ b ∈ gens as, a * b * a⁻¹ * b⁻¹ ∈ gens ns)
     (hal : as.length ≤ n ^ 2)
@@ -163,7 +167,7 @@ theorem linObjectLocal_spec {P : Program} {b jsci jder jmem n M : ℕ}
     (fun S w => GroupValC n w (Aut (gens as) (tmGlMs S))) ctx Ps
     (linObjectLocalItemCost hsci hm n M (100 * (W + 1))) (fun S hSP => by
       obtain ⟨ox, hox⟩ := hne S hSP
-      exact (linObjectLocalItem_spec h as ns S hsol hNA hNn hc (hfix S hSP) hal
+      exact (linObjectLocalItem_spec h as ns S (hsol S hSP) hNA hNn hc (hfix S hSP) hal
         (horbit S hSP) (hS S hSP) (hok S hSP) ox hox).mono fun out cost ho =>
           ⟨ho.1, ho.2.trans (linObjectLocalItemCost_mono hsci hm (hs S hSP))⟩)
 

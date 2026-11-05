@@ -1,6 +1,10 @@
-import Workspace.Impl.LinFiniteRecenterMatrix
-import Workspace.Impl.LinMatrixVec
-import Workspace.Impl.LinFiniteReduce
+module
+
+public import Workspace.Impl.LinFiniteRecenterMatrix
+public import Workspace.Impl.LinMatrixVec
+public import Workspace.Impl.LinFiniteReduce
+
+@[expose] public section
 
 /-! Compute Rw + c - w in full finite-abelian coordinates. -/
 namespace GI.Impl

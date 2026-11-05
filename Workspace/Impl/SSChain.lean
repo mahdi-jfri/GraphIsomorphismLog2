@@ -1,4 +1,8 @@
-import Workspace.Impl.SSEnc
+module
+
+public import Workspace.Impl.SSEnc
+
+@[expose] public section
 
 /-!
 # The chain of a sift, as a program

@@ -1,7 +1,11 @@
-import Workspace.Impl.AggItemCfRMath
-import Workspace.Impl.AggStructDesV
-import Workspace.Lang.Lib.OrbitT
-import Workspace.Lang.Lib.Tabulate
+module
+
+public import Workspace.Impl.AggItemCfRMath
+public import Workspace.Impl.AggStructDesV
+public import Workspace.Lang.Lib.OrbitT
+public import Workspace.Lang.Lib.Tabulate
+
+@[expose] public section
 
 set_option maxRecDepth 10000
 
@@ -84,7 +88,7 @@ theorem itCfRRow_wt {dl : List ℕ} {q a : ℕ} (hlen : dl.length = q * q) (ha :
       obtain ⟨x, hx, rfl⟩ := List.mem_map.1 hv
       obtain ⟨b, hb, rfl⟩ := List.mem_map.1 hx
       exact itCfRColor_wt hlen ha (List.mem_range.1 hb))
-  simpa only [List.length_map, List.length_range] using h
+  simpa only [natList, List.length_map, List.length_range] using h
 
 /-- Tabulate a row with a bound in weights, allowing arbitrary color values. -/
 theorem itCfR_row_spec {P : Program} {f mb rb ce : ℕ}

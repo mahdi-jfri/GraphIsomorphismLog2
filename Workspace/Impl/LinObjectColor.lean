@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectMath
-import Mathlib.Data.List.Perm.Basic
+module
+
+public import Workspace.Impl.LinObjectMath
+public import Mathlib.Data.List.Perm.Basic
+
+@[expose] public section
 
 /-! Canonical first-occurrence labels for (old color, underlying subgroup).
 The normalization is safe even on the unrestricted object-glue input contract. -/
@@ -44,7 +48,8 @@ theorem linObjectColor_eq_iff {n : ℕ} (Z : List (TmRiO n)) (o o' : TmRiO n)
     congr 1
     funext z
     apply Bool.eq_iff_iff.mpr
-    simp only [decide_eq_true_eq, linObjectColorEq, he, hg]
+    simp only [decide_eq_true_eq]
+    simp only [linObjectColorEq, he, hg]
 
 /-- Map a permutation of lists through any pointwise implication of equality.
 The two source lists may have different element types. -/
@@ -64,7 +69,6 @@ theorem linMapPerm_transfer {α β γ δ : Type*} (X : List α) (Y : List β)
     simp only [List.length_map] at hk hk'
     simp only [List.getElem_map]
     have hval := congrArg (fun xs : List γ => xs[k]?) he
-    dsimp only at hval
     rw [List.getElem?_map, List.getElem?_map,
       List.getElem?_eq_getElem hk, List.getElem?_eq_getElem hk'] at hval
     apply hr _ (List.getElem_mem hk) _ (hys.mem_iff.mp (List.getElem_mem hk'))

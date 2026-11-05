@@ -1,6 +1,10 @@
-import Workspace.Impl.VsQABm
-import Workspace.Impl.VsHSplitOK
-import Workspace.Proved.VsMBlocks
+module
+
+public import Workspace.Impl.VsQABm
+public import Workspace.Impl.VsHSplitOK
+public import Workspace.Proved.VsMBlocks
+
+@[expose] public section
 
 /-!
 # The blocks of the pieces
@@ -19,6 +23,8 @@ open Matrix Module
 namespace GI.Impl
 
 open GI.Lang GI.Cited GI.Proved Equiv
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 variable {I : VecStabInst} {s : VsQSt I} [Fact I.p.Prime]
 
@@ -191,13 +197,32 @@ theorem vsQAPi_trans (h : VsQAHyp hs as Lb) (h0 : 0 < (vsQAPcs s Lb).length) (ht
 
 /-- `H̄` is solvable. -/
 theorem vsQA_solv (hs : VsQStOK s) : IsSolvable (vsPBar hs (gens s.hs)) := by
-  haveI : IsSolvable (gens I.gs) := I.solvable
-  haveI : IsSolvable (gens s.hs) :=
-    solvable_of_solvable_injective (f := Subgroup.inclusion hs.prob.le) (Subgroup.inclusion_injective _)
-  haveI : IsSolvable ((gens s.hs).subgroupOf (gens s.hs)) := inferInstance
-  exact solvable_of_surjective (MonoidHom.subgroupMap_surjective (GI.Proved.vsQRho hs)
-    ((gens s.hs).subgroupOf (gens s.hs)))
+  let φH := I.φ.comp (Subgroup.inclusion hs.prob.le)
+  have : Group.IsSolvable I.φ.range := I.solvable
+  have : Group.IsSolvable φH.range :=
+    solvable_of_solvable_injective
+      (Subgroup.inclusion_injective (show φH.range ≤ I.φ.range by
+        rintro _ ⟨x, rfl⟩; exact ⟨Subgroup.inclusion hs.prob.le x, rfl⟩))
+  have hker : φH.ker ≤ (GI.Proved.vsQRho hs).ker := by
+    intro h hh
+    rw [MonoidHom.mem_ker] at hh ⊢
+    change I.φ ⟨h.1, hs.prob.le h.2⟩ = 1 at hh
+    have hphi : vsQPhi I h.1 = vsQPhi I 1 := by
+      rw [vsQPhi_of_mem (hs.prob.le h.2), hh, Units.val_one, vsQPhi_one]
+    have hlam : vsQLam s h.1 = vsQLam s 1 := by simp only [vsQLam, hphi]
+    exact ((vsQRho_ext hs h.2 (one_mem _)).mpr hlam).trans (map_one (GI.Proved.vsQRho hs))
+  let f : gens s.hs ⧸ φH.ker →* (GI.Proved.vsQRho hs).range :=
+    QuotientGroup.lift φH.ker (GI.Proved.vsQRho hs).rangeRestrict
+      (fun g hg => Subtype.ext (hker hg))
+  have hf : Function.Surjective f := fun ⟨_, g, rfl⟩ => ⟨QuotientGroup.mk g, rfl⟩
+  have : Group.IsSolvable (gens s.hs ⧸ φH.ker) :=
+    solvable_of_solvable_injective (QuotientGroup.quotientKerEquivRange φH).injective
+  have : Group.IsSolvable (GI.Proved.vsQRho hs).range := solvable_of_surjective hf
+  exact solvable_of_solvable_injective
+    (Subgroup.inclusion_injective (show vsPBar hs (gens s.hs) ≤ (GI.Proved.vsQRho hs).range by
+      rintro _ ⟨x, _, rfl⟩; exact ⟨x, rfl⟩))
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The pieces are independent. -/
 theorem vsQAU_indep (h : VsQAHyp hs as Lb) : iSupIndep (vsQAU s Lb) := by
   obtain ⟨a, hainj, ha⟩ := vsQA_pcs_eig h
@@ -207,6 +232,7 @@ theorem vsQAU_indep (h : VsQAHyp hs as Lb) : iSupIndep (vsQAU s Lb) := by
   rw [e]
   exact hind.comp hainj
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The pieces span everything. -/
 theorem vsQAU_top (h : VsQAHyp hs as Lb) : ⨆ k, vsQAU s Lb k = ⊤ := by
   have hP := vsFEigL_pieces I.prime _ (vsQAFix_sq (s := s) Lb)
@@ -258,6 +284,7 @@ theorem vsQA_mem_blk {c : ℕ} {u : List ℕ} :
     rw [e, if_pos hc]
     simpa [List.getD_eq_getElem?_getD] using hu
 
+set_option backward.isDefEq.respectTransparency false in
 theorem vsQA_sp_blk {p D : ℕ} [Fact p.Prime] (c : ℕ) :
     vsWSp p D (vsQABlk Pcs ((List.finRange Pcs.length).map lab) c) =
       vsMBlockSum (fun i : Fin Pcs.length => vsWSp p D Pcs[i]) lab c := by
@@ -336,6 +363,7 @@ theorem vsQA_pcs_ne_nil (k : Fin (vsQAPcs s Lb).length) : (vsQAPcs s Lb)[k] ≠ 
   change vsWSp I.p (vsQD s) (vsQAPcs s Lb)[k] = ⊥
   rw [he, vsWSp_nil]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- **The block sums of a minimal block system.** -/
 theorem vsQA_blkFacts (h : VsQAHyp hs as Lb) (h2 : 2 ≤ (vsQAPcs s Lb).length) (htop : vsQAW s Lb = ⊤)
     {lab : Fin (vsQAPcs s Lb).length → ℕ} (hlt : ∀ i, lab i < (vsQAPcs s Lb).length)

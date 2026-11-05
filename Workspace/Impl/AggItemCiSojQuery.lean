@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojMath
-import Workspace.Impl.AggWin
+module
+
+public import Workspace.Impl.AggItemCiSojMath
+public import Workspace.Impl.AggWin
+
+@[expose] public section
 
 /-!
 # The canonical state value of an inherited rectangle query

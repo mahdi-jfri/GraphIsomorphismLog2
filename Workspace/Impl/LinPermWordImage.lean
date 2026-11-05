@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPermWord
-import Workspace.Impl.LinPermCertificate
+module
+
+public import Workspace.Impl.LinPermWord
+public import Workspace.Impl.LinPermCertificate
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited

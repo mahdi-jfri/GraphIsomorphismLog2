@@ -1,6 +1,10 @@
-import Workspace.Impl.LinTabulate
-import Workspace.Lang.Lib.LinIntVector
-import Workspace.Proved.HNFRect
+module
+
+public import Workspace.Impl.LinTabulate
+public import Workspace.Lang.Lib.LinIntVector
+public import Workspace.Proved.HNFRect
+
+@[expose] public section
 
 /-!
 # The row reduction of the modular Hermite form, as a program

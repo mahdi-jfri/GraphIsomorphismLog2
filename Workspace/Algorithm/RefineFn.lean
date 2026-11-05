@@ -1,4 +1,8 @@
-import Workspace.Cited.CoherentConfig
+module
+
+public import Workspace.Cited.CoherentConfig
+
+@[expose] public section
 
 /-!
 # The coherent refinement used by the aggregation round

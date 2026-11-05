@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemStepWt
-import Workspace.Impl.AggCertLoop
+module
+
+public import Workspace.Impl.AggItemStepWt
+public import Workspace.Impl.AggCertLoop
+
+@[expose] public section
 
 /-!
 # The walk through the items, and the relation of the step function

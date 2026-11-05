@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabAff
+module
+
+public import Workspace.Impl.TermGlueLabAff
+
+@[expose] public section
 
 /-!
 # The label action in finite abelian coordinates

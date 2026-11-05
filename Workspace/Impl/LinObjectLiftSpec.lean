@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectLiftPositive
+module
+
+public import Workspace.Impl.LinObjectLiftPositive
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

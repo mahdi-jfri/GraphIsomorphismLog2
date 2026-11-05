@@ -1,6 +1,10 @@
-import Workspace.Proved.PalfyLinear
-import Workspace.PrimitiveAbelianNormal
-import Workspace.PrimitiveSolvableNormal
+module
+
+public import Workspace.Proved.PalfyLinear
+public import Workspace.PrimitiveAbelianNormal
+public import Workspace.PrimitiveSolvableNormal
+
+@[expose] public section
 
 /-!
 # A polynomial bound for primitive solvable groups
@@ -34,7 +38,7 @@ def PalfyBound : Prop :=
 `Hg ≤ Aut(N)` is solvable with no invariant subgroups besides `1` and `N`, then
 `|Hg|^3 ≤ |N|^69`. -/
 theorem palfy_affine_core {N : Type} [CommGroup N] [Finite N] [Nontrivial N] (p : ℕ)
-    [Fact p.Prime] [Module (ZMod p) (Additive N)] (Hg : Subgroup (MulAut N)) [IsSolvable Hg]
+    [Fact p.Prime] [Module (ZMod p) (Additive N)] (Hg : Subgroup (MulAut N)) [Group.IsSolvable Hg]
     (hirr0 : ∀ W : Subgroup N, (∀ σ ∈ Hg, ∀ w ∈ W, σ w ∈ W) → W = ⊥ ∨ W = ⊤) :
     Nat.card Hg ^ 3 ≤ Nat.card N ^ 69 := by
   classical
@@ -63,7 +67,7 @@ theorem palfy_affine_core {N : Type} [CommGroup N] [Finite N] [Nontrivial N] (p 
       Additive.toMul ((u : Module.End (ZMod p) (Additive N)) (Additive.ofMul y))) h
     exact this
   set H := Hg.map ψ
-  haveI : IsSolvable H := solvable_of_surjective (ψ.subgroupMap_surjective Hg)
+  haveI : Group.IsSolvable H := solvable_of_surjective (ψ.subgroupMap_surjective Hg)
   have hHcard : Nat.card H = Nat.card Hg := Subgroup.card_map_of_injective hψ
   -- irreducibility
   have hirr : palfyIrr H := by
@@ -100,7 +104,7 @@ theorem palfy_affine_core {N : Type} [CommGroup N] [Finite N] [Nontrivial N] (p 
       exact hv
   haveI : Finite (Additive N) := inferInstanceAs (Finite N)
   haveI : Nontrivial (Additive N) := inferInstanceAs (Nontrivial N)
-  have hlin := palfyLinear (ZMod p) (Additive N) H inferInstance (palfyCR_of_irr hirr)
+  have hlin := palfyLinear (ZMod p) (Additive N) H (inferInstance : Group.IsSolvable H) (palfyCR_of_irr hirr)
   have hVN : Nat.card (Additive N) = Nat.card N := rfl
   rw [hVN, hHcard] at hlin
   calc Nat.card Hg ^ 3 ≤ 24 * Nat.card (ZMod p) ^ 6 * Nat.card Hg ^ 3 :=
@@ -109,10 +113,10 @@ theorem palfy_affine_core {N : Type} [CommGroup N] [Finite N] [Nontrivial N] (p 
 
 /-- **The primitive case**, for an abstract faithful primitive action. -/
 theorem palfy_primitive_aux {G α : Type} [Group G] [Finite G] [MulAction G α] [FaithfulSMul G α]
-    [Finite α] [IsSolvable G] [Nontrivial G] [IsPreprimitive G α] :
+    [Finite α] [Group.IsSolvable G] [Nontrivial G] [IsPreprimitive G α] :
     Nat.card G ^ 3 ≤ Nat.card α ^ 72 := by
   classical
-  haveI : IsSolvable (⊤ : Subgroup G) :=
+  haveI : Group.IsSolvable (⊤ : Subgroup G) :=
     solvable_of_solvable_injective (Subgroup.subtype_injective ⊤)
   obtain ⟨N, hN, -, hc⟩ := exists_abelian_normal_of_solvable_normal (⊤ : Subgroup G) top_ne_bot
   haveI := hN.1
@@ -206,7 +210,7 @@ theorem palfy_primitive_aux {G α : Type} [Group G] [Finite G] [MulAction G α] 
       have hy : (y : G) ∈ W.map N.subtype := by rw [h]; exact y.2
       obtain ⟨w, hw, hwy⟩ := hy
       rwa [← Subtype.ext hwy]
-  haveI : IsSolvable ρ.range := solvable_of_surjective ρ.rangeRestrict_surjective
+  haveI : Group.IsSolvable ρ.range := solvable_of_surjective ρ.rangeRestrict_surjective
   have h3 : Nat.card ρ.range ^ 3 ≤ Nat.card N ^ 69 :=
     @palfy_affine_core N _ _ _ p _ (AddCommGroup.zmodModule (fun v => by
       change Additive.ofMul ((Additive.toMul v) ^ p) = Additive.ofMul 1
@@ -224,7 +228,8 @@ theorem palfyBound : PalfyBound := by
   refine ⟨24, ?_⟩
   intro n G hG hprim
   by_cases hnt : Nontrivial G
-  · haveI := hprim
+  · haveI : Group.IsSolvable G := hG
+    haveI := hprim
     have h := palfy_primitive_aux (G := G) (α := Fin n)
     rw [Nat.card_fin] at h
     have h' : Nat.card G ^ 3 ≤ (n ^ 24) ^ 3 := by rw [← pow_mul]; exact h

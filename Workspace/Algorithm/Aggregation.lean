@@ -1,11 +1,15 @@
-import Workspace.Algorithm.AggregationPlan
-import Workspace.Algorithm.AuxCases
-import Workspace.Algorithm.AuxCarrierRect
-import Workspace.Algorithm.CarrierOfState
-import Workspace.Algorithm.AggregationParams
-import Workspace.Algorithm.AuxOut
-import Workspace.Algorithm.LabelData
-import Workspace.Algorithm.CfgThreshold
+module
+
+public import Workspace.Algorithm.AggregationPlan
+public import Workspace.Algorithm.AuxCases
+public import Workspace.Algorithm.AuxCarrierRect
+public import Workspace.Algorithm.CarrierOfState
+public import Workspace.Algorithm.AggregationParams
+public import Workspace.Algorithm.AuxOut
+public import Workspace.Algorithm.LabelData
+public import Workspace.Algorithm.CfgThreshold
+
+@[expose] public section
 
 /-!
 # The interface of an aggregation round
@@ -33,8 +37,7 @@ aggregation step:
   `GiantLabels.Constituent`, `Workspace/Algorithm/LabelData.lean`): the labels are read on the
   domain, so that `π` factors through the faithful image `G|_dom` (`πd`, on which the local
   certificates are computed), and the Johnson block map of the constituent (Lemma A.11, `blocks`);
-* the cited inputs: the coherent refinement (`hK`), the bound on `6`-transitive groups (`h6`)
-  and the Design Lemma (`hD`);
+* the cited inputs: the coherent refinement (`hK`) and the Design Lemma (`hD`);
 * the parameter conditions `Params.Aggregates P` (Section 7.5, including `q₀ ≥ 2064`, the explicit
   label threshold of Lemma A.12) and the phase facts `q > q₀` and `N > N₀`;
 * the state is not in the row case (`hnot`; Algorithm 5: `GiantStep` aggregates only when the
@@ -107,9 +110,6 @@ structure AggregationData (P : Params) {Ω C : Type} (S : State Ω C) (L : Giant
   data (`JointFn`). The round refines the colorings of the two strings together, with one
   palette (Section A.3: "Use the same palette for both inputs"). -/
   hK : JointFn
-  /-- The bound behind Case 2b (cited, from CFSG): a `6`-transitive group of degree at least
-  `6` contains the alternating group. -/
-  h6 : GI.Cited.SixTransitiveContainsAlt
   /-- The Design Lemma behind Case 3 (cited, [H, Proposition 5.1]). -/
   hD : GI.Cited.DesignLemma
   /-- The state is not in the row case (Algorithm 5: "if this map is natural and (no rows are
@@ -149,18 +149,19 @@ theorem ℓ_le : (I.ℓ : ℝ) + 2 ≤ P.a := by
 string good in Cases 2b and 3. Such a tuple holds the anchors and the orbital pair of Case 2b ("Fix an ordered source
 tuple of `d - 1` distinct points … Choose one proper non-diagonal source orbital"), and the
 Design Lemma's tuple and the source vertex of the first rectangle in Case 3. The hypotheses
-`q ≥ 16` and `2κ ≤ q` follow from `q > q₀ ≥ 4κ + 2` and `κ ≥ 5`, and `β ≥ 3/4` from
+`q ≥ 24` and `2κ ≤ q` follow from `q > q₀ ≥ 4κ + 2` and `κ ≥ 7`, and `β ≥ 3/4` from
 `β ≥ 13/16`. -/
-theorem src_exists (nm : ClassNum S P.κ L.q) (hnm : ClassNum.OK I.fin S L I.πd P.κ nm) :
+theorem src_exists
+    (nm : ClassNum S P.κ L.q) (hnm : ClassNum.OK I.fin S L I.πd P.κ nm) :
     ∃ src : Fin I.ℓ → Fin L.q,
     (aggCase (structX I.fin S L I.πd I.hK P.κ nm src).grp = .twoB ∨
       aggCase (structX I.fin S L I.πd I.hK P.κ nm src).grp = .three) →
     ∀ Y, (outPair I.hK (structX I.fin S L I.πd I.hK P.κ nm src) Y).1.Good P.β :=
-  exists_src_good I.hK I.h6 I.hD I.fin S L I.πd nm hnm I.params.κ_five
-    (by have := I.params.q₀_cert; have := I.params.κ_five; have := I.q_large; omega)
+  exists_src_good I.hK I.hD I.fin S L I.πd nm hnm I.params.κ_five
+    (by have := I.params.q₀_cert; have := I.params.κ_seven; have := I.q_large; omega)
     (by have := I.params.q₀_cert; have := I.q_large; omega)
     (le_trans (by norm_num) I.params.β_cfg) (Nat.lt_succ_self P.κ)
-    (by have := I.params.κ_five; simp only [AggregationData.ℓ]; omega)
+    (by have := I.params.κ_seven; simp only [AggregationData.ℓ]; omega)
 
 /-- **The objects that end Cases 2b and 3**, read off the canonical structures `X`, `Y` of the
 two strings with their individualized tuples (`outPair`). Case 2b: "the canonical coherent

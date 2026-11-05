@@ -1,5 +1,9 @@
-import Workspace.CosetProductCoordinates
-import Mathlib.GroupTheory.GroupAction.Primitive
+module
+
+public import Workspace.CosetProductCoordinates
+public import Mathlib.GroupTheory.GroupAction.Primitive
+
+@[expose] public section
 
 namespace GI.PrimitiveCoordinates
 

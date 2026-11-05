@@ -1,4 +1,8 @@
-import Workspace.Impl.AggTupProg
+module
+
+public import Workspace.Impl.AggTupProg
+
+@[expose] public section
 
 /-!
 # The pointwise stabilizer of any points of a graph group, and the kernel `ker(φ_T|_A)`

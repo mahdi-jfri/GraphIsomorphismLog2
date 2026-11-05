@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.LinIntColumn
+module
+
+public import Workspace.Lang.Lib.LinIntColumn
+
+@[expose] public section
 
 /-! A row times an integer matrix. Columns are extracted from the dense row
 encoding, then paired with the input row in the proved dot-product loop.

@@ -1,6 +1,10 @@
-import Workspace.Algorithm.OutOrbital
-import Workspace.Paper.LocalCertificates
-import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+module
+
+public import Workspace.Algorithm.OutOrbital
+public import Workspace.Paper.LocalCertificates
+public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+
+@[expose] public section
 
 /-!
 # The object that ends Cases 2b and 3
@@ -246,16 +250,16 @@ end Twins
 
 /-- **A good source tuple exists** (Section A.3, Cases 2b and 3; Section 4.1: "We fix a bounded
 source tuple, branch over its target images"). For every state, label map and string, if `κ ≥ 5`,
-`q ≥ 16`, `q ≥ 2κ`, `β ≥ 3/4` and `ℓ ≥ max 6 (κ + 1)`, some source tuple `src` of length `ℓ`
-makes the object of the source string good in Cases 2b and 3. Case 2b uses the CFSG bound
-`GI.Cited.SixTransitiveContainsAlt` (`exists_orbitalOut_good`); Case 3 applies the Design Lemma
+`q ≥ 24`, `q ≥ 2κ`, `β ≥ 3/4` and `ℓ ≥ max 8 (κ + 1)`, some source tuple `src` of length `ℓ`
+makes the object of the source string good in Cases 2b and 3. Case 2b uses Wielandt's bound
+`GI.Proved.eightTransitiveContainsAlt` (`exists_orbitalOut_good`); Case 3 applies the Design Lemma
 `GI.Cited.DesignLemma` with `α = 3/4` to the refined tuple colors (`exists_designOut_good`),
 whose twin hypothesis is `twins_card_lt`. -/
-theorem exists_src_good (hK : JointFn) (h6 : SixTransitiveContainsAlt)
+theorem exists_src_good (hK : JointFn)
     (hD : DesignLemma) {Ω C : Type} (fin : Finite Ω) (S : State Ω C) (L : GiantLabels S)
     (πd : S.domGroup →* alternatingGroup (Fin L.q)) {κ : ℕ} (nm : ClassNum S κ L.q)
     (hnm : ClassNum.OK fin S L πd κ nm) {β : ℝ} (hκ : 5 ≤ κ)
-    (hq : 16 ≤ L.q) (hqκ : 2 * κ ≤ L.q) (hβ : 3 / 4 ≤ β) {ℓ : ℕ} (hℓ : κ < ℓ) (hℓ6 : 6 ≤ ℓ) :
+    (hq : 24 ≤ L.q) (hqκ : 2 * κ ≤ L.q) (hβ : 3 / 4 ≤ β) {ℓ : ℕ} (hℓ : κ < ℓ) (hℓ8 : 8 ≤ ℓ) :
     ∃ src : Fin ℓ → Fin L.q, (aggCase (structX fin S L πd hK κ nm src).grp = .twoB ∨
       aggCase (structX fin S L πd hK κ nm src).grp = .three) →
       ∀ Y : Canon L.q κ ℓ, (outPair hK (structX fin S L πd hK κ nm src) Y).1.Good β := by
@@ -287,7 +291,7 @@ theorem exists_src_good (hK : JointFn) (h6 : SixTransitiveContainsAlt)
       rw [if_pos hne] at hcase
       split_ifs at hcase with h
       exact h
-    obtain ⟨t, ht⟩ := exists_orbitalOut_good h6 (β := β) hq hℓ6 hne hng
+    obtain ⟨t, ht⟩ := exists_orbitalOut_good (β := β) hq hℓ8 hne hng
     refine ⟨t, fun _ Y => ?_⟩
     rw [outPair_twoB hK Y (by rw [hgrp]; exact hcase), hgrp, htup]
     exact ht _ (hK.left_ok _ _ _)

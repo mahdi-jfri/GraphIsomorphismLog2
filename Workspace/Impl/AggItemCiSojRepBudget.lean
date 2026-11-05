@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojCtxShape
-import Workspace.Impl.AggItemCiSojStartScalar
+module
+
+public import Workspace.Impl.AggItemCiSojCtxShape
+public import Workspace.Impl.AggItemCiSojStartScalar
+
+@[expose] public section
 
 /-! # The cited representation call at its actual encoded input weight -/
 
@@ -17,7 +21,7 @@ theorem itcs_set_parent_weight {q W : ℕ} (U : Finset (Fin q)) (hq : q≤2*W+3)
     (rcSetVal U).wt≤100*(W+3)^2 := by
   have hu : (rcSetVal U).wt≤7*q+4 := by
     simpa only [rcSetVal,Nat.mul_comm] using
-      wt_encFun_le (fun i => if i∈U then 1 else 0) (B:=1) (fun i => by dsimp only; split_ifs <;> omega)
+      wt_encFun_le (fun i => if i∈U then 1 else 0) (B:=1) (fun i => by split_ifs <;> omega)
   have hpow : W+3≤(W+3)^2 := Nat.le_self_pow (by decide : 2≠0) (W+3)
   omega
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJAutJ
-import Workspace.Impl.TermJCoset
+module
+
+public import Workspace.Impl.TermJAutJ
+public import Workspace.Impl.TermJCoset
+
+@[expose] public section
 
 /-!
 # Generators of `Aut_J(x)`: the local products of the kernel of the sum map

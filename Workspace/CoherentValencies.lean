@@ -1,6 +1,10 @@
-import Workspace.CoherentRefinementOutput
-import Workspace.SemiregularTwins
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+module
+
+public import Workspace.CoherentRefinementOutput
+public import Workspace.SemiregularTwins
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+
+@[expose] public section
 
 namespace GI.PairRefinement
 
@@ -94,7 +98,7 @@ theorem rowValency_lt_degree (c : Coloring n) (hc : Coherent c)
       rw [heq]
       exact Finset.mem_univ x
     exact offDiagonal_loop_ne c hc side a b x hab (Finset.mem_filter.mp hm).2
-  simpa only [Finset.card_univ, Fintype.card_fin] using hlt
+  simpa only [rowValency, Finset.card_univ, Fintype.card_fin] using hlt
 
 def colorMatrix (c : Coloring n) (side : Bool) (k : Color n) (x y : Fin n) : Bool :=
   decide (c (side, x, y) = k)

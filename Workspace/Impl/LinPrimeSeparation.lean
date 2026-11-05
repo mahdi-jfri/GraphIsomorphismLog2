@@ -1,4 +1,8 @@
-import Workspace.Impl.LinTrialPrimary
+module
+
+public import Workspace.Impl.LinTrialPrimary
+
+@[expose] public section
 
 /-! Bounded primary projections jointly detect zero. The bound on the
 prime divisors is precisely the one available for the paper's quotients. -/
@@ -14,7 +18,6 @@ theorem linPrimeSplit_exponent {d p : ℕ} {m : Fin d → ℕ}
     exact (Nat.ne_of_gt (hm i)) hh
   have hnd := hp.coprime_iff_not_dvd.mp (D.coprime i)
   have he := congrArg (fun n => n.factorization p) (D.factor i)
-  dsimp only at he
   rw [Nat.factorization_mul (pow_ne_zero _ hp.ne_zero) hco] at he
   simpa [Nat.factorization_pow_self hp, hp.factorization_self, Nat.factorization_eq_zero_of_not_dvd hnd] using he.symm
 

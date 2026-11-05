@@ -1,4 +1,8 @@
-import Workspace.Proved.SNFEmb
+module
+
+public import Workspace.Proved.SNFEmb
+
+@[expose] public section
 
 /-!
 # From a diagonal matrix to the Smith form (Smith form)

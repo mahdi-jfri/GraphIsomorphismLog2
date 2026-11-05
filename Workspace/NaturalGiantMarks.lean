@@ -1,4 +1,8 @@
-import Workspace.NaturalGiantCentralizer
+module
+
+public import Workspace.NaturalGiantCentralizer
+
+@[expose] public section
 
 open scoped commutatorElement
 

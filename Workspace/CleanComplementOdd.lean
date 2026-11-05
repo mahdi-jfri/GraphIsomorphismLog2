@@ -1,4 +1,8 @@
-import Workspace.CleanComplementConjugates
+module
+
+public import Workspace.CleanComplementConjugates
+
+@[expose] public section
 
 /-! Odd-degree clean complement from one actual localized pair and the supplied
 surjective alternating top action. No family of compatible lifts is assumed. -/
@@ -24,7 +28,7 @@ noncomputable def chosenCycle (j : J) : Equiv.Perm V :=
 theorem chosenCycle_clean (j : J) :
     CleanBlockCycle A.label none (some (j, false)) (some (j, true)) (chosenCycle d hcard j) := by
   obtain ⟨h0, h1, h2⟩ := conjugator_spec d hcard j
-  simpa only [h0, h1, h2] using
+  simpa only [chosenCycle, h0, h1, h2] using
     d.clean.conjugate (conjugator d hcard j).val (A.top (conjugator d hcard j)).val
       (A.action (conjugator d hcard j))
 

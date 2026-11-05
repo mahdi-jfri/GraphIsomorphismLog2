@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectBasisPiece
-import Workspace.Impl.LinObjectQuotientBuild
+module
+
+public import Workspace.Impl.LinObjectBasisPiece
+public import Workspace.Impl.LinObjectQuotientBuild
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,6 +1,10 @@
-import Workspace.Impl.CamNormalizer
-import Mathlib.Logic.Equiv.Fintype
-import Mathlib.Data.Fintype.Powerset
+module
+
+public import Workspace.Impl.CamNormalizer
+public import Mathlib.Logic.Equiv.Fintype
+public import Mathlib.Data.Fintype.Powerset
+
+@[expose] public section
 
 /-!
 # The Johnson scheme
@@ -80,7 +84,7 @@ theorem john_exists_perm_pair {m : ℕ} {A B A' B' : Finset (Fin m)} (hA : #A = 
   refine ⟨σ, fun a => ?_⟩
   have h := Equiv.ofFiberEquiv_map (fun c => Fintype.equivOfCardEq (hcard c)) a
   simp only [johnType, Prod.mk.injEq] at h
-  exact ⟨by simpa using h.1, by simpa using h.2⟩
+  exact ⟨decide_eq_decide.mp h.1, decide_eq_decide.mp h.2⟩
 
 /-- **Transitivity of `Alt(m)` on pairs.** If at least two points lie outside `A' ∪ B'`, then two
 pairs of sets with the same sizes and the same intersection size are carried to each other by

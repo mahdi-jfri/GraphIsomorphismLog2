@@ -1,5 +1,9 @@
-import Workspace.Impl.LinIntPresentation
-import Workspace.Lang.Lib.LinIntVector
+module
+
+public import Workspace.Impl.LinIntPresentation
+public import Workspace.Lang.Lib.LinIntVector
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -47,7 +51,9 @@ theorem linBasis_spec {P : Program} {b n : ℕ} (hp : P.HasAt b (linBasisFuns b)
     (by simp) (fun k acc _ he => he ▸ wacc k) (fun k acc hk he => ?_)
   · refine hlp.mono fun out cost ho => ⟨?_, ?_⟩
     · have hlen : xs.length = n := by simp [xs]
-      simpa only [← hlen, List.take_length] using ho.1
+      have h1 := ho.1
+      rw [← hlen, List.take_length] at h1
+      exact h1
     · have hc := ho.2
       change cost ≤ (∑ _ ∈ Finset.range n, 1000 * (W + n + M + 1)) + loopModK * (n + 1) * (W + n + M + 1) at hc
       simp only [Finset.sum_const, Finset.card_range, smul_eq_mul, loopModK] at hc
@@ -108,7 +114,6 @@ theorem linBasis_spec {P : Program} {b n : ℕ} (hp : P.HasAt b (linBasisFuns b)
         rw [List.take_add_one, List.getElem?_eq_getElem (by simp [xs]; omega)]
         simp only [xs, List.getElem_map, Option.toList_some]
         rw [hj]
-      dsimp only
       rw [ht]
     · have wa := wt_list3_le a (.nat k) (.list (xs.take k))
       have wk := wt_nat_le k

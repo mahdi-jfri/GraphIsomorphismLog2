@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCfDeg
-import Workspace.Impl.AggItemS2b
+module
+
+public import Workspace.Impl.AggItemCfDeg
+public import Workspace.Impl.AggItemS2b
+
+@[expose] public section
 
 /-!
 # The degree of transitivity on the dominant orbit

@@ -1,5 +1,9 @@
-import Workspace.Proved.VsHCoverMath
-import Workspace.Proved.VsHGreedyMath
+module
+
+public import Workspace.Proved.VsHCoverMath
+public import Workspace.Proved.VsHGreedyMath
+
+@[expose] public section
 
 /-!
 # Membership in `⟨kept⟩ S` by words

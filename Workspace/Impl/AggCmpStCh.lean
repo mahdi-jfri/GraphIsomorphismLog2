@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCmpStProg
+module
+
+public import Workspace.Impl.AggCmpStProg
+
+@[expose] public section
 
 /-!
 # The start of a pair: the choice for the first coset

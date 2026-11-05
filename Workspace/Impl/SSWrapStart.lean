@@ -1,4 +1,8 @@
-import Workspace.Impl.SSWrapBase
+module
+
+public import Workspace.Impl.SSWrapBase
+
+@[expose] public section
 
 /-!
 # The start of the wrappers

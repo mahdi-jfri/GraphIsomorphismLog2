@@ -1,4 +1,8 @@
-import Workspace.Impl.ColElem
+module
+
+public import Workspace.Impl.ColElem
+
+@[expose] public section
 
 /-!
 # The switch test, read from labels

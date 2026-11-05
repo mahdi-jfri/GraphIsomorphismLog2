@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojQuery
-import Workspace.Impl.LabelLift
+module
+
+public import Workspace.Impl.AggItemCiSojQuery
+public import Workspace.Impl.LabelLift
+
+@[expose] public section
 
 /-!
 # Projecting a physical answer through the stored graph homomorphism

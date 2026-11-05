@@ -1,4 +1,8 @@
-import Workspace.NormalTransposeColumns
+module
+
+public import Workspace.NormalTransposeColumns
+
+@[expose] public section
 
 /-!
 # Lemma A.14: equal column widths from the transitivity of `G`

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggStructDesPair
+module
+
+public import Workspace.Impl.AggStructDesPair
+
+@[expose] public section
 
 /-!
 # The Case 3 test as a program: outcome (b)

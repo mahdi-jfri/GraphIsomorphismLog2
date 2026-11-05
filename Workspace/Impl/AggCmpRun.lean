@@ -1,6 +1,10 @@
-import Workspace.Impl.AggCmpSetup
-import Workspace.Impl.AggCertWt
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Impl.AggCmpSetup
+public import Workspace.Impl.AggCertWt
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-!
 # `CmRunOK` and `AsCompOK`: the comparison program meets its contract

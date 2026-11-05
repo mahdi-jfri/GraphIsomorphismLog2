@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCache
-import Workspace.Impl.AggWin
+module
+
+public import Workspace.Impl.AggCache
+public import Workspace.Impl.AggWin
+
+@[expose] public section
 
 /-!
 # The certificate phase as a script with choices: one step

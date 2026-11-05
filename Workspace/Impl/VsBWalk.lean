@@ -1,5 +1,9 @@
-import Workspace.Impl.VsQGL
-import Workspace.Proved.VsBFldNT
+module
+
+public import Workspace.Impl.VsQGL
+public import Workspace.Proved.VsBFldNT
+
+@[expose] public section
 
 /-!
 # The power `X^{F_q}` of a matrix
@@ -127,7 +131,6 @@ theorem vsBWalk_spec [NeZero p] {P : Program} {b g : ℕ} (h : P.HasAt b (vsBWal
     have ea : (Val.list [Val.nat q, vsQE p d E X, .nat n]).wt = a.wt := rfl
     have q66 : 1 ≤ (N + 1) ^ 6 := Nat.one_le_pow _ _ (by omega)
     simp only [max_def] at hc
-    dsimp only
     split_ifs at hc <;> omega
   · rintro w c ⟨rfl, hc⟩
     refine ⟨rfl, hc.trans ?_⟩

@@ -1,4 +1,8 @@
-import Workspace.Proved.VsWKey
+module
+
+public import Workspace.Proved.VsWKey
+
+@[expose] public section
 
 /-!
 # The subspace of a key

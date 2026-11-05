@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiPartK
+module
+
+public import Workspace.Impl.AggItemCiPartK
+
+@[expose] public section
 
 /-!
 # The colored-partition item as a program: alignment and generators
@@ -127,7 +131,9 @@ theorem itciOt_spec (f : Fin q → ℕ) :
     split_ifs at h with hlt
     rw [Option.some.injEq] at h
     subst h
-    have hl : itciIdx f < ((List.range q).map Val.nat).length := by simpa using hlt
+    have hl : ((List.range q).map Val.nat).findIdx (itFixQ (itciCN f)) <
+        ((List.range q).map Val.nat).length := by
+      rw [List.length_map, List.length_range]; exact hlt
     have hsat := List.findIdx_getElem (w := hl)
     simp only [List.getElem_map, List.getElem_range, itFixQ] at hsat
     have hlt2 : ((List.range q).map Val.nat).findIdx (itFixQ (itciCN f)) < q := hlt

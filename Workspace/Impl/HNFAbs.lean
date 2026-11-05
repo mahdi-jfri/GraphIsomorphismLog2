@@ -1,4 +1,8 @@
-import Workspace.Impl.HNFBar
+module
+
+public import Workspace.Impl.HNFBar
+
+@[expose] public section
 
 /-!
 # The sum of the absolute values of the entries, as a program

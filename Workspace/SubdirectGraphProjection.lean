@@ -1,4 +1,8 @@
-import Workspace.SimpleSubdirect
+module
+
+public import Workspace.SimpleSubdirect
+
+@[expose] public section
 
 namespace GI.PrimitiveProducts
 
@@ -56,12 +60,3 @@ theorem goursatFst_eq_bot_of_no_full_first [IsSimpleGroup S]
     exact Subgroup.mem_top s
 
 end GI.PrimitiveProducts
-
-#print axioms GI.PrimitiveProducts.secondProjection
-#print axioms GI.PrimitiveProducts.secondProjection_surjective
-#print axioms GI.PrimitiveProducts.secondProjection_injective
-#print axioms GI.PrimitiveProducts.secondProjectionEquiv
-#print axioms GI.PrimitiveProducts.projectionGraphHom
-#print axioms GI.PrimitiveProducts.projectionGraphHom_pair_mem
-#print axioms GI.PrimitiveProducts.card_eq_secondProjection
-#print axioms GI.PrimitiveProducts.goursatFst_eq_bot_of_no_full_first

@@ -1,6 +1,10 @@
-import Workspace.Impl.VsBFldBP
-import Workspace.Impl.VsBChain
-import Workspace.Proved.VsBFldC
+module
+
+public import Workspace.Impl.VsBFldBP
+public import Workspace.Impl.VsBChain
+public import Workspace.Proved.VsBFldC
+
+@[expose] public section
 
 /-!
 # The transporter hypotheses of the two chains

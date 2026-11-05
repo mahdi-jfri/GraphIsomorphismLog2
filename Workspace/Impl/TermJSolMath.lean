@@ -1,6 +1,10 @@
-import Workspace.Impl.LinIntSolverCost
-import Workspace.Impl.LinSolve
-import Mathlib.Algebra.Group.Subgroup.Finsupp
+module
+
+public import Workspace.Impl.LinIntSolverCost
+public import Workspace.Impl.LinSolve
+public import Mathlib.Algebra.Group.Subgroup.Finsupp
+
+@[expose] public section
 
 /-!
 # Zero-sum equations over a presented abelian group (mathematics)
@@ -32,7 +36,8 @@ theorem tmJSolStack_vecMul {t G : ℕ} (M : Matrix (Fin t) (Fin t) ℤ)
     z ᵥ* tmJSolStack M B =
       (fun i => z (Fin.castAdd G i)) ᵥ* M + (fun k => z (Fin.natAdd t k)) ᵥ* B := by
   funext j
-  simp [vecMul, dotProduct, Fin.sum_univ_add, tmJSolStack]
+  simp [vecMul, dotProduct, Fin.sum_univ_add, tmJSolStack,
+    Fin.append_left (u := M) (v := B), Fin.append_right (u := M) (v := B)]
 
 /-- The stacked matrix has full column rank, because its top block `M` is nonsingular. -/
 theorem tmJSolStack_rank {t G : ℕ} (M : Matrix (Fin t) (Fin t) ℤ)
@@ -42,7 +47,8 @@ theorem tmJSolStack_rank {t G : ℕ} (M : Matrix (Fin t) (Fin t) ℤ)
   have htop : M *ᵥ (v - w) = 0 := by
     funext i
     have h := congrFun hvw (Fin.castAdd G i)
-    simp only [mulVec, dotProduct, tmJSolStack, Matrix.of_apply, Fin.append_left] at h
+    simp only [mulVec, dotProduct, tmJSolStack, Matrix.of_apply,
+      Fin.append_left (u := M) (v := B)] at h
     simp only [mulVec, dotProduct, Pi.sub_apply, mul_sub, Finset.sum_sub_distrib, h,
       sub_self, Pi.zero_apply]
   exact sub_eq_zero.mp (Matrix.eq_zero_of_mulVec_eq_zero hM htop)
@@ -104,7 +110,8 @@ theorem tmJSol_kernel_closure {t G : ℕ} (M : Matrix (Fin t) (Fin t) ℤ)
     (hH : IsHermiteForm H) (c : Fin G → ℤ) :
     c ∈ AddSubgroup.closure (Set.range (tmJSolKer U)) ↔
       ∃ y : Fin t → ℤ, c ᵥ* B + y ᵥ* M = 0 := by
-  rw [tmJSol_kernel_iff M B U H hU h hH c, AddSubgroup.mem_closure_range_iff_of_fintype]
+  rw [tmJSol_kernel_iff M B U H hU h hH c,
+    AddSubgroup.mem_closure_range_iff_of_fintype (f := tmJSolKer U)]
   constructor
   · rintro ⟨x, rfl⟩
     refine ⟨x, funext fun j => ?_⟩

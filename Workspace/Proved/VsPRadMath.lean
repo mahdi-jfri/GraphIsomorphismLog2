@@ -1,5 +1,9 @@
-import Workspace.Proved.VsPPairMath
-import Workspace.Proved.VsWLinMath
+module
+
+public import Workspace.Proved.VsPPairMath
+public import Workspace.Proved.VsWLinMath
+
+@[expose] public section
 
 /-!
 # The radical test as the program runs it

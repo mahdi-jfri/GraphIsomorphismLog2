@@ -10,9 +10,13 @@
   membership test, when `G` is given by the list of its elements (`cosetInter_spec`). The result
   is `[]` or `[y, encGroup K]` with `K` the elements of `G ∩ H`.
 -/
-import Workspace.Lang.Prims.Ops
-import Workspace.Lang.Lib.SmallGroup
-import Workspace.Assembly.Encoding
+module
+
+public import Workspace.Lang.Prims.Ops
+public import Workspace.Lang.Lib.SmallGroup
+public import Workspace.Assembly.Encoding
+
+@[expose] public section
 
 namespace GI.Lang
 

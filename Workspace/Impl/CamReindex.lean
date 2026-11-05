@@ -1,4 +1,8 @@
-import Workspace.Impl.CamDefs
+module
+
+public import Workspace.Impl.CamDefs
+
+@[expose] public section
 
 /-!
 # Renumbering the coordinates

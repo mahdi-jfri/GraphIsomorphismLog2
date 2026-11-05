@@ -1,5 +1,10 @@
-import Workspace.Impl.LinActiveMatrix
-import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+module
+
+public import Workspace.Impl.LinActiveMatrix
+public import Workspace.Impl.AddEquivGroup
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+
+@[expose] public section
 
 /-! Dense matrices of the linear action on p^j V_p / p^(j+1) V_p.
 Inactive coordinates receive the identity action as a harmless fixed padding. -/
@@ -29,6 +34,7 @@ theorem linPrimaryFieldMatrix_one {d : ℕ} (p : ℕ) (ν : Fin d → ℕ) (j : 
           simpa only [Matrix.one_apply] using linFiniteMatrix_id_mod (linPrimaryOrders p ν) p i k hpi
     _ = 1 := linActiveMatrix_one _
 
+set_option backward.isDefEq.respectTransparency false in
 theorem linPrimaryFieldMatrix_comp {d : ℕ} (p : ℕ) (hp : 0 < p) (ν : Fin d → ℕ) (j : ℕ)
     (f g : linFiniteVec (linPrimaryOrders p ν) →+ linFiniteVec (linPrimaryOrders p ν)) :
     linPrimaryFieldMatrix p ν j (f.comp g) =

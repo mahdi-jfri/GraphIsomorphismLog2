@@ -1,5 +1,9 @@
-import Workspace.SocleFactorKernel
-import Workspace.AlternatingSections
+module
+
+public import Workspace.SocleFactorKernel
+public import Workspace.AlternatingSections
+
+@[expose] public section
 
 namespace GI.SectionCaps
 
@@ -34,7 +38,7 @@ theorem faithful_group_family {I : Type*} [Fintype I]
   apply quotient_degree_le (bounds i) hk (component i) q onto
   intro u hu
   have hm : q u ∈ (component i).ker.map q := ⟨u, hu, rfl⟩
-  simpa only [hbot, Subgroup.mem_bot] using hm
+  simpa only [hbot, Subgroup.mem_bot, MonoidHom.mem_ker] using hm
 
 end GI.SectionCaps
 

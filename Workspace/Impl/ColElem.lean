@@ -1,6 +1,10 @@
-import Workspace.Impl.ColVal
-import Workspace.Lang.Lib.Fold
-import Workspace.Lang.Lib.Tabulate
+module
+
+public import Workspace.Impl.ColVal
+public import Workspace.Lang.Lib.Fold
+public import Workspace.Lang.Lib.Tabulate
+
+@[expose] public section
 
 /-!
 # The entry functions of the column step

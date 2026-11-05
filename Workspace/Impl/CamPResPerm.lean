@@ -1,5 +1,9 @@
-import Workspace.Impl.CamPIndex
-import Workspace.Impl.CamRestrict
+module
+
+public import Workspace.Impl.CamPIndex
+public import Workspace.Impl.CamRestrict
+
+@[expose] public section
 
 /-!
 # Step 7 of `camProg`: restricting a permutation to an invariant list

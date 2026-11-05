@@ -1,7 +1,11 @@
-import Workspace.Impl.CamPResPerm
-import Workspace.Lang.Lib.Orbit
-import Workspace.Lang.Lib.Search
-import Workspace.Lang.Prims.Ops
+module
+
+public import Workspace.Impl.CamPResPerm
+public import Workspace.Lang.Lib.Orbit
+public import Workspace.Lang.Lib.Search
+public import Workspace.Lang.Prims.Ops
+
+@[expose] public section
 
 /-!
 # Step 7 of `camProg`: one factor on one of its orbits

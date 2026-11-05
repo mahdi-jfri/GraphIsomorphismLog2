@@ -1,6 +1,10 @@
-import Workspace.Impl.VsQApp
-import Workspace.Impl.VsWProgCo
-import Workspace.Impl.VsWProgMC
+module
+
+public import Workspace.Impl.VsQApp
+public import Workspace.Impl.VsWProgCo
+public import Workspace.Impl.VsWProgMC
+
+@[expose] public section
 
 /-!
 # Basic programs on local matrices

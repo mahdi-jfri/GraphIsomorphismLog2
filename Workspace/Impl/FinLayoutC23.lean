@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCfCase
-import Workspace.Impl.AggItemCiSpec
-import Workspace.Impl.AggItemHvInitFit
+module
+
+public import Workspace.Impl.AggItemCfCase
+public import Workspace.Impl.AggItemCiSpec
+public import Workspace.Impl.AggItemHvInitFit
+
+@[expose] public section
 
 /-! # Fixed functions of Cases 2b and 3
 

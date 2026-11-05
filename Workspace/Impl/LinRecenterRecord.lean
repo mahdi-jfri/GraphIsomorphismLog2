@@ -1,5 +1,9 @@
-import Workspace.Impl.LinRecenterOffset
-import Workspace.Impl.LinIntAffineMatrix
+module
+
+public import Workspace.Impl.LinRecenterOffset
+public import Workspace.Impl.LinIntAffineMatrix
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

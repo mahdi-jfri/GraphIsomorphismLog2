@@ -1,4 +1,8 @@
-import Workspace.Proved.VsWAlgMath
+module
+
+public import Workspace.Proved.VsWAlgMath
+
+@[expose] public section
 
 /-!
 # Joint eigenspaces as lists of bases

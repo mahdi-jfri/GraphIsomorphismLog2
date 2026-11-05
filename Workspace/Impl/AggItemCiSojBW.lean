@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojBT
+module
+
+public import Workspace.Impl.AggItemCiSojBT
+
+@[expose] public section
 
 /-! # The balance scan with all weight preconditions discharged -/
 

@@ -1,9 +1,13 @@
-import Mathlib.LinearAlgebra.Dimension.Finite
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.LinearAlgebra.LinearIndependent.Lemmas
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-import Mathlib.Data.Rat.Defs
-import Mathlib.Algebra.Order.Field.Rat
+module
+
+public import Mathlib.LinearAlgebra.Dimension.Finite
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.LinearAlgebra.LinearIndependent.Lemmas
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+public import Mathlib.Data.Rat.Defs
+public import Mathlib.Algebra.Order.Field.Rat
+
+@[expose] public section
 
 /-!
 # Fisher's inequality

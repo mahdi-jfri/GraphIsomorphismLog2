@@ -1,4 +1,8 @@
-import Workspace.Assembly.BuildMath
+module
+
+public import Workspace.Assembly.BuildMath
+
+@[expose] public section
 
 /-!
 # Reading the answer of Algorithm 1

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabTorsor
+module
+
+public import Workspace.Impl.TermGlueLabTorsor
+
+@[expose] public section
 
 /-!
 # The affine action of `D` on the label torsor
@@ -245,7 +249,7 @@ theorem tmGL_types_d (hn : Normalizes H N) {h : P} (hD : h ∈ Aut H (types N x)
 theorem tmGL_prod_types {M : Type*} [CommMonoid M] (F : Set Ω → M) {z : Fin q → Ω}
     (hz : types N z = types N x) : ∏ i, F (orbitN N (z i)) = ∏ i, F (orbitN N (x i)) := by
   have := congrArg (fun T : Multiset (Set Ω) => (T.map F).prod) hz
-  simpa [types, Multiset.map_map, Finset.prod_eq_multiset_prod] using this
+  simpa [types, Multiset.map_map, Finset.prod_eq_multiset_prod, Function.comp_def] using this
 
 /-- **The label is equivariant** (the paper's formula). For `h ∈ D`, valid `t`, and a tuple `d`
 of class `h`, the label of `z^d` is `κ_h(s(z)) · Π_i [t(type x_i)] · Π_i [h⁻¹ d_i]`. -/
@@ -268,7 +272,7 @@ theorem tmGL_equivariant (hker : TmGLKer N H φ) {rep : Set Ω → Ω} (hrep : T
     rw [tmGL_orbit_d hn hh hd z i, show t (orbitN N (z i)) * (h⁻¹ * n i * h) * (h⁻¹ * d i) =
       t (orbitN N (z i)) * (h⁻¹ * (n i * d i)) by group, ← act_act, ← (ht _ (hmem i)).2, act_act,
       show h * (h⁻¹ * (n i * d i)) = n i * d i by group, ← act_act, (hA i).2]
-    simp [rowAct]
+    simp [rowAct, Perm.one_symm]
   have hbN : ∀ i, t (orbitN N (z i)) * (h⁻¹ * n i * h) * (h⁻¹ * d i) ∈ N := fun i =>
     N.mul_mem (N.mul_mem (ht _ (hmem i)).1 (hn.inv hh (hA i).1)) (hd i)
   rw [tmGLLab_eq hrep hz' hbN hb]

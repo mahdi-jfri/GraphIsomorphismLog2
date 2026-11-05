@@ -1,7 +1,11 @@
-import Workspace.Impl.LinSmith
-import Workspace.Impl.LinHermite
-import Workspace.Impl.LinPresentation
-import Workspace.Impl.TermGlueLabAff
+module
+
+public import Workspace.Impl.LinSmith
+public import Workspace.Impl.LinHermite
+public import Workspace.Impl.LinPresentation
+public import Workspace.Impl.TermGlueLabAff
+
+@[expose] public section
 
 /-!
 # The quotient of `ℤ^c` by integer relations, in finite abelian coordinates

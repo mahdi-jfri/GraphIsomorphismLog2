@@ -1,4 +1,8 @@
-import Workspace.JohnsonForest
+module
+
+public import Workspace.JohnsonForest
+
+@[expose] public section
 
 namespace GI.Johnson.RefinementTree
 

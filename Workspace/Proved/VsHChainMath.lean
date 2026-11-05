@@ -1,4 +1,8 @@
-import Workspace.Proved.VsWEigCount
+module
+
+public import Workspace.Proved.VsWEigCount
+
+@[expose] public section
 
 /-!
 # The chain of partial sums of pieces
@@ -114,7 +118,6 @@ theorem vsH_chain {D e : ℕ} {Ps : List (List (List ℕ))}
       rw [e1, vsHV_succ Ps (by omega)]; exact le_sup_left
     refine lt_of_le_of_ne hle fun h => ?_
     have := congrArg (fun U : Submodule (ZMod p) (Fin D → ZMod p) => finrank (ZMod p) U) h
-    simp only at this
     rw [hfr _ (by omega), hfr _ (by omega)] at this
     have : (b - t - 1) * e < (b - t) * e := Nat.mul_lt_mul_of_pos_right (by omega) he
     omega

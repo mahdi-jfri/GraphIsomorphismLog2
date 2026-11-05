@@ -1,4 +1,8 @@
-import Workspace.Proved.VsMBasic
+module
+
+public import Workspace.Proved.VsMBasic
+
+@[expose] public section
 
 /-!
 # The nondegenerate pairing (M4) and the least spin (M5)

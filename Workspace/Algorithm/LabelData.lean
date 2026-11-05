@@ -1,5 +1,9 @@
-import Workspace.Algorithm.AggregationParams
-import Workspace.Algorithm.HierInv
+module
+
+public import Workspace.Algorithm.AggregationParams
+public import Workspace.Algorithm.HierInv
+
+@[expose] public section
 
 /-!
 # The data that the supplied labels carry

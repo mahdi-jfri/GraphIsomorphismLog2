@@ -1,4 +1,8 @@
-import Workspace.TailFactorUniqueness
+module
+
+public import Workspace.TailFactorUniqueness
+
+@[expose] public section
 
 namespace GI.PrimitiveProducts
 
@@ -72,12 +76,3 @@ theorem tailImage_full_factor_unique [Finite S] [IsSimpleGroup S]
     (splitImage_no_full_tail H hno) nonabelian i j hi hj
 
 end GI.PrimitiveProducts
-
-#print axioms GI.PrimitiveProducts.splitImage_mem
-#print axioms GI.PrimitiveProducts.splitImage_head_surjective
-#print axioms GI.PrimitiveProducts.tailImage_subdirect
-#print axioms GI.PrimitiveProducts.splitImage_no_full_first
-#print axioms GI.PrimitiveProducts.splitImage_no_full_tail
-#print axioms GI.PrimitiveProducts.splitImage_first_kernel_eq_bot
-#print axioms GI.PrimitiveProducts.card_eq_tailImage
-#print axioms GI.PrimitiveProducts.tailImage_full_factor_unique

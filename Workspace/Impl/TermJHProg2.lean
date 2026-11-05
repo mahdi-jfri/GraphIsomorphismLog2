@@ -1,6 +1,10 @@
-import Workspace.Impl.TermJHProg
-import Workspace.Impl.LinPermPow
-import Workspace.Impl.TermJProgTl
+module
+
+public import Workspace.Impl.TermJHProg
+public import Workspace.Impl.LinPermPow
+public import Workspace.Impl.TermJProgTl
+
+@[expose] public section
 
 /-!
 # The transporter of one label: the correction programs

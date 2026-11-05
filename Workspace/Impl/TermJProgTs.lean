@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJProgTl
-import Workspace.Impl.TermJProgYg4
+module
+
+public import Workspace.Impl.TermJProgTl
+public import Workspace.Impl.TermJProgYg4
+
+@[expose] public section
 
 /-!
 # The even products of lifted transpositions (program)

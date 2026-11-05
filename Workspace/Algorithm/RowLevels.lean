@@ -1,5 +1,9 @@
-import Workspace.Algorithm.ColumnInv
-import Workspace.Algorithm.Expose
+module
+
+public import Workspace.Algorithm.ColumnInv
+public import Workspace.Algorithm.Expose
+
+@[expose] public section
 
 /-!
 # The stored levels against the row partition

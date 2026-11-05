@@ -1,6 +1,10 @@
-import Workspace.Proved.VsPFinMath
-import Workspace.Impl.VsPRad
-import Workspace.Impl.VsPCtxP
+module
+
+public import Workspace.Proved.VsPFinMath
+public import Workspace.Impl.VsPRad
+public import Workspace.Impl.VsPCtxP
+
+@[expose] public section
 
 /-!
 # Setting up the pairing on `N₂`
@@ -11,6 +15,8 @@ import Workspace.Impl.VsPCtxP
   in `S`.
 * `vsP_S4_of`: all of this gives `VsPS4`.
 -/
+
+set_option backward.isDefEq.respectTransparency false
 
 namespace GI.Proved
 

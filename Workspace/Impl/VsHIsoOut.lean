@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHIso
+module
+
+public import Workspace.Impl.VsHIso
+
+@[expose] public section
 
 /-!
 # What the two passes compute
@@ -14,6 +18,8 @@ From the hand-off of step 4 (`VsMHard H̄ Ā Ȳ r` with `Ȳ = ⟨ȳs⟩ S`):
 namespace GI.Impl
 
 open GI.Lang GI.Cited GI.Proved Equiv
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 variable {I : VecStabInst} {s : VsQSt I} [Fact I.p.Prime]
 

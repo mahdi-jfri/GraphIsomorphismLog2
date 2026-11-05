@@ -1,5 +1,9 @@
-import Workspace.Impl.FinLayoutAgg
-import Workspace.Impl.AggCertOK
+module
+
+public import Workspace.Impl.FinLayoutAgg
+public import Workspace.Impl.AggCertOK
+
+@[expose] public section
 
 /-!
 # The certificate phase in the final program
@@ -31,8 +35,8 @@ namespace GI.Impl
 
 open GI.Algorithm GI.Assembly GI.Lang Equiv Equiv.Perm
 open GI.Cited (Val PointwiseStab Preimage NormalizedFactor Membership MinimalBlocks GroupOrder
-  CameronRecognition ChiefSeriesAlgo DerivedSubgroup QuotientCentralizer NormalizedIntersection
-  SylowAlgo SylowConjugate NormalClosure)
+  CameronRecognition DerivedSubgroup NormalizedIntersection
+  NormalClosure)
 
 /-! ### The move program from its function table -/
 
@@ -44,8 +48,37 @@ set_option linter.unusedSimpArgs false
 private theorem fcr_peel {P : Program} {b n : ℕ} {A B : List Expr} (h : P.HasAt b (A ++ B))
     (hn : A.length = n) : P.HasAt b A ∧ P.HasAt (b + n) B := ⟨h.left, hn ▸ h.right⟩
 
-macro "fcr_len" : tactic => `(tactic| simp only [List.length_append, List.length_cons,
-  List.length_nil, allFuns, ansGensFuns, appendFuns, ckFindFuns, clSwapFuns, closFuns, composeFuns, countFuns, cpFzFuns, cpMvFuns, cycGensFuns, domFuns, dsMapFuns, eqNatsFuns, filterFuns, findEqFuns, findFuns, foldlFuns, gatherFuns, graphPreFuns, graphStabFuns, graphTupFuns, imgCardFuns, incFuns, invFuns, invMapFuns, iterFuns, krFuns, leFuns, loopFuns, mapFuns, minMapFuns, mkGroupFuns, orbTFuns, orbitFuns, pEncMapFuns, pSplitFuns, pSplitMapFuns, ptFuns, rangeFuns, redFuns, rightMapFuns, roundFoldFuns, tailFuns, tupOrbFuns, wpFuns, wrMapFuns])
+local macro "fcr_blk_len" : tactic => `(tactic| (
+  dsimp only [incFuns, graphStabFuns, ptFuns, tailFuns, mkGroupFuns,
+    ckFindFuns, graphTupFuns, pSplitMapFuns, krFuns, wpFuns, ansGensFuns, closFuns,
+    tupOrbFuns, pSplitFuns, clSwapFuns, invFuns, findEqFuns, cpFzFuns]
+  simp only [List.length_append, length_domFuns, length_imgCardFuns, length_orbTFuns,
+    length_orbitFuns, length_pEncMapFuns, length_filterFuns, length_rangeFuns]
+  rfl))
+
+private theorem l_inc (b j : ℕ) : (incFuns b j).length = 132 := by fcr_blk_len
+private theorem l_stab (b j : ℕ) : (graphStabFuns b j).length = 33 := by fcr_blk_len
+private theorem l_pt (b j : ℕ) : (ptFuns b j).length = 63 := by fcr_blk_len
+private theorem l_tail (b : ℕ) : (tailFuns b).length = 3 := rfl
+private theorem l_mkG (b : ℕ) : (mkGroupFuns b).length = 7 := by fcr_blk_len
+private theorem l_find (b j : ℕ) : (ckFindFuns b j).length = 9 := by fcr_blk_len
+private theorem l_tup (b : ℕ) : (graphTupFuns b).length = 37 := by fcr_blk_len
+private theorem l_map (b f : ℕ) : (mapFuns b f).length = 3 := rfl
+private theorem l_split (b : ℕ) : (pSplitMapFuns b).length = 12 := by fcr_blk_len
+private theorem l_app (b : ℕ) : (appendFuns b).length = 3 := rfl
+private theorem l_kr (b j : ℕ) : (krFuns b j).length = 20 := by fcr_blk_len
+private theorem l_cnt (b : ℕ) : (countFuns b).length = 5 := rfl
+private theorem l_wp (b d : ℕ) : (wpFuns b d).length = 15 := by fcr_blk_len
+private theorem l_ansG (b : ℕ) : (ansGensFuns b).length = 8 := by fcr_blk_len
+private theorem l_clos (b j : ℕ) : (closFuns b j).length = 55 := by fcr_blk_len
+private theorem l_fz (b f : ℕ) : (cpFzFuns b f).length = 9 := by fcr_blk_len
+
+macro "fcr_len" : tactic => `(tactic| (
+  try dsimp only [cpMvFuns]
+  try simp only [List.length_append, length_domFuns, length_pEncMapFuns, length_filterFuns,
+    length_rangeFuns, l_inc, l_stab, l_pt, l_tail, l_mkG, l_find, l_tup, l_map, l_split,
+    l_app, l_kr, l_cnt, l_wp, l_ansG, l_clos, l_fz]
+  rfl))
 
 /-- **The place of the move program** from the position of its function table. -/
 theorem fcrMvAt_of {P : Program} {b jp jpre jm : ℕ} (h : P.HasAt b (cpMvFuns b jp jpre jm)) :
@@ -154,19 +187,19 @@ theorem fcr_parts {P : Program} {c : ℕ} (h : P.HasAt c (fcrFuns c)) :
 section Asm
 
 variable {hst : PointwiseStab} {hm : Membership} {hpre : Preimage} {hfac : NormalizedFactor}
-  {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition} {hcs : ChiefSeriesAlgo}
-  {hder : DerivedSubgroup} {hqc : QuotientCentralizer} {hni : NormalizedIntersection}
-  {hsy : SylowAlgo} {hsc : SylowConjugate} {hnc : NormalClosure}
+  {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition}
+  {hder : DerivedSubgroup} {hni : NormalizedIntersection}
+  {hnc : NormalClosure}
   {ext : List Prim} {recF labF jF : List Expr}
 
 /-- PointwiseStab is primitive `0` of the final program. -/
 theorem fcr_prim_pst {cmE itE : Expr} {cmF itF : List Expr} :
-    (fagProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc ext recF labF jF fcrE cmE
+    (fagProg hst hm hpre hfac hmb hO hC hder hni hnc ext recF labF jF fcrE cmE
       itE fcrF cmF itF).prims[0]? = some (pointwiseStabPrim hst) := rfl
 
 /-- Membership is primitive `1` of the final program. -/
 theorem fcr_prim_mem {cmE itE : Expr} {cmF itF : List Expr} :
-    (fagProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc ext recF labF jF fcrE cmE
+    (fagProg hst hm hpre hfac hmb hO hC hder hni hnc ext recF labF jF fcrE cmE
       itE fcrF cmF itF).prims[1]? = some (membershipPrim hm) := rfl
 
 /-- **The certificate phase in the final program.** For every interface `I`, the entry `fcrE`
@@ -175,11 +208,11 @@ at `asb 2` with the helper list `fcrF` at `fagCrIdx` satisfies `AsCertOK` for th
 `0`, `2`, `1`. -/
 theorem fag_asCertOK (I : Iface) (hF : FlcFits recF labF jF) {cmE itE : Expr}
     {cmF itF : List Expr} (hcm : cmF.length ≤ fagItOff - fagCmOff) :
-    AsCertOK I (fagProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc ext recF labF jF
+    AsCertOK I (fagProg hst hm hpre hfac hmb hO hC hder hni hnc ext recF labF jF
       fcrE cmE itE fcrF cmF itF) asmF asHandImpl (cpCertX hst hpre hm) (asb 2) := by
   obtain ⟨-, h2, -, -, -, hcr, -⟩ := fag_hasAt (hst := hst) (hm := hm) (hpre := hpre)
-    (hfac := hfac) (hmb := hmb) (hO := hO) (hC := hC) (hcs := hcs) (hder := hder) (hqc := hqc)
-    (hni := hni) (hsy := hsy) (hsc := hsc) (hnc := hnc) (ext := ext) hF (crE := fcrE)
+    (hfac := hfac) (hmb := hmb) (hO := hO) (hC := hC) (hder := hder)
+    (hni := hni) (hnc := hnc) (ext := ext) hF (crE := fcrE)
     (cmE := cmE) (itE := itE) (itF := itF) ⟨fcr_fits, hcm⟩
   obtain ⟨hd, hstp, hfz, hmv⟩ := fcr_parts hcr
   exact asCertOK_of hst hpre hm I _ asmF asHandImpl _ h2 hd hstp hmv hfz fcr_prim_pst

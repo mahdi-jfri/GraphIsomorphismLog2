@@ -1,8 +1,12 @@
-import Workspace.Impl.TermJProgPrepA
-import Workspace.Impl.TermJProgBeta
-import Workspace.Impl.TermJProgTl
-import Workspace.Impl.TermJHSpec
-import Workspace.Impl.LinAbelianCoordinates
+module
+
+public import Workspace.Impl.TermJProgPrepA
+public import Workspace.Impl.TermJProgBeta
+public import Workspace.Impl.TermJProgTl
+public import Workspace.Impl.TermJHSpec
+public import Workspace.Impl.LinAbelianCoordinates
+
+@[expose] public section
 
 /-!
 # The context of the per-label program (program)

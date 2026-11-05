@@ -1,7 +1,11 @@
-import Workspace.Impl.SmallZ
-import Workspace.Lang.Prims.Other
-import Workspace.Lang.Prims.PermGroups
-import Workspace.Algorithm.SupplyBuild
+module
+
+public import Workspace.Impl.SmallZ
+public import Workspace.Lang.Prims.Other
+public import Workspace.Lang.Prims.PermGroups
+public import Workspace.Algorithm.SupplyBuild
+
+@[expose] public section
 
 /-!
 # The case decision of the general dispatcher

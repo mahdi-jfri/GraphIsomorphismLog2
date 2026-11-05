@@ -28,7 +28,11 @@ of primitive `p` on `v` also pays `p.bound v = p.c * (size v + 2) ^ p.k`. Indexi
 entry it returns, not for the entries it skips; the compiler pays for those from the cost of
 computing the list.
 -/
-import Workspace.Lang.Val
+module
+
+public import Workspace.Lang.Val
+
+@[expose] public section
 
 namespace GI.Lang
 

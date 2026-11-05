@@ -10,10 +10,14 @@ that, given two graphs on `n` vertices, decides whether they are isomorphic in t
 the full automorphism group of the first graph. Here an algorithm is a program for the machine
 of `Workspace.Statement.Machine`, and time is the cost of its run.
 -/
-import Workspace.Statement.Machine
-import Mathlib.Combinatorics.SimpleGraph.Maps
-import Mathlib.Algebra.Group.Subgroup.Lattice
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+module
+
+public import Workspace.Statement.Machine
+public import Mathlib.Combinatorics.SimpleGraph.Maps
+public import Mathlib.Algebra.Group.Subgroup.Lattice
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+@[expose] public section
 
 namespace GI.Statement
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggRectRepKq
-import Workspace.Impl.AggGraph
+module
+
+public import Workspace.Impl.AggRectRepKq
+public import Workspace.Impl.AggGraph
+
+@[expose] public section
 
 /-!
 # The representation function of the pair cases
@@ -58,8 +62,8 @@ theorem rcR_code_ord (f : GI.StabilizerQuotient.KernelQuotient πd S.dom
     have : pairCell f (orderedEmbedding hd) v = none := by
       rw [pairCell_eq_none f _ hv, hf]
       rintro ⟨⟨w, r⟩, hwr⟩
-      have h1 := congrArg (fun z : GI.Pairs.OrderedPair (Fin L.q) => z.1) hwr
-      simp only [orderedEmbedding, Function.Embedding.coeFn_mk, Prod.mk.injEq] at h1
+      have h1 : (w.1, r.1) = (c, d) := congrArg (fun z : GI.Pairs.OrderedPair (Fin L.q) => z.1) hwr
+      rw [Prod.mk.injEq] at h1
       exact h ⟨h1.1 ▸ w.2, h1.2 ▸ r.2⟩
     rw [this]; rfl
 
@@ -80,7 +84,7 @@ theorem rcR_code_uno (f : GI.StabilizerQuotient.KernelQuotient πd S.dom
     have : pairCell f (unorderedEmbedding hd) v = some (⟨d, h'.1⟩, ⟨c, h'.2⟩) := by
       rw [pairCell_eq_some f _ hv, hf]
       apply Subtype.ext
-      simp [GI.Pairs.unorderedOfOrdered, unorderedEmbedding, orderedEmbedding, Finset.pair_comm]
+      exact Finset.pair_comm c d
     rw [this]; rfl
   · rw [if_neg (by simp [h'])]
     have : pairCell f (unorderedEmbedding hd) v = none := by

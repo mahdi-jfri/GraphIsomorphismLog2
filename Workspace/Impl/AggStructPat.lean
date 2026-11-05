@@ -1,5 +1,9 @@
-import Workspace.Lang.Lib.NatList
-import Workspace.Lang.Lib.Search
+module
+
+public import Workspace.Lang.Lib.NatList
+public import Workspace.Lang.Lib.Search
+
+@[expose] public section
 
 /-!
 # The equality pattern of a tuple, as a program

@@ -1,8 +1,12 @@
-import Workspace.Algorithm.Aggregation
-import Workspace.Algorithm.Dispatch
-import Workspace.Algorithm.RowSteps
-import Workspace.Algorithm.FreshState
-import Workspace.Algorithm.NormLabels
+module
+
+public import Workspace.Algorithm.Aggregation
+public import Workspace.Algorithm.Dispatch
+public import Workspace.Algorithm.RowSteps
+public import Workspace.Algorithm.FreshState
+public import Workspace.Algorithm.NormLabels
+
+@[expose] public section
 
 /-!
 # The phase recursion of Section 6, as an abstract procedure

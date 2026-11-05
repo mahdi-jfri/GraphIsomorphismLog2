@@ -1,6 +1,10 @@
-import Workspace.MulticosetPieces
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Tactic.Ring
+module
+
+public import Workspace.MulticosetPieces
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Tactic.Ring
+
+@[expose] public section
 
 /-!
 # The recursion of Theorem A.20, as a procedure on mathematical objects

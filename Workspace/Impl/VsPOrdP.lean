@@ -1,4 +1,8 @@
-import Workspace.Impl.VsPOrd
+module
+
+public import Workspace.Impl.VsPOrd
+
+@[expose] public section
 
 /-!
 # An element of prime order modulo `L`, as a program
@@ -107,7 +111,8 @@ theorem vsPPredC_spec {P : Program} {f : ℕ} (hf : P.funs[f]? = some vsPPredCE)
   have wt' := wt_nat_le t
   have hb : GI.Machine.BinOp.eval .eq (GI.Machine.BinOp.eval .mod j
       (GI.Machine.BinOp.eval .add t 2)) 0 ≤ 1 := by
-    simp only [GI.Machine.BinOp.eval]; split_ifs <;> omega
+    change (if j % (t + 2) = 0 then 1 else 0) ≤ 1
+    split_ifs <;> omega
   have hm : GI.Machine.BinOp.eval .mod j (GI.Machine.BinOp.eval .add t 2) ≤ j := by
     simp only [GI.Machine.BinOp.eval]; exact Nat.mod_le _ _
   have ha : GI.Machine.BinOp.eval .add t 2 = t + 2 := rfl

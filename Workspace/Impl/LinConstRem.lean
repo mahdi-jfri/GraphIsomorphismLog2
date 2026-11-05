@@ -1,5 +1,9 @@
-import Workspace.Impl.LinFiniteReduce
-import Workspace.Impl.LinMapEncoded
+module
+
+public import Workspace.Impl.LinFiniteReduce
+public import Workspace.Impl.LinMapEncoded
+
+@[expose] public section
 
 /-! Reduce each entry of an integer row by one target-coordinate modulus. -/
 namespace GI.Impl

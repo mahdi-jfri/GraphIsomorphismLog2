@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPermChain
+module
+
+public import Workspace.Impl.LinPermChain
+
+@[expose] public section
 
 /-! The presentation certificate on permutation inputs. All quotient calculations
 are carried out inside A = <as>, while the SLPs use ambient permutations. -/
@@ -150,6 +154,7 @@ theorem linPermCertificate {n : ℕ} (ns as : List (Equiv.Perm (Fin n)))
   have hdet := linRelationMatrix_det_ne e hpos C hCearlier
   refine ⟨hnormal, hquot, hdet, hf, linRelationMatrix_relations e C f hrel, ?_⟩
   rw [linRelationMatrix_det e C hCearlier, ← Int.natAbsHom_apply, map_prod]
-  simpa only [Int.natAbs_natCast] using hprod.symm
+  simpa only [Int.natAbsHom_apply, Int.natAbs_natCast] using
+    (hprod.trans (Nat.card_congr Additive.toMul).symm).symm
 
 end GI.Impl

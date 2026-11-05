@@ -1,6 +1,10 @@
-import Workspace.Proved.VsFMatMath
-import Workspace.Impl.VsFMatPow
-import Mathlib.Data.Matrix.Mul
+module
+
+public import Workspace.Proved.VsFMatMath
+public import Workspace.Impl.VsFMatPow
+public import Mathlib.Data.Matrix.Mul
+
+@[expose] public section
 
 /-!
 # List matrices as matrices over `ZMod p`

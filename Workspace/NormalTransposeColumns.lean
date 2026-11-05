@@ -1,6 +1,10 @@
-import Workspace.Paper.RowNormalFormDefs
-import Workspace.RowTransfers
-import Workspace.CleanRowSubdirect
+module
+
+public import Workspace.Paper.RowNormalFormDefs
+public import Workspace.RowTransfers
+public import Workspace.CleanRowSubdirect
+
+@[expose] public section
 
 /-! The column partition in the proof of Lemma A.14, from a supplied clean row
 normal form (`GI.Paper.IsRowNormalForm`).

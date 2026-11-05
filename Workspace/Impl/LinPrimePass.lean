@@ -1,7 +1,11 @@
-import Workspace.Impl.LinPrimePrepareSpec
-import Workspace.Impl.LinPrimaryLoopSpec
-import Workspace.Impl.LinAffineRestrict
-import Workspace.Lang.Prims.BlockHom
+module
+
+public import Workspace.Impl.LinPrimePrepareSpec
+public import Workspace.Impl.LinPrimaryLoopSpec
+public import Workspace.Impl.LinAffineRestrict
+public import Workspace.Lang.Prims.BlockHom
+
+@[expose] public section
 
 /-! One primary pass retains the full mixed-order context. After solving the
 primary projection, it lifts the cover representative and subgroup through

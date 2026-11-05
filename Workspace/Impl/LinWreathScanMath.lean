@@ -1,4 +1,8 @@
-import Workspace.Impl.LinWreathReturned
+module
+
+public import Workspace.Impl.LinWreathReturned
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited Equiv

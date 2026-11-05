@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJProgYg4
+module
+
+public import Workspace.Impl.TermJProgYg4
+
+@[expose] public section
 
 /-!
 # The generators of `Aut_{N ≀ Sym(q)}(X)` (program, main function)
@@ -98,7 +102,7 @@ theorem TmJYgAt.of_hasAt {P : Program} {b rg ap iv tbA mpL tbR tbD tbP tbS pr pr
     (htbD : P.HasAt tbD (mapFuns tbD (b + 5))) (htbP : P.HasAt tbP (mapFuns tbP (b + 6)))
     (htbS : P.HasAt tbS (mapFuns tbS (b + 8))) (hpr : TmJPairAt P pr prg prt prte) :
     TmJYgAt P b rg ap iv tbA mpL tbR tbD tbP tbS pr prg prt prte where
-  hmain := by simpa using h 0 (by simp [tmJYgFuns, foldlFuns, loopFuns])
+  hmain := by simpa [tmJYgFuns] using h 0 (by simp [tmJYgFuns, foldlFuns, loopFuns])
   hdsAE := h 1 (by simp [tmJYgFuns, foldlFuns, loopFuns])
   hdsA := h 2 (by simp [tmJYgFuns, foldlFuns, loopFuns])
   hlocA := h 3 (by simp [tmJYgFuns, foldlFuns, loopFuns])
@@ -108,8 +112,8 @@ theorem TmJYgAt.of_hasAt {P : Program} {b rg ap iv tbA mpL tbR tbD tbP tbS pr pr
   hswS := h 7 (by simp [tmJYgFuns, foldlFuns, loopFuns])
   hsw := h 8 (by simp [tmJYgFuns, foldlFuns, loopFuns])
   hflat := h 9 (by simp [tmJYgFuns, foldlFuns, loopFuns])
-  hfl := by simpa using h.left.right
-  hst := by simpa [foldlFuns, loopFuns, Nat.add_assoc] using h.right.single
+  hfl := by simpa [tmJYgFuns] using h.left.right
+  hst := by simpa [tmJYgFuns, foldlFuns, loopFuns, Nat.add_assoc] using h.right.single
   hrg := hrg
   hap := hap
   hiv := hiv
@@ -136,7 +140,6 @@ def tmJYgSwVals {m q : ℕ} (O : Fin q → Fin q → Option (Perm (Fin m) × Lis
 /-- The cost of `tmJYgF`, in `Y = wt [us, q, m] + (m + 1) (q + 1)`. -/
 def tmJYgK (Y : ℕ) : ℕ := 10 ^ 19 * Y ^ 12
 
-set_option maxHeartbeats 1600000 in
 /-- **The generators read off the table**, on `Fin (m q)`. -/
 theorem tmJ_yg_spec {P : Program} {b rg ap iv tbA mpL tbR tbD tbP tbS pr prg prt prte : ℕ}
     (hA : TmJYgAt P b rg ap iv tbA mpL tbR tbD tbP tbS pr prg prt prte) {m q : ℕ}
@@ -217,155 +220,112 @@ theorem tmJ_yg_spec {P : Program} {b rg ap iv tbA mpL tbR tbD tbP tbS pr prg prt
   refine (Det.letE c1 (Det.letE c2 (Det.letE c3 (Det.letE c4 c5)))).mono ?_
   clear c1 c2 a0 a1 a2 v1 v2 c3l c3 w3 w2 cR c4 x4 x3 b1 dqq crg cS hAp c5
   -- the cost
+  unfold tmJYgK
+  have wR := tmJYg_rows_wt O hloc us hus
+  rw [eR] at wR
+  have wS : (Val.list (tmJYgSwVals O)).wt ≤ 9 * ((m + 1) * (q + 1)) ^ 4 + 4 := tmJYg_sws_wt O
+  have wc := wt_tmJLocCtx_le m q
   have hm1 : m + 1 ≤ (m + 1) * (q + 1) := Nat.le_mul_of_pos_right _ (by omega)
   have hq1 : q + 1 ≤ (m + 1) * (q + 1) := Nat.le_mul_of_pos_left _ (by omega)
-  have hW1 : 1 ≤ (m + 1) * (q + 1) := by omega
   have hmq : m * q + 1 ≤ (m + 1) * (q + 1) := by
     have e : (m + 1) * (q + 1) = m * q + m + q + 1 := by ring
     omega
+  set W := (m + 1) * (q + 1) with hW
+  set V := (Val.list us).wt + W with hV
+  set Y := (Val.list [.list us, .nat q, .nat m]).wt + W with hY
+  clear_value W
+  have hW1 : 1 ≤ W := by omega
   have hUI : (Val.list us).wt < (Val.list [.list us, .nat q, .nat m]).wt :=
     wt_le_wt_list (by simp)
-  have hVY : (Val.list us).wt + (m + 1) * (q + 1) ≤
-      (Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1) := by omega
-  have hY1 : 1 ≤ (Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1) := by omega
-  have hWY : (m + 1) * (q + 1) ≤ (Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1) := by
-    omega
-  have hY2 : (Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1) ≤
-      ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 2 :=
-    Nat.le_self_pow (by norm_num) _
-  have hY24 : ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 2 ≤
-      ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 4 :=
-    Nat.pow_le_pow_right hY1 (by norm_num)
-  have hY46 : ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 4 ≤
-      ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 6 :=
-    Nat.pow_le_pow_right hY1 (by norm_num)
-  have hY612 : ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 6 ≤
-      ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 12 :=
-    Nat.pow_le_pow_right hY1 (by norm_num)
-  have hY1012 : ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 10 ≤
-      ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 12 :=
-    Nat.pow_le_pow_right hY1 (by norm_num)
-  have hV4 : ((Val.list us).wt + (m + 1) * (q + 1)) ^ 4 ≤
-      ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 4 :=
-    Nat.pow_le_pow_left hVY 4
-  have hV10 : ((Val.list us).wt + (m + 1) * (q + 1)) ^ 10 ≤
-      ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 10 :=
-    Nat.pow_le_pow_left hVY 10
-  have hW2 : ((m + 1) * (q + 1)) ^ 2 ≤
-      ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 2 :=
-    Nat.pow_le_pow_left hWY 2
-  have hW4 : ((m + 1) * (q + 1)) ^ 4 ≤
-      ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 4 :=
-    Nat.pow_le_pow_left hWY 4
-  have hW6 : ((m + 1) * (q + 1)) ^ 6 ≤
-      ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 6 :=
-    Nat.pow_le_pow_left hWY 6
-  have hm3 : (m + 1) ^ 3 ≤ ((m + 1) * (q + 1)) ^ 6 :=
+  have hVY : V ≤ Y := by omega
+  have hY1 : 1 ≤ Y := by omega
+  have hWY : W ≤ Y := by omega
+  clear_value V Y
+  have hY2 : Y ≤ Y ^ 2 := Nat.le_self_pow (by norm_num) _
+  have hY24 : Y ^ 2 ≤ Y ^ 4 := Nat.pow_le_pow_right hY1 (by norm_num)
+  have hY46 : Y ^ 4 ≤ Y ^ 6 := Nat.pow_le_pow_right hY1 (by norm_num)
+  have hY612 : Y ^ 6 ≤ Y ^ 12 := Nat.pow_le_pow_right hY1 (by norm_num)
+  have hY1012 : Y ^ 10 ≤ Y ^ 12 := Nat.pow_le_pow_right hY1 (by norm_num)
+  have hV4 : V ^ 4 ≤ Y ^ 4 := Nat.pow_le_pow_left hVY 4
+  have hV10 : V ^ 10 ≤ Y ^ 10 := Nat.pow_le_pow_left hVY 10
+  have hW2 : W ^ 2 ≤ Y ^ 2 := Nat.pow_le_pow_left hWY 2
+  have hW4 : W ^ 4 ≤ Y ^ 4 := Nat.pow_le_pow_left hWY 4
+  have hW6 : W ^ 6 ≤ Y ^ 6 := Nat.pow_le_pow_left hWY 6
+  have hm3 : (m + 1) ^ 3 ≤ W ^ 6 :=
     (Nat.pow_le_pow_left hm1 3).trans (Nat.pow_le_pow_right hW1 (by norm_num))
-  have hq3 : (q + 1) ^ 3 ≤ ((m + 1) * (q + 1)) ^ 6 :=
+  have hq3 : (q + 1) ^ 3 ≤ W ^ 6 :=
     (Nat.pow_le_pow_left hq1 3).trans (Nat.pow_le_pow_right hW1 (by norm_num))
-  have hm2 : (m + 1) ^ 2 ≤ ((m + 1) * (q + 1)) ^ 2 := Nat.pow_le_pow_left hm1 2
-  have hq2 : (q + 1) ^ 2 ≤ ((m + 1) * (q + 1)) ^ 2 := Nat.pow_le_pow_left hq1 2
-  have hqq : q * q + 1 ≤ ((m + 1) * (q + 1)) ^ 2 := by
+  have hm2 : (m + 1) ^ 2 ≤ W ^ 2 := Nat.pow_le_pow_left hm1 2
+  have hq2 : (q + 1) ^ 2 ≤ W ^ 2 := Nat.pow_le_pow_left hq1 2
+  have hqq : q * q + 1 ≤ W ^ 2 := by
     have e : (q + 1) ^ 2 = q * q + 2 * q + 1 := by ring
     omega
-  have hqq3 : (q * q + 1) ^ 3 ≤ ((m + 1) * (q + 1)) ^ 6 := by
+  have hqq3 : (q * q + 1) ^ 3 ≤ W ^ 6 := by
     have := Nat.pow_le_pow_left hqq 3
-    have e : (((m + 1) * (q + 1)) ^ 2) ^ 3 = ((m + 1) * (q + 1)) ^ 6 := by ring
+    have e : (W ^ 2) ^ 3 = W ^ 6 := by ring
     omega
-  have hqq2 : (q * q + 1) ^ 2 ≤ ((m + 1) * (q + 1)) ^ 4 := by
+  have hqq2 : (q * q + 1) ^ 2 ≤ W ^ 4 := by
     have := Nat.pow_le_pow_left hqq 2
-    have e : (((m + 1) * (q + 1)) ^ 2) ^ 2 = ((m + 1) * (q + 1)) ^ 4 := by ring
+    have e : (W ^ 2) ^ 2 = W ^ 4 := by ring
     omega
-  have hW24 : ((m + 1) * (q + 1)) ^ 2 ≤ ((m + 1) * (q + 1)) ^ 4 :=
-    Nat.pow_le_pow_right hW1 (by norm_num)
-  have hWW : (m + 1) * (q + 1) ≤ ((m + 1) * (q + 1)) ^ 2 := Nat.le_self_pow (by norm_num) _
+  have hW24 : W ^ 2 ≤ W ^ 4 := Nat.pow_le_pow_right hW1 (by norm_num)
+  have hWW : W ≤ W ^ 2 := Nat.le_self_pow (by norm_num) _
   -- weights of the values
   have wone := wt_encPerm_le (1 : Perm (Fin m))
   have wid := wt_ids_le q
   have widqq := wt_ids_le (q * q)
   have wq := wt_nat_le q
   have wm := wt_nat_le m
-  have wc := wt_tmJLocCtx_le m q
   have rlc : (Val.list [encPerm (1 : Perm (Fin m)), encPerm (1 : Perm (Fin q)), .nat q,
       .nat m]).wt = (tmJLocCtx m q).wt := rfl
   have wcY := wt_list2_le (.list us) (tmJLocCtx m q)
   have wcR := wt_list2_le (.list [.list us, tmJLocCtx m q]) (encFun fun i : Fin q => (i : ℕ))
   have wcS := wt_list2_le (.list [.list us, tmJLocCtx m q])
     (encFun fun t : Fin (q * q) => (t : ℕ))
-  have wR := tmJYg_rows_wt O hloc us hus
-  rw [eR] at wR
   have wF := tmJ_wt_flatten_le (tmJYgRowVals O)
-  have wS : (Val.list (tmJYgSwVals O)).wt ≤ 9 * ((m + 1) * (q + 1)) ^ 4 + 4 := tmJYg_sws_wt O
   have wFS := wt_list2_le (.list (tmJYgRowVals O).flatten) (.list (tmJYgSwVals O))
   have wres := wt_tmJPermsVal_le (tmJYgList O)
   have hl := tmJYgList_length_le O hloc us hus
-  have hl2 : q * (Val.list us).wt + q * q ≤
-      2 * ((Val.list us).wt + (m + 1) * (q + 1)) ^ 2 := by
-    have e : ((Val.list us).wt + (m + 1) * (q + 1)) ^ 2 =
-        ((Val.list us).wt + (m + 1) * (q + 1)) * ((Val.list us).wt + (m + 1) * (q + 1)) := by
-      ring
-    have h1 : q * (Val.list us).wt ≤
-        ((Val.list us).wt + (m + 1) * (q + 1)) * ((Val.list us).wt + (m + 1) * (q + 1)) :=
-      Nat.mul_le_mul (by omega) (by omega)
-    have h2 : q * q ≤
-        ((Val.list us).wt + (m + 1) * (q + 1)) * ((Val.list us).wt + (m + 1) * (q + 1)) :=
-      Nat.mul_le_mul (by omega) (by omega)
+  have hl2 : q * (Val.list us).wt + q * q ≤ 2 * V ^ 2 := by
+    have e : V ^ 2 = V * V := by ring
+    have h1 : q * (Val.list us).wt ≤ V * V := Nat.mul_le_mul (by omega) (by omega)
+    have h2 : q * q ≤ V * V := Nat.mul_le_mul (by omega) (by omega)
     omega
-  have hV2W : ((m + 1) * (q + 1)) ^ 2 ≤ ((Val.list us).wt + (m + 1) * (q + 1)) ^ 2 :=
-    Nat.pow_le_pow_left (by omega) 2
-  have hmq2 : (m * q + 1) ^ 2 ≤ ((m + 1) * (q + 1)) ^ 2 := Nat.pow_le_pow_left hmq 2
-  have wres' : (tmJPermsVal (tmJYgList O)).wt ≤
-      18 * ((Val.list us).wt + (m + 1) * (q + 1)) ^ 4 + 4 := by
-    have h1 : (tmJYgList O).length * (8 * (m * q + 1) ^ 2 + 1) ≤
-        (2 * ((Val.list us).wt + (m + 1) * (q + 1)) ^ 2) *
-          (9 * ((Val.list us).wt + (m + 1) * (q + 1)) ^ 2) :=
+  have hV2W : W ^ 2 ≤ V ^ 2 := Nat.pow_le_pow_left (by omega) 2
+  have hmq2 : (m * q + 1) ^ 2 ≤ W ^ 2 := Nat.pow_le_pow_left hmq 2
+  have wres' : (tmJPermsVal (tmJYgList O)).wt ≤ 18 * V ^ 4 + 4 := by
+    have h1 : (tmJYgList O).length * (8 * (m * q + 1) ^ 2 + 1) ≤ (2 * V ^ 2) * (9 * V ^ 2) :=
       Nat.mul_le_mul (by omega) (by omega)
-    have e : (2 * ((Val.list us).wt + (m + 1) * (q + 1)) ^ 2) *
-        (9 * ((Val.list us).wt + (m + 1) * (q + 1)) ^ 2) =
-        18 * ((Val.list us).wt + (m + 1) * (q + 1)) ^ 4 := by ring
+    have e : (2 * V ^ 2) * (9 * V ^ 2) = 18 * V ^ 4 := by ring
     omega
   -- the costs of the calls
-  have PR : tmJYgRowsK ((Val.list us).wt + (m + 1) * (q + 1)) ≤
-      10 ^ 17 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 12 := by
+  have PR : tmJYgRowsK V ≤ 10 ^ 17 * Y ^ 12 := by
     unfold tmJYgRowsK; omega
-  have PS : tmJYgSwsK ((Val.list us).wt + (m + 1) * (q + 1)) ≤
-      10 ^ 16 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 12 := by
+  have PS : tmJYgSwsK V ≤ 10 ^ 16 * Y ^ 12 := by
     unfold tmJYgSwsK; omega
-  have PF : tmJFlatK (Val.list ((tmJYgRowVals O).map Val.list)).wt ≤
-      10 ^ 11 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 12 := by
+  have PF : tmJFlatK (Val.list ((tmJYgRowVals O).map Val.list)).wt ≤ 10 ^ 11 * Y ^ 12 := by
     unfold tmJFlatK
-    have h1 : (Val.list ((tmJYgRowVals O).map Val.list)).wt + 1 ≤
-        41 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 4 := by omega
+    have h1 : (Val.list ((tmJYgRowVals O).map Val.list)).wt + 1 ≤ 41 * Y ^ 4 := by omega
     calc 10 ^ 6 * ((Val.list ((tmJYgRowVals O).map Val.list)).wt + 1) ^ 3
-        ≤ 10 ^ 6 * (41 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 4) ^ 3 :=
+        ≤ 10 ^ 6 * (41 * Y ^ 4) ^ 3 :=
           Nat.mul_le_mul_left _ (Nat.pow_le_pow_left h1 3)
-      _ = 68921000000 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 12 := by
-          ring
+      _ = 68921000000 * Y ^ 12 := by ring
       _ ≤ _ := Nat.mul_le_mul_right _ (by norm_num)
   have PA : loopModK * (q * q + 1) * ((Val.list [.list (tmJYgRowVals O).flatten,
       .list (tmJYgSwVals O)]).wt + q * q + (tmJPermsVal (tmJYgList O)).wt + 1) ≤
-      10 ^ 6 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 6 := by
-    have h1 : q * q + 1 ≤ ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 2 := by
-      omega
+      10 ^ 6 * Y ^ 6 := by
+    have h1 : q * q + 1 ≤ Y ^ 2 := by omega
     have h2 : (Val.list [.list (tmJYgRowVals O).flatten, .list (tmJYgSwVals O)]).wt + q * q +
-        (tmJPermsVal (tmJYgList O)).wt + 1 ≤
-        1000 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 4 := by
-      omega
+        (tmJPermsVal (tmJYgList O)).wt + 1 ≤ 1000 * Y ^ 4 := by omega
     unfold loopModK
     calc 1000 * (q * q + 1) * ((Val.list [.list (tmJYgRowVals O).flatten,
           .list (tmJYgSwVals O)]).wt + q * q + (tmJPermsVal (tmJYgList O)).wt + 1)
-        ≤ 1000 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 2 *
-          (1000 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 4) :=
+        ≤ 1000 * Y ^ 2 * (1000 * Y ^ 4) :=
           Nat.mul_le_mul (Nat.mul_le_mul_left _ h1) h2
-      _ = 10 ^ 6 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 6 := by ring
-  have PG1 : 10000 * (m + 1) ^ 3 ≤
-      10000 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 12 := by omega
-  have PG2 : 10000 * (q + 1) ^ 3 ≤
-      10000 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 12 := by omega
-  have PG3 : 10000 * (q * q + 1) ^ 3 ≤
-      10000 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 12 := by omega
-  show _ ≤ 10 ^ 19 * ((Val.list [.list us, .nat q, .nat m]).wt + (m + 1) * (q + 1)) ^ 12
+      _ = 10 ^ 6 * Y ^ 6 := by ring
+  have PG1 : 10000 * (m + 1) ^ 3 ≤ 10000 * Y ^ 12 := by omega
+  have PG2 : 10000 * (q + 1) ^ 3 ≤ 10000 * Y ^ 12 := by omega
+  have PG3 : 10000 * (q * q + 1) ^ 3 ≤ 10000 * Y ^ 12 := by omega
   have wone' := wt_encPerm_le (1 : Perm (Fin q))
   omega
 

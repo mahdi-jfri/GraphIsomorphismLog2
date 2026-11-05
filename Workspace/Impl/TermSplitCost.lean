@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCombExact
-import Workspace.Impl.TermLift
+module
+
+public import Workspace.Impl.AggCombExact
+public import Workspace.Impl.TermLift
+
+@[expose] public section
 
 /-!
 # Polynomial bounds for the split of the row terminal

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiDisp
+module
+
+public import Workspace.Impl.AggItemCiDisp
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3: the test `q ≤ N^α` in exact arithmetic

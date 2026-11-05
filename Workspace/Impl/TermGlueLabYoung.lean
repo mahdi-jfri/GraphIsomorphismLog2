@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPair
+module
+
+public import Workspace.Impl.TermGlueLabPair
+
+@[expose] public section
 
 /-!
 # Generators of `Aut_{N ≀ Sym(q)}(Y)` from the `N`-test table
@@ -128,7 +132,7 @@ theorem tmGL_young {N : Subgroup (Perm B)} (Sg : Fin q → Set (Perm B))
         · funext i
           by_cases hi : i = a
           · subst hi; simp [has]
-          · simp [Finset.mem_insert, hi]
+          · by_cases his : i ∈ s <;> simp [Finset.mem_insert, hi, his]
       rw [he]
       exact Subgroup.mul_mem _ ih ha
   -- induction on the number of moved rows

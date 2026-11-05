@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCol
-import Workspace.Impl.AggCaseProg
+module
+
+public import Workspace.Impl.AggItemCol
+public import Workspace.Impl.AggCaseProg
+
+@[expose] public section
 
 /-!
 # The case of the round, from the items' start state
@@ -42,8 +46,10 @@ theorem it_snd_gens (e : Ω ≃ Fin k) {S : State Ω C} (L : GiantLabels S)
     ext g : 1; exact (hπ g).symm
   have e3 : F.comap S.domHom = (F.subgroupOf S.domGroup).comap S.domHom.rangeRestrict := by
     ext g; simp [Subgroup.mem_subgroupOf, State.domGroup]
-  rw [e1, ← Subgroup.map_map, e2, ← Subgroup.map_map, e3]
-  congr 2
+  rw [e1, ← Subgroup.map_map]
+  congr 1
+  rw [e2, e3]
+  refine (Subgroup.map_map _ _ _).symm.trans (congrArg (Subgroup.map πd) ?_)
   exact Subgroup.map_comap_eq_self_of_surjective S.domHom.rangeRestrict_surjective _
 
 /-- **For a round**: the second parts of graph pairs of the lift of `F_x` generate the group of

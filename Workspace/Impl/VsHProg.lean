@@ -1,5 +1,9 @@
-import Workspace.Impl.VsQMain
-import Workspace.Impl.VsHHQ
+module
+
+public import Workspace.Impl.VsQMain
+public import Workspace.Impl.VsHHQ
+
+@[expose] public section
 
 /-!
 # The blocks of the hard case and the `Q₈` continuation

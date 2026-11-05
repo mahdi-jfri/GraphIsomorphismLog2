@@ -1,7 +1,11 @@
-import Workspace.Transport
-import Workspace.Compat
-import Mathlib.Algebra.Group.Pointwise.Set.Basic
-import Mathlib.GroupTheory.Perm.Basic
+module
+
+public import Workspace.Transport
+public import Workspace.Compat
+public import Mathlib.Algebra.Group.Pointwise.Set.Basic
+public import Mathlib.GroupTheory.Perm.Basic
+
+@[expose] public section
 
 /-!
 # Exact answers and the rules that combine them (Section 3.2, Section 6)

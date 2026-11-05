@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectAffineDiagonal
+module
+
+public import Workspace.Impl.LinObjectAffineDiagonal
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Multicoset

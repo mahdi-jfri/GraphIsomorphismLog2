@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectSourceCoordinate
+module
+
+public import Workspace.Impl.LinObjectSourceCoordinate
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

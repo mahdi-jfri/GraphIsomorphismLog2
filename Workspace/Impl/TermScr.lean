@@ -1,4 +1,8 @@
-import Workspace.Impl.TermStep
+module
+
+public import Workspace.Impl.TermStep
+
+@[expose] public section
 
 /-!
 # The terminal script after `j` exact answers (T1)

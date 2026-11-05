@@ -1,4 +1,8 @@
-import Workspace.Proved.SSSift
+module
+
+public import Workspace.Proved.SSSift
+
+@[expose] public section
 
 /-!
 # Inserting into the table, with straight-line programs

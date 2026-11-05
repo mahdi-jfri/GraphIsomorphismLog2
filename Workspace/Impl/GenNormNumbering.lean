@@ -1,4 +1,8 @@
-import Workspace.Impl.GenExposeCand
+module
+
+public import Workspace.Impl.GenExposeCand
+
+@[expose] public section
 
 /-!
 # Keeping the quotient numbering in the exposure contract

@@ -1,7 +1,11 @@
-import Workspace.Proved.HNFMod
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
-import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
+module
+
+public import Workspace.Proved.HNFMod
+public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
+
+@[expose] public section
 
 /-!
 # The transform from one more Hermite form
@@ -92,10 +96,12 @@ theorem hnfBig_bot (A' : Matrix (Fin r) (Fin r) ℤ) (K : ℤ) (t : Fin r) :
   · have : ((⟨(j : ℕ) - r, by omega⟩ : Fin r) ≠ t) := fun e => h2 (by rw [← e])
     simp [this]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The row lattice of `M` is `{(y A', y + K z)}`. -/
 theorem hnfBig_mem_iff (A' : Matrix (Fin r) (Fin r) ℤ) (K : ℤ) (v : Fin (r + r) → ℤ) :
     v ∈ Submodule.span ℤ (Set.range (hnfBig A' K)) ↔
       ∃ y z : Fin r → ℤ, v = hnfJoin (y ᵥ* A') (y + K • z) := by
+  change v ∈ Submodule.span ℤ (Set.range (fun i => hnfBig A' K i)) ↔ _
   rw [Submodule.mem_span_range_iff_exists_fun]
   constructor
   · rintro ⟨w, rfl⟩
@@ -360,7 +366,8 @@ theorem hnf_exists_V (h : HnfSq A' d K) : ∃ V : Matrix (Fin r) (Fin r) ℤ, V 
   exact ⟨V, by
     ext i j
     have := congrFun (hV i) j
-    simpa [Matrix.mul_apply, vecMul, dotProduct] using this⟩
+    change ∑ k, V i k * hnfHp A' d K k j = A' i j
+    simpa [vecMul, dotProduct] using this⟩
 
 theorem hnfY_unit (h : HnfSq A' d K) : IsUnit (hnfY h).det := by
   obtain ⟨V, hV⟩ := hnf_exists_V h

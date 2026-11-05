@@ -1,5 +1,9 @@
-import Workspace.BlockChain
-import Workspace.AlternatingSimple
+module
+
+public import Workspace.BlockChain
+public import Workspace.AlternatingSimple
+
+@[expose] public section
 
 namespace GI.BlockCover
 

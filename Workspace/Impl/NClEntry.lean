@@ -1,4 +1,8 @@
-import Workspace.Impl.NClProg
+module
+
+public import Workspace.Impl.NClProg
+
+@[expose] public section
 
 /-!
 # The entry of the normal closure program

@@ -1,5 +1,9 @@
-import Workspace.Impl.GenProdRows
-import Workspace.Impl.GenCls
+module
+
+public import Workspace.Impl.GenProdRows
+public import Workspace.Impl.GenCls
+
+@[expose] public section
 
 /-!
 # The product refinement: the tables of the pairs

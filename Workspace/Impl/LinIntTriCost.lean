@@ -1,4 +1,8 @@
-import Workspace.Impl.LinIntTrim
+module
+
+public import Workspace.Impl.LinIntTrim
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinExponents
-import Workspace.Lang.Lib.LinIntVector
+module
+
+public import Workspace.Impl.LinExponents
+public import Workspace.Lang.Lib.LinIntVector
+
+@[expose] public section
 
 /-! Evaluate one checked SLP instruction as an integer exponent vector.
 The arithmetic functions below are proved programs, not primitives. -/

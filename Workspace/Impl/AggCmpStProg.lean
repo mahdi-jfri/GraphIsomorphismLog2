@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCmpMvC
-import Workspace.Impl.AggSubProg
+module
+
+public import Workspace.Impl.AggCmpMvC
+public import Workspace.Impl.AggSubProg
+
+@[expose] public section
 
 /-!
 # The start of a pair: program text and facts on values
@@ -139,7 +143,6 @@ theorem cm_orbit_le (O : TestTupleOrder q κ) (ps : List (Perm (Fin k) × Perm (
     obtain ⟨σ, -, rfl⟩ := mem_tupOrbit.1 hy
     refine ⟨t.trans σ.toEmbedding, ?_⟩
     simp [cmLabPts, List.map_map, Function.comp_def]
-    rfl
   have h1 := Set.ncard_le_ncard hsub (Set.finite_range _)
   have h2 : (Set.range (fun t' : Fin κ ↪ Fin q => cmLabPts k (t' : Fin κ → Fin q))).ncard ≤
       Fintype.card (Fin κ ↪ Fin q) := by

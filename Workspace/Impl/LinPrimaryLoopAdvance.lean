@@ -1,27 +1,41 @@
-import Workspace.Impl.LinPrimaryLoopInvariant
+module
+
+public import Workspace.Impl.LinPrimaryLoopInvariant
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
 
 theorem linPrimaryCover_solvable {n : ℕ} (gs ks : List (Equiv.Perm (Fin n)))
     (hs : IsSolvable (gens gs)) (hle : gens ks ≤ gens gs) : IsSolvable (gens ks) := by
-  letI : IsSolvable (gens gs) := hs
+  letI : Group.IsSolvable (gens gs) := hs
   exact solvable_of_solvable_injective (Subgroup.inclusion_injective hle)
+
+theorem linPrimaryRange_solvable {n : ℕ} {A : Type*} [Group A] (gs ks : List (Equiv.Perm (Fin n)))
+    (ρ : gens gs →* A) (hs : IsSolvable ρ.range) (hle : gens ks ≤ gens gs) :
+    IsSolvable (ρ.comp (Subgroup.inclusion hle)).range := by
+  letI : Group.IsSolvable ρ.range := hs
+  exact solvable_of_solvable_injective
+    (Subgroup.inclusion_injective (show (ρ.comp (Subgroup.inclusion hle)).range ≤ ρ.range by
+      rintro _ ⟨x, rfl⟩; exact ⟨_, rfl⟩))
 
 set_option maxHeartbeats 2500000 in
 set_option maxRecDepth 8000 in
 theorem linPrimaryLoopInv_advance {n p d : ℕ} (gs ks : List (Equiv.Perm (Fin n)))
-    (hks : IsSolvable (gens ks)) (hp : p.Prime) (hpn : p ≤ n) (ν : Fin d → ℕ)
+    (hp : p.Prime) (hpn : p ≤ n) (ν : Fin d → ℕ)
     (ρ : gens gs →* (linFiniteVec (linPrimaryOrders p ν) ≃+ linFiniteVec (linPrimaryOrders p ν)))
     (c : gens gs → linFiniteVec (linPrimaryOrders p ν))
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g)
     (x : linFiniteVec (linPrimaryOrders p ν)) (acc0 : Equiv.Perm (Fin n)) (j : ℕ)
-    (hle : gens ks ≤ gens gs) (r : gens gs)
+    (hle : gens ks ≤ gens gs)
+    (hks : IsSolvable (ρ.comp (Subgroup.inclusion hle)).range)
+    (r : gens gs)
     (hpoint : linPrimaryFiber p ν j (linFiniteEval ρ c r x))
     (hofs : ∀ k : gens ks, linPrimaryFiber p ν j (c (Subgroup.inclusion hle k)))
     (hcover : ∀ h : gens gs, linFiniteEval ρ c h x = 0 → h.val * r.val⁻¹ ∈ gens ks)
     (out : Val)
-    (hout : linPrimaryStepOut ks hks hp hpn ν j (ρ.comp (Subgroup.inclusion hle))
+    (hout : linPrimaryStepOut ks hp hpn ν j (ρ.comp (Subgroup.inclusion hle)) hks
       (c ∘ Subgroup.inclusion hle)
       (linActionRestricted_cocycle (linPrimaryOrders p ν) ρ c hc (Subgroup.inclusion hle))
       hofs (linFiniteEval ρ c r x) (r.val * acc0) out) :
@@ -70,16 +84,16 @@ theorem linPrimaryLoopInv_advance {n p d : ℕ} (gs ks : List (Equiv.Perm (Fin n
     · rw [hepoint]
       exact hg
     · intro k
-      have hk : (Subgroup.inclusion hts k).val ∈ linPrimaryNextTarget ks hks hp hpn ν j ρ' c' hc' hofs point := by
+      have hk : (Subgroup.inclusion hts k).val ∈ linPrimaryNextTarget ks hp hpn ν j ρ' hks c' hc' hofs point := by
         rw [← heq]
         exact k.property
-      exact (linPrimaryLayerTarget_mem ks hks hp hpn ν j ρ' c' hc' hofs point (Subgroup.inclusion hts k)).mp hk
+      exact (linPrimaryLayerTarget_mem ks hp hpn ν j ρ' hks c' hc' hofs point (Subgroup.inclusion hts k)).mp hk
     · intro h hh
       obtain ⟨k, hkval, hk⟩ := residual h hh
       have hf := linPrimaryResidual_factor hp.pos ν (j + 1) ρ' c' hc' point k g hk hg
       have hmem : (k * g⁻¹).val ∈ gens ts := by
         rw [heq]
-        exact (linPrimaryLayerTarget_mem ks hks hp hpn ν j ρ' c' hc' hofs point (k * g⁻¹)).mpr hf
+        exact (linPrimaryLayerTarget_mem ks hp hpn ν j ρ' hks c' hc' hofs point (k * g⁻¹)).mpr hf
       have he : h.val * rnew.val⁻¹ = (k * g⁻¹).val := by
         change h.val * (g.val * r.val)⁻¹ = k.val * g.val⁻¹
         rw [hkval]

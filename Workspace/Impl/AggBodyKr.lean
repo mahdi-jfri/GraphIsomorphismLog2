@@ -1,6 +1,10 @@
-import Workspace.Impl.AggLiftLoop
-import Workspace.Impl.AggKerRed
-import Workspace.Impl.AggInc
+module
+
+public import Workspace.Impl.AggLiftLoop
+public import Workspace.Impl.AggKerRed
+public import Workspace.Impl.AggInc
+
+@[expose] public section
 
 /-!
 # The kernel cut of `LiftAndContinue`, from the window-group module

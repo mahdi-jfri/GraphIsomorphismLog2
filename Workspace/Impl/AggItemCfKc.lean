@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCfRel
+module
+
+public import Workspace.Impl.AggItemCfRel
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3: the relations, the weight of the object part, and the branch outputs
@@ -156,7 +160,8 @@ def itCfRel (RI : ItCfIRel) (Xt : ℕ → ℕ) : ItSCaseRel where
 /-- **An item output is a branch output.** The item stage answered for the choice set `E` of the
 rounds `itCfD K cache E ⊆ D` (whose scripts are `sbI` of their choices), and the program wrapped
 its output with the object part of `cache`. -/
-theorem itCf_post {RI : ItCfIRel} {Xt : ℕ → ℕ} {e : Ω ≃ Fin k} {c : C → ℕ} {S : State Ω C}
+theorem itCf_post
+    {RI : ItCfIRel} {Xt : ℕ → ℕ} {e : Ω ≃ Fin k} {c : C → ℕ} {S : State Ω C}
     {L : SuppliedLabels S} {K : ItSCtx k S L} (hK : K.OK e c) {b : Fin (P₀.κ + 1) → Fin L.q}
     {oX oY : CfgOut L.q} {cache : List (ItCfEnt L.q)} (hca : ItCfCache K cache)
     {E : Set (ItCfCh S L.toGiantLabels)} {sbI : ItCfCh S L.toGiantLabels → Script (Branches Ω)}

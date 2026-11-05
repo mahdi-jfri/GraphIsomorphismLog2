@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojPG
+module
+
+public import Workspace.Impl.AggItemCiSojPG
+
+@[expose] public section
 
 /-!
 # The exact projected coset of each physical rectangle answer

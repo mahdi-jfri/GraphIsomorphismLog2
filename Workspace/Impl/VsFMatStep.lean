@@ -1,5 +1,9 @@
-import Workspace.Impl.VStabLinVec
-import Workspace.Lang.Lib.Fold
+module
+
+public import Workspace.Impl.VStabLinVec
+public import Workspace.Lang.Lib.Fold
+
+@[expose] public section
 
 /-!
 # One step of a row-times-matrix product over `𝔽_p`

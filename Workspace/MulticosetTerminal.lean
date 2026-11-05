@@ -1,5 +1,9 @@
-import Workspace.MulticosetRadical
-import Mathlib.GroupTheory.SpecificGroups.Alternating
+module
+
+public import Workspace.MulticosetRadical
+public import Mathlib.GroupTheory.SpecificGroups.Alternating
+
+@[expose] public section
 
 /-!
 # Theorem A.23: the transitive-kernel terminal
@@ -122,7 +126,7 @@ theorem rowAct_eq_iff {d : Fin m → P} {π : Equiv.Perm (Fin m)} {x y : Fin m �
 theorem rowAct_mul (d μ : Fin m → P) (π : Equiv.Perm (Fin m)) (x : Fin m → Ω) :
     rowAct (d * μ) π x = rowAct μ π (rowAct d 1 x) := by
   funext j
-  simp [rowAct, act_act]
+  simp [rowAct, act_act, Equiv.Perm.one_symm]
 
 variable (N : Subgroup P) {A : Type*} [CommGroup A] (φ : N →* A)
 
@@ -402,7 +406,7 @@ def terminalStringCalls (m : ℕ) : ℕ := 2 * m ^ 2 + m
 theorem terminalTransport_calls_exp (dixon : GI.Cited.DixonDerivedLength) {B : Type u}
     [Fintype B] [DecidableEq B] {Ω : Type u} [RAct (Equiv.Perm B) Ω]
     {H N : Subgroup (Equiv.Perm B)} (hNH : N ≤ H) (hn : Normalizes H N)
-    (hidx : (((radicalPreimage H N).subgroupOf H).index : ℝ) ≤
+    (hidx : (((radicalSubgroup H N).subgroupOf H).index : ℝ) ≤
       (Fintype.card B : ℝ) ^ (2 * Real.logb 2 (Fintype.card B)))
     (x y : Fin m → Ω) :
     ((radicalTransport H N (types N x) (types N y)).calls : ℝ) ≤

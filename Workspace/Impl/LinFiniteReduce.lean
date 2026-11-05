@@ -1,4 +1,8 @@
-import Workspace.Impl.LinFiniteCoordinates
+module
+
+public import Workspace.Impl.LinFiniteCoordinates
+
+@[expose] public section
 
 /-! Canonical full finite-abelian coordinates, reduced componentwise after
 an affine operation. The integer encodings are retained between SLP steps. -/

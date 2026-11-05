@@ -1,7 +1,11 @@
-import Mathlib.Data.Nat.Log
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Lean.Elab.Tactic.Omega
+module
+
+public import Mathlib.Data.Nat.Log
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Lean.Elab.Tactic.Omega
+
+@[expose] public section
 
 namespace GI
 

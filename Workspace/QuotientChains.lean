@@ -1,4 +1,8 @@
-import Workspace.ValuationBudget
+module
+
+public import Workspace.ValuationBudget
+
+@[expose] public section
 
 namespace GI
 

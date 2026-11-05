@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJProgYg3
+module
+
+public import Workspace.Impl.TermJProgYg3
+
+@[expose] public section
 
 /-!
 # The local `N*`-stabilizers of one row (program)

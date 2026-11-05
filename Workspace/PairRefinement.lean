@@ -1,9 +1,13 @@
-import Workspace.ColorCompression
-import Mathlib.Data.List.OfFn
-import Mathlib.Data.Fintype.Prod
-import Mathlib.Data.Fintype.Sum
-import Init.Data.Vector.OfFn
-import Init.Data.Vector.Lemmas
+module
+
+public import Workspace.ColorCompression
+public import Mathlib.Data.List.OfFn
+public import Mathlib.Data.Fintype.Prod
+public import Mathlib.Data.Fintype.Sum
+public import Init.Data.Vector.OfFn
+public import Init.Data.Vector.Lemmas
+
+@[expose] public section
 
 /-! Pair refinement uses a shared palette on two tagged domains. This keeps
 distinct source/target colors distinct, even if one color occurs on only one side. -/
@@ -49,7 +53,7 @@ def materialize {C : Type*} (f : Domain n → C) : Domain n → C :=
 theorem materialize_eq {C : Type*} (f : Domain n → C) : materialize f = f := by
   funext a
   rcases a with ⟨b, x, y⟩
-  cases b <;> simp [materialize, Vector.get]
+  cases b <;> simp [materialize, Vector.get, Fin.cast]
 
 def step (c : Coloring n) : Coloring n :=
   materialize (ColorCompression.compress (signature c))

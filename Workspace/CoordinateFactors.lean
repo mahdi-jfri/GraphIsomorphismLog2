@@ -1,4 +1,8 @@
-import Workspace.SubdirectNormalizer
+module
+
+public import Workspace.SubdirectNormalizer
+
+@[expose] public section
 
 namespace GI.PrimitiveProducts
 
@@ -15,9 +19,10 @@ def factorInclusion (H : Subgroup (I → S)) (i : I) (hi : HasFullFactor H i) : 
 theorem factorInclusion_injective (H : Subgroup (I → S)) (i : I)
     (hi : HasFullFactor H i) : Function.Injective (factorInclusion H i hi) := by
   intro s t he
-  have h := congrArg (fun z : H => z.val i) he
-  simpa only [factorInclusion, MonoidHom.codRestrict_apply,
-    MonoidHom.mulSingle_apply, Pi.mulSingle_eq_same] using h
+  have h : Pi.mulSingle (M := fun _ : I => S) i s i =
+      Pi.mulSingle (M := fun _ : I => S) i t i :=
+    congrArg (fun z : H => z.val i) he
+  simpa only [Pi.mulSingle_eq_same] using h
 
 theorem factorInclusion_commute (H : Subgroup (I → S)) (i j : I)
     (hi : HasFullFactor H i) (hj : HasFullFactor H j) (hne : i ≠ j) (s t : S) :
@@ -78,15 +83,3 @@ theorem tupleSplit_single_succ (n : ℕ) (i : Fin n) (s : S) :
     simp [tupleSplit, Pi.mulSingle_apply]
 
 end GI.PrimitiveProducts
-
-#print axioms GI.PrimitiveProducts.HasFullFactor
-#print axioms GI.PrimitiveProducts.NoFullFactors
-#print axioms GI.PrimitiveProducts.factorInclusion
-#print axioms GI.PrimitiveProducts.factorInclusion_injective
-#print axioms GI.PrimitiveProducts.factorInclusion_commute
-#print axioms GI.PrimitiveProducts.coordinateRelabel_single
-#print axioms GI.PrimitiveProducts.hasFullFactor_relabel
-#print axioms GI.PrimitiveProducts.noFullFactors_relabel
-#print axioms GI.PrimitiveProducts.subdirect_relabel
-#print axioms GI.PrimitiveProducts.tupleSplit_single_zero
-#print axioms GI.PrimitiveProducts.tupleSplit_single_succ

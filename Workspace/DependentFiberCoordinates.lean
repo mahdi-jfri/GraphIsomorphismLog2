@@ -1,5 +1,9 @@
-import Mathlib.Logic.Equiv.Basic
-import Mathlib.Logic.Function.Basic
+module
+
+public import Mathlib.Logic.Equiv.Basic
+public import Mathlib.Logic.Function.Basic
+
+@[expose] public section
 
 namespace GI.CartesianCover
 
@@ -30,6 +34,3 @@ theorem betweenFibers_apply (background : ∀ i, F i) (h : Equiv.Perm (∀ i, F 
   forward _ _ (by simp)
 
 end GI.CartesianCover
-
-#print axioms GI.CartesianCover.betweenFibers
-#print axioms GI.CartesianCover.betweenFibers_apply

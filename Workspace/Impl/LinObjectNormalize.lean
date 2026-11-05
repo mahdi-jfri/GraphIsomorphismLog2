@@ -1,7 +1,11 @@
-import Workspace.Impl.LinObjectFind
-import Workspace.Impl.LinObjectRelabel
-import Workspace.Lang.Prims.Ops
-import Workspace.Lang.Prims.LinNormal
+module
+
+public import Workspace.Impl.LinObjectFind
+public import Workspace.Impl.LinObjectRelabel
+public import Workspace.Lang.Prims.Ops
+public import Workspace.Lang.Prims.LinNormal
+
+@[expose] public section
 
 /-! Normalize colors and compress all object subgroups before the affine glue. -/
 namespace GI.Impl
@@ -144,7 +148,7 @@ theorem linObjectNormalize_spec (hm : Membership) {P : Program} {b j n : ℕ}
     have hh : ws = xs.map (fun x => tmGlObjVal (linObjectNorm (linObjectColor Z) (tmRiDec (n := n) x))) := by
       apply List.ext_getElem (by simp [hws.length_eq])
       intro i hi hi'
-      simpa only [List.getElem_map] using hws.get (by simpa only [List.length_map] using hi') hi
+      simpa only [List.getElem_map, List.get_eq_getElem] using hws.get (by simpa only [List.length_map] using hi') hi
     simpa only [xs, out, List.map_map, Function.comp_def, tmRiDec_val] using hh
   have ws : (Val.list out).wt ≤ 2 * (W * B) + W + 4 := by
     have hh := linWtList (vs := out) (B := B) (by
@@ -172,7 +176,6 @@ theorem linObjectNormalize_spec (hm : Membership) {P : Program} {b j n : ℕ}
   refine dd.post fun cost hc => ⟨rfl, ?_⟩
   change cost ≤ linObjectNormalizeCost hm W
   unfold linObjectNormalizeCost
-  simp only [List.map_const', List.sum_replicate, smul_eq_mul] at hc
   have hb := Nat.mul_le_mul_right B wl
   dsimp only [B, W, a, xs, out, tmGlObjsVal] at *
   simp only [mapK] at *

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojSD
+module
+
+public import Workspace.Impl.AggItemCiSojSD
+
+@[expose] public section
 
 /-! # Constructing rectangle-side indicators from the three-color table -/
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectLocal
-import Workspace.Impl.LinFiniteActionCost
+module
+
+public import Workspace.Impl.LinObjectLocal
+public import Workspace.Impl.LinFiniteActionCost
+
+@[expose] public section
 
 /-! Partition a normalized configuration into `A`-orbit pieces, then
 collect all their local stabilizers. The output retains the pieces for
@@ -57,7 +61,7 @@ theorem linObjectPieces_spec {P : Program} {b jsci jder jmem n M : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hm : Membership}
     (h : linObjectPiecesAt P b jsci jder jmem hsci hder hm)
     (as ns : List (Perm (Fin n))) (X : List (TmRiO n))
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : TmRiListNorm (gens as) X) (hNA : gens ns ≤ gens as)
     (hNn : GI.Multicoset.Normalizes (gens as) (gens ns))
     (hc : ∀ a ∈ gens as, ∀ b ∈ gens as, a * b * a⁻¹ * b⁻¹ ∈ gens ns)
     (hal : as.length ≤ n ^ 2) (hX : X.length ≤ M)
@@ -89,7 +93,7 @@ theorem linObjectPieces_spec {P : Program} {b jsci jder jmem n M : ℕ}
   have hp : FunDet P (b + 12) (.list [encGroup as, tmGlObjsVal X]) pv PC := by
     have hh := tmRi_pcs_spec h.locals.orbit.inner hsol hal hOK harg
     rw [← tmRiPcsO_val] at hh
-    simpa only [Nat.add_assoc, Nat.reduceAdd] using hh
+    simpa only [tmGlObjsVal, pv, PC, Ps, linObjectPiecesPartitionBudget, Nat.add_assoc, Nat.reduceAdd] using hh
   have dc := Det.arg' (P := P) (vs := [encGroup as, encGroup ns, tmGlObjsVal X])
     (rest := []) (j := 0) rfl
   have dx := Det.arg' (P := P) (vs := [encGroup as, encGroup ns, tmGlObjsVal X])
@@ -107,7 +111,8 @@ theorem linObjectPieces_spec {P : Program} {b jsci jder jmem n M : ℕ}
     omega
   have hpc (S : List (TmRiO n)) (hS : S ∈ Ps) :
       TmRiPc as ns M S ∧ ∀ o ∈ S, o ∈ X := tmRiPcsO_pc hX hfix hS
-  have hlocal := linObjectLocal_spec h.locals as ns Ps hsol hNA hNn hc hal
+  have hlocal := linObjectLocal_spec h.locals as ns Ps
+    (fun S hS o ho => hsol o ((hpc S hS).2 o ho)) hNA hNn hc hal
     (fun S hS => (hpc S hS).1.2.2.2) (fun S hS => (hpc S hS).1.2.2.1)
     (fun S hS => (hpc S hS).1.2.1) (fun S hS => ?_) (fun S hS => ?_)
   · have dn := Det.arg' (P := P) (vs := [encGroup as, encGroup ns, tmGlObjsVal X])

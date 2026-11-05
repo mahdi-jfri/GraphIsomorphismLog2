@@ -1,6 +1,10 @@
-import Workspace.Lang.Lib.SmallGroup
-import Workspace.Lang.Lib.Search
-import Workspace.Lang.Prims.Reduce
+module
+
+public import Workspace.Lang.Lib.SmallGroup
+public import Workspace.Lang.Lib.Search
+public import Workspace.Lang.Prims.Reduce
+
+@[expose] public section
 
 /-!
 # The answer coset on a small domain, by enumeration

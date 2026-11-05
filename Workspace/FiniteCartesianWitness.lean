@@ -1,5 +1,9 @@
-import Workspace.RelabeledCartesianCover
-import Mathlib.Data.Fintype.EquivFin
+module
+
+public import Workspace.RelabeledCartesianCover
+public import Mathlib.Data.Fintype.EquivFin
+
+@[expose] public section
 
 namespace GI.CartesianCoordinates
 
@@ -41,7 +45,3 @@ theorem finite_cartesian_witness (H : Subgroup (Equiv.Perm V))
     (finiteCoordinates_fibers e p fibers)
 
 end GI.CartesianCoordinates
-
-#print axioms GI.CartesianCoordinates.finiteCoordinates
-#print axioms GI.CartesianCoordinates.finiteCoordinates_fibers
-#print axioms GI.CartesianCoordinates.finite_cartesian_witness

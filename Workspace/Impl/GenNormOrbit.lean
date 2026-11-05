@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormChild
-import Workspace.Impl.RestSel
+module
+
+public import Workspace.Impl.GenNormChild
+public import Workspace.Impl.RestSel
+
+@[expose] public section
 
 /-!
 # Deciding the normalization mode by orbits

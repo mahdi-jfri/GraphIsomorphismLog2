@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabSLab
+module
+
+public import Workspace.Impl.TermGlueLabSLab
+
+@[expose] public section
 
 /-!
 # Step 6 of the label program: one affine call and the answer

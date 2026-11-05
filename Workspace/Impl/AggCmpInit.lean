@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCosets
-import Workspace.Impl.AggCmpTup
+module
+
+public import Workspace.Impl.AggCosets
+public import Workspace.Impl.AggCmpTup
+
+@[expose] public section
 
 /-!
 # The first coset of a comparison

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinCoordinates
-import Workspace.Impl.LinIntSlpValid
+module
+
+public import Workspace.Impl.LinCoordinates
+public import Workspace.Impl.LinIntSlpValid
+
+@[expose] public section
 
 /-! Zero/unit assignments for the cyclic-prefix SLPs. Later coordinates remain
 zero, and evaluation in the quotient proves each assembled relation. -/

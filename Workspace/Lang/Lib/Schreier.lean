@@ -9,7 +9,11 @@ Two uses of the orbit program with a transversal (`Workspace.Lang.Lib.OrbitT`).
   all elements of `G`, without repeats, as the orbit of `1` under left multiplication by the
   generators. The cost is at most `enumK * (m + B + 4 (n + 1)² + 20)⁶`.
 -/
-import Workspace.Lang.Lib.OrbitT
+module
+
+public import Workspace.Lang.Lib.OrbitT
+
+@[expose] public section
 
 namespace GI.Lang
 

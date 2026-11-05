@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiCfgA
-import Workspace.Impl.AggItemC1Sch
+module
+
+public import Workspace.Impl.AggItemCiCfgA
+public import Workspace.Impl.AggItemC1Sch
+
+@[expose] public section
 
 /-!
 # The configuration query: the even representative and the item

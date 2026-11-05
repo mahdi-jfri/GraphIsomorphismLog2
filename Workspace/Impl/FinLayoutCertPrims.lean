@@ -1,5 +1,9 @@
-import Workspace.Impl.FinLayoutAgg
-import Workspace.Impl.LinPrims
+module
+
+public import Workspace.Impl.FinLayoutAgg
+public import Workspace.Impl.LinPrims
+
+@[expose] public section
 
 /-!
 # The primitive slot of the aggregation round
@@ -16,8 +20,8 @@ namespace GI.Impl
 
 open GI.Algorithm GI.Assembly GI.Lang
 open GI.Cited (PointwiseStab Preimage NormalizedFactor Membership MinimalBlocks GroupOrder
-  CameronRecognition ChiefSeriesAlgo DerivedSubgroup QuotientCentralizer NormalizedIntersection
-  SylowAlgo SylowConjugate NormalClosure SolvableCosetIntersection HermiteFullRank
+  CameronRecognition DerivedSubgroup NormalizedIntersection
+  NormalClosure SolvableCosetIntersection HermiteFullRank
   SmithNonsingular ConstructiveMembership VectorStabilizer KaryRefinement)
 
 /-- **The primitives of the aggregation round**: the joint `κ`-ary refinement. In the final
@@ -30,13 +34,12 @@ theorem aggExtra_length (hk : KaryRefinement P₀.κ) : (aggExtra hk).length = 1
 `linA20Extra … ++ (aggExtra hk ++ ext'')`. -/
 theorem fcr_prim_kary {hst : PointwiseStab} {hm : Membership} {hpre : Preimage}
     {hfac : NormalizedFactor} {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition}
-    {hcs : ChiefSeriesAlgo} {hder : DerivedSubgroup} {hqc : QuotientCentralizer}
-    {hni : NormalizedIntersection} {hsy : SylowAlgo} {hsc : SylowConjugate}
-    {hnc : NormalClosure} {hs : SolvableCosetIntersection} {hh : HermiteFullRank}
-    {hn : SmithNonsingular} {hcmb : ConstructiveMembership} {hv : VectorStabilizer}
-    {hk : KaryRefinement P₀.κ} {ext'' : List Prim} {recF labF jF : List Expr}
-    {crE cmE itE : Expr} {crF cmF itF : List Expr} :
-    (fagProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc
+    {hder : DerivedSubgroup}
+    {hni : NormalizedIntersection} {hnc : NormalClosure} {hs : SolvableCosetIntersection}
+    {hh : HermiteFullRank} {hn : SmithNonsingular} {hcmb : ConstructiveMembership}
+    {hv : VectorStabilizer} {hk : KaryRefinement P₀.κ} {ext'' : List Prim}
+    {recF labF jF : List Expr} {crE cmE itE : Expr} {crF cmF itF : List Expr} :
+    (fagProg hst hm hpre hfac hmb hO hC hder hni hnc
       (linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ ext'')) recF labF jF crE cmE itE crF cmF
       itF).prims[19]? = some (karyRefinementPrim hk) := rfl
 

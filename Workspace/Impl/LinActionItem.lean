@@ -1,5 +1,9 @@
-import Workspace.Impl.LinActionSubgroup
-import Workspace.Lang.Prims.Ops
+module
+
+public import Workspace.Impl.LinActionSubgroup
+public import Workspace.Lang.Prims.Ops
+
+@[expose] public section
 
 /-! One new cover generator: constructive membership and evaluation of its
 SLP in the full retained affine action. -/

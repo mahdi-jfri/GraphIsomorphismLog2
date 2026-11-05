@@ -1,6 +1,10 @@
-import Workspace.Impl.VsQChunk
-import Workspace.Proved.VsFAlgSpanMath
-import Workspace.Impl.VsBAct
+module
+
+public import Workspace.Impl.VsQChunk
+public import Workspace.Proved.VsFAlgSpanMath
+public import Workspace.Impl.VsBAct
+
+@[expose] public section
 
 /-!
 # A combination of stored matrices

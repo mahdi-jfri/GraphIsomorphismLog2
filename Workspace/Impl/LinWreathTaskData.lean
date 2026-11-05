@@ -1,6 +1,10 @@
-import Workspace.Impl.LinWreathMatrices
-import Workspace.Impl.LinWreathBlockGenerator
-import Workspace.Impl.LinWreathVector
+module
+
+public import Workspace.Impl.LinWreathMatrices
+public import Workspace.Impl.LinWreathBlockGenerator
+public import Workspace.Impl.LinWreathVector
+
+@[expose] public section
 
 /-! The table constructors produce the encoding of the actual two-copy vector
 instance, including its representation on the original permutation cover. -/
@@ -72,7 +76,7 @@ theorem linWreathVecInst_matrices (I : VecStabInst) [Nonempty (Fin I.n)]
   have hs (g : gens I.gs) :
       (linWreathMatrixRep I.φ (linWreathSingle linTwoSwap g)).val =
         linWreathBlock hd (I.φ g).val 1 := by
-    simpa [linWreathGeneratorElement] using (linWreathBlock_generator hd I.φ g (1 : Fin 3)).symm
+    simpa [Matrix, linWreathGeneratorElement] using (linWreathBlock_generator hd I.φ g (1 : Fin 3)).symm
   have hw : (linWreathMatrixRep I.φ linWreathSwap).val =
       linWreathBlock hd (0 : Matrix (Fin I.d) (Fin I.d) (ZMod I.p)) 2 := by
     have hh := (linWreathBlock_generator hd I.φ (1 : gens I.gs) (2 : Fin 3)).symm
@@ -80,7 +84,9 @@ theorem linWreathVecInst_matrices (I : VecStabInst) [Nonempty (Fin I.n)]
         linWreathBlock hd (0 : Matrix (Fin I.d) (Fin I.d) (ZMod I.p)) 2 := by
       funext i j
       simp only [linWreathBlock, show ¬ (2 < 2) by decide, if_false]
-    simpa only [linWreathGeneratorElement, Fin.isValue, Nat.reduceEqDiff, if_false, he] using hh
+    change (linWreathMatrixRep I.φ linWreathSwap).val =
+      linWreathBlock hd (I.φ (1 : gens I.gs)).val 2 at hh
+    exact hh.trans he
   simp only [linWreathGenerators, List.map_append, List.map_map, List.map_cons, List.map_nil,
     Function.comp_def, hf, hs, hw, linWreathMatrices, linWreathOldMatrices]
   rfl

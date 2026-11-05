@@ -1,6 +1,10 @@
-import Workspace.Impl.TermGlueLabPOffM
-import Workspace.Impl.AggItemC1Par
-import Workspace.Impl.TermGlueLabPE
+module
+
+public import Workspace.Impl.TermGlueLabPOffM
+public import Workspace.Impl.AggItemC1Par
+public import Workspace.Impl.TermGlueLabPE
+
+@[expose] public section
 
 /-!
 # The orientation `ε(h)`

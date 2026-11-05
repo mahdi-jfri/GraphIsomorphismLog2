@@ -1,6 +1,10 @@
-import Workspace.Impl.VsHQ8Out
-import Workspace.Proved.VsWEigCount
-import Workspace.Proved.VsQAlg
+module
+
+public import Workspace.Impl.VsHQ8Out
+public import Workspace.Proved.VsWEigCount
+public import Workspace.Proved.VsQAlg
+
+@[expose] public section
 
 /-!
 # The algebra `𝔽_p[A ∪ E]` from stored local matrices
@@ -15,6 +19,8 @@ open Matrix
 namespace GI.Impl
 
 open GI.Lang GI.Cited GI.Proved Equiv
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 variable {I : VecStabInst} {s : VsQSt I} [Fact I.p.Prime]
 

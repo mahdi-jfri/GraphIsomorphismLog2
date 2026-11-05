@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectLocalRelation
+module
+
+public import Workspace.Impl.LinObjectLocalRelation
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang Matrix

@@ -1,4 +1,8 @@
-import Workspace.CartesianFiberCover
+module
+
+public import Workspace.CartesianFiberCover
+
+@[expose] public section
 
 namespace GI.CartesianCover
 
@@ -27,5 +31,3 @@ noncomputable def ofRelabeledFiberInvariance (H : Subgroup (Equiv.Perm V))
   simpa only [e.apply_symm_apply] using hxy
 
 end GI.CartesianCover
-
-#print axioms GI.CartesianCover.ofRelabeledFiberInvariance

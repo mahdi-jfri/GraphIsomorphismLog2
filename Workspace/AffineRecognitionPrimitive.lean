@@ -1,5 +1,9 @@
-import Workspace.AffineRecognitionBudget
-import Workspace.PrimitiveAbelianCoordinates
+module
+
+public import Workspace.AffineRecognitionBudget
+public import Workspace.PrimitiveAbelianCoordinates
+
+@[expose] public section
 namespace GI.AffineRecognition
 
 open BudgetInduction PrimitiveStructure

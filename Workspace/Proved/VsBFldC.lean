@@ -1,5 +1,9 @@
-import Workspace.Proved.VsBFldB
-import Workspace.Proved.VsFAlgPiece
+module
+
+public import Workspace.Proved.VsBFldB
+public import Workspace.Proved.VsFAlgPiece
+
+@[expose] public section
 
 /-!
 # The two cases of the field line
@@ -15,6 +19,8 @@ open Matrix
 namespace GI.Proved
 
 open GI.Impl GI.Cited GI.Lang Equiv
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 variable {I : VecStabInst} {s : VsQSt I} (hs : VsQStOK s)
 include hs
@@ -248,7 +254,7 @@ theorem vsB_unit (hab : s.Ab) (hdom : VsBDom s) {X : Matrix (Fin (vsQD s)) (Fin 
   have hsurj := LinearMap.injective_iff_surjective.mp hφ
   obtain ⟨Y, hY⟩ := hsurj ⟨1, (vsBLamA s).one_mem⟩
   have hXY : X * Y.1 = 1 := congrArg Subtype.val hY
-  have hYX : Y.1 * X = 1 := Matrix.mul_eq_one_comm.mp hXY
+  have hYX : Y.1 * X = 1 := mul_eq_one_comm.mp hXY
   exact ⟨⟨⟨X, Y, hXY, hYX⟩, hX, Y.2⟩, rfl⟩
 
 end GI.Proved

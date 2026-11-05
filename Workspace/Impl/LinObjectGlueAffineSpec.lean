@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectGlueAction
+module
+
+public import Workspace.Impl.LinObjectGlueAction
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -14,12 +18,13 @@ theorem linObjectGlueFrame_affine_spec (hh : HermiteFullRank)
     (as ns : List (Equiv.Perm (Fin n))) [((gens ns).subgroupOf (gens as)).Normal]
     [IsMulCommutative ((gens as) ⧸ (gens ns).subgroupOf (gens as))]
     (Y : List (TmRiO n)) (F : linObjectGlueFrame as ns Y)
-    (hok : TmRecObjOK Y.length Y) (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hok : TmRecObjOK Y.length Y) (hsol : TmRiListNorm (gens as) Y) (hNA : gens ns ≤ gens as)
     (gs : List (Equiv.Perm (Fin n))) (hAH : gens as ≤ gens gs)
     (hA : GI.Multicoset.Normalizes (gens gs) (gens as)) (hN : GI.Multicoset.Normalizes (gens gs) (gens ns))
     (hcomm : ∀ a ∈ gens as,∀ b ∈ gens as,a*b*a⁻¹*b⁻¹ ∈ gens ns)
     (hal : as.length ≤ n^2) (hf : Fixes (gens ns) (tmGlMs Y))
-    (hy : ∀ g ∈ gens gs,Conf (gens as) (tmGlMs Y) (tmGlMs Y ↼ g)) (hsolB : IsSolvable (gens gs))
+    (hy : ∀ g ∈ gens gs,Conf (gens as) (tmGlMs Y) (tmGlMs Y ↼ g))
+    (hsolB : IsSolvable (F.rep (gens gs) hA hy (QuotientGroup.mk'_surjective _) (linObjectCanonical_ker_local as ns Y hf)).range)
     (v w : tmGLVec (tmGLQMod F.D)) :
     let π := linObjectCanonicalProjection as ns
     let hπ : Function.Surjective π := QuotientGroup.mk'_surjective _

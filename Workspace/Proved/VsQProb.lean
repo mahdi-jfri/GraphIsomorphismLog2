@@ -1,6 +1,10 @@
-import Workspace.Cited.AlgoLinear
-import Mathlib.LinearAlgebra.Matrix.ToLin
-import Mathlib.Algebra.Module.Submodule.Map
+module
+
+public import Workspace.Cited.AlgoLinear
+public import Mathlib.LinearAlgebra.Matrix.ToLin
+public import Mathlib.Algebra.Module.Submodule.Map
+
+@[expose] public section
 
 /-!
 # The recursive problem

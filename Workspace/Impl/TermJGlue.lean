@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJGlueLab
+module
+
+public import Workspace.Impl.TermJGlueLab
+
+@[expose] public section
 
 /-!
 # The `J`-answer: `TermJSpec` from the layout of its programs
@@ -46,6 +50,7 @@ theorem tmJ_lab_of_ansC {k : ℕ} {A : Set (Perm (Fin k))} {h0 : Perm (Fin k)}
   simp only [Set.mem_smul_set, Set.mem_image, smul_eq_mul]
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
 /-- **The `J`-answer** from the layout of its programs. -/
 theorem tmJ_termJSpec (hm : Membership) (hfac : NormalizedFactor)
     (hcm : ConstructiveMembership) (hH : HermiteFullRank) (ho : GroupOrder)
@@ -65,9 +70,9 @@ theorem tmJ_termJSpec (hm : Membership) (hfac : NormalizedFactor)
   refine ⟨4 * Kn + 130, Dn + 1, ?_⟩
   intro P f ne pr lb au ou jo jni jst p hf hA hHA hjo hjm hjni hjh hjst hjmem hjf
   intro Ω C _ S k e c _ sv lv L hsv _ _ _ _ label hnat hq m h0 E hP σH σN σS hσH hσN hσS htr
-    _ _ _ hcard hsN hN hqα us vs hus hvs r hr w hw
+    _ _ _ hcard hsN hN hqα us vs hus hvs R' hRH hNR hsolv r hr w hw
   set F := RowForm.ofPure hnat hq E hP ⟨0, h0⟩ with hF
-  set T := F.rowTerminal P₀ htr hcard hsN hN hqα with hT
+  set T := F.rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv with hT
   haveI : Nonempty T.B := ⟨⟨0, h0⟩⟩
   have hσN' : gens σN = T.Nb := hσN
   have hq1 : 0 < L.q := by omega

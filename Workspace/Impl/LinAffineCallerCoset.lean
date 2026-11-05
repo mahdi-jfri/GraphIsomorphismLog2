@@ -1,4 +1,8 @@
-import Workspace.Impl.LinAffineCallerMath
+module
+
+public import Workspace.Impl.LinAffineCallerMath
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -25,7 +29,7 @@ theorem linAffineTrans_left {n d : ℕ} (gs ks : List (Equiv.Perm (Fin n)))
       apply (linFiniteRecenter_transport ρ c w v h).mp
       apply (hres h).mpr
       change k * r.val * r.val⁻¹ ∈ gens ks
-      simpa only [mul_assoc, mul_inv_cancel, mul_one] using hk
+      simpa only [mul_assoc, mul_inv_cancel, mul_one, SetLike.mem_coe] using hk
   rw [he, linRightCoset_left, ← linConjugateGenerators_gens]
   rfl
 

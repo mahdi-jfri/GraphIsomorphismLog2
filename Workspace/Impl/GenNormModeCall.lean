@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormCall
-import Workspace.Impl.GenNormChild
+module
+
+public import Workspace.Impl.GenNormCall
+public import Workspace.Impl.GenNormChild
+
+@[expose] public section
 
 /-! # Calling the mode selected by the normalization orbit test -/
 namespace GI.Impl

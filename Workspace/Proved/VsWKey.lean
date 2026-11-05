@@ -1,5 +1,9 @@
-import Workspace.Proved.VsWLinMath
-import Workspace.Proved.VsQMat
+module
+
+public import Workspace.Proved.VsWLinMath
+public import Workspace.Proved.VsQMat
+
+@[expose] public section
 
 /-!
 # A canonical key for a subspace

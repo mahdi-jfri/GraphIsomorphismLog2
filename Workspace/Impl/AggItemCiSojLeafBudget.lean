@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojParentBudget
+module
+
+public import Workspace.Impl.AggItemCiSojParentBudget
+
+@[expose] public section
 
 /-! # All first-rectangle leaf calls fit the first analysis stage -/
 

@@ -1,4 +1,8 @@
-import Workspace.GraphSearch
+module
+
+public import Workspace.GraphSearch
+
+@[expose] public section
 
 namespace GI
 variable {V : Type*}

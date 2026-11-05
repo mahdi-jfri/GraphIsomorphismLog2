@@ -1,5 +1,9 @@
-import Workspace.Proved.VStabLinMath
-import Workspace.Impl.VStabLinAll
+module
+
+public import Workspace.Proved.VStabLinMath
+public import Workspace.Impl.VStabLinAll
+
+@[expose] public section
 
 /-!
 # What the insertion of a list computes

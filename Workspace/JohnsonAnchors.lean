@@ -1,8 +1,12 @@
-import Workspace.AlternatingSimple
-import Workspace.VisibleImage
-import Workspace.QuotientImage
-import Workspace.OrbitLocalization
-import Mathlib.Algebra.Group.Action.Pointwise.Finset
+module
+
+public import Workspace.AlternatingSimple
+public import Workspace.VisibleImage
+public import Workspace.QuotientImage
+public import Workspace.OrbitLocalization
+public import Mathlib.Algebra.Group.Action.Pointwise.Finset
+
+@[expose] public section
 
 namespace GI.Johnson
 
@@ -108,7 +112,7 @@ theorem localize_anchor [IsSimpleGroup S]
   refine ⟨a, by simpa using ha, ?_⟩
   intro h hh
   have hi := Subgroup.mem_map_of_mem φ hh
-  simpa only [hzero, Subgroup.mem_bot] using hi
+  simpa only [hzero, Subgroup.mem_bot, MonoidHom.mem_ker] using hi
 
 /-- The pointwise-stabilizer branch of the Johnson argument yields a genuine
 visible natural-action mark at an anchor. -/

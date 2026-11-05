@@ -1,5 +1,9 @@
-import Workspace.Algorithm.AuxRectQuery
-import Workspace.Algorithm.AuxBlocks
+module
+
+public import Workspace.Algorithm.AuxRectQuery
+public import Workspace.Algorithm.AuxBlocks
+
+@[expose] public section
 
 /-!
 # The rectangle on the cross-pair orbit (Lemma A.27)

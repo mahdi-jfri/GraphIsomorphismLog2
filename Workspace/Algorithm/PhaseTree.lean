@@ -1,4 +1,8 @@
-import Workspace.Algorithm.Tree
+module
+
+public import Workspace.Algorithm.Tree
+
+@[expose] public section
 
 /-!
 # The phase tree of a run (Section 7)
@@ -311,7 +315,7 @@ theorem forest_spec :
             subst hb
             exact ⟨rfl, ha'⟩ }
     · have := orbitReps_sum_le S
-      simpa [Run.forest, List.map_map, Function.comp_def, Leaf.dom] using this
+      simpa [Run.forest, List.map_map, Function.comp_def, Leaf.dom, State.size] using this
   case orbitStop =>
     intro Ω C S S₁ D₁ hs hint hD₁ h₁ hN₁ hhier₁ _ r₁ ih₁
     obtain ⟨hG, hdom, -, -⟩ := h₁

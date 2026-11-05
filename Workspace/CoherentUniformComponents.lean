@@ -1,4 +1,8 @@
-import Workspace.CoherentSaturatedRelations
+module
+
+public import Workspace.CoherentSaturatedRelations
+
+@[expose] public section
 
 namespace GI.CoherentEntrance
 
@@ -115,9 +119,3 @@ theorem colorReach_stays_in_cut (c : Coloring n) (side : Bool) (k : Color n)
     exact hcut b ih d hd hbd
 
 end GI.CoherentEntrance
-
-#print axioms GI.CoherentEntrance.saturated_row_card_eq
-#print axioms GI.CoherentEntrance.colorComponent_card_eq
-#print axioms GI.CoherentEntrance.colorComponent_half
-#print axioms GI.CoherentEntrance.colorComponent_nontrivial
-#print axioms GI.CoherentEntrance.colorReach_stays_in_cut

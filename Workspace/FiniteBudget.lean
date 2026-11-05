@@ -1,8 +1,12 @@
-import Workspace.MarkedChains
-import Mathlib.Data.Nat.Lattice
-import Mathlib.GroupTheory.Index
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
+module
+
+public import Workspace.MarkedChains
+public import Mathlib.Data.Nat.Lattice
+public import Mathlib.GroupTheory.Index
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+
+@[expose] public section
 
 namespace GI
 

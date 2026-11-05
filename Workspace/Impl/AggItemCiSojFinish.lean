@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojRes
-import Workspace.Impl.AggItemCiSojRF
-import Workspace.Impl.AggItemCiSojOV
+module
+
+public import Workspace.Impl.AggItemCiSojRes
+public import Workspace.Impl.AggItemCiSojRF
+public import Workspace.Impl.AggItemCiSojOV
+
+@[expose] public section
 
 /-!
 # The rectangle answer finalizer

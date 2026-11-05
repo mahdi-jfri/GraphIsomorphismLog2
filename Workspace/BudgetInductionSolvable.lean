@@ -1,28 +1,32 @@
-import Workspace.BudgetInductionAlternatives
-import Mathlib.GroupTheory.Solvable
+module
+
+public import Workspace.BudgetInductionAlternatives
+public import Mathlib.GroupTheory.Solvable
+
+@[expose] public section
 
 namespace GI
 
 /-- Solvable groups have no nonabelian alternating quotient. -/
-theorem no_alternating_surjection_of_solvable {G : Type*} [Group G] [IsSolvable G]
+theorem no_alternating_surjection_of_solvable {G : Type*} [Group G] [Group.IsSolvable G]
     {k : ℕ} (hk : 5 ≤ k) (q : G →* alternatingGroup (Fin k)) :
     ¬ Function.Surjective q := by
   intro onto
   letI : IsSimpleGroup (alternatingGroup (Fin k)) := AlternatingSimple.isSimple_fin hk
-  haveI : IsSolvable (alternatingGroup (Fin k)) := solvable_of_surjective onto
+  haveI : Group.IsSolvable (alternatingGroup (Fin k)) := Group.isSolvable_of_surjective onto
   obtain ⟨f, g, hfg⟩ := AlternatingSimple.nonabelian_fin hk
   exact hfg (IsSimpleGroup.comm_iff_isSolvable.mpr inferInstance f g)
 
 /-- Restriction to an actual subgroup preserves solvability. -/
 theorem solvable_of_subgroup_le {G : Type*} [Group G]
-    {H L : Subgroup G} (hle : L ≤ H) [IsSolvable H] : IsSolvable L :=
-  solvable_of_solvable_injective (Subgroup.inclusion_injective hle)
+    {H L : Subgroup G} (hle : L ≤ H) [Group.IsSolvable H] : Group.IsSolvable L :=
+  Group.isSolvable_of_isSolvable_injective (Subgroup.inclusion_injective hle)
 
 /-- Every alternating quotient chain in a solvable group has zero weight,
 including chains which repeatedly restrict to arbitrary subgroups. -/
 theorem quotient_chain_zero_of_solvable {G : Type*} [Group G]
     {H : Subgroup G} {cutoff w : ℕ} (hcutoff : 5 ≤ cutoff)
-    (chain : QuotientChain cutoff H w) : IsSolvable H → w = 0 := by
+    (chain : QuotientChain cutoff H w) : Group.IsSolvable H → w = 0 := by
   induction chain with
   | stop H => intro _; rfl
   | restrict hle _ ih =>
@@ -37,14 +41,14 @@ theorem quotient_chain_zero_of_solvable {G : Type*} [Group G]
 
 theorem marked_chain_zero_of_solvable {V : Type*} {a : V}
     {H : Subgroup (Equiv.Perm V)} {cutoff w : ℕ} (hcutoff : 5 ≤ cutoff)
-    (chain : MarkedChain cutoff a H w) [IsSolvable H] : w = 0 :=
+    (chain : MarkedChain cutoff a H w) [Group.IsSolvable H] : w = 0 :=
   quotient_chain_zero_of_solvable hcutoff chain.toQuotientChain inferInstance
 
 /-- This bound applies to every solvable permutation group, without
 primitive-action recognition or a supplied affine representation. -/
 theorem sigma_zero_of_solvable {V : Type*} [Fintype V]
     {H : Subgroup (Equiv.Perm V)} {cutoff : ℕ} (hcutoff : 5 ≤ cutoff)
-    (a : V) [IsSolvable H] : sigma cutoff a H = 0 :=
+    (a : V) [Group.IsSolvable H] : sigma cutoff a H = 0 :=
   marked_chain_zero_of_solvable hcutoff (sigma_achieved hcutoff a H)
 
 namespace BudgetInduction
@@ -57,7 +61,7 @@ theorem unsupported_nonsolvable_primitive_witness {cutoff : ℕ} {C A₀ : ℝ}
     (failure : ∃ n, ∃ a : Fin n, degreeAllowance C n < (sigma cutoff a ⊤ : ℝ)) :
     ∃ n, cutoff ≤ n ∧ ∃ H : Subgroup (Equiv.Perm (Fin n)),
       MulAction.IsPreprimitive H (Fin n) ∧ ¬ alternatingGroup (Fin n) ≤ H ∧
-      ¬ IsSolvable H ∧ ¬ PrimitiveReductionAlternative A₀ H ∧
+      ¬ Group.IsSolvable H ∧ ¬ PrimitiveReductionAlternative A₀ H ∧
       ∃ a : Fin n, degreeAllowance C n < (sigma cutoff a H : ℝ) := by
   obtain ⟨n, hn, H, hp, hng, halt, a, hfail⟩ :=
     unsupported_primitive_witness hcutoff hC absorb failure
@@ -70,10 +74,3 @@ theorem unsupported_nonsolvable_primitive_witness {cutoff : ℕ} {C A₀ : ℝ}
 
 end BudgetInduction
 end GI
-
-#print axioms GI.no_alternating_surjection_of_solvable
-#print axioms GI.solvable_of_subgroup_le
-#print axioms GI.quotient_chain_zero_of_solvable
-#print axioms GI.marked_chain_zero_of_solvable
-#print axioms GI.sigma_zero_of_solvable
-#print axioms GI.BudgetInduction.unsupported_nonsolvable_primitive_witness

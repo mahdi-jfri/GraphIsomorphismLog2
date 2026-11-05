@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojWt
-import Workspace.Impl.ScriptRun
+module
+
+public import Workspace.Impl.AggItemCiSojWt
+public import Workspace.Impl.ScriptRun
+
+@[expose] public section
 
 /-!
 # Scheduling the at most two rectangle queries

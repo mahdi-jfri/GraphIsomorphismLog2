@@ -1,4 +1,8 @@
-import Workspace.Impl.SSOrderCnt
+module
+
+public import Workspace.Impl.SSOrderCnt
+
+@[expose] public section
 
 /-!
 # Listing the entries of the high levels

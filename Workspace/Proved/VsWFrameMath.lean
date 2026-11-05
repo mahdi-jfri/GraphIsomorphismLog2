@@ -1,4 +1,8 @@
-import Workspace.Proved.VsWLinMath
+module
+
+public import Workspace.Proved.VsWLinMath
+
+@[expose] public section
 
 /-!
 # Frames

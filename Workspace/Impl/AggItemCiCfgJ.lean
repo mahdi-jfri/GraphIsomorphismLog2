@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgZ
+module
+
+public import Workspace.Impl.AggItemCiCfgZ
+
+@[expose] public section
 
 /-!
 # The configuration query: the points outside the fiber and their transpositions

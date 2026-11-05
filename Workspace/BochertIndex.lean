@@ -9,12 +9,16 @@ Authors: Yawara Ishida
 CFSG/ThirdParty/OddOrder/Isaacs/PermutationGroups/Bochert.lean.
 Licensed under the Apache License 2.0; see `licenses/CFSG-Apache-2.0.txt`.
 The original copyright notice above is kept.
-Modified for this project: module names, and changes to build with Lean v4.30.0-rc2 and
-mathlib 2f9133a. -/
+Modified for this project: module names, and proof changes for the Lean and mathlib versions
+used here. -/
 
-import Workspace.BochertJordan
-import Workspace.BochertCommutator
-import Mathlib.GroupTheory.GroupAction.FixingSubgroup
+module
+
+public import Workspace.BochertJordan
+public import Workspace.BochertCommutator
+public import Mathlib.GroupTheory.GroupAction.FixingSubgroup
+
+@[expose] public section
 
 open scoped commutatorElement
 
@@ -200,4 +204,3 @@ theorem factorial_le_index_of_isPreprimitive {G : Subgroup (Perm α)}
 end Bochert
 
 end GI
-

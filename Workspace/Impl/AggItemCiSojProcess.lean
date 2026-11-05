@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojProjB
-import Workspace.Impl.AggItemCiSojIW
+module
+
+public import Workspace.Impl.AggItemCiSojProjB
+public import Workspace.Impl.AggItemCiSojIW
+
+@[expose] public section
 
 /-! # Exact processing of a nonempty physical rectangle answer -/
 

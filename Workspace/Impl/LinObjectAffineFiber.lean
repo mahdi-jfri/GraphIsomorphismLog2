@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectCallerSpec
+module
+
+public import Workspace.Impl.LinObjectCallerSpec
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -43,8 +47,8 @@ theorem linObjectAffineTrans_zero_mem {n d : ℕ} (gs : List (Equiv.Perm (Fin n)
   · rintro ⟨h,hh,he⟩
     have hg : h = g := Subtype.ext he
     subst h
-    simpa only [map_zero,zero_add] using hh
+    simpa only [Set.mem_setOf_eq, map_zero, zero_add] using hh
   · intro hg
-    exact ⟨g,by simpa only [map_zero,zero_add] using hg,rfl⟩
+    exact ⟨g, by simpa only [Set.mem_setOf_eq, map_zero, zero_add] using hg, rfl⟩
 
 end GI.Impl

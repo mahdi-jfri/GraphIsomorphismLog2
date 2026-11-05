@@ -1,7 +1,11 @@
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Fintype.Card
-import Mathlib.Data.List.Lex
-import Lean.Elab.Tactic.Omega
+module
+
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Fintype.Card
+public import Mathlib.Data.List.Lex
+public import Lean.Elab.Tactic.Omega
+
+@[expose] public section
 
 namespace GI.ColorCompression
 

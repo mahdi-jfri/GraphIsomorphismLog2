@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepGens
+module
+
+public import Workspace.Impl.AggRectRepGens
+
+@[expose] public section
 
 /-!
 # The support of a point-stabilizer image

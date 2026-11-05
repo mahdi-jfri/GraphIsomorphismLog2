@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojFinalW
-import Workspace.Impl.AggItemCiSojModelOut
+module
+
+public import Workspace.Impl.AggItemCiSojFinalW
+public import Workspace.Impl.AggItemCiSojModelOut
+
+@[expose] public section
 
 /-! # The full finalizer when all exact rectangle answers are empty -/
 

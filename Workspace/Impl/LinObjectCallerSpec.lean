@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectCallerCost
+module
+
+public import Workspace.Impl.LinObjectCallerCost
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -13,7 +17,7 @@ theorem linObjectAffineCaller_object_spec (hh : HermiteFullRank)
     {Q R : Type*} [CommGroup Q] [AddCommGroup R]
     (as ns : List (Equiv.Perm (Fin n))) (π : gens as →* Q) (hπ : Function.Surjective π)
     (Y : List (TmRiO n)) (hok : TmRecObjOK Y.length Y)
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : TmRiListNorm (gens as) Y) (hNA : gens ns ≤ gens as)
     (gs : List (Equiv.Perm (Fin n))) (hAH : gens as ≤ gens gs)
     (hA : GI.Multicoset.Normalizes (gens gs) (gens as)) (hN : GI.Multicoset.Normalizes (gens gs) (gens ns))
     (hcomm : ∀ a ∈ gens as, ∀ b ∈ gens as, a * b * a⁻¹ * b⁻¹ ∈ gens ns)
@@ -33,7 +37,7 @@ theorem linObjectAffineCaller_object_spec (hh : HermiteFullRank)
       ρ k (E (q (linObjectIndexedConfigEquiv as π hπ Y hker ⟨Z,hZ⟩))) + c k =
         E (q (linObjectIndexedConfigEquiv as π hπ Y hker
           ⟨Z ↼ k.val⁻¹,(affine_law hA ((gens gs).inv_mem k.property) (hy _ ((gens gs).inv_mem k.property)) hZ).2.2⟩)))
-    (hsolB : IsSolvable (gens gs))
+    (hsolB : IsSolvable ρ.range)
     (hprime : ∀ i p, p.Prime → p ∣ tmGLQMod D i → p ≤ max n 2)
     (hcocycle : ∀ g k, c (g * k) = ρ g (c k) + c g)
     (v w : tmGLVec (tmGLQMod D)) :
@@ -79,7 +83,7 @@ theorem linObjectAffineCaller_object_spec (hh : HermiteFullRank)
       (.list (gs.map encPerm)) SB := by
     have hr := linSlice_spec h.slice ((1 :: gs).map encPerm) 1 gs.length (by simp; omega)
     have hb := linPolyEnvelope_bound linSliceCost_poly (Nat.zero_le _) hsarg (Nat.zero_le _)
-    simpa only [List.map_cons,List.drop_succ_cons,List.drop_zero,← List.map_take,List.take_length] using hr.mono hb
+    simpa only [SB,linObjectCallerSliceBudget,List.map_cons,List.drop_succ_cons,List.drop_zero,← List.map_take,List.take_length] using hr.mono hb
   have wraw := hslice.wt_lt.le
   have hrarg : (Val.list [ctx,.list (gs.map encPerm)]).wt ≤ linObjectCallerRecordsArg W := by
     have hh := wt_list2_le ctx (.list (gs.map encPerm))

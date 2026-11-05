@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgS
+module
+
+public import Workspace.Impl.AggItemCiCfgS
+
+@[expose] public section
 
 /-!
 # The configuration query: the fiber lists as a program

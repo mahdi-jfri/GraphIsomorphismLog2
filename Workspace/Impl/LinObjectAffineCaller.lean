@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectRecordsEncoding
+module
+
+public import Workspace.Impl.LinObjectRecordsEncoding
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,4 +1,8 @@
-import Workspace.Proved.VsMBasic
+module
+
+public import Workspace.Proved.VsMBasic
+
+@[expose] public section
 
 /-!
 # The goodness test

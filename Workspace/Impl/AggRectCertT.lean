@@ -1,7 +1,11 @@
-import Workspace.Impl.AggRectCertMath
-import Workspace.Impl.AggStructDC
-import Workspace.Impl.AggStructDesPair
-import Workspace.Impl.GenProdSq
+module
+
+public import Workspace.Impl.AggRectCertMath
+public import Workspace.Impl.AggStructDC
+public import Workspace.Impl.AggStructDesPair
+public import Workspace.Impl.GenProdSq
+
+@[expose] public section
 
 /-!
 # The certificate search as a program: the small tests

@@ -1,4 +1,8 @@
-import Workspace.Impl.SmallInv
+module
+
+public import Workspace.Impl.SmallInv
+
+@[expose] public section
 
 /-!
 # Canonical values of states and answers

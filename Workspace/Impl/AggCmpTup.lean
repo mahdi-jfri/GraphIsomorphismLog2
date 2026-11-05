@@ -1,5 +1,9 @@
-import Workspace.Impl.AggSubMath
-import Workspace.Impl.AggStructRel
+module
+
+public import Workspace.Impl.AggSubMath
+public import Workspace.Impl.AggStructRel
+
+@[expose] public section
 
 /-!
 # The order of the test tuples that the program builds

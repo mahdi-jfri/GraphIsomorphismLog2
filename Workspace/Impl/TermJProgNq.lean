@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJProgYg3
-import Workspace.Impl.TermJProgFlat
+module
+
+public import Workspace.Impl.TermJProgYg3
+public import Workspace.Impl.TermJProgFlat
+
+@[expose] public section
 
 /-!
 # Generators of `N^q` (program)

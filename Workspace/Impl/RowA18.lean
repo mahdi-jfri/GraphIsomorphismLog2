@@ -1,4 +1,8 @@
-import Workspace.Impl.RowPure
+module
+
+public import Workspace.Impl.RowPure
+
+@[expose] public section
 
 /-!
 # The groups of Theorem A.18 in coordinates
@@ -107,7 +111,7 @@ theorem mem_Nstar_ofPure (σ : Perm B) :
     have hxG := ((pureComplementOf hnat e hP b₀).mem_normalRows_iff h5 ⟨0, by omega⟩ _).1 hx
     refine ⟨fun r => (rowSingle (⟨0, by omega⟩ : Fin L.q) n r).val, hxG, fun r hr => ?_, ?_⟩
     · simp [rowSingle, hr]; rfl
-    · simp [rowSingle]
+    · simp [rowSingle]; rfl
   · rintro ⟨y, hy, hy1, hy0⟩
     have h0 : y ⟨0, by omega⟩ ∈ F.Hb := row_mem_Hb hnat hq e hP b₀ y hy _
     refine ⟨⟨y ⟨0, by omega⟩, h0⟩, ?_, hy0⟩
@@ -118,10 +122,9 @@ theorem mem_Nstar_ofPure (σ : Perm B) :
         (⟨y ⟨0, by omega⟩, h0⟩ : F.Hb) r).val) = y := by
       funext r
       by_cases hr : r = ⟨0, by omega⟩
-      · rw [hr]; simp [rowSingle]
+      · rw [hr]; simp [rowSingle]; rfl
       · simp [rowSingle, hr, hy1 r hr]; rfl
-    show cleanRowPerm e _ ∈ _
-    convert hy using 2
+    exact (congrArg (fun z => cleanRowPerm e z ∈ S.domGroup) hfun).mpr hy
 
 end OfPure
 

@@ -1,6 +1,10 @@
-import Workspace.Impl.LinObjectLiftAfter
-import Workspace.Impl.LinObjectNormal
-import Workspace.Impl.GenNormGlue
+module
+
+public import Workspace.Impl.LinObjectLiftAfter
+public import Workspace.Impl.LinObjectNormal
+public import Workspace.Impl.GenNormGlue
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectDataSpec
-import Workspace.Lang.Prims.Ops
+module
+
+public import Workspace.Impl.LinObjectDataSpec
+public import Workspace.Lang.Prims.Ops
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -37,10 +41,28 @@ theorem linObjectKernelPrefix_mem {G : Type*} [Group G] (A : Subgroup G) (Bs : L
   | cons B Bs ih =>
     simp only [List.foldl_cons,ih,Subgroup.mem_inf,List.forall_mem_cons,and_assoc]
 
-theorem linObjectKernelPrefix_solvable {G : Type*} [Group G] (A : Subgroup G) (hsol : IsSolvable A)
-    (Bs : List (Subgroup G)) (i : ℕ) : IsSolvable (linObjectKernelPrefix A Bs i) := by
-  letI : IsSolvable A := hsol
-  exact solvable_of_solvable_injective (Subgroup.inclusion_injective (linObjectKernelPrefix_le A Bs i))
+theorem linObjectKernelFold_ge {G : Type*} [Group G] (N A : Subgroup G) (Bs : List (Subgroup G))
+    (hNA : N ≤ A) (hBs : ∀ B ∈ Bs, N ≤ B) :
+    N ≤ Bs.foldl (fun K B => K ⊓ B) A := by
+  induction Bs generalizing A with
+  | nil => exact hNA
+  | cons B Bs ih =>
+    exact ih (A ⊓ B) (le_inf hNA (hBs B (List.mem_cons_self ..)))
+      (fun B' hB' => hBs B' (List.mem_cons_of_mem _ hB'))
+
+theorem linObjectKernelPrefix_normalizes {n : ℕ} (N A : Subgroup (Equiv.Perm (Fin n)))
+    (Bs : List (Subgroup (Equiv.Perm (Fin n)))) (hNA : N ≤ A)
+    (hcomm : ∀ a ∈ A, ∀ b ∈ A, a * b * a⁻¹ * b⁻¹ ∈ N)
+    (hBsN : ∀ B ∈ Bs, N ≤ B) (i : ℕ) {B : Subgroup (Equiv.Perm (Fin n))} (hBA : B ≤ A) :
+    GI.Lang.Normalizes B (linObjectKernelPrefix A Bs i) := by
+  intro b hb k hk
+  have hkA : k ∈ A := linObjectKernelPrefix_le A Bs i hk
+  have hbA : b ∈ A := hBA hb
+  have hc : b * k * b⁻¹ * k⁻¹ ∈ N := hcomm b hbA k hkA
+  have hcK : b * k * b⁻¹ * k⁻¹ ∈ linObjectKernelPrefix A Bs i :=
+    linObjectKernelFold_ge N A (Bs.take i) hNA (fun B' hB' => hBsN B' (List.mem_of_mem_take hB')) hc
+  have hmul := (linObjectKernelPrefix A Bs i).mul_mem hcK hk
+  simpa [mul_assoc] using hmul
 
 /-- Intersect the accumulator with the next collected local stabilizer.
 The coset intersection is nonempty because its translating element is one. -/

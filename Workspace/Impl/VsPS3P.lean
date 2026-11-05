@@ -1,5 +1,9 @@
-import Workspace.Impl.VsPS4P
-import Workspace.Lang.Prims.BlockHom
+module
+
+public import Workspace.Impl.VsPS4P
+public import Workspace.Lang.Prims.BlockHom
+
+@[expose] public section
 
 /-!
 # The pairing stage
@@ -60,7 +64,6 @@ noncomputable def vsPS3Cost (Cφ : ℕ) (hn : NormalClosure) (S : ℕ) : ℕ :=
     vsPRadCost (I := I) Cφ (vsPN S) (vsPW6 S) + vsPS4Cost Cφ hn S + vsPGrowCost hn (vsPN S) (vsPW6 S) +
     10 ^ 4 * (vsPN S + 1) * (vsPW6 S + 100 * (vsPN S + 1) ^ 3)
 
-set_option maxHeartbeats 4000000 in
 /-- **The weight of an output.** -/
 theorem VsPOut.wt_le [Fact I.p.Prime] {S Tm : ℕ} (hS : VsQDSz I S Tm) {s : VsQSt I} (hs : VsQStOK s)
     {as : List (Perm (Fin I.n))} {Lb : List (List (List ℕ))} {ccs tcs : List (Perm (Fin I.n))}
@@ -77,17 +80,17 @@ theorem VsPOut.wt_le [Fact I.p.Prime] {S Tm : ℕ} (hS : VsQDSz I S Tm) {s : VsQ
   · set A := vsPIn s as Lb ccs tcs
     set St := Val.list [vsQGam I, encGroup s.hs, vsWVs s.ws', vsWVs s.ws, natList s.x, natList s.y]
     set LC := Val.list [St, vsWFrVal I.p I.d s.ws' (vsQCs s), .nat (vsQD s), vsFMatsVal (vsQMs s)]
-    have wLC : LC.wt < A.wt := wt_le_wt_list (by simp [A, vsPIn, LC, St, vsQLCV, vsQStV])
-    have wSt : St.wt < LC.wt := wt_le_wt_list (by simp [LC])
-    have wG : (vsQGam I).wt < St.wt := wt_le_wt_list (by simp [St])
-    have wHs : (encGroup s.hs).wt < St.wt := wt_le_wt_list (by simp [St])
-    have wW' : (vsWVs s.ws').wt < St.wt := wt_le_wt_list (by simp [St])
-    have wW : (vsWVs s.ws).wt < St.wt := wt_le_wt_list (by simp [St])
-    have wFr : (vsWFrVal I.p I.d s.ws' (vsQCs s)).wt < LC.wt := wt_le_wt_list (by simp [LC])
-    have wAs : (encGroup as).wt < A.wt := wt_le_wt_list (by simp [A, vsPIn])
-    have wCc : (encGroup ccs).wt < A.wt := wt_le_wt_list (by simp [A, vsPIn])
-    have wTc : (Val.list (tcs.map encPerm)).wt < A.wt := wt_le_wt_list (by simp [A, vsPIn])
-    have wLb : (vsFMatsVal Lb).wt < A.wt := wt_le_wt_list (by simp [A, vsPIn])
+    have wLC : LC.wt < A.wt := wt_le_wt_list (by simp [LC, St, vsQLCV, vsQStV])
+    have wSt : St.wt < LC.wt := wt_le_wt_list (by simp)
+    have wG : (vsQGam I).wt < St.wt := wt_le_wt_list (by simp)
+    have wHs : (encGroup s.hs).wt < St.wt := wt_le_wt_list (by simp)
+    have wW' : (vsWVs s.ws').wt < St.wt := wt_le_wt_list (by simp)
+    have wW : (vsWVs s.ws).wt < St.wt := wt_le_wt_list (by simp)
+    have wFr : (vsWFrVal I.p I.d s.ws' (vsQCs s)).wt < LC.wt := wt_le_wt_list (by simp)
+    have wAs : (encGroup as).wt < A.wt := wt_le_wt_list (by simp)
+    have wCc : (encGroup ccs).wt < A.wt := wt_le_wt_list (by simp)
+    have wTc : (Val.list (tcs.map encPerm)).wt < A.wt := wt_le_wt_list (by simp)
+    have wLb : (vsFMatsVal Lb).wt < A.wt := wt_le_wt_list (by simp)
     have hD := vsQD_le hs
     have hyl' : ys.length ≤ S ^ 2 := hyl.trans (Nat.pow_le_pow_left (by have := hS.d; omega) 2)
     have wys := vs_wt_list_le_of (ys.map encPerm) (c := 4 * S ^ 2) (by
@@ -112,9 +115,11 @@ theorem VsPOut.wt_le [Fact I.p.Prime] {S Tm : ℕ} (hS : VsQDSz I S Tm) {s : VsQ
       .list (tcs.map encPerm), .list (ys.map encPerm), .nat r, vsFMatsVal Lb]).wt := rfl
     have := wt_list2_le (Val.nat 1) (vsPGIn s as Lb ccs tcs ys r)
     have := wt_nat_le 1
+    have eAw : (vsPIn s as Lb ccs tcs).wt = A.wt := rfl
+    clear_value A St LC
     omega
 
-set_option maxHeartbeats 16000000 in
+set_option maxHeartbeats 800000 in
 /-- **The pairing stage.** -/
 theorem vsPS3_spec [Fact I.p.Prime] {P : Program} {hn : NormalClosure} {f : ℕ} {x : VsPS3X}
     (hf : P.funs[f]? = some (vsPS3E x.pair x.comm x.zp x.tl x.rad x.x4.grow x.s4))
@@ -135,7 +140,7 @@ theorem vsPS3_spec [Fact I.p.Prime] {P : Program} {hn : NormalClosure} {f : ℕ}
         encGroup gs, .list [encPerm x2, .nat r]])
       (fun w c => VsPOut hs as Lb ccs tcs w ∧
         c ≤ vsPS3Cost (I := I) Cφ hn S + 10 ^ 5 * (vsPIn s as Lb ccs tcs).wt) := by
-  haveI : NeZero r := ⟨hr.out.ne_zero⟩
+  have : NeZero r := ⟨hr.out.ne_zero⟩
   have hr2 := hr.out.two_le
   set N := vsPN S
   set W := vsPW6 S
@@ -272,6 +277,7 @@ theorem vsPS3_spec [Fact I.p.Prime] {P : Program} {hn : NormalClosure} {f : ℕ}
   obtain ⟨rfl, hc7⟩ := h7
   refine EvalAll.letE dR fun v8 c8 h8 => ?_
   obtain ⟨rfl, hc8⟩ := h8
+  clear dP a0 a2 dP' b2 dL v1 v2 gi gj ga gb dc c0' c3 cr dZ dT e0 dpc f0 f5 f1 fl drc g3 gr dR
   set E8 := [Val.list vs, PV, Val.list L2, encPerm c0, ZV, gV, pc, rc, RV]
   -- weights
   have wvs := wt_list_le vs
@@ -292,10 +298,10 @@ theorem vsPS3_spec [Fact I.p.Prime] {P : Program} {hn : NormalClosure} {f : ℕ}
   have ePV : PV.wt = (Val.list [Val.nat i, Val.nat j]).wt := rfl
   have wi := wt_nat_le i
   have wj := wt_nat_le j
-  have wL2 : (Val.list L2).wt < G2.wt := wt_le_wt_list (by simp [G2, encGroup, encPerms, L2])
+  have wL2 : (Val.list L2).wt < G2.wt := wt_le_wt_list (by simp [L2])
   have wc0 : (encPerm c0).wt ≤ 4 * (I.n + 1) ^ 2 := wt_encPerm_le c0
   have wpc : pc.wt ≤ W := OD.hpc
-  have wZV : ZV.wt < pc.wt := wt_le_wt_list (by simp [pc, vsPPc, ZV])
+  have wZV : ZV.wt < pc.wt := wt_le_wt_list (by simp [ZV])
   have wRV : RV.wt ≤ 20 * (I.n + 1) ^ 2 + 20 := by
     show (vsPRadV I s.ws' (vsQCs s) rows Zp gs r).wt ≤ _
     unfold vsPRadV
@@ -354,7 +360,16 @@ theorem vsPS3_spec [Fact I.p.Prime] {P : Program} {hn : NormalClosure} {f : ℕ}
   have hpre : c1 + c2 + c3' + c4 + c5 + c6 + c7 + c8 ≤ vsPPairCost Cφ (vsPN S) (vsPW6 S) +
       vsPCommCost (vsPN S) + vsPZpCost Cφ (vsPN S) (vsPW6 S) + vsPRadCost (I := I) Cφ (vsPN S) (vsPW6 S) +
       4000 * Y + 100 * (Val.list vs).wt + 100 * W + 1000 * S ^ 6 := by
+    have eG2 : (Val.list [Val.nat I.n, Val.list L2]).wt = G2.wt := rfl
+    have eo' : (Val.list [encPerm x2, Val.nat r]).wt = o.wt := rfl
+    have ePV' : (Val.list [Val.nat i, Val.nat j]).wt = PV.wt := rfl
+    have epc' : (Val.list [C, gV, ZV]).wt = pc.wt := rfl
+    have erc' : (Val.list [C, gV, encPerm (1 : Perm (Fin I.n)), Val.nat gs.length]).wt = rc.wt := rfl
+    have w0 := wt_nat_le 0; have w1 := wt_nat_le 1
+    clear L hphi H OD hgN hfitK hH h2
+    clear_value N W rows C A o G2 a b c0 Zp vs L2 PV ZV gV pc rc RV E2 E3 E4 E5 E6 E7 E8 Y
     omega
+  clear hc1 hc2 hc3 hc4 hc5 hc6 hc7 hc8
   set K := vsWKer r (vsPGram I s.ws' (vsQCs s) Zp gs)
   set J := vsPRadJ I s.ws' (vsQCs s) rows Zp gs r
   have h1i : Det P E8 (arg 1) A _ :=
@@ -384,14 +399,15 @@ theorem vsPS3_spec [Fact I.p.Prime] {P : Program} {hn : NormalClosure} {f : ℕ}
     have hzK : K[J] ∈ K := List.getElem_mem hJ
     have hzb : vsPInLB I s.ws' (vsQCs s) rows z = false := by
       have := List.findIdx_getElem (w := hJ)
-      simpa using this
+      change (!vsPInLB I s.ws' (vsQCs s) rows z) = true at this
+      simpa only [Bool.not_eq_true'] using this
     have hn2' := hH.two_le_n
     have hxl : [z].length ≤ I.n ^ 2 := by
       show 1 ≤ I.n ^ 2; exact Nat.one_le_pow _ _ (by omega)
     have wAl : A.wt < (Val.list vs).wt :=
       wt_le_wt_list (List.mem_cons_of_mem _ (List.mem_cons_self (a := A) (l := vs.tail.tail)))
     have wC0' : C.wt < (Val.list vs).wt := wt_le_wt_list (List.mem_cons_self (a := C) (l := vs.tail))
-    have wAs : (encGroup as).wt < A.wt := wt_le_wt_list (by simp [A, vsPIn])
+    have wAs : (encGroup as).wt < A.wt := wt_le_wt_list (by simp)
     have wz := wt_encPerm_le z
     have w1z := wt_list1_le (encPerm z)
     have e1z : Val.list ([z].map encPerm) = Val.list [encPerm z] := rfl
@@ -418,7 +434,13 @@ theorem vsPS3_spec [Fact I.p.Prime] {P : Program} {hn : NormalClosure} {f : ℕ}
       have hn6' : (I.n + 1) ^ 6 ≤ S ^ 6 := hn6
       have lz : (Val.list [C, encGroup as, Val.list (List.map encPerm [z])]).wt =
         (Val.list [C, encGroup as, Val.list [encPerm z]]).wt := rfl
+      have e1z' : (Val.list (List.map encPerm [z])).wt = (Val.list [encPerm z]).wt := rfl
       have w11 := wt_nat_le 1
+      have lAA : A.wt = (vsPIn s as Lb ccs tcs).wt := rfl
+      unfold vsPS3Cost
+      rw [eY]
+      clear L hphi H OD hgN hfitK hH h2 h1i h0i h3i dT8 hz8 g1 gx dA
+      clear_value N W rows C A o G2 a b c0 Zp vs L2 PV ZV gV pc rc RV E2 E3 E4 E5 E6 E7 E8 Y K J z
       have hKAb : KA ≤ 20 * (Val.list vs).wt + 100 * S ^ 6 + 200 := by omega
       have hc3b : (Val.list [Val.nat 0, encGroup as']).wt ≤ 640 * S ^ 6 + 20 := by omega
       have hccb : cc ≤ 20 * (Val.list vs).wt + 200 * S ^ 6 + 300 := by omega
@@ -427,8 +449,6 @@ theorem vsPS3_spec [Fact I.p.Prime] {P : Program} {hn : NormalClosure} {f : ℕ}
       have hbr : cc + cw + 9 * (Val.list [Val.nat 0, encGroup as']).wt ≤
           vsPGrowCost hn (vsPN S) (vsPW6 S) + 50 * (Val.list vs).wt + 10 ^ 4 * S ^ 6 + 1000 := by
         omega
-      unfold vsPS3Cost
-      rw [eY]
       omega
   · -- the radical lies in `S`: the last stage
     have eRV : RV = .list [.nat 0, encPerm (1 : Perm (Fin I.n))] := by
@@ -464,6 +484,8 @@ theorem vsPS3_spec [Fact I.p.Prime] {P : Program} {hn : NormalClosure} {f : ℕ}
     have lAA : A.wt = (vsPIn s as Lb ccs tcs).wt := rfl
     unfold vsPS3Cost
     rw [eY]
+    clear L hphi H OD hgN hfitK hH h2 h4 h1i h0i h3i dT8 d6
+    clear_value N W rows C A o G2 a b c0 Zp vs L2 PV ZV gV pc rc RV E2 E3 E4 E5 E6 E7 E8 Y K J
     omega
 
 end GI.Impl

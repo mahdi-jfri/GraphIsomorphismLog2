@@ -1,5 +1,9 @@
-import Workspace.Proved.PalfyRing
-import Workspace.Proved.SolvOrder
+module
+
+public import Workspace.Proved.PalfyRing
+public import Workspace.Proved.SolvOrder
+
+@[expose] public section
 
 /-!
 # The imprimitive step
@@ -213,7 +217,7 @@ end
 
 /-- **The imprimitive step.** -/
 theorem palfy_imprimitive [Finite K] [Finite V] [Nontrivial V] {E : ℕ} (ih : PalfyIH K E (Nat.card V))
-    {H : Subgroup (Module.End K V)ˣ} [IsSolvable H] (hH : palfyIrr H)
+    {H : Subgroup (Module.End K V)ˣ} [Group.IsSolvable H] (hH : palfyIrr H)
     {R : Subalgebra K (Module.End K V)} (hR : PalfyAlg H R) {f : Module.End K V} (hfR : f ∈ R)
     (hf : IsIdempotentElem f) (hf0 : f ≠ 0) (hf1 : f ≠ 1) :
     24 * Nat.card K ^ 6 * Nat.card H ^ 3 ≤ Nat.card V ^ E := by
@@ -228,7 +232,7 @@ theorem palfy_imprimitive [Finite K] [Finite V] [Nontrivial V] {E : ℕ} (ih : P
     palfyResGrp (palfyStab H e.1) _ (palfyStab_inv H e.1)
   have hGsolv : ∀ e : T, IsSolvable (G e) := by
     intro e
-    haveI : IsSolvable (palfyStab H e.1) :=
+    haveI : Group.IsSolvable (palfyStab H e.1) :=
       solvable_of_solvable_injective (Subgroup.inclusion_injective (palfyStab_le H e.1))
     exact palfyResGrp_solvable _ _ _
   have hWne : ∀ e : T, Nontrivial (LinearMap.range e.1) := by
@@ -273,10 +277,9 @@ theorem palfy_imprimitive [Finite K] [Finite V] [Nontrivial V] {E : ℕ} (ih : P
     exact ih _ (hWlt e) (G e) (hGsolv e) (palfyCR_of_irr (palfy_stab_irr hH hR (hP e)))
   -- the permutation part
   set φ := palfyPermHom hR
-  haveI : IsSolvable φ.range := solvable_of_surjective φ.rangeRestrict_surjective
   have hS : Nat.card φ.range ^ 3 ≤ 24 ^ (Fintype.card T - 1) := by
     have := solvOrder_bound (α := T) (by rw [Nat.card_eq_fintype_card]; omega) φ.range
-      inferInstance
+      (solvable_of_surjective φ.rangeRestrict_surjective)
     rwa [Nat.card_eq_fintype_card (α := T)] at this
   -- the kernel
   have hL : Nat.card φ.ker ≤ ∏ e : T, Nat.card (G e) := by

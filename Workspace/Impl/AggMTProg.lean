@@ -1,5 +1,9 @@
-import Workspace.Impl.AggMT
-import Workspace.Impl.AggPairs
+module
+
+public import Workspace.Impl.AggMT
+public import Workspace.Impl.AggPairs
+
+@[expose] public section
 
 /-!
 # The generators of `M_T`, in `GI.Lang`

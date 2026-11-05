@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertFzOut
+module
+
+public import Workspace.Impl.AggCertFzOut
+
+@[expose] public section
 
 /-!
 # The graph forms of the certificate groups: one test set

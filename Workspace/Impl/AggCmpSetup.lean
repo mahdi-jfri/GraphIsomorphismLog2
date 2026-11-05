@@ -1,7 +1,11 @@
-import Workspace.Impl.AggCmpClOK
-import Workspace.Impl.AggCmpStart
-import Workspace.Impl.AggCmpPhase
-import Workspace.Impl.AggCmpTupProg
+module
+
+public import Workspace.Impl.AggCmpClOK
+public import Workspace.Impl.AggCmpStart
+public import Workspace.Impl.AggCmpPhase
+public import Workspace.Impl.AggCmpTupProg
+
+@[expose] public section
 
 /-!
 # The setup of the comparison phase

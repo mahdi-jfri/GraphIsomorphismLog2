@@ -1,5 +1,9 @@
-import Workspace.Cited.MarotiPrimitive
-import Workspace.AltAutConjugation
+module
+
+public import Workspace.Cited.MarotiPrimitive
+public import Workspace.AltAutConjugation
+
+@[expose] public section
 
 /-!
 # The normalizer fact for `Alt(m)` on `k`-sets
@@ -31,6 +35,7 @@ theorem cam_kSetPerm_mul (a b : Perm (Fin m)) :
 theorem cam_kSetPerm_one : (kSetPerm 1 : Perm {A : Finset (Fin m) // A.card = k}) = 1 := by
   ext S x
   simp [cam_kSetPerm_apply]
+  rfl
 
 /-- The action on `k`-sets is faithful for `1 ≤ k < m`. -/
 theorem cam_kSetPerm_injective (hk : 1 ≤ k) (hkm : k < m) :

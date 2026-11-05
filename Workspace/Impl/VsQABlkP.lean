@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQATblP
+module
+
+public import Workspace.Impl.VsQATblP
+
+@[expose] public section
 
 /-!
 # The program for the block sums
@@ -91,11 +95,15 @@ section
 
 variable {Pcs : List (List (List ℕ))} {labL : List ℕ} {N : ℕ}
 
-set_option maxHeartbeats 2000000 in
 theorem vsQABlkI_spec {P : Program} {fi : ℕ} (hfi : P.funs[fi]? = some vsQABlkIE)
     (H : VsQABlkSz Pcs labL N) {c i : ℕ} (hc : c ≤ N) (hi : i < Pcs.length) :
     FunDet P fi (.list [.list [.list [vsFMatsVal Pcs, natList labL], .nat c], .nat i])
       (vsWVs (vsQABlkI Pcs labL c i)) (10 ^ 4 * (N + 1) ^ 4) := by
+  have hil : i < labL.length := by rw [H.lab]; exact hi
+  set li := labL[i]
+  set Qi := Pcs[i]
+  have hli_mem : li ∈ labL := List.getElem_mem hil
+  have hQi_mem : Qi ∈ Pcs := List.getElem_mem hi
   set PV := vsFMatsVal Pcs
   set LV := natList labL
   set X := [Val.list [Val.list [PV, LV], .nat c], .nat i]
@@ -105,47 +113,42 @@ theorem vsQABlkI_spec {P : Program} {fi : ℕ} (hfi : P.funs[fi]? = some vsQABlk
   have dc := Det.get' g0 (Det.nat 1) (show [Val.list [PV, LV], .nat c][1]? = some (.nat c) from rfl)
   have dL := Det.get' d00 (Det.nat 1) (show [PV, LV][1]? = some LV from rfl)
   have dP := Det.get' d00 (Det.nat 0) (show [PV, LV][0]? = some PV from rfl)
-  have hil : i < labL.length := by rw [H.lab]; exact hi
-  have dLi := Det.get' dL g1 (show (labL.map Val.nat)[i]? = some (.nat labL[i]) by simp [hil])
+  have dLi := Det.get' dL g1 (show (labL.map Val.nat)[i]? = some (.nat li) by simp [hil, li])
   have dPi := Det.get' dP g1 (show (Pcs.map fun M => Val.list (M.map natList))[i]? =
-    some (vsWVs Pcs[i]) by simp [hi, vsWVs])
+    some (vsWVs Qi) by simp [hi, vsWVs, Qi])
   have deq := Det.arith' (op := BinOp.eq) dLi dc rfl
   have dite := Det.ite' deq dPi (Det.nil (P := P) (env := [Val.list X]))
-  have ev : (if BinOp.eval .eq labL[i] c = 0 then Val.list [] else vsWVs Pcs[i]) =
+  have ev : (if BinOp.eval .eq li c = 0 then Val.list [] else vsWVs Qi) =
       vsWVs (vsQABlkI Pcs labL c i) := by
     simp only [vsQABlkI, GI.Machine.BinOp.eval, List.getD_eq_getElem?_getD, List.getElem?_eq_getElem hil,
-      List.getElem?_eq_getElem hi, Option.getD_some]
+      List.getElem?_eq_getElem hi, Option.getD_some, li, Qi]
     by_cases h : labL[i] = c <;> simp [h, vsWVs]
   rw [ev] at dite
   refine FunDet.intro hfi (dite.mono ?_)
+  clear g0 g1 d00 dc dL dP dLi dPi deq dite hfi
   have wP : PV.wt ≤ 40 * (N + 1) ^ 4 := H.wP
   have wL : LV.wt ≤ 5 * (N + 1) ^ 2 := H.wL
-  have wQ : (vsWVs Pcs[i]).wt ≤ 11 * (N + 1) ^ 3 + 4 :=
-    wt_vsWVs_le (H.bnd _ (List.getElem_mem hi)) (by have := H.qlen (List.getElem_mem hi); omega)
+  have wQ : (vsWVs Qi).wt ≤ 11 * (N + 1) ^ 3 + 4 :=
+    wt_vsWVs_le (H.bnd _ hQi_mem) (by have := H.qlen hQi_mem; omega)
   have wQ' : (vsWVs (vsQABlkI Pcs labL c i)).wt ≤ 11 * (N + 1) ^ 3 + 4 := by
     rw [← ev]; split_ifs
-    · simp [vsWVs]
+    · simp
     · exact wQ
-  have hli : labL[i] ≤ N := H.labb _ (List.getElem_mem hil)
-  have := wt_nat_le c; have := wt_nat_le i; have := wt_nat_le labL[i]; have := wt_nat_le 0
-  have := wt_nat_le 1; have := wt_nat_le (BinOp.eval .eq labL[i] c)
-  have he : BinOp.eval .eq labL[i] c ≤ 1 := by simp only [GI.Machine.BinOp.eval]; split_ifs <;> omega
+  have hli : li ≤ N := H.labb _ hli_mem
+  have := wt_nat_le c; have := wt_nat_le i; have := wt_nat_le li; have := wt_nat_le 0
+  have := wt_nat_le 1; have := wt_nat_le (BinOp.eval .eq li c)
+  have he : BinOp.eval .eq li c ≤ 1 := by simp only [GI.Machine.BinOp.eval]; split_ifs <;> omega
   have w1 := wt_list2_le PV LV
   have w2 := wt_list2_le (.list [PV, LV]) (.nat c)
   have w3 := wt_list2_le (.list [.list [PV, LV], .nat c]) (.nat i)
   have eX : (Val.list X).wt = (Val.list [Val.list [Val.list [PV, LV], .nat c], .nat i]).wt := rfl
   have wn : (Val.list []).wt ≤ 10 := (wt_list_le []).trans (by simp)
   have hiN : i ≤ N := by have := H.len; omega
+  clear H ev
+  clear_value li Qi PV LV X
   have q12 : N + 1 ≤ (N + 1) ^ 2 := Nat.le_self_pow (by norm_num) _
   have q23 : (N + 1) ^ 2 ≤ (N + 1) ^ 3 := Nat.pow_le_pow_right (by omega) (by omega)
   have q34 : (N + 1) ^ 3 ≤ (N + 1) ^ 4 := Nat.pow_le_pow_right (by omega) (by omega)
-  have hmx : max (vsWVs Pcs[i]).wt (Val.list []).wt ≤ 11 * (N + 1) ^ 3 + 4 := max_le wQ (by omega)
-  have hmx2 : max (2 * (Val.list X).wt + 1 + 5 + (Val.list [PV, LV]).wt + 1 + (0 + 3) + PV.wt + 1 +
-      (2 * (Val.list X).wt + 1 + 5) + (vsWVs Pcs[i]).wt + 1) ((Val.list []).wt + 1) ≤
-      2 * (Val.list X).wt + 1 + 5 + (Val.list [PV, LV]).wt + 1 + (0 + 3) + PV.wt + 1 +
-      (2 * (Val.list X).wt + 1 + 5) + (vsWVs Pcs[i]).wt + 1 := max_le le_rfl (by omega)
-  clear_value PV LV X
-  trace_state
   omega
 
 end
@@ -189,7 +192,6 @@ theorem VsQABlkSz.blk (H : VsQABlkSz Pcs labL N) (c : ℕ) :
   obtain ⟨Q, hQ, huQ⟩ := vsQABlkI_sub u hu
   exact H.bnd Q hQ u huQ
 
-set_option maxHeartbeats 4000000 in
 theorem vsQABlk_spec {P : Program} {fo rng mpi fi cat : ℕ}
     (hfo : P.funs[fo]? = some (vsQABlkE rng mpi cat)) (hrng : P.HasAt rng (rangeFuns rng))
     (hmpi : P.HasAt mpi (mapFuns mpi fi)) (hfi : P.funs[fi]? = some vsQABlkIE)
@@ -253,6 +255,7 @@ theorem vsQABlk_spec {P : Program} {fo rng mpi fi cat : ℕ}
     (by rw [eo]; omega) (by omega))
   rw [eo] at dcat
   refine FunDet.intro hfo (dcat.mono ?_)
+  clear g0 g1 dP dm hr dr hmap dmap dcat hfo hrng hmpi hfi hcat hb ex eo
   have wP : PV.wt ≤ 40 * (N + 1) ^ 4 := H.wP
   have wL : LV.wt ≤ 5 * (N + 1) ^ 2 := H.wL
   have wR : (natList (List.range Pcs.length)).wt ≤ 5 * (N + 1) ^ 2 :=
@@ -265,6 +268,7 @@ theorem vsQABlk_spec {P : Program} {fo rng mpi fi cat : ℕ}
   have lr : (List.range Pcs.length).length = Pcs.length := List.length_range
   rw [lr]
   have hm := H.len
+  clear H
   have q12 : N + 1 ≤ (N + 1) ^ 2 := Nat.le_self_pow (by norm_num) _
   have q23 : (N + 1) ^ 2 ≤ (N + 1) ^ 3 := Nat.pow_le_pow_right (by omega) (by omega)
   have q45 : (N + 1) ^ 4 ≤ (N + 1) ^ 5 := Nat.pow_le_pow_right (by omega) (by omega)
@@ -318,7 +322,6 @@ theorem vsQANon_spec {P : Program} {fn : ℕ} (hfn : P.funs[fn]? = some vsQANonE
 /-- The cost of the block program. -/
 def vsQABlksCost (N : ℕ) : ℕ := 10 ^ 11 * (N + 1) ^ 7
 
-set_option maxHeartbeats 4000000 in
 /-- **The block program.** -/
 theorem vsQABlks_spec {P : Program} {f rng mpo fo mpi fi cat flt fn : ℕ}
     (L : VsQABlksAt P f rng mpo fo mpi fi cat flt fn) {Pcs : List (List (List ℕ))} {labL : List ℕ} {N : ℕ}
@@ -364,6 +367,7 @@ theorem vsQABlks_spec {P : Program} {f rng mpo fo mpi fi cat flt fn : ℕ}
   have dflt := Det.call (Det.mk2 (Det.nat (P := P) (env := E2) 0) (Det.var' (P := P) (env := E2) (i := 2) rfl))
     hflt'
   refine FunDet.intro L.hf ((Det.letE dr (Det.letE dmap dflt)).mono ?_)
+  clear g0 g1 dm hr dr g0' g1' hmap dmap hflt ef hflt' dflt L
   have hm := H.len
   have wP : PV.wt ≤ 40 * (N + 1) ^ 4 := H.wP
   have wL : LV.wt ≤ 5 * (N + 1) ^ 2 := H.wL
@@ -380,6 +384,7 @@ theorem vsQABlks_spec {P : Program} {f rng mpo fo mpi fi cat flt fn : ℕ}
   have wO : (vsFMatsVal (vsQABlks Pcs labL)).wt ≤ 40 * (N + 1) ^ 4 :=
     vsQ_wt_mats_le (fun b hb => hblk b (List.mem_of_mem_filter hb))
       ((List.length_filter_le _ _).trans (by simp; omega))
+  clear H hblk
   have hXl : XS.length = Pcs.length := by simp [XS]
   have hsum : (XS.map fun v => 4 * (Val.list [.nat 0, v]).wt + 30).sum ≤ XS.length * (400 * (N + 1) ^ 4) := by
     have := List.sum_le_card_nsmul (XS.map fun v => 4 * (Val.list [.nat 0, v]).wt + 30) (400 * (N + 1) ^ 4) (by
@@ -426,7 +431,7 @@ theorem vsQABlks_spec {P : Program} {f rng mpo fo mpi fi cat flt fn : ℕ}
   have mk : mapK = 1000 := rfl
   have mk2 : loopModK = 1000 := rfl
   unfold vsQABlksCost
-  clear_value PV LV RV XS
+  clear_value PV LV RV E1 XS E2
   omega
 
 end GI.Impl

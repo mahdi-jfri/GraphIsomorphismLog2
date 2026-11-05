@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepTab
+module
+
+public import Workspace.Impl.AggRectRepTab
+
+@[expose] public section
 
 /-!
 # The group of the query in graph form

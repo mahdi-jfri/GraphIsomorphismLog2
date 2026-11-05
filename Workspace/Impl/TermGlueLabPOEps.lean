@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabPOBlk
-import Workspace.Impl.TermGlueLabPOr
+module
+
+public import Workspace.Impl.TermGlueLabPOBlk
+public import Workspace.Impl.TermGlueLabPOr
+
+@[expose] public section
 
 /-!
 # The orientation entry of one element (step 5, all types distinct)

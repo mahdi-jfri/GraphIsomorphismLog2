@@ -1,4 +1,8 @@
-import Workspace.Proved.VsMHardA
+module
+
+public import Workspace.Proved.VsMHardA
+
+@[expose] public section
 
 /-!
 # The greedy isotropic family

@@ -1,10 +1,14 @@
-import Workspace.DiagonalCarrier
-import Workspace.SideParity
-import Workspace.RectangleSides
-import Workspace.EqualFibers
-import Workspace.Parameters
-import Mathlib.Algebra.Pointwise.Stabilizer
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+module
+
+public import Workspace.DiagonalCarrier
+public import Workspace.SideParity
+public import Workspace.RectangleSides
+public import Workspace.EqualFibers
+public import Workspace.Parameters
+public import Mathlib.Algebra.Pointwise.Stabilizer
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+@[expose] public section
 
 /-!
 # Paper statements: Lemma A.29 and Lemma A.30

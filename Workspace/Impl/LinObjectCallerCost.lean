@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectCallerCompose
+module
+
+public import Workspace.Impl.LinObjectCallerCompose
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

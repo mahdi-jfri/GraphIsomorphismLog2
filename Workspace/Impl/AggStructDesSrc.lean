@@ -1,4 +1,8 @@
-import Workspace.Impl.AggStructDesTest
+module
+
+public import Workspace.Impl.AggStructDesTest
+
+@[expose] public section
 
 /-!
 # The search for the source tuple of Case 3 as a program

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabNProg
+module
+
+public import Workspace.Impl.TermGlueLabNProg
+
+@[expose] public section
 
 /-!
 # The label driver: discharges of the contracts of the label programs

@@ -1,6 +1,10 @@
-import Workspace.Proved.VsQDrvMath
-import Workspace.Proved.VsWFrameLoc
-import Workspace.Proved.VsQMat
+module
+
+public import Workspace.Proved.VsQDrvMath
+public import Workspace.Proved.VsWFrameLoc
+public import Workspace.Proved.VsQMat
+
+@[expose] public section
 
 /-!
 # Local matrices of a state
@@ -177,6 +181,7 @@ theorem vsQRho_apply (h : gens s.hs) (a : Fin (vsQD s) → ZMod I.p) :
       Module.End (ZMod I.p) (Fin (vsQD s) → ZMod I.p)) a = (vsQLam s h.1).mulVec a := by
   simp [vsQRho, Matrix.toLin'_apply]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- **`D` is the rank of `W/W'`.** -/
 theorem vsQD_eq : vsQD s = s.dim := by
   haveI : Fact I.p.Prime := ⟨I.prime⟩
@@ -250,6 +255,7 @@ theorem vsQLift_inv {K : Subgroup (Perm (Fin I.n))} (hK : K ≤ gens s.hs)
   exact Submodule.add_mem _ (Submodule.mem_sup_left (Submodule.add_mem _ h1 h2))
     (Submodule.mem_sup_right ⟨_, hU h hh a ha, rfl⟩)
 
+set_option backward.isDefEq.respectTransparency false in
 theorem vsQLift_finrank (U : Submodule (ZMod I.p) (Fin (vsQD s) → ZMod I.p)) :
     Module.finrank (ZMod I.p) (vsQLift s U) =
       Module.finrank (ZMod I.p) (vsQSp I s.ws') + Module.finrank (ZMod I.p) U := by
@@ -278,6 +284,7 @@ theorem vsQLift_mono {U U' : Submodule (ZMod I.p) (Fin (vsQD s) → ZMod I.p)} (
     vsQLift s U ≤ vsQLift s U' :=
   sup_le_sup_left (Submodule.map_mono h) _
 
+set_option backward.isDefEq.respectTransparency false in
 theorem vsQLift_lt {U U' : Submodule (ZMod I.p) (Fin (vsQD s) → ZMod I.p)} (h : U < U') :
     vsQLift s U < vsQLift s U' := by
   haveI : Fact I.p.Prime := ⟨I.prime⟩

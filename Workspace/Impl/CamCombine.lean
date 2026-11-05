@@ -1,5 +1,9 @@
-import Workspace.Impl.CamJohnsonUnique
-import Workspace.Impl.CamDefs
+module
+
+public import Workspace.Impl.CamJohnsonUnique
+public import Workspace.Impl.CamDefs
+
+@[expose] public section
 
 /-!
 # The Johnson promise for one factor, and combining the coordinates
@@ -71,7 +75,7 @@ theorem cam_johnson_promise (e₀ : Fin n ≃ (Fin r → {A : Finset (Fin m) // 
     funext j
     by_cases hj : j = i
     · subst hj
-      simpa using hgh w
+      simpa only [Pi.mulSingle_eq_same, Equiv.ofBijective, Equiv.coe_fn_mk] using hgh w
     · rw [hout _ j hj, Pi.mulSingle_eq_of_ne hj, cam_kSetPerm_one, hout w j hj]
       rfl
 

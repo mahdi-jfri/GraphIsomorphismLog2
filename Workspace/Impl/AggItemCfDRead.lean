@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCfDMatrix
+module
+
+public import Workspace.Impl.AggItemCfDMatrix
+
+@[expose] public section
 
 namespace GI.Impl
 

@@ -1,4 +1,8 @@
-import Workspace.CleanComplementEven
+module
+
+public import Workspace.CleanComplementEven
+
+@[expose] public section
 
 /-! Exact LG2-style input obligations and their connection to the constructed
 clean complements. This file does not assert that the logarithmic threshold

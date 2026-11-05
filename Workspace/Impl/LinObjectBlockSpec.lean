@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectBlockProg
-import Workspace.Impl.LinFiniteActionCost
+module
+
+public import Workspace.Impl.LinObjectBlockProg
+public import Workspace.Impl.LinFiniteActionCost
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

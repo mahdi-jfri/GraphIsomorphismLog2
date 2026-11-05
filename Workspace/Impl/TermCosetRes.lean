@@ -1,19 +1,23 @@
-import Workspace.Impl.TermCosetLink
-import Workspace.Impl.TermHyp
+module
+
+public import Workspace.Impl.TermCosetLink
+public import Workspace.Impl.TermHyp
+public import Workspace.Impl.OutbReb
+
+@[expose] public section
 
 /-!
 # The residual transporter in one radical coset (Corollary A.22 through Lemma A.19)
 
-`tmCsResF` works on `tmCsResIn σH σN vs m q r = [σH, σN, vs, m, q, r]` (generator lists as lists
-of permutations, `vs` the coset table). With `H = ⟨σH⟩`, `N = ⟨σN⟩`:
+`tmCsResF` works on `tmCsResIn uR σN vs q r = [uR, σN, vs, m, q, r]` (generator lists as lists
+of permutations, `vs` the coset table). With `R = ⟨uR⟩ ≤ H = ⟨σH⟩`, `N = ⟨σN⟩ ≤ R`:
 
-1. `R` = the radical preimage of `H/N` (`TermRadSpec`, T2), `S` = a solvable supplement of `N`
-   in `R` (`TermSupSpec`, T4).
-2. The objects of the rows (`tmCsObjsF`); if some row has no partner, the answer is `[]`.
-3. The objects of `x` shifted by `r` (`tmCsShF`), the fuel `ℓ` (least with `m⁵ ≤ 3^ℓ`), and the
-   recursion of Theorem A.20 on `(S, 1)` (`TermRecSpec`): a canonical answer of
-   `Iso_S(X^r, Y)`.
-4. If it is `[x0, gs]`, the answer is `[r x0, ⟨gs, σN⟩]` (cut to `m²` generators).
+1. Turn `uR` and `σN` into group values (`mkGroup`), and rebase `vs` from `Iso_H(x_i, y_j)` to
+   `vs'` for `Iso_R(x_i, y_j^{r⁻¹})` (`outbRebFuns`).
+2. The objects of the rows (`tmCsObjsF`); if some row has no `R`-partner, the answer is `[]`.
+3. The fuel `ℓ` (least with `m⁵ ≤ 3^ℓ`), and the recursion of Theorem A.20 on `(R, N)`
+   (`TermRecSpec`): a canonical answer of `Iso_R(X, Y')`.
+4. If it is `[x0, gs]`, the answer is `[x0 r, ⟨r⁻¹ gs r⟩]`.
 
 `tmCs_res_spec`: the result is a canonical answer of the residual set
 `{h ∈ Iso_H(types x, types y) : h ∈ R r}` (`tmCsResSet`).
@@ -22,7 +26,7 @@ of permutations, `vs` the coset table). With `H = ⟨σH⟩`, `N = ⟨σN⟩`:
 namespace GI.Impl
 
 open GI.Algorithm GI.Assembly GI.Lang GI.Multicoset Equiv
-open GI.Cited (Val encPerm encGroup gens PointwiseStab)
+open GI.Cited (Val encPerm encGroup gens PointwiseStab Membership GensOf)
 
 /-! ### Shifting the objects -/
 
@@ -148,9 +152,9 @@ theorem tmCs_cast {n Q cb : ℕ} {RB : ℝ} (h : n ≤ Q + cb) (hcb : (cb : ℝ)
 /-! ### The residual program -/
 
 /-- The input of the residual program. -/
-def tmCsResIn {m : ℕ} (σH σN : List (Perm (Fin m))) (vs : List Val) (q : ℕ) (r : Perm (Fin m)) :
-    Val :=
-  .list [.list (σH.map encPerm), .list (σN.map encPerm), .list vs, .nat m, .nat q, encPerm r]
+def tmCsResIn {m : ℕ} (uR : Val) (σN : List (Perm (Fin m))) (vs : List Val) (q : ℕ)
+    (r : Perm (Fin m)) : Val :=
+  .list [uR, .list (σN.map encPerm), .list vs, .nat m, .nat q, encPerm r]
 
 /-- `m⁵`, from the input. -/
 def tmCsM5 : Expr :=
@@ -159,76 +163,84 @@ def tmCsM5 : Expr :=
       (.get (.var 0) (.nat 3)))))
 
 /-- The tail after a nonempty answer `[x0, gs]` of the recursion (at `var 11`). -/
-def tmCsResTail (comp app red : ℕ) : Expr :=
-  .letE (.call comp (mk2 (.get (.var 0) (.nat 5)) (.get (.var 11) (.nat 0))))
-  (.letE (.call app (mk2 (.get (.get (.var 11) (.nat 1)) (.nat 1)) (.get (.var 0) (.nat 1))))
-  (.letE (.call red (mk2 (.get (.var 0) (.nat 3)) (mk2 (.get (.var 0) (.nat 3)) (.var 13))))
-  (mk2 (.var 12) (.var 14))))
+def tmCsResTail (comp inv mp_conj : ℕ) : Expr :=
+  .letE (.call comp (mk2 (.get (.var 11) (.nat 0)) (.get (.var 0) (.nat 5))))
+  (.letE (.call inv (.get (.var 0) (.nat 5)))
+  (.letE (.call mp_conj (mk2 (mk2 (.var 13) (.get (.var 0) (.nat 5)))
+      (.get (.get (.var 11) (.nat 1)) (.nat 1))))
+  (mk2 (.var 12) (mk2 (.get (.var 0) (.nat 3)) (.var 14)))))
 
 /-- The part after the objects (at `var 7`), when every row has a partner. -/
-def tmCsResRec (mkg msh ell rec comp app red : ℕ) : Expr :=
-  .letE (.call mkg (mk2 (.get (.var 0) (.nat 3)) .nil))
-  (.letE (.call msh (mk2 (.get (.var 0) (.nat 5)) (.get (.var 7) (.nat 0))))
+def tmCsResRec (ell rec comp inv red mp_conj : ℕ) : Expr :=
+  .letE (.call red (mk2 (.get (.var 0) (.nat 3)) (.var 2)))
+  (.letE (.get (.var 7) (.nat 0))
   (.letE (.call ell (mk3 (.nat 1) tmCsM5 (.nat 0)))
   (.letE (.call rec (.snoc (mk4 (.var 10) (.var 6) (.var 8) (.var 9)) (.get (.var 7) (.nat 1))))
-  (.ite (.length (.var 11)) (tmCsResTail comp app red) .nil))))
+  (.ite (.length (.var 11)) (tmCsResTail comp inv mp_conj) .nil))))
 
 /-- **The residual program.** -/
-def tmCsResF (mkg rad sup objs msh ell rec comp app red : ℕ) : Expr :=
+def tmCsResF (mkg reb objs ell rec comp inv red mp_conj : ℕ) : Expr :=
   .letE (.call mkg (mk2 (.get (.var 0) (.nat 3)) (.get (.var 0) (.nat 0))))
   (.letE (.call mkg (mk2 (.get (.var 0) (.nat 3)) (.get (.var 0) (.nat 1))))
-  (.letE (.call rad (mk2 (.var 1) (.var 2)))
-  (.letE (.call mkg (mk2 (.get (.var 0) (.nat 3)) (.var 3)))
-  (.letE (.call sup (mk2 (.var 4) (.var 2)))
-  (.letE (.call mkg (mk2 (.get (.var 0) (.nat 3)) (.var 5)))
-  (.letE (.call objs (mk4 (.get (.var 0) (.nat 2)) (.get (.var 0) (.nat 1))
+  (.letE (.call reb (mk4 (.var 1) (.get (.var 0) (.nat 3)) (.get (.var 0) (.nat 5))
+      (.get (.var 0) (.nat 2))))
+  (.letE (.var 1)
+  (.letE (.var 1)
+  (.letE (.var 1)
+  (.letE (.call objs (mk4 (.var 3) (.get (.var 0) (.nat 1))
       (.get (.var 0) (.nat 3)) (.get (.var 0) (.nat 4))))
-  (.ite (.length (.var 7)) (tmCsResRec mkg msh ell rec comp app red) .nil)))))))
+  (.ite (.length (.var 7)) (tmCsResRec ell rec comp inv red mp_conj) .nil)))))))
 
 /-- The functions of the residual program. -/
-structure TmCsResAt (P : Program) (f mkg rad sup objs msh sh ell rec comp app red jst : ℕ)
+structure TmCsResAt (P : Program) (hm : Membership)
+    (f mkg reb objs ell rec comp app red mp_conj conj jst jm : ℕ)
     (rg ax px ay py mx fx my fy first inv : ℕ) : Prop where
-  hf : P.funs[f]? = some (tmCsResF mkg rad sup objs msh ell rec comp app red)
+  hf : P.funs[f]? = some (tmCsResF mkg reb objs ell rec comp inv red mp_conj)
   hmkg : P.HasAt mkg (mkGroupFuns mkg)
+  hreb : OutbRebPlaced P hm reb comp inv rg app red mp_conj conj jst jm
   hobjs : TmCsObjsAt P objs rg ax px ay py mx fx my fy first app red inv comp jst
-  hmsh : P.HasAt msh (mapFuns msh sh)
-  hsh : P.funs[sh]? = some (tmCsShF comp)
   hell : P.funs[ell]? = some (tmCsEllF ell)
   hcomp : P.HasAt comp (composeFuns comp)
   happ : P.HasAt app (appendFuns app)
   hred : P.HasAt red (redFuns red jst)
 
 /-- The polynomial part of the cost of the residual program. -/
-def tmCsResQ (p : Prim) (Kr Dr Ks Ds X : ℕ) : ℕ :=
-  10 ^ 9 * (tmCsObjsK p (20 * X + 20) + Kr * (10 ^ 4 * (X + 1) ^ 6) ^ Dr +
-    Ks * (10 ^ 4 * (X + 1) ^ 6) ^ Ds + p.boundSize (10 ^ 4 * (X + 1) ^ 6) +
+noncomputable def tmCsResQ (p : Prim) (hm : Membership) (Kr Dr X : ℕ) : ℕ :=
+  10 ^ 9 * (tmCsObjsK p (10 ^ 4 * (X + 1) ^ 8) + outbRebK p hm X +
+    Kr * (10 ^ 4 * (X + 1) ^ 6) ^ Dr +
+    p.boundSize (10 ^ 4 * (X + 1) ^ 6) +
     10 ^ 12 * (X + 1) ^ 12) ^ 2
 
 set_option maxHeartbeats 3200000 in
 /-- **The residual program** (Corollary A.22 through Lemma A.19 and Theorem A.20). -/
-theorem tmCs_res_spec (hst : PointwiseStab) (dixon : GI.Cited.DixonDerivedLength) {P : Program}
-    {f mkg rad sup objs msh sh ell rec comp app red jst rg ax px ay py mx fx my fy first inv : ℕ}
-    (hA : TmCsResAt P f mkg rad sup objs msh sh ell rec comp app red jst rg ax px ay py mx fx my fy
-      first inv)
-    (hjst : P.prims[jst]? = some (pointwiseStabPrim hst)) {Kr Dr Ks Ds Kc Dc : ℕ}
-    (hrad : Iface.TermRadSpec P Kr Dr rad) (hsup : Iface.TermSupSpec P Ks Ds sup)
+theorem tmCs_res_spec (hst : PointwiseStab) (hm_mem : Membership)
+    (dixon : GI.Cited.DixonDerivedLength) {P : Program}
+    {f mkg reb objs ell rec comp app red mp_conj conj jst jm
+      rg ax px ay py mx fx my fy first inv : ℕ}
+    (hA : TmCsResAt P hm_mem f mkg reb objs ell rec comp app red mp_conj conj jst jm
+      rg ax px ay py mx fx my fy first inv)
+    (hjst : P.prims[jst]? = some (pointwiseStabPrim hst)) (Kr Dr : ℕ) {Kc Dc : ℕ}
     (hrec : Iface.TermRecSpec P Kc Dc rec)
     {m q : ℕ} (hm : 0 < m) {Ω : Type*} [RAct (Perm (Fin m)) Ω] {x y : Fin q → Ω}
-    {σH σN : List (Perm (Fin m))} {vs : List Val} (hNH : gens σN ≤ gens σH)
-    (hn : GI.Multicoset.Normalizes (gens σH) (gens σN)) (hT : TmCsTabOK (gens σH) x y vs)
-    {r : Perm (Fin m)} (hr : r ∈ gens σH) {X : ℕ} (hX : (tmCsResIn σH σN vs q r).wt ≤ X)
+    {σH σN : List (Perm (Fin m))} {R : Subgroup (Perm (Fin m))} {uR : Val}
+    {vs : List Val} (huR : GensOf R uR)
+    (hRH : R ≤ gens σH) (hNR : gens σN ≤ R)
+    (hRd : ∃ ℓ, relDerived R (gens σN) ℓ ≤ gens σN)
+    (hn : GI.Multicoset.Normalizes (gens σH) (gens σN))
+    (hT : TmCsTabOK (gens σH) x y vs)
+    {r : Perm (Fin m)} (hr : r ∈ gens σH) {X : ℕ}
+    (hX : (tmCsResIn uR σN vs q r).wt + (R.subgroupOf (gens σH)).index ≤ X)
     (hmX : m ≤ X) (hqX : q ≤ X) :
-    FunAll P f (tmCsResIn σH σN vs q r) (fun w cost =>
-      AnsC (Equiv.refl (Fin m)) w (tmCsResSet (gens σH) (gens σN) x y r) ∧
+    FunAll P f (tmCsResIn uR σN vs q r) (fun w cost =>
+      AnsC (Equiv.refl (Fin m)) w (tmCsResSet (gens σH) (gens σN) R x y r) ∧
       ∃ ℓ : ℕ, (ℓ : ℝ) ≤ 5 * Real.logb 3 m + 1 ∧
-        (cost : ℝ) ≤ (tmCsResQ (pointwiseStabPrim hst) Kr Dr Ks Ds X : ℝ) +
+        (cost : ℝ) ≤ (tmCsResQ (pointwiseStabPrim hst) hm_mem Kr Dr X : ℝ) +
           20 * ((5 * ((q : ℝ) + 1) ^ 3 + 1) ^ ℓ * (Kc * (((m + q : ℕ) : ℝ) + 2) ^ Dc))) := by
   set H := gens σH with hH
   set N := gens σN with hN
-  set R := radicalPreimage H N with hR
-  obtain ⟨hRH, hNR, hRd⟩ := radicalPreimage_spec hNH hn
-  have hRn : GI.Multicoset.Normalizes H R := tmCs_rad_normalizes hn
-  set a := tmCsResIn σH σN vs q r with ha
+  obtain ⟨hsR, rfl, hlR, hgR⟩ := huR
+  set a := tmCsResIn (.list (hsR.map encPerm)) σN vs q r with ha
+  set y' : Fin q → Ω := fun j => y j ↼ r⁻¹ with hy'
   have hRB0 : ∀ ℓ : ℕ, (0 : ℝ) ≤ (5 * ((q : ℝ) + 1) ^ 3 + 1) ^ ℓ *
       (Kc * (((m + q : ℕ) : ℝ) + 2) ^ Dc) := fun ℓ => by positivity
   have hlog0 : ((0 : ℕ) : ℝ) ≤ 5 * Real.logb 3 m + 1 := by
@@ -236,100 +248,90 @@ theorem tmCs_res_spec (hst : PointwiseStab) (dixon : GI.Cited.DixonDerivedLength
     simp; linarith
   refine FunAll.intro hA.hf ?_
   unfold tmCsResF
-  -- 1, 2. the group values of `H` and `N`
+  -- 1, 2. the group values of `R` and `N`
   have d0 := Det.var' (P := P) (env := [a]) (i := 0) (v := a) rfl
-  have dm := Det.get' d0 (Det.nat 3) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
+  have dm := Det.get' d0 (Det.nat 3) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
     .list vs, .nat m, .nat q, encPerm r]) (v := .nat m) rfl
-  have dH := Det.get' d0 (Det.nat 0) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
-    .list vs, .nat m, .nat q, encPerm r]) (v := .list (σH.map encPerm)) rfl
-  refine EvalAll.letE (Det.call (Det.mk2 dm dH) (mkGroup_spec hA.hmkg σH)) ?_
+  have dR := Det.get' d0 (Det.nat 0) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
+    .list vs, .nat m, .nat q, encPerm r]) (v := .list (hsR.map encPerm)) rfl
+  refine EvalAll.letE (Det.call (Det.mk2 dm dR) (mkGroup_spec hA.hmkg hsR)) ?_
   rintro _ c1 ⟨rfl, hc1⟩
-  have e0 := Det.var' (P := P) (env := [a, encGroup σH]) (i := 0) (v := a) rfl
-  have em := Det.get' e0 (Det.nat 3) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
+  have e0 := Det.var' (P := P) (env := [a, encGroup hsR]) (i := 0) (v := a) rfl
+  have em := Det.get' e0 (Det.nat 3) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
     .list vs, .nat m, .nat q, encPerm r]) (v := .nat m) rfl
-  have eN := Det.get' e0 (Det.nat 1) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
+  have eN := Det.get' e0 (Det.nat 1) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
     .list vs, .nat m, .nat q, encPerm r]) (v := .list (σN.map encPerm)) rfl
   refine EvalAll.letE (Det.call (Det.mk2 em eN) (mkGroup_spec hA.hmkg σN)) ?_
   rintro _ c2 ⟨rfl, hc2⟩
-  -- 3, 4. the radical preimage
-  have f1 := Det.var' (P := P) (env := [a, encGroup σH, encGroup σN]) (i := 1) rfl
-  have f2 := Det.var' (P := P) (env := [a, encGroup σH, encGroup σN]) (i := 2) rfl
-  refine EvalAll.letE (EvalAll.call_spec (Det.mk2 f1 f2) (hrad σH σN hNH hn)) ?_
-  rintro _ c3 ⟨cb3, ⟨⟨hsR, rfl, hlR, hgR⟩, hcb3⟩, hc3⟩
-  have g0 := Det.var' (P := P) (env := [a, encGroup σH, encGroup σN, .list (hsR.map encPerm)])
-    (i := 0) (v := a) rfl
-  have gm := Det.get' g0 (Det.nat 3) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
+  -- 3. rebase the coset table `vs` into `R`
+  have f0 := Det.var' (P := P) (env := [a, encGroup hsR, encGroup σN]) (i := 0) (v := a) rfl
+  have f1 := Det.var' (P := P) (env := [a, encGroup hsR, encGroup σN]) (i := 1)
+    (v := encGroup hsR) rfl
+  have fm := Det.get' f0 (Det.nat 3) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
     .list vs, .nat m, .nat q, encPerm r]) (v := .nat m) rfl
-  have g3 := Det.var' (P := P) (env := [a, encGroup σH, encGroup σN, .list (hsR.map encPerm)])
-    (i := 3) rfl
-  refine EvalAll.letE (Det.call (Det.mk2 gm g3) (mkGroup_spec hA.hmkg hsR)) ?_
-  rintro _ c4 ⟨rfl, hc4⟩
-  -- 5, 6. the solvable supplement
-  have hNR' : gens σN ≤ gens hsR := by rw [hgR]; exact hNR
-  haveI : ((gens σN).subgroupOf (gens hsR)).Normal := by
-    rw [hgR]; exact normal_of_normalizes (hn.mono hRH)
-  have hsolvq : IsSolvable ((gens hsR) ⧸ (gens σN).subgroupOf (gens hsR)) := by
-    obtain ⟨ℓ, hℓ⟩ := hRd
-    rw [← hgR] at hℓ
-    exact isSolvable_quot_of_relDerived hℓ
-  set env5 := [a, encGroup σH, encGroup σN, .list (hsR.map encPerm), encGroup hsR] with henv5
-  have h4 := Det.var' (P := P) (env := env5) (i := 4) (v := encGroup hsR) rfl
-  have h2 := Det.var' (P := P) (env := env5) (i := 2) (v := encGroup σN) rfl
-  refine EvalAll.letE (EvalAll.call_spec (Det.mk2 h4 h2) (hsup hsR σN hNR' hsolvq)) ?_
-  rintro _ c5 ⟨cb5, ⟨S, ⟨hsS, rfl, hlS, hgS⟩, hSR, hSsolv, hSsup, hcb5⟩, hc5⟩
-  rw [hgR] at hSR hSsup
-  set env6 := env5 ++ [.list (hsS.map encPerm)] with henv6
-  have i0 := Det.var' (P := P) (env := env6) (i := 0) (v := a) rfl
-  have im := Det.get' i0 (Det.nat 3) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
-    .list vs, .nat m, .nat q, encPerm r]) (v := .nat m) rfl
-  have i5 := Det.var' (P := P) (env := env6) (i := 5) (v := .list (hsS.map encPerm)) rfl
-  refine EvalAll.letE (Det.call (Det.mk2 im i5) (mkGroup_spec hA.hmkg hsS)) ?_
-  rintro _ c6 ⟨rfl, hc6⟩
-  -- 7. the objects
-  have hSN : GI.Multicoset.Normalizes S N := (hn.mono hRH).mono hSR
-  have hcov := tmCs_cover hSN hSsup
-  set env7 := env6 ++ [encGroup hsS] with henv7
-  have j0 := Det.var' (P := P) (env := env7) (i := 0) (v := a) rfl
-  have jvs := Det.get' j0 (Det.nat 2) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
+  have fr := Det.get' f0 (Det.nat 5) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
+    .list vs, .nat m, .nat q, encPerm r]) (v := encPerm r) rfl
+  have fvs := Det.get' f0 (Det.nat 2) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
     .list vs, .nat m, .nat q, encPerm r]) (v := .list vs) rfl
-  have jN := Det.get' j0 (Det.nat 1) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
+  refine EvalAll.letE (EvalAll.call_spec (Det.mk4 f1 fm fr fvs)
+    (outbReb_spec hst hm_mem hA.hreb hjst hRH hlR hgR hr hT hmX hqX (by omega))) ?_
+  rintro _ c3 ⟨cb3, ⟨⟨vs', rfl, hT', hwvs'⟩, hcb3⟩, hc3⟩
+  -- 4, 5, 6. keep `encGroup hsR`
+  set env4 := [a, encGroup hsR, encGroup σN, .list vs'] with henv4
+  have g1 := Det.var' (P := P) (env := env4) (i := 1) (v := encGroup hsR) rfl
+  refine EvalAll.letE g1 ?_
+  rintro _ c4 ⟨rfl, hc4⟩
+  set env5 := env4 ++ [encGroup hsR] with henv5
+  have h1 := Det.var' (P := P) (env := env5) (i := 1) (v := encGroup hsR) rfl
+  refine EvalAll.letE h1 ?_
+  rintro _ c5 ⟨rfl, hc5⟩
+  set env6 := env5 ++ [encGroup hsR] with henv6
+  have i1 := Det.var' (P := P) (env := env6) (i := 1) (v := encGroup hsR) rfl
+  refine EvalAll.letE i1 ?_
+  rintro _ c6 ⟨rfl, hc6⟩
+  -- 7. the objects of `(x, y')` in `R`
+  have hRN : GI.Multicoset.Normalizes R N := hn.mono hRH
+  set env7 := env6 ++ [encGroup hsR] with henv7
+  have j0 := Det.var' (P := P) (env := env7) (i := 0) (v := a) rfl
+  have jvs := Det.var' (P := P) (env := env7) (i := 3) (v := .list vs') rfl
+  have jN := Det.get' j0 (Det.nat 1) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
     .list vs, .nat m, .nat q, encPerm r]) (v := .list (σN.map encPerm)) rfl
-  have jm := Det.get' j0 (Det.nat 3) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
+  have jm := Det.get' j0 (Det.nat 3) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
     .list vs, .nat m, .nat q, encPerm r]) (v := .nat m) rfl
-  have jq := Det.get' j0 (Det.nat 4) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
+  have jq := Det.get' j0 (Det.nat 4) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
     .list vs, .nat m, .nat q, encPerm r]) (v := .nat q) rfl
-  have hctx : (tmCsCtx vs σN q).wt ≤ 20 * X + 20 := by
-    have h1 := wt_list4_le (.list vs) (.list (σN.map encPerm)) (.nat m) (.nat q)
-    have hav : (Val.list vs).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
-    have haN : (Val.list (σN.map encPerm)).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
-    have ham : (Val.nat m).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
-    have haq : (Val.nat q).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
+  have hX1 : 1 ≤ X + 1 := by omega
+  have hX81 : 1 ≤ (X + 1) ^ 8 := Nat.one_le_pow _ _ (by omega)
+  have hXY8 : X + 1 ≤ (X + 1) ^ 8 := Nat.le_self_pow (by norm_num) _
+  have haX : a.wt ≤ X := (Nat.le_add_right _ _).trans hX
+  have waN : (Val.list (σN.map encPerm)).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
+  have wam : (Val.nat m).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
+  have waq : (Val.nat q).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
+  have wavs : (Val.list vs).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
+  have war : (encPerm r).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
+  have waR : (Val.list (hsR.map encPerm)).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
+  have hctx : (tmCsCtx vs' σN q).wt ≤ 10 ^ 4 * (X + 1) ^ 8 := by
+    have h1 := wt_list4_le (.list vs') (.list (σN.map encPerm)) (.nat m) (.nat q)
     unfold tmCsCtx; omega
   refine EvalAll.letE (EvalAll.call_spec (Det.mk4 jvs jN jm jq)
-    (FunAll.wt_lt (tmCs_objs_spec hst hA.hobjs hjst (tmCs_tab_of hT) hctx (by omega)
+    (FunAll.wt_lt (tmCs_objs_spec hst hA.hobjs hjst (tmCs_tab_of hT') hctx (by omega)
       (by omega)))) ?_
   rintro v7 c7 ⟨cb7, ⟨⟨hob, hcb7⟩, hw7⟩, hc7⟩
   -- the cost of steps 1 to 7
   set p := pointwiseStabPrim hst with hp
-  set C := tmCsObjsK p (20 * X + 20) + Kr * (10 ^ 4 * (X + 1) ^ 6) ^ Dr +
-    Ks * (10 ^ 4 * (X + 1) ^ 6) ^ Ds + p.boundSize (10 ^ 4 * (X + 1) ^ 6) +
+  set C := tmCsObjsK p (10 ^ 4 * (X + 1) ^ 8) + outbRebK p hm_mem X +
+    Kr * (10 ^ 4 * (X + 1) ^ 6) ^ Dr +
+    p.boundSize (10 ^ 4 * (X + 1) ^ 6) +
     10 ^ 12 * (X + 1) ^ 12 with hC
-  have hQ : tmCsResQ p Kr Dr Ks Ds X = 10 ^ 9 * C ^ 2 := rfl
+  have hQ : tmCsResQ p hm_mem Kr Dr X = 10 ^ 9 * C ^ 2 := rfl
   have hY1 : 1 ≤ X + 1 := by omega
   have hYp : ∀ k ≤ 12, (X + 1) ^ k ≤ (X + 1) ^ 12 := fun k hk => Nat.pow_le_pow_right hY1 hk
   have hm1 : m + 1 ≤ X + 1 := by omega
   have hmp : ∀ k, (m + 1) ^ k ≤ (X + 1) ^ k := fun k => Nat.pow_le_pow_left hm1 k
   have hC12 : 10 ^ 12 * (X + 1) ^ 12 ≤ C := by rw [hC]; omega
-  have hCo : tmCsObjsK p (20 * X + 20) ≤ C := by rw [hC]; omega
+  have hCo : tmCsObjsK p (10 ^ 4 * (X + 1) ^ 8) ≤ C := by rw [hC]; omega
+  have hCreb : outbRebK p hm_mem X ≤ C := by rw [hC]; omega
   have hC1 : 1 ≤ C := by have := Nat.one_le_pow 12 (X + 1) (by omega); omega
-  have haX : a.wt ≤ X := hX
-  have waH : (Val.list (σH.map encPerm)).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
-  have waN : (Val.list (σN.map encPerm)).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
-  have wam : (Val.nat m).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
-  have waq : (Val.nat q).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
-  have wavs : (Val.list vs).wt < a.wt := wt_le_wt_list (by simp [ha, tmCsResIn])
-  have hlH : σH.length < X := by
-    have := length_lt_wt_list (σH.map encPerm); simp at this; omega
   have hlN : σN.length < X := by
     have := length_lt_wt_list (σN.map encPerm); simp at this; omega
   have hmeas : ∀ l : ℕ, l < X → (l + 2) * (m + 1) ≤ 2 * (X + 1) ^ 2 := by
@@ -342,72 +344,58 @@ theorem tmCs_res_spec (hst : PointwiseStab) (dixon : GI.Cited.DixonDerivedLength
     have := hmp 3; omega
   have hcube : ∀ {b B : ℕ}, b ≤ B → mkGroupK * b ^ 3 ≤ mkGroupK * B ^ 3 := fun h =>
     Nat.mul_le_mul_left _ (Nat.pow_le_pow_left h 3)
-  have hmkH := hcube (hmeas _ hlH)
   have hmkN := hcube (hmeas _ hlN)
   have hmkR := hcube (hmeas2 _ hlR)
-  have hmkS := hcube (hmeas2 _ hlS)
   have e2 : (2 * (X + 1) ^ 2) ^ 3 = 8 * (X + 1) ^ 6 := by ring
   have e3 : (2 * (X + 1) ^ 3) ^ 3 = 8 * (X + 1) ^ 9 := by ring
-  rw [e2] at hmkH hmkN
-  rw [e3] at hmkR hmkS
+  rw [e2] at hmkN
+  rw [e3] at hmkR
   have hsq : ∀ {b B : ℕ}, b ≤ B → 40 * b ^ 2 ≤ 40 * B ^ 2 := fun h =>
     Nat.mul_le_mul_left _ (Nat.pow_le_pow_left h 2)
-  have wgH := (wt_encGroup_le σH).trans (hsq (hmeas _ hlH))
   have wgN := (wt_encGroup_le σN).trans (hsq (hmeas _ hlN))
   have e4 : (2 * (X + 1) ^ 2) ^ 2 = 4 * (X + 1) ^ 4 := by ring
-  rw [e4] at wgH wgN
+  rw [e4] at wgN
   have wgR := wt_encGroup_le_sq hlR
-  have wgS := wt_encGroup_le_sq hlS
   have wlR := wt_list_encPerms_le_sq hlR
-  have wlS := wt_list_encPerms_le_sq hlS
   have hX6 := hmp 6
-  have hpow : ∀ {b : ℕ} (K D : ℕ), b ≤ 10 ^ 4 * (X + 1) ^ 6 → K * b ^ D ≤
-      K * (10 ^ 4 * (X + 1) ^ 6) ^ D := fun K D h =>
-    Nat.mul_le_mul_left _ (Nat.pow_le_pow_left h D)
-  have w3 := wt_list2_le (encGroup σH) (encGroup σN)
-  have w5 := wt_list2_le (encGroup hsR) (encGroup σN)
-  have h46 : (X + 1) ^ 4 ≤ (X + 1) ^ 6 := Nat.pow_le_pow_right hY1 (by norm_num)
-  have hX61 : 1 ≤ (X + 1) ^ 6 := Nat.one_le_pow _ _ (by omega)
-  have hcb3' := hcb3.trans (hpow Kr Dr (b := (Val.list [encGroup σH, encGroup σN]).wt + 1)
-    (by omega))
-  have hcb5' := hcb5.trans (hpow Ks Ds (b := (Val.list [encGroup hsR, encGroup σN]).wt + 1)
-    (by omega))
-  have wl1 := wt_list2_le (Val.nat m) (Val.list (σH.map encPerm))
+  have wl1 := wt_list2_le (Val.nat m) (Val.list (hsR.map encPerm))
   have wl2 := wt_list2_le (Val.nat m) (Val.list (σN.map encPerm))
-  have wl3 := wt_list2_le (Val.nat m) (Val.list (hsR.map encPerm))
-  have wl4 := wt_list2_le (Val.nat m) (Val.list (hsS.map encPerm))
-  have wl5 := wt_list4_le (Val.list vs) (Val.list (σN.map encPerm)) (Val.nat m) (Val.nat q)
+  have wl4 := wt_list4_le (encGroup hsR) (Val.nat m) (encPerm r) (Val.list vs)
+  have wl5 := wt_list4_le (Val.list vs') (Val.list (σN.map encPerm)) (Val.nat m) (Val.nat q)
   have h6 := hYp 6 (by norm_num)
+  have h8 := hYp 8 (by norm_num)
   have h9 := hYp 9 (by norm_num)
   have hXY : X + 1 ≤ (X + 1) ^ 12 := Nat.le_self_pow (by norm_num) _
   have hmk : mkGroupK = 100000 := rfl
   have h612 := hYp 6 (by norm_num)
   have h412 := hYp 4 (by norm_num)
   have hpre : c1 + c2 + c3 + c4 + c5 + c6 + c7 ≤ 10 * C + v7.wt := by
-    rw [hmk] at hmkH hmkN hmkR hmkS hc1 hc2 hc4 hc6
+    rw [hmk] at hmkN hmkR hc1 hc2
     omega
-  have hpart_iff : ((∀ i < q, TmCsHas vs (i * q) 1 q) ∧ (∀ j < q, TmCsHas vs j q q)) ↔
-      ((∀ i, ∃ j, (Iso H (x i) (y j)).Nonempty) ∧ (∀ j, ∃ i, (Iso H (x i) (y j)).Nonempty)) := by
+  have hpart_iff : ((∀ i < q, TmCsHas vs' (i * q) 1 q) ∧ (∀ j < q, TmCsHas vs' j q q)) ↔
+      ((∀ i, ∃ j, (Iso R (x i) (y' j)).Nonempty) ∧
+        (∀ j, ∃ i, (Iso R (x i) (y' j)).Nonempty)) := by
     constructor
     · rintro ⟨h1, h2⟩
-      exact ⟨fun i => (tmCs_has_x hT i).1 (h1 i.1 i.2), fun j => (tmCs_has_y hT j).1 (h2 j.1 j.2)⟩
+      exact ⟨fun i => (tmCs_has_x hT' i).1 (h1 i.1 i.2),
+        fun j => (tmCs_has_y hT' j).1 (h2 j.1 j.2)⟩
     · rintro ⟨h1, h2⟩
-      exact ⟨fun i hi => (tmCs_has_x hT ⟨i, hi⟩).2 (h1 ⟨i, hi⟩),
-        fun j hj => (tmCs_has_y hT ⟨j, hj⟩).2 (h2 ⟨j, hj⟩)⟩
+      exact ⟨fun i hi => (tmCs_has_x hT' ⟨i, hi⟩).2 (h1 ⟨i, hi⟩),
+        fun j hj => (tmCs_has_y hT' ⟨j, hj⟩).2 (h2 ⟨j, hj⟩)⟩
   rcases hob with ⟨hall, OX, OY, rfl, hlx, hly, hOX, hOY⟩ | ⟨rfl, hnot⟩
   swap
-  · -- some row has no partner
+  · -- some row has no partner in `R`
     have k7 := Det.var' (P := P) (env := env7 ++ [.list []]) (i := 7) (v := .list []) rfl
-    refine (Det.ite_zero (t := tmCsResRec mkg msh ell rec comp app red) (Det.length k7)
+    refine (Det.ite_zero (t := tmCsResRec ell rec comp inv red mp_conj) (Det.length k7)
       Det.nil).post fun c' hc' => ⟨Or.inl ⟨rfl, ?_⟩, 0, hlog0, ?_⟩
-    · exact tmCs_res_empty hNH hn fun h => hnot (hpart_iff.2 h)
+    · exact tmCs_res_empty hRH hNR hn hr fun h => hnot (hpart_iff.2 h)
     · refine tmCs_cast (cb := 0) ?_ (by simpa using hRB0 0) (hRB0 0)
       have hw0 : (Val.list []).wt ≤ 5 := by decide
       have hCC : C ≤ C ^ 2 := Nat.le_self_pow (by norm_num) _
       rw [hQ]
       simp only [List.length_nil] at hc'
       omega
-  -- every row has a partner
+  -- every row has a partner in `R`
   obtain ⟨hpx, hpy⟩ := hpart_iff.1 hall
   set v7 := Val.list [tmGlObjsVal OX, tmGlObjsVal OY] with hv7
   have k7 := Det.var' (P := P) (env := env7 ++ [v7]) (i := 7) (v := v7) rfl
@@ -416,65 +404,38 @@ theorem tmCs_res_spec (hst : PointwiseStab) (dixon : GI.Cited.DixonDerivedLength
   rw [if_neg (by simp [hv7])]
   unfold tmCsResRec
   -- the multisets of the objects
-  have hmsX : tmGlMs OX = (types N x).map (tmCsF H N y) :=
-    tmCs_ms_list hlx fun i hi => tmCs_x_obj hT hNH hn rfl (hOX i hi)
-  have hmsY : tmGlMs OY = (types N y).map (tmCsF H N y) :=
-    tmCs_ms_list hly fun j hj => tmCs_y_obj hT hNH hn rfl (hOY j hj)
-  have hmain := tmCs_res_main hNH hn hRH hRn hSR hNR hcov hSN hmsX hmsY hpx hr
-  -- 8. the trivial group
+  have hmsX : tmGlMs OX = (types N x).map (tmCsF R N y') :=
+    tmCs_ms_list hlx fun i hi => tmCs_x_obj hT' hNR hRN rfl (hOX i hi)
+  have hmsY : tmGlMs OY = (types N y').map (tmCsF R N y') :=
+    tmCs_ms_list hly fun j hj => tmCs_y_obj hT' hNR hRN rfl (hOY j hj)
+  have hiso_objs := tmCs_iso_objs_eq hNR hRN hmsX hmsY hpx
+  -- 8. cut `σN` to `m²` generators
   set env8 := env7 ++ [v7] with henv8
   have l0 := Det.var' (P := P) (env := env8) (i := 0) (v := a) rfl
-  have lm := Det.get' l0 (Det.nat 3) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
+  have lm := Det.get' l0 (Det.nat 3) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
     .list vs, .nat m, .nat q, encPerm r]) (v := .nat m) rfl
-  refine EvalAll.letE (Det.call (Det.mk2 lm Det.nil) (mkGroup_spec hA.hmkg ([] : List (Perm (Fin m)))))
-    ?_
-  rintro _ c8 ⟨rfl, hc8⟩
-  -- 9. the shifted objects of `x`
-  set env9 := env8 ++ [encGroup ([] : List (Perm (Fin m)))] with henv9
-  have n0 := Det.var' (P := P) (env := env9) (i := 0) (v := a) rfl
-  have nr := Det.get' n0 (Det.nat 5) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
-    .list vs, .nat m, .nat q, encPerm r]) (v := encPerm r) rfl
+  have l2 := Det.var' (P := P) (env := env8) (i := 2) (v := encGroup σN) rfl
+  have hgvN : GroupVal m (encGroup σN) N := ⟨σN, rfl, rfl⟩
+  refine EvalAll.letE (EvalAll.call_spec (Det.mk2 lm l2) (red_spec hst hA.hred hjst hgvN)) ?_
+  rintro _ c8 ⟨cb8, ⟨hsN, rfl, hgensN, hlN2, hcb8⟩, hc8⟩
+  -- 9. the objects of `x`
+  set env9 := env8 ++ [encGroup hsN] with henv9
   have n7 := Det.var' (P := P) (env := env9) (i := 7) (v := v7) rfl
   have nX := Det.get' n7 (Det.nat 0) (vs := [tmGlObjsVal OX, tmGlObjsVal OY])
-    (v := .list (OX.map tmGlObjVal)) rfl
+    (v := tmGlObjsVal OX) rfl
   have hv7C : v7.wt < C := by omega
-  have hxsv : (Val.list (OX.map tmGlObjVal)).wt < v7.wt := wt_le_wt_list (by simp [hv7, tmGlObjsVal])
+  have hxsv : (tmGlObjsVal OX).wt < v7.wt := wt_le_wt_list (by simp [hv7])
   have hr4 := wt_encPerm_le r
   have hm2 := hmp 2
   have hm3 := hmp 3
   have h2_12 := hYp 2 (by norm_num)
   have h3_12 := hYp 3 (by norm_num)
-  have hshf : ∀ xv ∈ OX.map tmGlObjVal, FunAll P sh (.list [encPerm r, xv]) (fun w cost =>
-      ((∀ o, xv = tmGlObjVal o → w = tmGlObjVal (tmCsSh r o)) ∧ w.wt < 200 * C) ∧
-        cost ≤ 200 * C) := by
-    intro xv hxv
-    have hxw : xv.wt < (Val.list (OX.map tmGlObjVal)).wt := wt_le_wt_list hxv
-    obtain ⟨o, -, rfl⟩ := List.mem_map.1 hxv
-    refine (FunAll.wt_lt (tmCs_sh_spec hA.hsh hA.hcomp r o)).mono ?_
-    rintro w c ⟨⟨rfl, hc⟩, hwc⟩
-    suffices hcb : c ≤ 200 * C from
-      ⟨⟨fun o' ho' => by rw [tmCs_objVal_inj ho'], by omega⟩, hcb⟩
-    have : (tmGlObjVal (tmCsSh r o)).wt ≤ 2 * ((tmGlObjVal o).wt + 4 * (m + 1) ^ 2) + 7 := by
-      have h1 := wt_encPerm_le (o.2.2 * r)
-      have h2 := wt_list3_le (.nat o.1) (encGroup o.2.1) (encPerm (o.2.2 * r))
-      have h3 := sum_wt_lt_wt_list [.nat o.1, encGroup o.2.1, encPerm o.2.2]
-      simp only [List.map_cons, List.map_nil, List.sum_cons, List.sum_nil] at h3
-      have e1 : (tmGlObjVal (tmCsSh r o)).wt =
-          (Val.list [.nat o.1, encGroup o.2.1, encPerm (o.2.2 * r)]).wt := rfl
-      have e2 : (tmGlObjVal o).wt = (Val.list [.nat o.1, encGroup o.2.1, encPerm o.2.2]).wt := rfl
-      omega
-    have := wt_list2_le (encPerm r) (tmGlObjVal o)
-    have hpk : permK = 30000 := rfl
-    rw [hpk] at hc
-    omega
-  refine EvalAll.letE (EvalAll.call_spec (Det.mk2 nr nX) (map_spec hA.hmsh hshf)) ?_
-  rintro _ c9 ⟨cb9, ⟨wsX, rfl, hwsX, hcb9⟩, hc9⟩
-  have hws := tmCs_map_sh r OX wsX (hwsX.imp fun _ _ h => h.1)
-  set OX' := OX.map (tmCsSh r) with hOX'
+  refine EvalAll.letE nX ?_
+  rintro _ c9 ⟨rfl, hc9⟩
   -- 10. the fuel
-  set env10 := env9 ++ [Val.list wsX] with henv10
+  set env10 := env9 ++ [tmGlObjsVal OX] with henv10
   have p0 := Det.var' (P := P) (env := env10) (i := 0) (v := a) rfl
-  have pm := Det.get' p0 (Det.nat 3) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
+  have pm := Det.get' p0 (Det.nat 3) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
     .list vs, .nat m, .nat q, encPerm r]) (v := .nat m) rfl
   set t := m * (m * (m * (m * m))) with ht
   have ht5 : t = m ^ 5 := by rw [ht]; ring
@@ -488,59 +449,98 @@ theorem tmCs_res_spec (hst : PointwiseStab) (dixon : GI.Cited.DixonDerivedLength
   refine EvalAll.letE (Det.call (Det.mk3 (Det.nat 1) p5 (Det.nat 0)) hL) ?_
   rintro _ c10 ⟨rfl, hc10⟩
   have hLm : (L : ℝ) ≤ 5 * Real.logb 3 m + 1 := tmCs_ell_le hm (by rw [← ht5]; exact hL2)
-  -- 11. the recursion on `(S, 1)`
-  have hok : ∀ o ∈ OX' ++ OY, o.2.1.length ≤ m ^ 2 ∧ ∃ hc : o.1 < q,
-      ∀ z, z ∈ gens o.2.1 ↔ ∃ a ∈ Aut H (y ⟨o.1, hc⟩), ∃ k ∈ N, z = a * k := by
+  -- 11. the recursion on `(R, N)`
+  have hok : ∀ o ∈ OX ++ OY, o.2.1.length ≤ m ^ 2 ∧ o.2.2 ∈ R ∧ ∃ hc : o.1 < q,
+      ∀ z, z ∈ gens o.2.1 ↔ ∃ a ∈ Aut R (y' ⟨o.1, hc⟩), ∃ k ∈ N, z = a * k := by
     intro o ho
     rcases List.mem_append.1 ho with ho | ho
-    · obtain ⟨o0, ho0, rfl⟩ := List.mem_map.1 ho
-      obtain ⟨i, hi, rfl⟩ := List.mem_iff_getElem.1 ho0
+    · obtain ⟨i, hi, rfl⟩ := List.mem_iff_getElem.1 ho
       have hxo := hOX i (by omega)
-      obtain ⟨hc, hg⟩ := tmCs_x_gens (i := ⟨i, by omega⟩) hT hn rfl hxo
-      exact ⟨hxo.choose_spec.choose_spec.2.2.2.2.2, hc, hg⟩
+      obtain ⟨hc, hg⟩ := tmCs_x_gens (i := ⟨i, by omega⟩) hT' hRN rfl hxo
+      obtain ⟨g, gs, hrep, hc', -, hv, -, hlen⟩ := hxo
+      have hgR' := (tmCs_mem_of_cons hT' (i := ⟨i, by omega⟩) (j := ⟨(OX[i]'hi).1, hc'⟩) hv).1
+      have hrepR : (OX[i]'hi).2.2 ∈ R := by
+        rw [hrep]
+        exact R.inv_mem hgR'
+      exact ⟨hlen, hrepR, hc, hg⟩
     · obtain ⟨j, hj, rfl⟩ := List.mem_iff_getElem.1 ho
       have hyo := hOY j (by omega)
-      obtain ⟨hc, hg⟩ := tmCs_y_gens (j := ⟨j, by omega⟩) hT hn rfl hyo
-      obtain ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, hlen⟩ := hyo
-      exact ⟨hlen, hc, hg⟩
-  have hrecok : TmRecObjOK q (OX' ++ OY) := by
+      obtain ⟨hc, hg⟩ := tmCs_y_gens (j := ⟨j, by omega⟩) hT' hRN rfl hyo
+      obtain ⟨I, g, g', gs, gs', hrep, hI, -, hv', hc', -, hv, -, hlen⟩ := hyo
+      have hgR' := (tmCs_mem_of_cons hT' (i := ⟨I, hI⟩) (j := ⟨(OY[j]'hj).1, hc'⟩) hv).1
+      have hg'R := (tmCs_mem_of_cons hT' (i := ⟨I, hI⟩) (j := ⟨j, by omega⟩) hv').1
+      have hrepR : (OY[j]'hj).2.2 ∈ R := by
+        rw [hrep]
+        exact R.mul_mem (R.inv_mem hgR') hg'R
+      exact ⟨hlen, hrepR, hc, hg⟩
+  have hrecok : TmRecObjOK q (OX ++ OY) := by
     intro o ho
-    obtain ⟨hlo, hc, hgo⟩ := hok o ho
+    obtain ⟨hlo, -, hc, hgo⟩ := hok o ho
     refine ⟨hlo, by omega, fun o' ho' he => ?_⟩
-    obtain ⟨-, hc', hgo'⟩ := hok o' ho'
+    obtain ⟨-, -, hc', hgo'⟩ := hok o' ho'
     ext z
     rw [hgo z, hgo' z]
     have : (⟨o.1, hc⟩ : Fin q) = ⟨o'.1, hc'⟩ := Fin.ext he
     rw [this]
-  have hsolvS : IsSolvable (gens hsS) := by rw [hgS]; exact hSsolv
-  have hnorm0 : GI.Multicoset.Normalizes (gens hsS) (gens ([] : List (Perm (Fin m)))) := by
-    rw [tmCs_gens_nil]; intro g _ k hk; rw [Subgroup.mem_bot] at hk ⊢; rw [hk]; group
-  have hfix0 : ∀ Z : Multiset (CObj ℕ (Perm (Fin m))),
-      Fixes (gens ([] : List (Perm (Fin m)))) Z := by
-    intro Z k hk z _; rw [tmCs_gens_nil, Subgroup.mem_bot] at hk; rw [hk, act_one]
-  have hrel : relDerived (gens hsS) (gens ([] : List (Perm (Fin m)))) L ≤
-      gens ([] : List (Perm (Fin m))) := by
-    refine relDerived_le_of_solvable (by rw [tmCs_gens_nil]; exact bot_le) hnorm0 ?_
+  have hnormR : ∀ o ∈ OX ++ OY,
+      GI.Multicoset.Normalizes (gens (o.2.1.map fun x => o.2.2⁻¹ * x * o.2.2⁻¹⁻¹)) (gens hsR) := by
+    intro o ho
+    obtain ⟨-, hrepR, hc, hgo⟩ := hok o ho
+    have hle : gens (o.2.1.map fun x => o.2.2⁻¹ * x * o.2.2⁻¹⁻¹) ≤ R := by
+      rw [GI.Cited.gens, Subgroup.closure_le]
+      intro z hz
+      rw [Set.mem_setOf_eq, List.mem_map] at hz
+      obtain ⟨x, hx, rfl⟩ := hz
+      have hxR : x ∈ R := by
+        have : x ∈ gens o.2.1 := Subgroup.subset_closure hx
+        obtain ⟨a, ha, k, hk, rfl⟩ := (hgo x).1 this
+        exact R.mul_mem ha.1 (hNR hk)
+      exact R.mul_mem (R.mul_mem (R.inv_mem hrepR) hxR) (R.inv_mem (R.inv_mem hrepR))
+    rw [hgR]
+    intro k hk g hg
+    exact R.mul_mem (R.mul_mem (hle hk) hg) (R.inv_mem (hle hk))
+  have hNR'' : gens hsN ≤ gens hsR := by rw [hgensN, hgR]; exact hNR
+  have hnormRN : GI.Multicoset.Normalizes (gens hsR) (gens hsN) := by
+    rw [hgR, hgensN]; exact hRN
+  have hrel : relDerived (gens hsR) (gens hsN) L ≤ gens hsN := by
+    rw [hgR, hgensN]
+    obtain ⟨hSR, hSsolv, hSsup⟩ := supplement_spec hNR hRN hRd
     have hge := tmCs_ell_ge hm (L := L) (by rw [← ht5]; exact htL)
-    simpa using dixon m (gens hsS) hsolvS L (by simpa using hge)
-  have hrecF := hrec q L hsS [] OX' OY hsolvS (by rw [tmCs_gens_nil]; exact bot_le) hnorm0 hrel
-    (tmCs_ell_le_sq (by rw [← ht5]; exact hL2)) (hfix0 _) (hfix0 _) hlS (by simp)
-    (by simp [hOX', hlx]) (by omega) hrecok
+    have hdix := dixon m (supplement R N) hSsolv L (by simpa using hge)
+    exact relDerived_le_of_supplement hNR hSR hRN hSsup hdix
+  have hDx : ∀ t ∈ types N x, t ∈ tmCsD R N y' := fun t ht => by
+    obtain ⟨i, -, rfl⟩ := Multiset.mem_map.1 ht
+    obtain ⟨j, hj⟩ := hpx i
+    exact ⟨j, (tmCs_in_iff hNR (x i) j).2 hj⟩
+  have hDy : ∀ t ∈ types N y', t ∈ tmCsD R N y' := fun t ht => by
+    obtain ⟨j, -, rfl⟩ := Multiset.mem_map.1 ht
+    exact ⟨j, (tmCs_in_iff hNR (y' j) j).2 ⟨1, R.one_mem, act_one _⟩⟩
+  have hfixM : ∀ {Z : Multiset (Set Ω)}, (∀ t ∈ Z, t ∈ tmCsD R N y') → Fixes N Z →
+      Fixes N (Z.map (tmCsF R N y')) := by
+    intro Z hZ hfZ k hk o ho
+    obtain ⟨t, ht, rfl⟩ := Multiset.mem_map.1 ho
+    rw [← tmCsF_act hRN t (hZ t ht) k (hNR hk), hfZ k hk t ht]
+  have hfixOX : Fixes (gens hsN) (tmGlMs OX) := by
+    rw [hgensN, hmsX]
+    exact hfixM hDx (fixes_types N x)
+  have hfixOY : Fixes (gens hsN) (tmGlMs OY) := by
+    rw [hgensN, hmsY]
+    exact hfixM hDy (fixes_types N y')
+  have hrecF := hrec q L hsR hsN OX OY hnormR hNR'' hnormRN hrel
+    (tmCs_ell_le_sq (by rw [← ht5]; exact hL2)) hfixOX hfixOY hlR hlN2
+    (by omega) (by omega) hrecok
   set env11 := env10 ++ [Val.nat L] with henv11
   have r10 := Det.var' (P := P) (env := env11) (i := 10) (v := .nat L) rfl
-  have r6 := Det.var' (P := P) (env := env11) (i := 6) (v := encGroup hsS) rfl
-  have r8 := Det.var' (P := P) (env := env11) (i := 8) (v := encGroup ([] : List (Perm (Fin m))))
-    rfl
-  have r9 := Det.var' (P := P) (env := env11) (i := 9) (v := .list wsX) rfl
-  rw [hws] at r9
+  have r6 := Det.var' (P := P) (env := env11) (i := 6) (v := encGroup hsR) rfl
+  have r8 := Det.var' (P := P) (env := env11) (i := 8) (v := encGroup hsN) rfl
+  have r9 := Det.var' (P := P) (env := env11) (i := 9) (v := tmGlObjsVal OX) rfl
   have r7 := Det.var' (P := P) (env := env11) (i := 7) (v := v7) rfl
   have r7Y := Det.get' r7 (Det.nat 1) (vs := [tmGlObjsVal OX, tmGlObjsVal OY])
     (v := tmGlObjsVal OY) rfl
   have darg := Det.snoc (Det.mk4 r10 r6 r8 r9) r7Y
   refine EvalAll.letE (EvalAll.call_spec darg hrecF) ?_
   rintro u c11 ⟨cb11, ⟨hans, hcb11⟩, hc11⟩
-  have hmsX' : tmGlMs OX' = tmGlMs OX ↼ r := tmCs_ms_shift OX r
-  rw [hmsX', hgS] at hans
+  rw [hgR] at hans
   have hans' := hans
   -- the cost of steps 8 to 11
   have hu : u.wt ≤ C := by
@@ -554,41 +554,19 @@ theorem tmCs_res_spec (hst : PointwiseStab) (dixon : GI.Cited.DixonDerivedLength
   have hmid : cz + c8 + c9 + c10 + c11 ≤ 10 ^ 8 * C ^ 2 + cb11 := by
     have hlen2 : [tmGlObjsVal OX, tmGlObjsVal OY].length = 2 := rfl
     rw [hlen2] at hcz
-    have hlen0 : ([] : List (Perm (Fin m))).length = 0 := rfl
-    rw [hlen0] at hc8
-    have hmk8 : 100000 * ((0 + 2) * (m + 1)) ^ 3 ≤ 8 * 10 ^ 5 * (X + 1) ^ 3 := by
-      have : ((0 + 2) * (m + 1)) ^ 3 = 8 * (m + 1) ^ 3 := by ring
-      rw [this]; omega
-    have wg0 := wt_encGroup_le_sq (n := m) (hs := []) (by simp)
-    have w8 := wt_list2_le (Val.nat m) (Val.list [])
+    have wg0' := wt_encGroup_le_sq hlN2
+    have hX61 : 1 ≤ (X + 1) ^ 6 := Nat.one_le_pow _ _ (by omega)
+    have h4_6 : (X + 1) ^ 4 ≤ (X + 1) ^ 6 := Nat.pow_le_pow_right hY1 (by norm_num)
+    have h6_12 := hYp 6 (by norm_num)
+    have w8 := wt_list2_le (Val.nat m) (encGroup σN)
+    have w8b := wt_list2_le (encGroup σN) (Val.list [])
     have hl0 : (Val.list []).wt ≤ 5 := by decide
-    -- the map
-    have hsumK : ∀ (l : List Val) (k : ℕ), (l.map fun _ => k).sum = l.length * k := by
-      intro l k; induction l with
-      | nil => simp
-      | cons a l ih => simp only [List.map_cons, List.sum_cons, List.length_cons, ih]; ring
-    rw [hsumK, List.length_map, hlx] at hcb9
-    have hwsw := tm_wt_forall₂ (W := 200 * C) (fun _ _ h => h.2.le) hwsX.flip
-    rw [List.length_map, hlx] at hwsw
-    have hqC1 : q * (2 * (200 * C) + 1) ≤ 401 * (X * C) := by
-      calc q * (2 * (200 * C) + 1) ≤ X * (401 * C) := Nat.mul_le_mul hqX (by omega)
-        _ = 401 * (X * C) := by ring
-    have hXC : (X + 1) * C = X * C + C := by ring
-    have hY2C : (X + 1) ^ 2 ≤ C := by omega
-    have w9 := wt_list2_le (encPerm r) (Val.list (OX.map tmGlObjVal))
-    have hW9 : (Val.list [encPerm r, Val.list (List.map tmGlObjVal OX)]).wt + (Val.list wsX).wt + 1
-        ≤ 1000 * ((X + 1) * C) := by omega
-    have hmap9 : mapK * (q + 1) * ((Val.list [encPerm r, Val.list (List.map tmGlObjVal OX)]).wt +
-        (Val.list wsX).wt + 1) ≤ 10 ^ 6 * C ^ 2 := by
-      calc mapK * (q + 1) * ((Val.list [encPerm r, Val.list (List.map tmGlObjVal OX)]).wt +
-            (Val.list wsX).wt + 1) ≤ 1000 * (X + 1) * (1000 * ((X + 1) * C)) :=
-            Nat.mul_le_mul (Nat.mul_le_mul (le_refl _) (by omega)) hW9
-        _ = 10 ^ 6 * ((X + 1) ^ 2 * C) := by ring
-        _ ≤ 10 ^ 6 * (C * C) := Nat.mul_le_mul_left _ (Nat.mul_le_mul_right _ hY2C)
-        _ = 10 ^ 6 * C ^ 2 := by ring
-    have hqC : q * (200 * C) ≤ 200 * C ^ 2 := by
-      calc q * (200 * C) ≤ C * (200 * C) := Nat.mul_le_mul_right _ (by omega)
-        _ = 200 * C ^ 2 := by ring
+    have hbd8 : (pointwiseStabPrim hst).bound (Val.list [encGroup σN, Val.list []]) ≤
+        p.boundSize (10 ^ 4 * (X + 1) ^ 6) := by
+      apply Prim.bound_le
+      have := (Val.list [encGroup σN, Val.list []]).size_le_wt
+      omega
+    have hm9 := hmp 9
     -- the fuel
     have hmm : m * m ≤ (X + 1) ^ 12 := by
       have : m * m ≤ (X + 1) ^ 2 := by rw [sq]; exact Nat.mul_le_mul (by omega) (by omega)
@@ -629,37 +607,28 @@ theorem tmCs_res_spec (hst : PointwiseStab) (dixon : GI.Cited.DixonDerivedLength
     have wn0 : (Val.nat 0).wt ≤ 2 := wt_nat_le 0
     have wt3 := wt_list3_le (Val.nat 1) (Val.nat t) (Val.nat 0)
     have wtt := wt_nat_le t
-    have wgS0 := wgS
-    have hwsX' : (Val.list (List.map tmGlObjVal OX')).wt ≤ q * (2 * (200 * C) + 1) + 4 := by
-      rw [← hws]; exact hwsw
+    have wgS0 := wgR
     have hOYw : (tmGlObjsVal OY).wt < v7.wt := wt_le_wt_list (by simp [hv7])
-    have w11a := wt_list4_le (Val.nat L) (encGroup hsS) (encGroup ([] : List (Perm (Fin m))))
-      (Val.list (List.map tmGlObjVal OX'))
+    have w11a := wt_list4_le (Val.nat L) (encGroup hsR) (encGroup hsN) (tmGlObjsVal OX)
     have w11b := wt_list_le
-      ([Val.nat L, encGroup hsS, encGroup ([] : List (Perm (Fin m))),
-        Val.list (List.map tmGlObjVal OX')] ++
-        [tmGlObjsVal OY])
+      ([Val.nat L, encGroup hsR, encGroup hsN, tmGlObjsVal OX] ++ [tmGlObjsVal OY])
     simp only [List.cons_append, List.nil_append, List.map_cons, List.map_nil, List.sum_cons,
       List.sum_nil, List.length_cons, List.length_nil] at w11b
     have hCC : C ≤ C ^ 2 := Nat.le_self_pow (by norm_num) _
-    have hXC2 : X * C ≤ C ^ 2 := by
-      calc X * C ≤ C * C := Nat.mul_le_mul_right _ (by omega)
-        _ = C ^ 2 := by ring
-    rw [hmk] at hc8
-    have e11 : (Val.list ([Val.nat L, encGroup hsS, encGroup ([] : List (Perm (Fin m))),
-        Val.list (List.map tmGlObjVal OX')] ++ [tmGlObjsVal OY])).wt =
-        (Val.list [Val.nat L, encGroup hsS, encGroup ([] : List (Perm (Fin m))),
-        Val.list (List.map tmGlObjVal OX'), tmGlObjsVal OY]).wt := rfl
+    have e11 : (Val.list ([Val.nat L, encGroup hsR, encGroup hsN, tmGlObjsVal OX] ++
+        [tmGlObjsVal OY])).wt =
+        (Val.list [Val.nat L, encGroup hsR, encGroup hsN, tmGlObjsVal OX,
+        tmGlObjsVal OY]).wt := rfl
     rw [e11] at hc11
-    have ews : (Val.list wsX).wt = (Val.list (List.map tmGlObjVal OX')).wt := by rw [hws]
     omega
-  have hset : tmCsResSet H N x y r =
-      {h | ∃ s ∈ Iso S (tmGlMs OX ↼ r) (tmGlMs OY), ∃ k ∈ N, h = r * s * k} := hmain
+  have hset : tmCsResSet H N R x y r =
+      (fun z => z * r) '' Iso R (tmGlMs OX) (tmGlMs OY) := by
+    rw [tmCs_resSet_eq_image hRH hn hr, ← hiso_objs]
   set env12 := env11 ++ [u] with henv12
   have s11 := Det.var' (P := P) (env := env12) (i := 11) (v := u) rfl
   rcases hans with ⟨rfl, hI⟩ | ⟨x0, gs, rfl, hgl, -⟩
-  · -- the transporter on the supplement is empty
-    refine (Det.ite_zero (t := tmCsResTail comp app red) (Det.length s11) Det.nil).post
+  · -- the transporter on `R` is empty
+    refine (Det.ite_zero (t := tmCsResTail comp inv mp_conj) (Det.length s11) Det.nil).post
       fun c' hc' => ⟨Or.inl ⟨rfl, ?_⟩, L, hLm, ?_⟩
     · rw [hset, hI]; simp
     · refine tmCs_cast (cb := cb11) ?_ hcb11 (hRB0 L)
@@ -669,100 +638,128 @@ theorem tmCs_res_spec (hst : PointwiseStab) (dixon : GI.Cited.DixonDerivedLength
       rw [hQ]
       omega
   have hI := tmCs_ansC_cons hans' rfl
-  refine EvalAll.ite (Det.length s11) (fun _ _ h => ⟨_, h.1⟩) fun z cz ⟨hz, hcz⟩ => ?_
-  cases hz
+  refine EvalAll.ite (Det.length s11) (fun _ _ h => ⟨_, h.1⟩) fun z' cz' ⟨hz', hcz'⟩ => ?_
+  cases hz'
   rw [if_neg (by simp)]
   unfold tmCsResTail
-  -- 12. the representative `r x0`
+  -- 12. the representative `x0 * r`
   have t0 := Det.var' (P := P) (env := env12) (i := 0) (v := a) rfl
-  have tr := Det.get' t0 (Det.nat 5) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
+  have tr := Det.get' t0 (Det.nat 5) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
     .list vs, .nat m, .nat q, encPerm r]) (v := encPerm r) rfl
   have tx := Det.get' s11 (Det.nat 0) (vs := [encPerm x0, encGroup gs]) (v := encPerm x0) rfl
-  refine EvalAll.letE (Det.call (Det.mk2 tr tx) (compose_spec hA.hcomp r x0)) ?_
+  refine EvalAll.letE (Det.call (Det.mk2 tx tr) (compose_spec hA.hcomp x0 r)) ?_
   rintro _ c12 ⟨rfl, hc12⟩
-  -- 13. the generators `gs, σN`
-  set env13 := env12 ++ [encPerm (r * x0)] with henv13
-  have u11 := Det.var' (P := P) (env := env13) (i := 11) (v := .list [encPerm x0, encGroup gs]) rfl
-  have ugs := Det.get' u11 (Det.nat 1) (vs := [encPerm x0, encGroup gs]) (v := encGroup gs) rfl
-  have ul := Det.get' ugs (Det.nat 1) (vs := [.nat m, .list ((1 :: gs).map encPerm)])
-    (v := .list ((1 :: gs).map encPerm)) rfl
+  -- 13. `r⁻¹`
+  set env13 := env12 ++ [encPerm (x0 * r)] with henv13
   have u0 := Det.var' (P := P) (env := env13) (i := 0) (v := a) rfl
-  have uN := Det.get' u0 (Det.nat 1) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
-    .list vs, .nat m, .nat q, encPerm r]) (v := .list (σN.map encPerm)) rfl
-  set L0 := Val.list ((1 :: gs).map encPerm ++ σN.map encPerm) with hL0
-  have happ' : FunDet P app (.list [.list ((1 :: gs).map encPerm), .list (σN.map encPerm)]) L0
-      (loopModK * ((σN.map encPerm).length + 1) *
-        ((Val.list [.list ((1 :: gs).map encPerm), .list (σN.map encPerm)]).wt +
-          (σN.map encPerm).length + L0.wt + 1)) :=
-    (append_spec hA.happ _ _).mono fun w c' ⟨h1, h2⟩ => ⟨h1, by rw [h1] at h2; exact h2⟩
-  refine EvalAll.letE (Det.call (Det.mk2 ul uN) happ') ?_
+  have ur := Det.get' u0 (Det.nat 5) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
+    .list vs, .nat m, .nat q, encPerm r]) (v := encPerm r) rfl
+  refine EvalAll.letE (Det.call ur (inv_spec hA.hreb.hinv r)) ?_
   rintro _ c13 ⟨rfl, hc13⟩
-  -- 14. cut to `m²` generators
-  set env14 := env13 ++ [L0] with henv14
-  have hgv : GroupVal m (.list [.nat m, L0]) (gens (gs ++ σN)) := ⟨gs ++ σN, by
-    simp [hL0, encGroup, GI.Cited.encPerms], rfl⟩
-  have w0 := Det.var' (P := P) (env := env14) (i := 0) (v := a) rfl
-  have wm := Det.get' w0 (Det.nat 3) (vs := [.list (σH.map encPerm), .list (σN.map encPerm),
+  -- 14. conjugate `(1 :: gs)` by `r⁻¹`
+  set env14 := env13 ++ [encPerm r⁻¹] with henv14
+  have v13 := Det.var' (P := P) (env := env14) (i := 13) (v := encPerm r⁻¹) rfl
+  have v0 := Det.var' (P := P) (env := env14) (i := 0) (v := a) rfl
+  have vr := Det.get' v0 (Det.nat 5) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
+    .list vs, .nat m, .nat q, encPerm r]) (v := encPerm r) rfl
+  have v11 := Det.var' (P := P) (env := env14) (i := 11) (v := .list [encPerm x0, encGroup gs]) rfl
+  have vgs := Det.get' v11 (Det.nat 1) (vs := [encPerm x0, encGroup gs]) (v := encGroup gs) rfl
+  have vl := Det.get' vgs (Det.nat 1) (vs := [.nat m, .list ((1 :: gs).map encPerm)])
+    (v := .list ((1 :: gs).map encPerm)) rfl
+  set pairRi := Val.list [encPerm r⁻¹, encPerm r] with hpairRi
+  have hpairRi_eq : pairRi = Val.list [encPerm r⁻¹, encPerm (r⁻¹)⁻¹] := by simp [hpairRi]
+  set gs' := gs.map (fun g => r⁻¹ * g * r) with hgs'
+  have hgl' : gs'.length ≤ m ^ 2 := by rw [hgs', List.length_map]; exact hgl
+  have hMconj := map_spec hA.hreb.hmp_conj (c := pairRi) (xs := (1 :: gs).map encPerm)
+    (R := fun u_v w_v => ∀ σ : Perm (Fin m), u_v = encPerm σ → w_v = encPerm (r⁻¹ * σ * r))
+    (B := fun _ => tmCsConjK m) (by
+      intro u_v hu_v
+      obtain ⟨σ, -, rfl⟩ := List.mem_map.1 hu_v
+      rw [hpairRi_eq]
+      refine FunAll.mono (tmCs_conj_spec hA.hreb.hconj hA.hcomp r⁻¹ σ) fun w_v cost hw_v =>
+        ⟨fun σ' h' => by
+          have h1 := hw_v.1
+          rw [inv_inv] at h1
+          rw [h1, encPerm_injective h'], hw_v.2⟩)
+  have hws_conj : ∀ ws', List.Forall₂ (fun u_v w_v => ∀ σ : Perm (Fin m), u_v = encPerm σ →
+      w_v = encPerm (r⁻¹ * σ * r)) ((1 :: gs).map encPerm) ws' →
+      ws' = (1 :: gs').map encPerm := by
+    intro ws' h2
+    have := forall₂_map_eq (g := fun σ => encPerm (r⁻¹ * σ * r)) (fun a _ w hw => hw a rfl) h2
+    rw [this, hgs', List.map_cons, List.map_cons, List.map_map]
+    simp
+  have hlen_gs : (1 :: gs).length ≤ (X + 1) ^ 2 := by
+    simp only [List.length_cons]
+    have h1 : m ^ 2 + 1 ≤ (m + 1) ^ 2 := by
+      calc m ^ 2 + 1 ≤ m ^ 2 + 2 * m + 1 := by omega
+        _ = (m + 1) ^ 2 := by ring
+    have h2 := hmp 2
+    omega
+  have wgs := (wt_encGroup_le_sq hgl).trans (Nat.mul_le_mul_left 320 (hmp 6))
+  have w1gs : (Val.list ((1 :: gs).map encPerm)).wt < (encGroup gs).wt :=
+    wt_le_wt_list (by simp [encGroup, GI.Cited.encPerms])
+  have wgs' := (wt_encGroup_le_sq hgl').trans (Nat.mul_le_mul_left 320 (hmp 6))
+  have w1gs' : (Val.list ((1 :: gs').map encPerm)).wt < (encGroup gs').wt :=
+    wt_le_wt_list (by simp [encGroup, GI.Cited.encPerms])
+  have wri := wt_encPerm_le r⁻¹
+  have wpri := wt_list2_le (encPerm r⁻¹) (encPerm r)
+  rw [← hpairRi] at wpri
+  have h2_6 : (X + 1) ^ 2 ≤ (X + 1) ^ 6 := Nat.pow_le_pow_right hY1 (by norm_num)
+  have hconj_cost : FunDet P mp_conj (.list [pairRi, .list ((1 :: gs).map encPerm)])
+      (.list ((1 :: gs').map encPerm)) (10 ^ 7 * (X + 1) ^ 8) := by
+    refine FunAll.mono hMconj fun w_v cost ⟨ws', hw_v, h2, hcost⟩ => ?_
+    have := hws_conj ws' h2; subst this; subst hw_v
+    refine ⟨rfl, ?_⟩
+    rw [tm_sum_map_const, List.length_map] at hcost
+    have h1 : (1 :: gs).length * tmCsConjK m ≤ (X + 1) ^ 2 * (10 ^ 6 * (X + 1) ^ 3) := by
+      unfold tmCsConjK
+      exact Nat.mul_le_mul hlen_gs (Nat.mul_le_mul_left _ (hmp 3))
+    have w2 := wt_list2_le pairRi (.list ((1 :: gs).map encPerm))
+    have hlp : mapK * ((1 :: gs).length + 1) *
+        ((Val.list [pairRi, .list ((1 :: gs).map encPerm)]).wt +
+          (Val.list ((1 :: gs').map encPerm)).wt + 1) ≤
+        2 * 10 ^ 3 * (X + 1) ^ 2 * (2000 * (X + 1) ^ 6) := by
+      simp only [mapK]
+      refine Nat.mul_le_mul (by
+        have : 1 ≤ (X + 1) ^ 2 := Nat.one_le_pow _ _ (by omega); omega) ?_
+      omega
+    have e5 : (X + 1) ^ 2 * (10 ^ 6 * (X + 1) ^ 3) = 10 ^ 6 * (X + 1) ^ 5 := by ring
+    have e8 : 2 * 10 ^ 3 * (X + 1) ^ 2 * (2000 * (X + 1) ^ 6) = 4 * 10 ^ 6 * (X + 1) ^ 8 := by ring
+    have h58 := Nat.pow_le_pow_right hY1 (show 5 ≤ 8 by norm_num)
+    omega
+  refine EvalAll.letE (Det.call (Det.mk2 (Det.mk2 v13 vr) vl) hconj_cost) ?_
+  rintro _ c14 ⟨rfl, hc14⟩
+  rw [← hpairRi] at hc14
+  set env15 := env14 ++ [Val.list ((1 :: gs').map encPerm)] with henv15
+  have o12 := Det.var' (P := P) (env := env15) (i := 12) (v := encPerm (x0 * r)) rfl
+  have o0 := Det.var' (P := P) (env := env15) (i := 0) (v := a) rfl
+  have om := Det.get' o0 (Det.nat 3) (vs := [.list (hsR.map encPerm), .list (σN.map encPerm),
     .list vs, .nat m, .nat q, encPerm r]) (v := .nat m) rfl
-  have wL := Det.var' (P := P) (env := env14) (i := 13) (v := L0) rfl
-  refine EvalAll.letE (EvalAll.call_spec (Det.mk2 wm (Det.mk2 wm wL))
-    (red_spec hst hA.hred hjst hgv)) ?_
-  rintro _ c14 ⟨cb14, ⟨hs, rfl, hgens, hlen, hcb14⟩, hc14⟩
-  have o12 := Det.var' (P := P) (env := env14 ++ [encGroup hs]) (i := 12) (v := encPerm (r * x0)) rfl
-  have o14 := Det.var' (P := P) (env := env14 ++ [encGroup hs]) (i := 14) (v := encGroup hs) rfl
-  refine (Det.mk2 o12 o14).post fun c' hc' => ⟨Or.inr ⟨r * x0, hs, rfl, hlen, ?_⟩, L, hLm, ?_⟩
-  · have hσS : gens gs ≤ S := tmCs_gens_le (fun g hg => hg.1) hI
-    rw [tmCs_toFin_refl, hset, tmCs_res_coset hσS hSN rfl hI, ← hgens]
+  have o14 := Det.var' (P := P) (env := env15) (i := 14)
+    (v := .list ((1 :: gs').map encPerm)) rfl
+  refine (Det.mk2 o12 (Det.mk2 om o14)).post fun c' hc' =>
+    ⟨Or.inr ⟨x0 * r, gs', rfl, hgl', ?_⟩, L, hLm, ?_⟩
+  · rw [tmCs_toFin_refl, hset, hI, outbReb_right_translate]
     rfl
   · refine tmCs_cast (cb := cb11) ?_ hcb11 (hRB0 L)
     have hCC : C ≤ C ^ 2 := Nat.le_self_pow (by norm_num) _
     have hlen2 : [encPerm x0, encGroup gs].length = 2 := rfl
-    rw [hlen2] at hcz
+    rw [hlen2] at hcz'
     have hX16 : X + 1 ≤ (X + 1) ^ 6 := Nat.le_self_pow (by norm_num) _
+    have hm4' := hmp 4
     have hm9 := hmp 9
     have hx0 := wt_encPerm_le x0
-    have hrx := wt_encPerm_le (r * x0)
-    have hgsw := wt_encGroup_le_sq hgl
-    have hhsw := wt_encGroup_le_sq hlen
-    have hl1 : (Val.list ((1 :: gs).map encPerm)).wt < (encGroup gs).wt :=
-      wt_le_wt_list (by simp [encGroup, GI.Cited.encPerms])
-    have hlen1 := length_lt_wt_list ((1 :: gs).map encPerm)
-    have hlenN := length_lt_wt_list (σN.map encPerm)
-    have hL0w : L0.wt ≤ 960 * (X + 1) ^ 6 + 3 * X + 4 := by
-      have h1 := wt_list_le ((1 :: gs).map encPerm ++ σN.map encPerm)
-      have h2 := sum_wt_lt_wt_list ((1 :: gs).map encPerm)
-      have h3 := sum_wt_lt_wt_list (σN.map encPerm)
-      rw [List.map_append, List.sum_append, List.length_append] at h1
-      rw [hL0]
-      omega
-    have wa := wt_list2_le (Val.nat m) L0
-    have wb := wt_list2_le (Val.nat m) (Val.list [Val.nat m, L0])
-    have wc := wt_list2_le (Val.list [Val.nat m, L0]) (Val.list [])
-    have hl0 : (Val.list []).wt ≤ 5 := by decide
-    have hbd : (pointwiseStabPrim hst).bound (Val.list [Val.list [Val.nat m, L0], Val.list []]) ≤
-        p.boundSize (10 ^ 4 * (X + 1) ^ 6) := by
-      apply Prim.bound_le
-      have := (Val.list [Val.list [Val.nat m, L0], Val.list []]).size_le_wt
-      omega
-    have wd := wt_list2_le (Val.list ((1 :: gs).map encPerm)) (Val.list (σN.map encPerm))
-    have hW13 : (Val.list [Val.list (List.map encPerm (1 :: gs)), Val.list (List.map encPerm σN)]).wt +
-        (List.map encPerm σN).length + L0.wt + 1 ≤ 100 * C := by
-      simp only [List.length_map] at hlenN ⊢
-      omega
-    have hloop13 : loopModK * ((List.map encPerm σN).length + 1) *
-        ((Val.list [Val.list (List.map encPerm (1 :: gs)), Val.list (List.map encPerm σN)]).wt +
-          (List.map encPerm σN).length + L0.wt + 1) ≤ 10 ^ 5 * C ^ 2 := by
-      calc loopModK * ((List.map encPerm σN).length + 1) *
-            ((Val.list [Val.list (List.map encPerm (1 :: gs)),
-              Val.list (List.map encPerm σN)]).wt + (List.map encPerm σN).length + L0.wt + 1)
-          ≤ 1000 * C * (100 * C) := by
-            apply Nat.mul_le_mul (Nat.mul_le_mul (le_refl _) ?_) hW13
-            simp only [List.length_map]; omega
-        _ = 10 ^ 5 * C ^ 2 := by ring
+    have hxr := wt_encPerm_le (x0 * r)
     have hpk : permK = 30000 := rfl
+    have hik : invK = 100000 := rfl
     rw [hpk] at hc12
-    have wp2 := wt_list2_le (encPerm r) (encPerm x0)
-    have wo := wt_list2_le (encPerm (r * x0)) (encGroup hs)
+    rw [hik] at hc13
+    have wp2 := wt_list2_le (encPerm x0) (encPerm r)
+    have wp3 := wt_list2_le pairRi (.list ((1 :: gs).map encPerm))
+    have wp4 := wt_list2_le (.nat m) (.list ((1 :: gs').map encPerm))
+    have wo := wt_list2_le (encPerm (x0 * r)) (encGroup gs')
+    have e_gs' : Val.list [Val.nat m, Val.list ((1 :: gs').map encPerm)] = encGroup gs' := rfl
+    rw [e_gs'] at wp4 hc' ⊢
     rw [hQ]
     omega
 

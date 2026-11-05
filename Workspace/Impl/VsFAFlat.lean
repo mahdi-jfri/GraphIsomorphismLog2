@@ -1,5 +1,9 @@
-import Workspace.Impl.VStabLinUnit
-import Workspace.Impl.VsFMatMul
+module
+
+public import Workspace.Impl.VStabLinUnit
+public import Workspace.Impl.VsFMatMul
+
+@[expose] public section
 
 /-!
 # Flattening a matrix

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojChoice
+module
+
+public import Workspace.Impl.AggItemCiSojChoice
+
+@[expose] public section
 
 /-!
 # Initializing the fixed first-rectangle choices

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectGlueIface
+module
+
+public import Workspace.Impl.LinObjectGlueIface
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -24,8 +28,8 @@ theorem linObjectGlue_iface_fixed (ho : GroupOrder) (hh : HermiteFullRank) (hn :
     (hjh : P.prims[jh]? = some (linHermitePrim hh)) (hjs : P.prims[js]? = some (linSmithPrim hn)) :
     Iface.TermGlueObjSpec P (linObjectGlueK hs hm ho hc hh hn hv) (linObjectGlueD hs hm ho hc hh hn hv) b := by
   have hKD := (linObjectGlue_uniform hs hm ho hc hh hn hv).choose_spec.choose_spec
-  intro n σH σN σA X Y σB τ hsol hNA hAH hN hA hcA hfX hfY hAB hBH hτ hP1 hP2 hP3 hP4 hP5
-  let I : linObjectGlueRaw n := ⟨σH,σN,σA,X,Y,σB,τ,hsol,hNA,hAH,hN,hA,hcA,hfX,hfY,hAB,hBH,hτ,hP1,hP2,hP3,hP4,hP5⟩
+  intro n σH σN σA X Y σB τ hsol hIn hNA hAH hN hA hcA hfX hfY hAB hBH hτ hP1 hP2 hP3 hP4 hP5
+  let I : linObjectGlueRaw n := ⟨σH,σN,σA,X,Y,σB,τ,hsol,hIn,hNA,hAH,hN,hA,hcA,hfX,hfY,hAB,hBH,hτ,hP1,hP2,hP3,hP4,hP5⟩
   exact (linObjectGlue_spec I ho hh hn h hjmem hjo hjm hjh hjs).mono fun out cost hout =>
     ⟨hout.1,hout.2.trans (hKD I.value.wt)⟩
 

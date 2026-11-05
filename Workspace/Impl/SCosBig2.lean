@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosBig1
+module
+
+public import Workspace.Impl.SCosBig1
+
+@[expose] public section
 
 /-!
 # Function 5 (`bigF`), steps 1–5

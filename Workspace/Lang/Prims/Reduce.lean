@@ -23,8 +23,12 @@ most `n²` generators are kept (`length_keepList_le`).
 
 The membership primitive must sit at index `j` of the program.
 -/
-import Workspace.Lang.Prims.CosetOps
-import Workspace.Lang.Prims.PermGroups
+module
+
+public import Workspace.Lang.Prims.CosetOps
+public import Workspace.Lang.Prims.PermGroups
+
+@[expose] public section
 
 namespace GI.Lang
 
@@ -100,7 +104,7 @@ theorem card_foldl_keepStep :
 /-- **At most `n²` generators are kept**: `2 ^ (number kept) ≤ |G| ≤ n! ≤ 2 ^ (n²)`. -/
 theorem length_foldl_keepStep_le (l : List (Perm (Fin n))) :
     (l.foldl keepStep []).length ≤ n ^ 2 := by
-  have h := card_foldl_keepStep l [] (by simpa using Nat.card_pos)
+  have h := card_foldl_keepStep l [] Nat.card_pos
   have h2 : Nat.card (gens (l.foldl keepStep [])) ≤ 2 ^ (n ^ 2) := by
     have := Subgroup.card_le_of_le (le_top : gens (l.foldl keepStep []) ≤ ⊤)
     rw [Subgroup.card_top] at this

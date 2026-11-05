@@ -1,5 +1,9 @@
-import Workspace.EmbeddedQuotient
-import Workspace.OrbitBudget
+module
+
+public import Workspace.EmbeddedQuotient
+public import Workspace.OrbitBudget
+
+@[expose] public section
 
 namespace GI.EmbeddedQuotient
 

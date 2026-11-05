@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojRepBudget
+module
+
+public import Workspace.Impl.AggItemCiSojRepBudget
+
+@[expose] public section
 
 /-! # The actual source item and certificate input budgets -/
 

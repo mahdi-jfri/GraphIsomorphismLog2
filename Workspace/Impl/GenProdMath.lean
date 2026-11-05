@@ -1,6 +1,10 @@
-import Workspace.Impl.GenCosetsMath
-import Workspace.Impl.Canon
-import Mathlib.Data.Nat.Digits.Defs
+module
+
+public import Workspace.Impl.GenCosetsMath
+public import Workspace.Impl.Canon
+public import Mathlib.Data.Nat.Digits.Defs
+
+@[expose] public section
 
 /-!
 # The product refinement: the mathematics

@@ -1,5 +1,9 @@
-import Workspace.Impl.VsBFldM
-import Workspace.Proved.VsBFld0M
+module
+
+public import Workspace.Impl.VsBFldM
+public import Workspace.Proved.VsBFld0M
+
+@[expose] public section
 
 /-!
 # The field line when `T = 0`

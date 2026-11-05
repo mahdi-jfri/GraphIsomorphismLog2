@@ -1,4 +1,8 @@
-import Workspace.Lang.Prims.LinMembership
+module
+
+public import Workspace.Lang.Prims.LinMembership
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

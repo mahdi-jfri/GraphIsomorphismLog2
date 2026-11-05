@@ -1,7 +1,11 @@
-import Workspace.SmallDegreeBudget
-import Workspace.AlternatingSimple
-import Workspace.OrbitLocalization
-import Workspace.QuotientImage
+module
+
+public import Workspace.SmallDegreeBudget
+public import Workspace.AlternatingSimple
+public import Workspace.OrbitLocalization
+public import Workspace.QuotientImage
+
+@[expose] public section
 
 namespace GI.SectionCaps
 
@@ -75,7 +79,7 @@ theorem extension (f : G →* H) (kernelBound : Cap f.ker b) (imageBound : Cap H
   · apply (quotient_degree_le imageBound hk p q onto ?_).trans (le_max_right b c)
     intro u hu
     have hm : q u ∈ p.ker.map q := ⟨u, hu, rfl⟩
-    simpa only [hbot, Subgroup.mem_bot] using hm
+    simpa only [hbot, Subgroup.mem_bot, MonoidHom.mem_ker] using hm
   · let embed : p.ker →* f.ker :=
       { toFun := fun u => ⟨u.val.val, u.property⟩
         map_one' := rfl
@@ -118,6 +122,6 @@ theorem faithful_family {I : Type*} [Fintype I] {D : I → Type*} [∀ i, Fintyp
   apply (quotient_degree_le permutations hk (component i) q onto ?_).trans (degrees i)
   intro u hu
   have hm : q u ∈ (component i).ker.map q := ⟨u, hu, rfl⟩
-  simpa only [hbot, Subgroup.mem_bot] using hm
+  simpa only [hbot, Subgroup.mem_bot, MonoidHom.mem_ker] using hm
 
 end GI.SectionCaps

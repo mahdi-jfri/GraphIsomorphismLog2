@@ -1,5 +1,9 @@
-import Workspace.RectangleQueries
-import Workspace.TransportOutput
+module
+
+public import Workspace.RectangleQueries
+public import Workspace.TransportOutput
+
+@[expose] public section
 
 namespace GI.Rectangle
 

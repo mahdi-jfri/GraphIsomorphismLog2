@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojMath
+module
+
+public import Workspace.Impl.AggItemCiSojMath
+
+@[expose] public section
 
 /-!
 # A fixed even alignment of the two rectangles

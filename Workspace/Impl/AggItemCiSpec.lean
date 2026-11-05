@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiDisp
-import Workspace.Impl.AggItemOKC1
+module
+
+public import Workspace.Impl.AggItemCiDisp
+public import Workspace.Impl.AggItemOKC1
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3: the item stage

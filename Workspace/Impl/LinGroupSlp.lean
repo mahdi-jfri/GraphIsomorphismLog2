@@ -1,5 +1,9 @@
-import Workspace.Impl.LinGroupSlpStep
-import Workspace.Impl.LinIntSlpValue
+module
+
+public import Workspace.Impl.LinGroupSlpStep
+public import Workspace.Impl.LinIntSlpValue
+
+@[expose] public section
 
 /-! Evaluate an SLP in a bounded encoded group, retaining shared entries.
 The encoding need not be faithful. In particular, the cover can act through
@@ -95,8 +99,7 @@ theorem linGroupSlp_loop_spec {G : Type*} [Group G] {P : Program} {b step mul in
     have dacc := Det.arg' (P := P) (vs := [a, .nat k, linGroupSlpTable enc prev]) (rest := []) (j := 2) rfl
     have dd := Det.snoc dacc (Det.call (Det.mk3 dg dacc dins) hs')
     refine dd.post fun cost hc => ⟨?_, ?_⟩
-    · dsimp only
-      rw [hnext]
+    · rw [hnext]
       simp only [linGroupSlpTable, List.map_append, List.map_singleton]
       rfl
     · have wx := hB x
@@ -147,7 +150,7 @@ theorem linGroupSlp_spec {G : Type*} [Group G] {P : Program} {b mul inv B C : �
   have wm : (linGroupSlpTable enc es).wt ≤ linVectorAccWt prog.length B := by
     have hh := linWtList (vs := es.map enc) (B := B) (by
       intro v hv; obtain ⟨x, hx, rfl⟩ := List.mem_map.mp hv; exact hB x)
-    simpa only [List.length_map, hl, linVectorAccWt] using hh
+    simpa only [linGroupSlpTable, List.length_map, hl, linVectorAccWt] using hh
   have da (j : ℕ) (rest : List Val) {v : Val}
       (hv : [linGroupSlpTable enc gs, .list (prog.map encSlpInstr), enc 1][j]? = some v) :=
     Det.arg' (P := P) (vs := [linGroupSlpTable enc gs, .list (prog.map encSlpInstr), enc 1])

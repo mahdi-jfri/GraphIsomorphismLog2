@@ -1,5 +1,9 @@
-import Workspace.Impl.VsQPhi
-import Workspace.Proved.VsWBasic
+module
+
+public import Workspace.Impl.VsQPhi
+public import Workspace.Proved.VsWBasic
+
+@[expose] public section
 
 /-!
 # Applying `φ(t)⁻¹` to a vector

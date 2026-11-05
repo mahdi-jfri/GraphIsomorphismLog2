@@ -1,8 +1,12 @@
-import Workspace.Impl.RowSpecProg
-import Workspace.Impl.TermLift
-import Workspace.Impl.TermSplit
-import Workspace.Impl.TermRepsMain
-import Workspace.Impl.LayoutAsm
+module
+
+public import Workspace.Impl.RowSpecProg
+public import Workspace.Impl.TermLift
+public import Workspace.Impl.TermSplit
+public import Workspace.Impl.TermRepsMain
+public import Workspace.Impl.LayoutAsm
+
+@[expose] public section
 
 /-!
 # The row step in the concrete program

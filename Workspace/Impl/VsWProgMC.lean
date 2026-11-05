@@ -1,4 +1,8 @@
-import Workspace.Impl.VsWProgAnn
+module
+
+public import Workspace.Impl.VsWProgAnn
+
+@[expose] public section
 
 /-!
 # Flattening and combining stored matrices as programs

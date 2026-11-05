@@ -1,6 +1,10 @@
-import Workspace.Impl.GenNormNumbering
-import Workspace.Impl.GenNormLabels
-import Workspace.Impl.LargestOrbit
+module
+
+public import Workspace.Impl.GenNormNumbering
+public import Workspace.Impl.GenNormLabels
+public import Workspace.Impl.LargestOrbit
+
+@[expose] public section
 
 /-!
 # Computing the fiber size of the Johnson block map

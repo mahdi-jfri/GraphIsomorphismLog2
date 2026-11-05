@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJLay
+module
+
+public import Workspace.Impl.TermJLay
+
+@[expose] public section
 
 /-!
 # The layout facts of the `J`-answer

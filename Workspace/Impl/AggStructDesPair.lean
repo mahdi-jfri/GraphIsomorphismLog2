@@ -1,4 +1,8 @@
-import Workspace.Impl.AggStructDesV
+module
+
+public import Workspace.Impl.AggStructDesV
+
+@[expose] public section
 
 /-!
 # The Case 3 test as a program: pairs of labels

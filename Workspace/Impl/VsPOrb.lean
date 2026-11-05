@@ -1,4 +1,8 @@
-import Workspace.Impl.VsPWord
+module
+
+public import Workspace.Impl.VsPWord
+
+@[expose] public section
 
 /-!
 # The orbit of `ȳ` under conjugation

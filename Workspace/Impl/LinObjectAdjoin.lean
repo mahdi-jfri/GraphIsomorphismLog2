@@ -1,5 +1,9 @@
-import Workspace.Impl.LinAppend
-import Workspace.Impl.LinObjectCorrectedList
+module
+
+public import Workspace.Impl.LinAppend
+public import Workspace.Impl.LinObjectCorrectedList
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

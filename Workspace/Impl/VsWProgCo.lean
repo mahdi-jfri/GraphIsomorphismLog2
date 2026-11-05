@@ -1,5 +1,9 @@
-import Workspace.Impl.VsWProgFrame
-import Workspace.Proved.VsWFrameLoc
+module
+
+public import Workspace.Impl.VsWProgFrame
+public import Workspace.Proved.VsWFrameLoc
+
+@[expose] public section
 
 /-!
 # Coordinates, local matrices and lifts as programs

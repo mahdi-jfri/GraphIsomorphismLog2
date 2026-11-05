@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimaryCoordinateKernel
-import Workspace.Impl.LinAffineTransport
+module
+
+public import Workspace.Impl.LinPrimaryCoordinateKernel
+public import Workspace.Impl.LinAffineTransport
+
+@[expose] public section
 
 /-! The field transporter and stabilizer tests are exactly the next primary
 fiber tests for the retained full affine action. -/

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemTs
-import Workspace.Impl.AggItemHand
+module
+
+public import Workspace.Impl.AggItemTs
+public import Workspace.Impl.AggItemHand
+
+@[expose] public section
 
 /-!
 # The refined tuple colorings of the round, from the items' start state

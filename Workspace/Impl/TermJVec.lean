@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJVecMath
+module
+
+public import Workspace.Impl.TermJVecMath
+
+@[expose] public section
 
 /-!
 # The coordinate vector of one element of `A = N / N*` (program)

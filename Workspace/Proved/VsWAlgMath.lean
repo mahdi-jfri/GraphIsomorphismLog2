@@ -1,7 +1,11 @@
-import Workspace.Impl.VsWAlgDefs
-import Workspace.Proved.VsWLinMath
-import Workspace.Proved.VsFAlgSpanMath
-import Workspace.Proved.VsFAlgPiece
+module
+
+public import Workspace.Impl.VsWAlgDefs
+public import Workspace.Proved.VsWLinMath
+public import Workspace.Proved.VsFAlgSpanMath
+public import Workspace.Proved.VsFAlgPiece
+
+@[expose] public section
 
 /-!
 # The Frobenius map on a span of matrices
@@ -117,7 +121,7 @@ theorem vsWUnf_eq_zero {D : ℕ} {f : ℕ → ZMod p} (hf : f ∈ vsWSupp p (D *
     have h1 : k / D < D := Nat.div_lt_of_lt_mul hk
     have h2 : k % D < D := Nat.mod_lt _ hD
     have := congrFun (congrFun h ⟨k / D, h1⟩) ⟨k % D, h2⟩
-    simp only [vsFAUnflat, LinearMap.coe_mk, AddHom.coe_mk, Matrix.zero_apply] at this
+    change f (k / D * D + k % D) = 0 at this
     rwa [Nat.div_add_mod'] at this
   · exact hf k (by omega)
 

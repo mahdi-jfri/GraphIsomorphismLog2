@@ -1,7 +1,11 @@
-import Workspace.Impl.VsPFin
-import Workspace.Impl.VsQAnaBase
-import Workspace.Impl.VsWProgBas
-import Workspace.Impl.VsWProgImg
+module
+
+public import Workspace.Impl.VsPFin
+public import Workspace.Impl.VsQAnaBase
+public import Workspace.Impl.VsWProgBas
+public import Workspace.Impl.VsWProgImg
+
+@[expose] public section
 
 /-!
 # The input and the context

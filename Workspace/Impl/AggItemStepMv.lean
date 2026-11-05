@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemStepProg
+module
+
+public import Workspace.Impl.AggItemStepProg
+
+@[expose] public section
 
 /-!
 # The moves of the step function of the items keep the relation

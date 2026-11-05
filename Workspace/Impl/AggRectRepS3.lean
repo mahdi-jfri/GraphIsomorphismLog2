@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepS2
+module
+
+public import Workspace.Impl.AggRectRepS2
+
+@[expose] public section
 
 /-!
 # Keys, row numbers, small labels and table lookups

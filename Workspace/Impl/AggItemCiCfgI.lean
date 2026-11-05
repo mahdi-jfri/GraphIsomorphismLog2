@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgB
+module
+
+public import Workspace.Impl.AggItemCiCfgB
+
+@[expose] public section
 
 /-!
 # The configuration query: the spec of the overcoset program

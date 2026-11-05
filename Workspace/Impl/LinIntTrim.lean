@@ -1,4 +1,8 @@
-import Workspace.Impl.LinIntTriMath
+module
+
+public import Workspace.Impl.LinIntTriMath
+
+@[expose] public section
 
 set_option maxHeartbeats 2000000
 

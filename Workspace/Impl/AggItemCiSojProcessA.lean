@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojProcessL
-import Workspace.Impl.AggItemCiSojRows
+module
+
+public import Workspace.Impl.AggItemCiSojProcessL
+public import Workspace.Impl.AggItemCiSojRows
+
+@[expose] public section
 
 /-! # Processing either form of a canonical rectangle answer -/
 

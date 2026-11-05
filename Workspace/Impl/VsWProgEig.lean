@@ -1,5 +1,9 @@
-import Workspace.Impl.VsWProgNil
-import Workspace.Proved.VsWEigCount
+module
+
+public import Workspace.Impl.VsWProgNil
+public import Workspace.Proved.VsWEigCount
+
+@[expose] public section
 
 /-!
 # The joint eigenspace pieces as a program

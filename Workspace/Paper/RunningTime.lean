@@ -1,7 +1,11 @@
-import Workspace.Paper.RunningTimeInequalities
-import Workspace.Paper.RunningTimeParameters
-import Workspace.Recurrence
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+module
+
+public import Workspace.Paper.RunningTimeInequalities
+public import Workspace.Paper.RunningTimeParameters
+public import Workspace.Recurrence
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+
+@[expose] public section
 
 /-!
 # Section 7: Lemma 7.1 (weighted phase induction) on an abstract recursion tree
@@ -710,12 +714,12 @@ theorem eq_main_charged_induction (hT : T.Hyp C N K) (hN6 : 6 ≤ (N : ℝ) ^ C.
       (by
         have := hT.branch_disjoint v cls hv c hc b hb
         have h' : ((b.map fun u => (T.state u).s).sum : ℝ) ≤ S.s := by exact_mod_cast this
-        simpa [Nat.cast_list_sum, List.map_map] using h')
+        simpa [Nat.cast_list_sum, List.map_map, Function.comp_def] using h')
       (by
         intro U hU
         obtain ⟨u, hu, rfl⟩ := List.mem_map.mp hU
         exact charged_child_Φ_le C T N K hT hN6 hv hc hb hu)
-    simpa [List.map_map] using this
+    simpa [List.map_map, Function.comp_def, Wf] using this
   -- One class: at most `M exp(-ΔΦ) W(S) ≤ W(S)/(8J)`.
   have hclass : ∀ c ∈ cls, (c.branches.flatten.map Wf).sum ≤ S.W C.A C.B C.D / (8 * C.J) := by
     intro c hc
@@ -768,7 +772,7 @@ theorem orbit_node_slack (hT : T.Hyp C N K) (hN6 : 6 ≤ (N : ℝ) ^ C.γ) {v : 
     (by
       have := hT.orbit_disjoint v cs hv
       have h' : ((cs.map fun u => (T.state u).s).sum : ℝ) ≤ S.s := by exact_mod_cast this
-      simpa [Nat.cast_list_sum, List.map_map] using h')
+      simpa [Nat.cast_list_sum, List.map_map, Function.comp_def] using h')
   have hWsum : (cs.map fun u => (T.state u).W C.A C.B C.D).sum ≤
       (((S.s : ℝ) + 1) ^ C.D + 3 ^ C.D) * Real.exp (S.Φ C.A C.B) := by
     calc (cs.map fun u => (T.state u).W C.A C.B C.D).sum
@@ -1033,7 +1037,7 @@ theorem lem_main_phase_bound_fresh (C : ChargingConstants) {cσ : ℝ} (hcσ : 0
             exact (hroots v hv).one_le_s
           · have h' : ((roots.map fun v => (T.state v).s).sum : ℝ) ≤ N := by
               exact_mod_cast hsum
-            simpa [Nat.cast_list_sum, List.map_map] using h'
+            simpa [Nat.cast_list_sum, List.map_map, Function.comp_def] using h'
   -- The initialization work: `N^a ≤ (N+2)^D`, since `a < D`.
   have haD : C.a ≤ C.D := by
     have h := C.D_gt

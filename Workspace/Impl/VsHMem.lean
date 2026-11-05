@@ -1,5 +1,9 @@
-import Workspace.Impl.VsPStep4
-import Workspace.Proved.VsHBasisMath
+module
+
+public import Workspace.Impl.VsPStep4
+public import Workspace.Proved.VsHBasisMath
+
+@[expose] public section
 
 /-!
 # Is `y` in `⟨K⟩ S`?
@@ -201,6 +205,7 @@ section Meaning
 
 variable {s : VsQSt I} [Fact I.p.Prime]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- **What the membership test means.** If `⟨K̄⟩` has commutators and `r`-th powers in `S`
 (and commutes with `S`), the test on `y` holds iff `ȳ ∈ ⟨K̄⟩ S`. -/
 theorem vsHMemB_iff (hs : VsQStOK s) {as : List (Perm (Fin I.n))} (has : gens as ≤ gens s.hs)

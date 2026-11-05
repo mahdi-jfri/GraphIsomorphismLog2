@@ -1,5 +1,9 @@
-import Workspace.Algorithm.LabelOrbits
-import Workspace.Cited.AlgoPermGroups
+module
+
+public import Workspace.Algorithm.LabelOrbits
+public import Workspace.Cited.AlgoPermGroups
+
+@[expose] public section
 
 /-!
 # The case of the aggregation, by group orders

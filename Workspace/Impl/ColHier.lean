@@ -1,4 +1,8 @@
-import Workspace.Impl.ColLink
+module
+
+public import Workspace.Impl.ColLink
+
+@[expose] public section
 
 /-!
 # The child hierarchy of the column step, entry by entry

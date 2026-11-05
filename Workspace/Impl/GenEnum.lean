@@ -1,9 +1,13 @@
-import Workspace.Impl.Orbit
-import Workspace.Impl.GenChild
-import Workspace.Impl.GenKernel
-import Workspace.Impl.Combine
-import Workspace.Impl.MapGhost
-import Workspace.Lang.Lib.Tabulate
+module
+
+public import Workspace.Impl.Orbit
+public import Workspace.Impl.GenChild
+public import Workspace.Impl.GenKernel
+public import Workspace.Impl.Combine
+public import Workspace.Impl.MapGhost
+public import Workspace.Lang.Lib.Tabulate
+
+@[expose] public section
 
 /-!
 # The enumeration step of the dispatcher

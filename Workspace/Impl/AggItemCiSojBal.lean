@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojMath
-import Workspace.Impl.AggItemCiCfgS
-import Workspace.Impl.AggItemCfObW
+module
+
+public import Workspace.Impl.AggItemCiSojMath
+public import Workspace.Impl.AggItemCiCfgS
+public import Workspace.Impl.AggItemCfObW
+
+@[expose] public section
 
 /-!
 # Constructing the balanced vertex colors

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPSetP
+module
+
+public import Workspace.Impl.TermGlueLabPSetP
+
+@[expose] public section
 
 /-!
 # Step 5 of the label program: the context and the items

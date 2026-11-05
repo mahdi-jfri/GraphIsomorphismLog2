@@ -1,5 +1,9 @@
-import Workspace.Impl.CamNormalizer
-import Workspace.Cited.AlgoCameron
+module
+
+public import Workspace.Impl.CamNormalizer
+public import Workspace.Cited.AlgoCameron
+
+@[expose] public section
 
 /-!
 # Moving a Maróti structure along changes of coordinates

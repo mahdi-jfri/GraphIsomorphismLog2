@@ -1,4 +1,8 @@
-import Workspace.Impl.LinFiniteActionCost
+module
+
+public import Workspace.Impl.LinFiniteActionCost
+
+@[expose] public section
 
 /-! A monotone polynomial envelope for composing the existing input-bit
 cost bounds. All three size arguments are counted. -/

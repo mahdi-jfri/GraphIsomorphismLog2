@@ -1,7 +1,11 @@
-import Workspace.Impl.LinPrimaryDigit
-import Workspace.Impl.LinPrimaryCoordinates
-import Workspace.Impl.LinFinitePointMath
-import Workspace.Impl.LinTabulate
+module
+
+public import Workspace.Impl.LinPrimaryDigit
+public import Workspace.Impl.LinPrimaryCoordinates
+public import Workspace.Impl.LinFinitePointMath
+public import Workspace.Impl.LinTabulate
+
+@[expose] public section
 
 /-! Read the first d primary digits of a full homogeneous point. The last
 coordinate is omitted by using the length of the cyclic-order table. -/

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectItemCompose
-import Workspace.Impl.LinPolyEnvelope
+module
+
+public import Workspace.Impl.LinObjectItemCompose
+public import Workspace.Impl.LinPolyEnvelope
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

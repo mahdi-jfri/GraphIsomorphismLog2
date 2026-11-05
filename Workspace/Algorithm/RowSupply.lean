@@ -1,6 +1,10 @@
-import Workspace.Algorithm.RowFormOf
-import Workspace.Algorithm.SupplyBuild
-import Workspace.Algorithm.Cases
+module
+
+public import Workspace.Algorithm.RowFormOf
+public import Workspace.Algorithm.SupplyBuild
+public import Workspace.Algorithm.Cases
+
+@[expose] public section
 
 /-!
 # The row branch of the giant step
@@ -26,10 +30,10 @@ open scoped Pointwise
 variable {Ω C : Type}
 
 /-- **The row threshold** (Theorem A.18 under the row case): above the base size, `N^α` is at
-least the logarithmic threshold `2 max{8, 2 + log₂ N} + 3`. It holds for large `N₀` because
+least the logarithmic threshold `2 max{63, 12 log₂ N} + 3`. It holds for large `N₀` because
 `N^α` grows faster than `log N`. -/
 def Params.RowThreshold (P : Params) : Prop :=
-  ∀ N : ℕ, P.N₀ < N → 2 * max 8 (2 + Real.logb 2 N) + 3 ≤ (N : ℝ) ^ P.α
+  ∀ N : ℕ, P.N₀ < N → 2 * max 63 (12 * Real.logb 2 N) + 3 ≤ (N : ℝ) ^ P.α
 
 namespace RowForm
 
@@ -47,17 +51,21 @@ noncomputable instance : CommGroup F.QuotA :=
       induction b using QuotientGroup.induction_on with | H b => ?_
       rw [← QuotientGroup.mk_mul, ← QuotientGroup.mk_mul, QuotientGroup.eq, Subgroup.mem_subgroupOf]
       have := F.rnf.abelian (b⁻¹ : F.Nl) (b⁻¹ : F.Nl).2 (a⁻¹ : F.Nl) (a⁻¹ : F.Nl).2
-      convert this using 1 }
+      convert this using 1
+      simp only [Subgroup.coe_mul, Subgroup.coe_inv]
+      group }
 
 /-- The identification `N ≅ N.map ι` with the image of `N` in `Sym(B)`. -/
 noncomputable def nlEquiv : F.Nl ≃* F.Nl.map F.Hb.subtype :=
   Subgroup.equivMapOfInjective F.Nl F.Hb.subtype Subtype.val_injective
 
-/-- **The terminal data** (Theorem A.23): `N` transitive on `B`, `A = N/N*`. The row size bound
-uses the row case `N^α < q` and `|B| q = s ≤ N`. -/
-noncomputable def rowTerminal (P : Params) (htr : MulAction.IsPretransitive F.Nl F.B)
+/-- **The terminal data** (Theorem A.23) with a chosen solvable-quotient subgroup `R' ≤ H`:
+`N` transitive on `B`, `A = N/N*`. The row size bound uses the row case `N^α < q` and `|B| q = s ≤ N`. -/
+noncomputable def rowTerminalWith (P : Params) (htr : MulAction.IsPretransitive F.Nl F.B)
     (hcard : Fintype.card F.B * L.q = S.size) (hsN : S.size ≤ S.N) (hN : 0 < S.N)
-    (hq : (S.N : ℝ) ^ P.α < L.q) : RowTerminal P S L where
+    (hq : (S.N : ℝ) ^ P.α < L.q) (R' : Subgroup (Perm F.B))
+    (hRH : R' ≤ F.Hb) (hNR : F.Nb ≤ R')
+    (hsolv : ∃ ℓ, GI.Multicoset.relDerived R' F.Nb ℓ ≤ F.Nb) : RowTerminal P S L where
   toRowForm := F
   A := F.QuotA
   φ := (QuotientGroup.mk' _).comp F.nlEquiv.symm.toMonoidHom
@@ -86,6 +94,20 @@ noncomputable def rowTerminal (P : Params) (htr : MulAction.IsPretransitive F.Nl
   cosets := Finset.univ.toList
   cosets_nodup := Finset.nodup_toList _
   mem_cosets _ := Finset.mem_toList.2 (Finset.mem_univ _)
+  rad := R'
+  rad_le := hRH
+  Nb_le_rad := hNR
+  rad_solv := hsolv
+
+/-- **The terminal data** (Theorem A.23): `N` transitive on `B`, `A = N/N*`. The row size bound
+uses the row case `N^α < q` and `|B| q = s ≤ N`. -/
+noncomputable def rowTerminal (P : Params) (htr : MulAction.IsPretransitive F.Nl F.B)
+    (hcard : Fintype.card F.B * L.q = S.size) (hsN : S.size ≤ S.N) (hN : 0 < S.N)
+    (hq : (S.N : ℝ) ^ P.α < L.q) : RowTerminal P S L :=
+  F.rowTerminalWith P htr hcard hsN hN hq (GI.Multicoset.radicalSubgroup F.Hb F.Nb)
+    (GI.Multicoset.radicalSubgroup_spec F.Nb_le F.normalizes).1
+    (GI.Multicoset.radicalSubgroup_spec F.Nb_le F.normalizes).2.1
+    (GI.Multicoset.radicalSubgroup_spec F.Nb_le F.normalizes).2.2
 
 /-- `N` intransitive on a nonempty `B` has at least two orbits. -/
 theorem two_le_orbits [Nonempty F.B] (hnt : ¬ MulAction.IsPretransitive F.Nl F.B) :
@@ -150,7 +172,7 @@ noncomputable def Aggregation.withLabels {P : Params} [Finite Ω] {S : State Ω 
     con := L.con }
 
 /-- **The row branch** (Algorithm 4): the case decision of RowStep. -/
-noncomputable def rowBranch (hcite : GI.Cited.TransitiveAffected) {P : Params}
+noncomputable def rowBranch {P : Params}
     (hT : P.RowThreshold) [Finite Ω] (S : State Ω C) (hinv : S.HierInv) (hN₀ : P.N₀ < S.N)
     (hsN : S.size ≤ S.N) (htr : S.Transitive) (hγ : (S.N : ℝ) ^ P.γ < S.size)
     (L : SuppliedLabels S) (hrow : RowCase P.α S L.toGiantLabels) : GiantCase P S L := by
@@ -161,14 +183,14 @@ noncomputable def rowBranch (hcite : GI.Cited.TransitiveAffected) {P : Params}
   have hne : S.dom.Nonempty := by
     have : Nonempty S.dom := (Nat.card_pos_iff.1 hspos).1
     exact ⟨this.some.1, this.some.2⟩
-  have hthr : 2 * max 8 (2 + Real.logb 2 S.size) + 3 ≤ (L.q : ℝ) := by
+  have hthr : 2 * max 63 (12 * Real.logb 2 S.size) + 3 ≤ (L.q : ℝ) := by
     have hlog : Real.logb 2 S.size ≤ Real.logb 2 S.N :=
       Real.logb_le_logb_of_le (by norm_num) (by exact_mod_cast hspos) (by exact_mod_cast hsN)
     have h1 := hT S.N hN₀
-    have : max 8 (2 + Real.logb 2 S.size) ≤ max 8 (2 + Real.logb 2 S.N) :=
+    have : max 63 (12 * Real.logb 2 S.size) ≤ max 63 (12 * Real.logb 2 S.N) :=
       max_le_max le_rfl (by linarith)
     linarith [hrow.1]
-  have hex := exists_rowForm hcite S L (Classical.choose_spec hrow.2.1) hthr
+  have hex := exists_rowForm S L (Classical.choose_spec hrow.2.1) hthr
   let F := Classical.choose hex
   have hcard : Fintype.card F.B * L.q = S.size := (Classical.choose_spec hex).2
   by_cases hNt : MulAction.IsPretransitive F.Nl F.B
@@ -179,7 +201,7 @@ noncomputable def rowBranch (hcite : GI.Cited.TransitiveAffected) {P : Params}
 
 /-- **The giant-step data from the aggregation data.** The row case is the row branch; the other
 case is an aggregation round, supplied by `agg`. -/
-noncomputable def GiantSupply.ofAggregate (hcite : GI.Cited.TransitiveAffected) {P : Params}
+noncomputable def GiantSupply.ofAggregate {P : Params}
     (hT : P.RowThreshold)
     (agg : ∀ {Ω C : Type} [Finite Ω] (S : State Ω C), S.HierInv → P.N₀ < S.N → S.size ≤ S.N →
       S.Transitive → (S.N : ℝ) ^ P.γ < S.size → (L : SuppliedLabels S) → P.q₀ < L.q →
@@ -189,7 +211,7 @@ noncomputable def GiantSupply.ofAggregate (hcite : GI.Cited.TransitiveAffected) 
   giant S hinv hN₀ hsN htr hγ L hq := by
     classical
     by_cases hrow : RowCase P.α S L
-    · exact rowBranch hcite hT S hinv hN₀ hsN htr hγ L hrow
+    · exact rowBranch hT S hinv hN₀ hsN htr hγ L hrow
     · have I := agg S hinv hN₀ hsN htr hγ L hq hrow
       exact .aggregate hrow (I.1.withLabels hinv) rfl rfl I.2
 

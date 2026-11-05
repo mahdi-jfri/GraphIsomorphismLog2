@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabNS5C
+module
+
+public import Workspace.Impl.TermGlueLabNS5C
+
+@[expose] public section
 
 /-!
 # The label driver: step 5 meets its contract
@@ -93,11 +97,7 @@ theorem tmGLN_s5_ok (hm : Membership) (hfac : NormalizedFactor) (hcm : Construct
       (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).Hb)
       (types (@id (Subgroup (Perm (Fin m))) (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).Nb)
         (@id (Fin L.q → Fin m → C)
-          (rowTuple (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).e S.x))) := by
-    intro g hg'
-    have h1 : g ∈ gens gs ⊔ gens σN := Subgroup.mem_sup_left hg'
-    rw [hSN] at h1
-    exact h1.1
+          (rowTuple (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).e S.x))) := hSN
   have hNH : gens σN ≤ (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).Hb := by
     rw [hσN]; exact (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).Nb_le
   have hn : GI.Multicoset.Normalizes (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).Hb (gens σN) := by

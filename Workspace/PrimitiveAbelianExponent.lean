@@ -1,6 +1,10 @@
-import Workspace.PrimitiveAbelianNormal
-import Mathlib.GroupTheory.Perm.Cycle.Type
-import Mathlib.Algebra.Module.ZMod
+module
+
+public import Workspace.PrimitiveAbelianNormal
+public import Mathlib.GroupTheory.Perm.Cycle.Type
+public import Mathlib.Algebra.Module.ZMod
+
+@[expose] public section
 
 namespace GI.PrimitiveStructure
 
@@ -79,7 +83,3 @@ theorem abelian_normal_prime_exponent [Finite G] [MulAction.IsPreprimitive G V]
   exact hy.2
 
 end GI.PrimitiveStructure
-
-#print axioms GI.PrimitiveStructure.eq_of_transitive_le_regular
-#print axioms GI.PrimitiveStructure.abelianTorsion_normal
-#print axioms GI.PrimitiveStructure.abelian_normal_prime_exponent

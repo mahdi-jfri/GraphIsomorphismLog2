@@ -1,6 +1,10 @@
-import Workspace.Impl.LinBackSub
-import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.LinearAlgebra.Matrix.Nondegenerate
+module
+
+public import Workspace.Impl.LinBackSub
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Mathlib.LinearAlgebra.Matrix.Nondegenerate
+
+@[expose] public section
 
 /-! Reducing a full-rank rectangular row equation to the square Hermite block.
 The algorithm returns a lift in the original relation rows. No oracle for row

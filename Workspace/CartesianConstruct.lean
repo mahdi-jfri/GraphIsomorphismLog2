@@ -1,4 +1,8 @@
-import Workspace.CartesianCover
+module
+
+public import Workspace.CartesianCover
+
+@[expose] public section
 
 namespace GI.CartesianCover
 

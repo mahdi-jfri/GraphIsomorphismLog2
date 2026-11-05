@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJData
+module
+
+public import Workspace.Impl.TermJData
+
+@[expose] public section
 
 /-!
 # The generators of `Aut_{N ≀ Sym(q)}(X)` read off the `N`-test table

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojProcessA
-import Workspace.Impl.AggItemCiSojRT
+module
+
+public import Workspace.Impl.AggItemCiSojProcessA
+public import Workspace.Impl.AggItemCiSojRT
+
+@[expose] public section
 
 /-! # Processing all saved canonical answers in query order -/
 
@@ -72,6 +76,6 @@ theorem itcs_answers_prog (hfac : NormalizedFactor)
   have wi := wt_list3_le ctx (answers[i.val]'(i.isLt)) (encPerm (ts[i.val]'(by simpa only [ht] using i.isLt)).val.val)
   have hbound : (Val.list [ctx,(answers[i.val]'(i.isLt)),encPerm (ts[i.val]'(by simpa only [ht] using i.isLt)).val.val]).wt ≤ 10*(inp.wt+10) := by omega
   have hp := (hrows i).mono (itcs_process_mono _ hbound)
-  simpa only [twists,List.getElem_map] using hp
+  simpa only [twists, List.getElem_map, ctx, Fin.getElem_fin] using hp
 
 end GI.Impl

@@ -1,5 +1,9 @@
-import Workspace.Impl.VsWProgBas
-import Workspace.Proved.VsWKey
+module
+
+public import Workspace.Impl.VsWProgBas
+public import Workspace.Proved.VsWKey
+
+@[expose] public section
 
 /-!
 # The key program

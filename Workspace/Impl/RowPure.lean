@@ -1,4 +1,8 @@
-import Workspace.Algorithm.RowFormOf
+module
+
+public import Workspace.Algorithm.RowFormOf
+
+@[expose] public section
 
 /-!
 # Pure coordinates give the row normal form

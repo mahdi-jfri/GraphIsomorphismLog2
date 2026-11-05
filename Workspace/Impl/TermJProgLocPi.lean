@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJProgLocBit
+module
+
+public import Workspace.Impl.TermJProgLocBit
+
+@[expose] public section
 
 /-!
 # The local transporter of a class (program, part 2: the matching)

@@ -1,5 +1,9 @@
-import Workspace.AlternatingImprimitiveBudget
-import Workspace.BochertExponential
+module
+
+public import Workspace.AlternatingImprimitiveBudget
+public import Workspace.BochertExponential
+
+@[expose] public section
 
 namespace GI.AlternatingActions
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabPCMat
-import Workspace.Impl.TermGlueLabPInv
+module
+
+public import Workspace.Impl.TermGlueLabPCMat
+public import Workspace.Impl.TermGlueLabPInv
+
+@[expose] public section
 
 /-!
 # Polynomial bounds of the step 5 programs

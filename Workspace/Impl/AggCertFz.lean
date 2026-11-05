@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertFxMath
+module
+
+public import Workspace.Impl.AggCertFxMath
+
+@[expose] public section
 
 /-!
 # The graph forms of the certificate groups: the program and its invariant

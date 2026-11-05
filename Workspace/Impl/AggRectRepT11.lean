@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepT10
+module
+
+public import Workspace.Impl.AggRectRepT10
+
+@[expose] public section
 
 /-!
 # The program in the pair case

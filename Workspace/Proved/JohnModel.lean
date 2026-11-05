@@ -1,5 +1,9 @@
-import Workspace.Proved.JohnOrbital
-import Workspace.Lang.Lib.NatList
+module
+
+public import Workspace.Proved.JohnOrbital
+public import Workspace.Lang.Lib.NatList
+
+@[expose] public section
 
 /-!
 # Finding the two orbitals `Υ` and `Δ` of [H, §2.8]

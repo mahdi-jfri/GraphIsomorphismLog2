@@ -1,5 +1,9 @@
-import Workspace.Proved.JohnModel
-import Mathlib.Data.Finset.Sort
+module
+
+public import Workspace.Proved.JohnModel
+public import Mathlib.Data.Finset.Sort
+
+@[expose] public section
 
 /-!
 # The sets `C(x, y)` and the bijection `ι`

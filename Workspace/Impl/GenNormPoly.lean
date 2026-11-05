@@ -1,11 +1,16 @@
-import Workspace.Impl.GenNormBudget
+module
+
+public import Workspace.Impl.GenNormBudget
+meta import Lean
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Lang
 open GI.Cited (Preimage PointwiseStab Membership)
 
 open Lean Meta Elab Tactic in
-private partial def normPolyProof (vs : Array Lean.Expr) (b : Lean.Expr) : MetaM Lean.Expr := do
+private meta partial def normPolyProof (vs : Array Lean.Expr) (b : Lean.Expr) : MetaM Lean.Expr := do
   let b := b.consumeMData
   if let .letE _ _ v body _ := b then
     return ← normPolyProof vs (body.instantiate1 v)

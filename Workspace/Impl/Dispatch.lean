@@ -1,4 +1,8 @@
-import Workspace.Impl.Skeleton
+module
+
+public import Workspace.Impl.Skeleton
+
+@[expose] public section
 
 /-!
 # One step specification per case

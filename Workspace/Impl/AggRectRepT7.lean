@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepT6
+module
+
+public import Workspace.Impl.AggRectRepT6
+
+@[expose] public section
 
 /-!
 # The main function of the representation program

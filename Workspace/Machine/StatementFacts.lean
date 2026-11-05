@@ -2,9 +2,13 @@
 Basic facts about the machine of `Workspace.Statement.Machine` and the input layout of
 `Workspace.Statement.Main`, used by the proof.
 -/
-import Workspace.Statement.Main
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.Fintype.Perm
+module
+
+public import Workspace.Statement.Main
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Data.Fintype.Perm
+
+@[expose] public section
 
 namespace GI.Machine
 

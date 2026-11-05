@@ -1,5 +1,9 @@
-import Workspace.CoherentDominantWitness
-import Workspace.Parameters
+module
+
+public import Workspace.CoherentDominantWitness
+public import Workspace.Parameters
+
+@[expose] public section
 
 namespace GI.CoherentEntrance
 
@@ -69,6 +73,3 @@ theorem primitive_entrance_alternative (c : Coloring n) (hc : Coherent c)
     exact Or.inr (rectangleCertificate_of_dominant c hc side hh hn hp x i eta heta hi)
 
 end GI.CoherentEntrance
-
-#print axioms GI.CoherentEntrance.rectangleCertificate_of_dominant
-#print axioms GI.CoherentEntrance.primitive_entrance_alternative

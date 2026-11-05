@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectGlueOuterPrefix
+module
+
+public import Workspace.Impl.LinObjectGlueOuterPrefix
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

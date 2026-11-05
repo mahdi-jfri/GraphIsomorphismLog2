@@ -1,4 +1,8 @@
-import Workspace.BlockOrbit
+module
+
+public import Workspace.BlockOrbit
+
+@[expose] public section
 
 namespace GI
 

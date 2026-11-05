@@ -1,5 +1,9 @@
-import Workspace.Impl.VsWProgCo
-import Workspace.Proved.VsWAlgMath
+module
+
+public import Workspace.Impl.VsWProgCo
+public import Workspace.Proved.VsWAlgMath
+
+@[expose] public section
 
 /-!
 # The identity and `A - c` as programs

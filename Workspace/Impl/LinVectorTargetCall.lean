@@ -1,4 +1,8 @@
-import Workspace.Impl.LinVectorTransportProg
+module
+
+public import Workspace.Impl.LinVectorTransportProg
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

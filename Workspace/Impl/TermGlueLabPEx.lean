@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabPBs
-import Workspace.Impl.TermGlueLabPS5Ad
+module
+
+public import Workspace.Impl.TermGlueLabPBs
+public import Workspace.Impl.TermGlueLabPS5Ad
+
+@[expose] public section
 
 /-!
 # The coordinates `E` from the computed setup

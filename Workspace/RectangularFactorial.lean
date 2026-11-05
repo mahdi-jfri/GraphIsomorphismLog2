@@ -1,6 +1,10 @@
-import Mathlib.Data.Fintype.Powerset
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.Data.Fintype.Powerset
+public import Mathlib.Data.Nat.Choose.Basic
+public import Mathlib.Tactic
+
+@[expose] public section
 
 namespace GI.ImprimitiveIndex
 
@@ -13,10 +17,11 @@ def graphSubset (a b : ℕ) (f : Fin a → Fin b) :
 theorem graphSubset_injective (a b : ℕ) : Function.Injective (graphSubset a b) := by
   intro f g he
   funext i
-  have hi : (i, f i) ∈ (graphSubset a b f).val := by simp [graphSubset]
+  have hi : (i, f i) ∈ (graphSubset a b f).val := Finset.mem_map.mpr ⟨i, Finset.mem_univ i, rfl⟩
   rw [he] at hi
-  have hg : g i = f i := by simpa [graphSubset] using hi
-  exact hg.symm
+  rcases Finset.mem_map.mp hi with ⟨j, _, hj⟩
+  rcases Prod.mk.inj hj with ⟨rfl, h⟩
+  exact h.symm
 
 theorem pow_le_choose_mul (a b : ℕ) : b ^ a ≤ Nat.choose (a * b) a := by
   have hc := Fintype.card_le_of_injective _ (graphSubset_injective a b)

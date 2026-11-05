@@ -1,7 +1,11 @@
-import Workspace.Impl.LinPrimaryRecords
-import Workspace.Impl.LinPrimaryVectorPoint
-import Workspace.Impl.LinNatPower
-import Workspace.Impl.LinProject
+module
+
+public import Workspace.Impl.LinPrimaryRecords
+public import Workspace.Impl.LinPrimaryVectorPoint
+public import Workspace.Impl.LinNatPower
+public import Workspace.Impl.LinProject
+
+@[expose] public section
 
 /-! Assemble the field action of one primary layer from full affine records.
 The input stores the cover, p, cyclic exponents, level, records and full point. -/

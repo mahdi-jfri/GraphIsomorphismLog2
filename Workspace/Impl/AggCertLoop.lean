@@ -1,4 +1,8 @@
-import Workspace.Impl.ScriptRun
+module
+
+public import Workspace.Impl.ScriptRun
+
+@[expose] public section
 
 /-!
 # A step function that moves until it asks

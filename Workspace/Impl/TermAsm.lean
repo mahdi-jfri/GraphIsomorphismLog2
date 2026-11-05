@@ -1,7 +1,11 @@
-import Workspace.Impl.TermCall
-import Workspace.Impl.RowA18Prog
-import Workspace.Impl.RowPart
-import Workspace.Impl.Weights
+module
+
+public import Workspace.Impl.TermCall
+public import Workspace.Impl.RowA18Prog
+public import Workspace.Impl.RowPart
+public import Workspace.Impl.Weights
+
+@[expose] public section
 
 /-!
 # The assembly of the row terminal, as a hypothesis (T2–T7)

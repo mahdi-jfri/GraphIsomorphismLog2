@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabNCost
+module
+
+public import Workspace.Impl.TermGlueLabNCost
+
+@[expose] public section
 
 /-!
 # The label driver: the concrete code of the nonempty part
@@ -40,14 +44,14 @@ def tmGLNeDrv (g : ℕ) : Expr :=
   tmGLNeF (g + 1) (g + 1 + 7) (g + 1 + 117) (g + 1 + 121) (g + 1 + 156) (g + 1 + 150) (g + 350)
     (g + 313) (g + 434)
 
-/-- **The code of the nonempty part** at `g`, calling T4 at `sup`. -/
-def tmGLNeConc (g sup : ℕ) : List Expr :=
-  [tmGLNeDrv g] ++ (tmGLNFrontFuns (g + 1) 0 1 3 sup ++ (tmGLNLinFuns (g + 178) 17 ++
+/-- **The code of the nonempty part** at `g`. -/
+def tmGLNeConc (g _sup : ℕ) : List Expr :=
+  [tmGLNeDrv g] ++ (tmGLNFrontFuns (g + 1) 0 1 3 (g + 1586) ++ (tmGLNLinFuns (g + 178) 17 ++
     (tmGLNVecMFuns (g + 313) (g + 178) ++ (tmGLNS5Funs (g + 350) (g + 1) (g + 178) (g + 1479)
       (g + 1479 + 96) (g + 1479 + 105) ++ (tmGLNS6Funs (g + 434) 0 1 17 18 ++
-    tmGLNSetFuns (g + 1479) 5 17 15 16)))))
+    (tmGLNSetFuns (g + 1479) 5 17 15 16 ++ tailFuns (g + 1586)))))))
 
-theorem length_tmGLNeConc (g sup : ℕ) : (tmGLNeConc g sup).length = 1586 := by
+theorem length_tmGLNeConc (g sup : ℕ) : (tmGLNeConc g sup).length = 1589 := by
   simp only [tmGLNeConc, List.length_append, length_tmGLNFrontFuns, length_tmGLNLinFuns,
     length_tmGLNS5Funs, length_tmGLNS6Funs, length_tmGLNSetFuns, tmGLNVecMFuns,
     List.length_singleton]
@@ -59,20 +63,22 @@ private theorem tmGLN_cc_right {P : Program} {b b' : ℕ} {A B : List Expr}
 
 /-- The modules of `tmGLNeConc g sup`. -/
 theorem tmGLN_conc_parts {P : Program} {g sup : ℕ} (h : P.HasAt g (tmGLNeConc g sup)) :
-    P.funs[g]? = some (tmGLNeDrv g) ∧ P.HasAt (g + 1) (tmGLNFrontFuns (g + 1) 0 1 3 sup) ∧
+    P.funs[g]? = some (tmGLNeDrv g) ∧ P.HasAt (g + 1) (tmGLNFrontFuns (g + 1) 0 1 3 (g + 1586)) ∧
       P.HasAt (g + 178) (tmGLNLinFuns (g + 178) 17) ∧
       P.HasAt (g + 313) (tmGLNVecMFuns (g + 313) (g + 178)) ∧
       P.HasAt (g + 350) (tmGLNS5Funs (g + 350) (g + 1) (g + 178) (g + 1479) (g + 1479 + 96)
         (g + 1479 + 105)) ∧
       P.HasAt (g + 434) (tmGLNS6Funs (g + 434) 0 1 17 18) ∧
-      P.HasAt (g + 1479) (tmGLNSetFuns (g + 1479) 5 17 15 16) := by
+      P.HasAt (g + 1479) (tmGLNSetFuns (g + 1479) 5 17 15 16) ∧
+      P.HasAt (g + 1586) (tailFuns (g + 1586)) := by
   have h1 := tmGLN_cc_right h (n := 1) rfl rfl
   have h2 := tmGLN_cc_right h1 (length_tmGLNFrontFuns _ _ _ _ _) (b' := g + 178) (by omega)
   have h3 := tmGLN_cc_right h2 (length_tmGLNLinFuns _ _) (b' := g + 313) (by omega)
   have h4 := tmGLN_cc_right h3 (n := 37) rfl (b' := g + 350) (by omega)
   have h5 := tmGLN_cc_right h4 (length_tmGLNS5Funs _ _ _ _ _ _) (b' := g + 434) (by omega)
   have h6 := tmGLN_cc_right h5 (length_tmGLNS6Funs _ _ _ _ _) (b' := g + 1479) (by omega)
-  exact ⟨(h.left (B := _)).single, h1.left, h2.left, h3.left, h4.left, h5.left, h6⟩
+  have h7 := tmGLN_cc_right h6 (length_tmGLNSetFuns _ _ _ _ _) (b' := g + 1586) (by omega)
+  exact ⟨(h.left (B := _)).single, h1.left, h2.left, h3.left, h4.left, h5.left, h6.left, h7⟩
 
 /-! ### The cost -/
 
@@ -154,7 +160,7 @@ set_option maxHeartbeats 1000000 in
 /-- **The nonempty part meets `TmGLPNeSpec`** at its layout. -/
 theorem tmGLN_conc_spec (hst : PointwiseStab) (hm : Membership) (hfac : NormalizedFactor)
     (ho : GroupOrder) (hH : HermiteFullRank) (hS : SmithNonsingular)
-    (hcm : ConstructiveMembership) (hv : VectorStabilizer) {P : Program} {g sup Ks Ds : ℕ}
+    (hcm : ConstructiveMembership) (hv : VectorStabilizer) {P : Program} {g sup : ℕ} (Ks Ds : ℕ)
     (h : P.HasAt g (tmGLNeConc g sup))
     (h0 : P.prims[0]? = some (pointwiseStabPrim hst))
     (h1 : P.prims[1]? = some (membershipPrim hm))
@@ -163,12 +169,11 @@ theorem tmGLN_conc_spec (hst : PointwiseStab) (hm : Membership) (hfac : Normaliz
     (h15 : P.prims[15]? = some (linHermitePrim hH))
     (h16 : P.prims[16]? = some (linSmithPrim hS))
     (h17 : P.prims[17]? = some (linMembershipPrim hcm))
-    (h18 : P.prims[18]? = some (vectorStabilizerPrim hv))
-    (hsup : Iface.TermSupSpec P Ks Ds sup) :
+    (h18 : P.prims[18]? = some (vectorStabilizerPrim hv)) :
     Iface.TmGLPNeSpec P (tmGLNeK hst hm hfac ho hH hS hcm hv Ks Ds)
       (tmGLNeD hst hm hfac ho hH hS hcm hv Ks Ds) g := by
-  obtain ⟨hd, hF, hL, hV, h5m, h6m, hU⟩ := tmGLN_conc_parts h
-  obtain ⟨hmk, hlc, hl1, hx, hy, hsp, hbs⟩ := tmGLN_front_ok hst hm hfac hF h0 h1 h3 hsup
+  obtain ⟨hd, hF, hL, hV, h5m, h6m, hU, hsup⟩ := tmGLN_conc_parts h
+  obtain ⟨hmk, hlc, hl1, hx, hy, hsp, hbs⟩ := tmGLN_front_ok hst hm hfac Ks Ds hF h0 h1 h3 hsup
   have hLin := tmGLNLinAt_of hL h17
   have hvec : Iface.TmGLNVecOK P (g + 313)
       (tmGLNVecC (tmGLNCs hcm) (tmGLNDs hcm) tmGLNCv tmGLNDv) :=
@@ -177,7 +182,7 @@ theorem tmGLN_conc_spec (hst : PointwiseStab) (hm : Membership) (hfac : Normaliz
   have hs5 : Iface.TmGLNS5OK P (g + 350)
       (tmGLNM5C hm hfac hcm (tmGLNFA ho hcm) (tmGLNFQ hH hS) (tmGLNFI hH)) :=
     @tmGLN_m5_ok hst hm hfac hcm P (g + 350) (g + 1) (g + 178) (g + 1479) (g + 1479 + 96)
-      (g + 1479 + 105) 0 1 3 17 sup h5m hF hLin h0 h1 h3 _ _ _ (tmGLNFA_mono ho hcm)
+      (g + 1479 + 105) 0 1 3 17 (g + 1586) h5m hF hLin h0 h1 h3 _ _ _ (tmGLNFA_mono ho hcm)
       (tmGLNFQ_mono hH hS) (tmGLNFI_mono hH) hab hquo hminv
   have hs6 : Iface.TmGLNS6OK P (g + 434) (fun B => tmGLS6C (tmGLNAffK hm hcm hv)
       (tmGLNAffD hm hcm hv) (pointwiseStabPrim hst).c (pointwiseStabPrim hst).k (B + 1) B) :=

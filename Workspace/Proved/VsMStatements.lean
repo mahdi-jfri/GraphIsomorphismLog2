@@ -1,5 +1,9 @@
-import Workspace.Proved.VsTCliff
-import Workspace.Cited.AlgoPermGroups
+module
+
+public import Workspace.Proved.VsTCliff
+public import Workspace.Cited.AlgoPermGroups
+
+@[expose] public section
 
 /-!
 # Statements of the mathematics M2–M7 of the vector stabilizer algorithm

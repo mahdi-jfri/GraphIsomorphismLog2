@@ -1,6 +1,10 @@
-import Workspace.Impl.LinObjectMatrixCompose
-import Workspace.Impl.LinObjectMatrixMath
-import Workspace.Impl.LinPolyEnvelope
+module
+
+public import Workspace.Impl.LinObjectMatrixCompose
+public import Workspace.Impl.LinObjectMatrixMath
+public import Workspace.Impl.LinPolyEnvelope
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

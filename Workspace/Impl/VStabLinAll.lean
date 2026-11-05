@@ -1,4 +1,8 @@
-import Workspace.Impl.VStabLinInsert
+module
+
+public import Workspace.Impl.VStabLinInsert
+
+@[expose] public section
 
 /-!
 # Inserting a list of vector pairs

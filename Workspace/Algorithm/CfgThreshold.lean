@@ -1,5 +1,9 @@
-import Workspace.Algorithm.AuxCases
-import Workspace.Paper.CapsExplicit
+module
+
+public import Workspace.Algorithm.AuxCases
+public import Workspace.Paper.CapsExplicit
+
+@[expose] public section
 
 /-!
 # The configuration item with the explicit label threshold of Lemma A.12
@@ -86,7 +90,7 @@ theorem cfgItem_valid_explicit {δ : ℝ} (hβ : max (1 - δ) (1 / 2) < P.β) (h
     subst hQ
     left
     refine ⟨rfl, ?_⟩
-    change ((pairState _ _ _).size : ℝ) ≤ _
+    change ((pairState (C' := ℕ) _ _ _).size : ℝ) ≤ _
     rw [pairState_size]
     exact sq_le_rpow (by simpa using Finset.card_le_univ X.fiber) hlam
   · -- soundness: two maps from `X` to `Y` differ by an automorphism of `X`

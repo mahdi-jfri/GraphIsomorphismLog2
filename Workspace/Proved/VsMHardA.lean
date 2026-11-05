@@ -1,4 +1,8 @@
-import Workspace.Proved.VsMSplit
+module
+
+public import Workspace.Proved.VsMSplit
+
+@[expose] public section
 
 /-!
 # The hard case, part A (pairing, shifts, the bound `|Ȳ| ≤ r^(2k+2)`)
@@ -268,6 +272,7 @@ theorem VsMHard.exists_shift (h : VsMHard H A Y r) (he : VsMIso A Y r e)
   classical
   haveI : Fact r.Prime := ⟨h.prime⟩
   haveI : NeZero r := ⟨h.prime.ne_zero⟩
+  letI : AddCommGroup (ZMod r) := (ZMod.commRing r).toAddCommGroup
   let M : Submodule (ZMod r) (Fin k → ZMod r) :=
     { carrier := {v | ∃ y ∈ Y, ∀ j, ⁅y, e j⁆ = ζ ^ (v j).val}
       add_mem' := by

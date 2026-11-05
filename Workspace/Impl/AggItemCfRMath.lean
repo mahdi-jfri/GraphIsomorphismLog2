@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCfDMath
+module
+
+public import Workspace.Impl.AggItemCfDMath
+
+@[expose] public section
 
 /-!
 # Reading the refined orbital object

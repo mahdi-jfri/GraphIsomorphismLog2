@@ -1,4 +1,8 @@
-import Workspace.Impl.VsBFld0B
+module
+
+public import Workspace.Impl.VsBFld0B
+
+@[expose] public section
 
 /-!
 # The case `T = 0` with a generator `g` that moves `0`
@@ -444,7 +448,7 @@ theorem vsB0b_spec (hm : Membership) {P : Program}
   · simp only [one_ne_zero, if_false]
     have hpe' : vsQLam s prod = τ := by
       have := congrArg (fun u : vsBU s => ((u : (vsBMt s)ˣ) : vsBMt s)) hpe
-      simpa [vsBPsi_val hs hp, huτ] using this
+      rw [vsBPsi_val hs hp, huτ] at this; exact this
     have hgw := vsB_wt_gens hS hglA
     have w1v : (Val.list [encPerm (1 : Perm (Fin I.n))]).wt ≤ 1000 * S ^ 6 := by
       have := wt_list1_le (encPerm (1 : Perm (Fin I.n))); have := hS.wt_perm (1 : Perm (Fin I.n))

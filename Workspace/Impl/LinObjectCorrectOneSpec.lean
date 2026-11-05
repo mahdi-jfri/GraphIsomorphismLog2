@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectCorrectOneCost
+module
+
+public import Workspace.Impl.LinObjectCorrectOneCost
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -12,7 +16,7 @@ theorem linObjectCorrectOne_spec {P : Program} {b jsci jder jmem jm jh n r : ℕ
     {Q : Type*} [CommGroup Q] (as ns : List (Equiv.Perm (Fin n))) (π : gens as →* Q)
     (hπ : Function.Surjective π) (hf : Function.Surjective (linObjectLiftCoord as π))
     (Y : List (TmRiO n)) (hok : TmRecObjOK Y.length Y)
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : TmRiListNorm (gens as) Y) (hNA : gens ns ≤ gens as)
     (H : Subgroup (Equiv.Perm (Fin n))) (hAH : gens as ≤ H)
     (hA : GI.Multicoset.Normalizes H (gens as)) (hN : GI.Multicoset.Normalizes H (gens ns))
     (hcomm : ∀ a ∈ gens as, ∀ b ∈ gens as, a*b*a⁻¹*b⁻¹ ∈ gens ns)

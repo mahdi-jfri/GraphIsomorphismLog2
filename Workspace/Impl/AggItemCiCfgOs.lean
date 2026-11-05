@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgJ
+module
+
+public import Workspace.Impl.AggItemCiCfgJ
+
+@[expose] public section
 
 /-!
 # The configuration query: the outer points by color, as a program
@@ -434,7 +438,7 @@ theorem itcq_atB_spec {f fnd fe : ℕ} (hf : P.funs[f]? = some (itcqAtB fnd))
         obtain ⟨r, hr, rfl⟩ := List.mem_map.1 hx
         obtain ⟨b, hbD, rfl⟩ := List.mem_map.1 hr
         have : itciRk Z b < D.length := itciRk_lt_length Z (Finset.mem_compl.1 (itci_mem_fl.1 hbD))
-        exact (eqTest_det hfe i (itciRk Z b)).mono (by dsimp only; omega))
+        exact (eqTest_det hfe i (itciRk Z b)).mono (by omega))
     refine key.mono fun w c ⟨hw, hc⟩ => ⟨by rw [hw, hkf], ?_⟩
     simp only [List.map_const', List.sum_replicate, List.length_map, smul_eq_mul] at hc
     exact hc

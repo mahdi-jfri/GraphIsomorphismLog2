@@ -1,5 +1,9 @@
-import Workspace.Impl.TermStep
-import Workspace.Impl.Reduce
+module
+
+public import Workspace.Impl.TermStep
+public import Workspace.Impl.Reduce
+
+@[expose] public section
 
 /-!
 # The context of the terminal calls (T1)

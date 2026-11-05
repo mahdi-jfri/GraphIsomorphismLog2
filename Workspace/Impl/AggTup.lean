@@ -1,5 +1,9 @@
-import Workspace.Impl.AggPT
-import Workspace.Lang.Lib.Schreier
+module
+
+public import Workspace.Impl.AggPT
+public import Workspace.Lang.Lib.Schreier
+
+@[expose] public section
 
 /-!
 # The orbit of a test tuple under a graph group

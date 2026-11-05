@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectGlueAction
+module
+
+public import Workspace.Impl.LinObjectGlueAction
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -12,7 +16,7 @@ theorem linObjectGlueFrame_coordinate_spec {P : Program} {b jsci jder jmem jm n 
     [IsMulCommutative ((gens as) ⧸ (gens ns).subgroupOf (gens as))]
     (Y X : List (TmRiO n)) (F : linObjectGlueFrame as ns Y)
     (hok : TmRecObjOK (Y.length+X.length) (Y++X))
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : TmRiListNorm (gens as) (Y++X)) (hNA : gens ns ≤ gens as)
     (H : Subgroup (Equiv.Perm (Fin n))) (hAH : gens as ≤ H)
     (hA : GI.Multicoset.Normalizes H (gens as)) (hN : GI.Multicoset.Normalizes H (gens ns))
     (hcomm : ∀ a ∈ gens as,∀ b ∈ gens as,a*b*a⁻¹*b⁻¹ ∈ gens ns)

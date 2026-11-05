@@ -1,6 +1,10 @@
-import Workspace.Impl.AggLiftLoop
-import Workspace.Impl.ScriptRun
-import Workspace.Impl.GenEnum
+module
+
+public import Workspace.Impl.AggLiftLoop
+public import Workspace.Impl.ScriptRun
+public import Workspace.Impl.GenEnum
+
+@[expose] public section
 
 /-!
 # The run of an aggregation round, from the outputs of its phases
@@ -126,7 +130,7 @@ theorem ab_cps (e : Ω ≃ Fin k) {S : State Ω C} {L : GiantLabels S} (os : Lis
     (fun i τ => if hi : i < os.length then (lcChild S os[i].2.1 τ sel cap).answer else ∅) ws
     (fun i hw => by
       obtain ⟨a, u, h1, h2, h3⟩ := h i (by omega) hw
-      exact ⟨a, u, h1, fun _ => h2, by simp only; rwa [dif_pos (by omega)]⟩)
+      exact ⟨a, u, h1, fun _ => h2, by rwa [dif_pos (by omega)]⟩)
   have hlen : cps.length = os.length := by rw [← hl, hws, List.length_map]
   refine ⟨cps, hws, hlen, fun i h1 h2 => ⟨(hcps i h1).1 h2, ?_⟩⟩
   have := (hcps i h1).2

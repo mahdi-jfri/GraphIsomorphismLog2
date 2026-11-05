@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojFinalB
-import Workspace.Impl.AggItemCiSojEncodedRows
-import Workspace.Impl.AggItemCiSojOV
+module
+
+public import Workspace.Impl.AggItemCiSojFinalB
+public import Workspace.Impl.AggItemCiSojEncodedRows
+public import Workspace.Impl.AggItemCiSojOV
+
+@[expose] public section
 
 /-! # All argument sizes of the full rectangle finalizer -/
 

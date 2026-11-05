@@ -1,5 +1,9 @@
-import Workspace.Impl.LinMapSource
-import Workspace.Lang.Lib.LinIntColumn
+module
+
+public import Workspace.Impl.LinMapSource
+public import Workspace.Lang.Lib.LinIntColumn
+
+@[expose] public section
 
 /-! Select one field from each stored record, without assuming that records
 encode their source group elements injectively. -/

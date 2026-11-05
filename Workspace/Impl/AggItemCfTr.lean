@@ -1,5 +1,9 @@
-import Workspace.Algorithm.OutOrbital
-import Workspace.Cited.AlgoPermGroups
+module
+
+public import Workspace.Algorithm.OutOrbital
+public import Workspace.Cited.AlgoPermGroups
+
+@[expose] public section
 
 /-!
 # The degree of transitivity by a stabilizer chain

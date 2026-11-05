@@ -1,6 +1,10 @@
-import Workspace.Algorithm.RowSteps
-import Workspace.Paper.RectangleCarrier
-import Workspace.CertificateCalls
+module
+
+public import Workspace.Algorithm.RowSteps
+public import Workspace.Paper.RectangleCarrier
+public import Workspace.CertificateCalls
+
+@[expose] public section
 
 /-!
 # The row-action counter never becomes negative (Section 7.1)

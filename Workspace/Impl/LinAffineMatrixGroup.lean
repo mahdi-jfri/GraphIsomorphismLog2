@@ -1,5 +1,10 @@
-import Workspace.Impl.LinAffineMatrix
-import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+module
+
+public import Workspace.Impl.LinAffineMatrix
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Mathlib.GroupTheory.Solvable
+
+@[expose] public section
 
 /-! The dense matrices built by linAffineMatrix_spec form the homogeneous
 representation, so they can be supplied directly to VectorStabilizerTask. -/
@@ -76,5 +81,62 @@ theorem linAffineGLRep_fixed {G : Type*} [Group G]
     have hh := congrFun h i.castSucc
     simpa using hh
   · intro h; rw [h]
+
+theorem solvable_range_of_ker_le {G A B : Type*} [Group G] [Group A] [Group B]
+    (ρ : G →* A) (ψ : G →* B) (hker : ρ.ker ≤ ψ.ker) (hsol : Group.IsSolvable ρ.range) :
+    Group.IsSolvable ψ.range := by
+  let f : G ⧸ ρ.ker →* ψ.range :=
+    QuotientGroup.lift ρ.ker ψ.rangeRestrict (fun g hg => Subtype.ext (hker hg))
+  have hf : Function.Surjective f := fun ⟨_, g, rfl⟩ => ⟨QuotientGroup.mk g, rfl⟩
+  letI : Group.IsSolvable ρ.range := hsol
+  letI : Group.IsSolvable (G ⧸ ρ.ker) :=
+    solvable_of_solvable_injective (QuotientGroup.quotientKerEquivRange ρ).injective
+  exact solvable_of_surjective hf
+
+theorem linAffineGLRep_range_solvable {G : Type*} [Group G]
+    (ρ : G →* Matrix.GeneralLinearGroup (Fin d) R) (c : G → Fin d → R)
+    (hc : ∀ g h, c (g * h) = (ρ g).val.mulVec (c h) + c g)
+    (hsol : Group.IsSolvable ρ.range) :
+    Group.IsSolvable (linAffineGLRep ρ c hc).range := by
+  let φ := linAffineGLRep ρ c hc
+  have hker : φ.ker ≤ ρ.ker := by
+    intro g hg
+    rw [MonoidHom.mem_ker] at hg ⊢
+    apply Units.ext
+    ext i j
+    have hij := congrArg (fun M : Matrix (Fin (d + 1)) (Fin (d + 1)) R => M i.castSucc j.castSucc)
+      (congrArg Units.val hg)
+    simpa [φ, linAffineGLRep, linAffineMatrix, Matrix.one_apply, Fin.ext_iff] using hij
+  let q : G ⧸ φ.ker →* ρ.range :=
+    QuotientGroup.lift φ.ker ρ.rangeRestrict (fun g hg => Subtype.ext (hker hg))
+  let π : φ.range →* ρ.range :=
+    q.comp (QuotientGroup.quotientKerEquivRange φ).symm.toMonoidHom
+  have hπ (g : G) : π (φ.rangeRestrict g) = ρ.rangeRestrict g := by
+    change q ((QuotientGroup.quotientKerEquivRange φ).symm (φ.rangeRestrict g)) = _
+    have heq : (QuotientGroup.quotientKerEquivRange φ).symm (φ.rangeRestrict g) =
+        QuotientGroup.mk g :=
+      (QuotientGroup.quotientKerEquivRange φ).symm_apply_eq.mpr rfl
+    rw [heq]
+    rfl
+  have hcomm : ∀ a b : π.ker, a * b = b * a := by
+    rintro ⟨⟨_, g, rfl⟩, ha⟩ ⟨⟨_, h, rfl⟩, hb⟩
+    have hg : ρ g = 1 := congrArg Subtype.val ((hπ g).symm.trans (MonoidHom.mem_ker.mp ha))
+    have hh : ρ h = 1 := congrArg Subtype.val ((hπ h).symm.trans (MonoidHom.mem_ker.mp hb))
+    apply Subtype.ext
+    apply Subtype.ext
+    change φ g * φ h = φ h * φ g
+    rw [← map_mul, ← map_mul]
+    apply Units.ext
+    change linAffineMatrix (ρ (g * h)).val (c (g * h)) =
+      linAffineMatrix (ρ (h * g)).val (c (h * g))
+    simp [map_mul, hc, hg, hh, Matrix.one_mulVec, add_comm]
+  have : Group.IsSolvable π.ker := ⟨⟨1, by
+    rw [derivedSeries_one, eq_bot_iff]
+    change ⁅(⊤ : Subgroup π.ker), ⊤⁆ ≤ ⊥
+    rw [Subgroup.commutator_le]
+    intro a _ b _
+    rw [Subgroup.mem_bot, commutatorElement_def, hcomm a b, mul_inv_cancel_right, mul_inv_cancel]⟩⟩
+  have : Group.IsSolvable ρ.range := hsol
+  exact solvable_of_ker_le_range π.ker.subtype π (fun x hx => ⟨⟨x, hx⟩, rfl⟩)
 
 end GI.Impl

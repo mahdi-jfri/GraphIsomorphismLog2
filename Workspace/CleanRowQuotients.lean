@@ -1,4 +1,8 @@
-import Workspace.CleanRowSemidirect
+module
+
+public import Workspace.CleanRowSemidirect
+
+@[expose] public section
 
 /-! The final row quotients transported to the actual supplied group G. -/
 namespace GI

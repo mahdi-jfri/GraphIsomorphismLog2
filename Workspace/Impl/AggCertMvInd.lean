@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCertMvRound
-import Workspace.Impl.GenCls
+module
+
+public import Workspace.Impl.AggCertMvRound
+public import Workspace.Impl.GenCls
+
+@[expose] public section
 
 /-!
 # The move program: the window indicator and the points left outside

@@ -1,7 +1,11 @@
-import Workspace.Impl.LinPrimeContext
-import Workspace.Impl.LinPrimePoint
-import Workspace.Impl.LinTrialPrepare
-import Workspace.Impl.LinPrimaryLoopInput
+module
+
+public import Workspace.Impl.LinPrimeContext
+public import Workspace.Impl.LinPrimePoint
+public import Workspace.Impl.LinTrialPrepare
+public import Workspace.Impl.LinPrimaryLoopInput
+
+@[expose] public section
 
 /-! Construct one complete primary-loop input from retained mixed-order data. -/
 namespace GI.Impl

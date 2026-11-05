@@ -1,10 +1,14 @@
-import Workspace.Impl.VsHSplitHyp
-import Workspace.Impl.VsHQ8P
-import Workspace.Impl.VsWProgId
-import Workspace.Impl.VsFAlgSpanProg
-import Workspace.Impl.VsWProgNil
-import Workspace.Impl.VsWProgEig
-import Workspace.Impl.VsQAnaAb
+module
+
+public import Workspace.Impl.VsHSplitHyp
+public import Workspace.Impl.VsHQ8P
+public import Workspace.Impl.VsWProgId
+public import Workspace.Impl.VsFAlgSpanProg
+public import Workspace.Impl.VsWProgNil
+public import Workspace.Impl.VsWProgEig
+public import Workspace.Impl.VsQAnaAb
+
+@[expose] public section
 
 /-!
 # The program for the pieces

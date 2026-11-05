@@ -1,4 +1,8 @@
-import Workspace.Impl.VsBChain
+module
+
+public import Workspace.Impl.VsBChain
+
+@[expose] public section
 
 /-!
 # Looking up a target along a chain of small orbits
@@ -331,7 +335,6 @@ theorem vsBDesc_spec {P : Program} {b sot0 fa jp jm tk up cmp : ℕ}
         have eidx : (Val.nat (List.findIdx (fun q_1 => decide (q_1.1 = T q τi)) L)).wt = (Val.nat idx).wt := rfl
         have esa : (Val.list [a, Val.nat i, acc]).wt = sa.wt := rfl
         have hidxS : idx ≤ S := by omega
-        dsimp only
         have eacc : acc.wt = (Val.list [Val.nat 1, enc τi, encPerm prod]).wt := rfl
         clear * - wLs wLl eacc eLl hc wsa wacc' wk3 wk2 wkv widx hidxS wpi wt1 wt2 wnew wo3 wu3 wc2 wτi wpr w1 w0 w2 wL wctx wq wps hiS wi1 eidx esa h34 h14 hD0 h2n hidxl
         omega
@@ -362,7 +365,6 @@ theorem vsBDesc_spec {P : Program} {b sot0 fa jp jm tk up cmp : ℕ}
         have eidx : (Val.nat (List.findIdx (fun q_1 => decide (q_1.1 = T q τi)) L)).wt = (Val.nat idx).wt := rfl
         have esa : (Val.list [a, Val.nat i, acc]).wt = sa.wt := rfl
         have hidxS : idx ≤ S := by omega
-        dsimp only
         have eacc : acc.wt = (Val.list [Val.nat 1, enc τi, encPerm prod]).wt := rfl
         clear * - wLs wLl eacc eLl hc wsa wacc' wk3 wk2 wkv widx hidxS wo3 wτi wpr w1 w0 w2 wL wctx wq wps hiS wi1 eidx esa h34 h14 hD0 hidxl
         omega

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectConfigAdd
+module
+
+public import Workspace.Impl.LinObjectConfigAdd
+
+@[expose] public section
 
 /-! The action computed through local transporters is affine on W.
 Its linear part and translation obey the full group laws. -/

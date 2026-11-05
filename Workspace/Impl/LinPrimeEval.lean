@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimeAction
-import Workspace.Impl.LinAffineResidual
+module
+
+public import Workspace.Impl.LinPrimeAction
+public import Workspace.Impl.LinAffineResidual
+
+@[expose] public section
 
 /-! Primary projection commutes with full affine evaluation. Thus later
 passes preserve all primary equations already imposed. -/

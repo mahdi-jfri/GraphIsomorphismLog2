@@ -1,5 +1,9 @@
-import Workspace.Impl.LinAffineMatrixGroup
-import Workspace.Lang.Lib.List
+module
+
+public import Workspace.Impl.LinAffineMatrixGroup
+public import Workspace.Lang.Lib.List
+
+@[expose] public section
 
 /-! One executable affine layer: build every homogeneous generator matrix,
 then call the vector stabilizer on the same solvable permutation cover. -/
@@ -10,7 +14,11 @@ set_option maxRecDepth 4000
 
 def linAffineLayerInst (I : VecStabInst) (c : gens I.gs → Fin I.d → ZMod I.p)
     (hc : ∀ g h, c (g * h) = (I.φ g).val.mulVec (c h) + c g) : VecStabInst :=
-  { I with d := I.d + 1, φ := linAffineGLRep I.φ c hc, v := linExtend I.v 1 }
+  { I with
+    d := I.d + 1
+    φ := linAffineGLRep I.φ c hc
+    solvable := linAffineGLRep_range_solvable I.φ c hc I.solvable
+    v := linExtend I.v 1 }
 
 def linAffineLayerInput (I : VecStabInst) (c : gens I.gs → Fin I.d → ZMod I.p) : Val :=
   .list [encGroup I.gs, .nat I.p,

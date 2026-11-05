@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimaryLoopArg
-import Workspace.Impl.LinLoopInit
+module
+
+public import Workspace.Impl.LinPrimaryLoopArg
+public import Workspace.Impl.LinLoopInit
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggRectRepT1
-import Workspace.Impl.AggTupProg
+module
+
+public import Workspace.Impl.AggRectRepT1
+public import Workspace.Impl.AggTupProg
+
+@[expose] public section
 
 /-!
 # Stage 2 of the representation program

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinFiniteMatrixReduce
-import Workspace.Impl.LinAffineMatrixGroup
+module
+
+public import Workspace.Impl.LinFiniteMatrixReduce
+public import Workspace.Impl.LinAffineMatrixGroup
+
+@[expose] public section
 
 /-! Store the full finite-abelian affine transformation as an integer
 homogeneous matrix. The final row is fixed and uses modulus zero. Only

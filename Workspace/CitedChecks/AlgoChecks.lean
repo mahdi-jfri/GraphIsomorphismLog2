@@ -1,5 +1,9 @@
-import Workspace.Cited.AlgoPermGroups
-import Mathlib.Data.Nat.Prime.Factorial
+module
+
+public import Workspace.Cited.AlgoPermGroups
+public import Mathlib.Data.Nat.Prime.Factorial
+
+@[expose] public section
 
 /-!
 # Checks for the algorithm tasks
@@ -158,14 +162,6 @@ theorem gensOf_cells_le {n : ℕ} {H : Subgroup (Perm (Fin n))} {v : Val} (h : G
   rw [cells_list_encPerm_length]
   have := Nat.mul_le_mul_right (2 * n + 3) hl
   omega
-
-/-- **Input bound of `SylowTask`.** A prime dividing the order of a subgroup of `Sym(n)` is at
-most `n`, so the number `p` in the input is at most the number of cells. -/
-theorem sylowInst_p_le (I : SylowInst) : I.p ≤ I.n := by
-  have h1 : Nat.card (gens I.gs) ∣ Nat.card (Perm (Fin I.n)) :=
-    Subgroup.card_subgroup_dvd_card _
-  rw [Nat.card_eq_fintype_card (α := Perm (Fin I.n)), Fintype.card_perm, Fintype.card_fin] at h1
-  exact (Nat.Prime.dvd_factorial I.prime).1 (I.dvd.trans h1)
 
 /-- The preimage set of `PreimageTask` is a subgroup, for every graph group `D` and every `M`
 (with or without the hypotheses of `PreimageInst`). -/

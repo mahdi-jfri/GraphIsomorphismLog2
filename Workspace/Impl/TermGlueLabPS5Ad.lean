@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabPStep5
-import Workspace.Impl.TermGlueLabS6
+module
+
+public import Workspace.Impl.TermGlueLabPStep5
+public import Workspace.Impl.TermGlueLabS6
+
+@[expose] public section
 
 /-!
 # Step 5 meets the interface of step 6

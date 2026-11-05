@@ -1,5 +1,9 @@
-import Workspace.Impl.KRefParts
-import Workspace.Impl.KRefRef
+module
+
+public import Workspace.Impl.KRefParts
+public import Workspace.Impl.KRefRef
+
+@[expose] public section
 
 /-!
 # The values of one round, and their weights

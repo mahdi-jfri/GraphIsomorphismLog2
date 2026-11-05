@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPCoord
+module
+
+public import Workspace.Impl.TermGlueLabPCoord
+
+@[expose] public section
 
 /-!
 # The coordinates `E` of the label torsor
@@ -72,7 +76,7 @@ def tmGLPUnits : Additive ℤˣ ≃+ ZMod 2 where
     · have : u = Additive.ofMul (-1) := by rw [← h]; rfl
       subst this; decide
   right_inv z := by
-    fin_cases z <;> decide
+    fin_cases z <;> rfl
   map_add' u v := by
     rcases Int.units_eq_one_or (Additive.toMul u) with hu | hu <;>
     rcases Int.units_eq_one_or (Additive.toMul v) with hv | hv

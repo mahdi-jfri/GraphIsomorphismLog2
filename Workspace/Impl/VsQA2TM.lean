@@ -1,6 +1,10 @@
-import Workspace.Impl.VsQASpinP
-import Workspace.Impl.VsHPowIt
-import Workspace.Impl.VsQTSplit
+module
+
+public import Workspace.Impl.VsQASpinP
+public import Workspace.Impl.VsHPowIt
+public import Workspace.Impl.VsQTSplit
+
+@[expose] public section
 
 /-!
 # Facts for the transitive case

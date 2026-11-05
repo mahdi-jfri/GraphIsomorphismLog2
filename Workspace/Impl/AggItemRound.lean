@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCase
-import Workspace.Impl.AggStructDes
+module
+
+public import Workspace.Impl.AggItemCase
+public import Workspace.Impl.AggStructDes
+
+@[expose] public section
 
 /-!
 # The round that the items fix
@@ -13,11 +17,11 @@ This file names the choice and shows that it gives a member of the candidate set
 * `hK`: any joint refinement `J`; the program fixes its value at the pair of class colorings to
   the output `(d, d')` of the cited call (`stSetJ`), and in Case 2b later at binary arguments.
 * `src` (`itSrc`): by the case of `π(F_x)` (which does not depend on the choices,
-  `st_structX_grp`): in Case 2b the six smallest points of the dominant orbit (`stSrc2b`), in
+  `st_structX_grp`): in Case 2b the eight smallest points of the dominant orbit (`stSrc2b`), in
   Case 3 the first tuple that passes the test of the Design Lemma on the refined colors of `x`
   (`stSrc3`), otherwise the zero tuple. It is good for every `J` (`itSrc_good`), by
-  `stSrcGood_twoB'`, `stSrcGood_three'` and `stSrcGood_other`; the cited facts used are the
-  round's own fields `h6` (Case 2b) and `hD` (Case 3).
+  `stSrcGood_twoB'`, `stSrcGood_three'` and `stSrcGood_other`; the cited fact used is the
+  round's own field `hD` (Case 3).
 
 `itRound Ag J := stRound Ag (stNum …) _ J (itSrc Ag J) _`; `it_round_mem`: it lies in the
 candidate set of `ItHand`.
@@ -56,7 +60,7 @@ noncomputable def itX0 (Ag : Aggregation P₀ S L) (J : JointFn) : GI.Algorithm.
 /-- **The source tuple that the items choose.** -/
 noncomputable def itSrc (Ag : Aggregation P₀ S L) (J : JointFn) : Fin (P₀.κ + 1) → Fin L.q :=
   match aggCase (itX0 Ag J).grp with
-  | .twoB => if h : 6 ≤ (domSet (itX0 Ag J).grp).card then stSrc2b _ h else fun _ => ⟨0, it_q_pos Ag⟩
+  | .twoB => if h : 8 ≤ (domSet (itX0 Ag J).grp).card then stSrc2b _ h else fun _ => ⟨0, it_q_pos Ag⟩
   | .three => stSrc3 (itX0 Ag J).col (Nat.lt_succ_self _) (it_q_pos Ag)
   | .one => fun _ => ⟨0, it_q_pos Ag⟩
   | .twoA => fun _ => ⟨0, it_q_pos Ag⟩
@@ -66,6 +70,7 @@ theorem itSrc_good (Ag : Aggregation P₀ S L) (J : JointFn) :
     StSrcGood Ag.fin S L Ag.πd J P₀.κ (itNum Ag) P₀.β (itSrc Ag J) := by
   have hq := it_q_large Ag
   have hκ := Ag.κ_five
+  have hκ7 : 7 ≤ P₀.κ := by norm_num [P₀]
   have hgrp : ∀ t : Fin (P₀.κ + 1) → Fin L.q,
       (structX Ag.fin S L Ag.πd J P₀.κ (itNum Ag) t).grp = (itX0 Ag J).grp := fun _ => rfl
   unfold itSrc
@@ -73,15 +78,16 @@ theorem itSrc_good (Ag : Aggregation P₀ S L) (J : JointFn) :
   | one => exact stSrcGood_other _ _ _ _ _ _ _ _ (Or.inl (by rw [hgrp]; exact h))
   | twoA => exact stSrcGood_other _ _ _ _ _ _ _ _ (Or.inr (by rw [hgrp]; exact h))
   | twoB =>
-    have h6 : 6 ≤ (domSet (itX0 Ag J).grp).card := st_domSet_six (by omega) h
-    simp only [dif_pos h6]
-    exact stSrcGood_twoB' Ag.fin S L Ag.πd J P₀.κ (itNum Ag) Ag.h6 (by omega) (by omega) h h6
+    have h8 : 8 ≤ (domSet (itX0 Ag J).grp).card := st_domSet_eight (by omega) h
+    simp only [dif_pos h8]
+    exact stSrcGood_twoB' Ag.fin S L Ag.πd J P₀.κ (itNum Ag) (by omega) (by omega) h h8
   | three =>
     exact stSrcGood_three' Ag.hD Ag.fin S L Ag.πd J (itNum Ag) (itNum_ok Ag)
       (le_trans (by norm_num) Ag.β_cfg) hκ (by omega) (by omega) (Nat.lt_succ_self _) h
 
 /-- **The round that the items fix**, for the joint refinement `J`. -/
-noncomputable def itRound (Ag : Aggregation P₀ S L) (J : JointFn) : Aggregation P₀ S L :=
+noncomputable def itRound
+    (Ag : Aggregation P₀ S L) (J : JointFn) : Aggregation P₀ S L :=
   stRound Ag (itNum Ag) (itNum_ok Ag) J (itSrc Ag J) (itSrc_good Ag J)
 
 theorem itRound_certScript (Ag : Aggregation P₀ S L) (J : JointFn) :
@@ -90,7 +96,8 @@ theorem itRound_certScript (Ag : Aggregation P₀ S L) (J : JointFn) :
 theorem itRound_compScript (Ag : Aggregation P₀ S L) (J : JointFn) :
     (itRound Ag J).compScript = Ag.compScript := rfl
 
-theorem itRound_hK (Ag : Aggregation P₀ S L) (J : JointFn) : (itRound Ag J).hK = J := rfl
+theorem itRound_hK
+    (Ag : Aggregation P₀ S L) (J : JointFn) : (itRound Ag J).hK = J := rfl
 
 theorem itRound_src (Ag : Aggregation P₀ S L) (J : JointFn) :
     (itRound Ag J).src = itSrc Ag J := rfl

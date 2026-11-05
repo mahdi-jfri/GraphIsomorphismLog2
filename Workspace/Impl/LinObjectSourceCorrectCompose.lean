@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectSourceCorrect
-import Workspace.Impl.LinObjectCorrectOneCompose
+module
+
+public import Workspace.Impl.LinObjectSourceCorrect
+public import Workspace.Impl.LinObjectCorrectOneCompose
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHGood
+module
+
+public import Workspace.Impl.VsHGood
+
+@[expose] public section
 
 /-!
 # The greedy isotropic family
@@ -12,6 +16,8 @@ matrices), and is not in `⟨kept⟩ S`. The kept family satisfies `VsMIso` (`vs
 namespace GI.Impl
 
 open GI.Lang GI.Cited GI.Proved Equiv
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 variable {I : VecStabInst}
 
@@ -268,6 +274,7 @@ theorem vsHIT_test (hs : VsQStOK s) {as : List (Perm (Fin I.n))} (has : gens as 
     push Not
     exact forall₂_congr fun e he => vsH_loc_comm_iff hs hy.1 (hk e he).1
   rw [hc, and_assoc]
+  rfl
 
 end Meaning
 

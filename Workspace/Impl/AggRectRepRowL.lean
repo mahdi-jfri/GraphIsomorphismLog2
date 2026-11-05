@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepH
+module
+
+public import Workspace.Impl.AggRectRepH
+
+@[expose] public section
 
 /-!
 # The row numbers as the program computes them
@@ -58,8 +62,7 @@ theorem rcR_findIdx_sorted : ∀ {l : List ℕ}, l.Pairwise (· < ·) → ∀ {t
       rw [this]; rfl
     · have hat : a < t := hl.1 t ht'
       have hne : (a == t) = false := by simp; omega
-      rw [hne, if_pos (by simpa using hat), cond_false, List.length_cons,
-        rcR_findIdx_sorted hl.2 ht']
+      simp [hne, hat, rcR_findIdx_sorted hl.2 ht']
 
 /-! ### Keys and row numbers -/
 
@@ -220,7 +223,8 @@ theorem rcR_rhoL_eq (hD : ∀ g ∈ G, ∀ v ∈ D, g v ∈ D) (g : G) {h : ℕ 
   have hlen := rcR_keysN_length e D rows dI rlab hdI hrl
   rw [rcR_keys_card hs] at hlen
   unfold rcRRhoL
-  rw [← List.map_coe_finRange, List.map_map]
+  have hfr : (List.finRange m).map Fin.val = List.range m := List.ext_getElem (by simp) (by simp)
+  rw [← hfr, List.map_map]
   apply List.map_congr_left
   intro r _
   simp only [Function.comp_apply]

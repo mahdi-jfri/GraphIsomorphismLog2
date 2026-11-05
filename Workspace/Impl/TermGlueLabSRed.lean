@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabST4
-import Workspace.Impl.Combine
+module
+
+public import Workspace.Impl.TermGlueLabST4
+public import Workspace.Impl.Combine
+
+@[expose] public section
 
 /-!
 # Adjoining `N` to the label stabilizer (step 6, the generator cut)

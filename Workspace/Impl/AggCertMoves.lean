@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertNext
+module
+
+public import Workspace.Impl.AggCertNext
+
+@[expose] public section
 
 /-!
 # The moves without calls, for the relation `CpRep`

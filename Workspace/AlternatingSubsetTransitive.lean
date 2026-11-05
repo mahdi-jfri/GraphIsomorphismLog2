@@ -1,6 +1,10 @@
-import Workspace.JohnsonAction
-import Mathlib.GroupTheory.SpecificGroups.Alternating
-import Mathlib.Logic.Equiv.Fintype
+module
+
+public import Workspace.JohnsonAction
+public import Mathlib.GroupTheory.SpecificGroups.Alternating
+public import Mathlib.Logic.Equiv.Fintype
+
+@[expose] public section
 
 namespace GI.AlternatingActions
 

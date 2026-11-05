@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemPart
+module
+
+public import Workspace.Impl.AggItemPart
+
+@[expose] public section
 
 /-!
 # Case 1: generators of the stabilizer of a partition
@@ -269,8 +273,8 @@ theorem itp_mem_of_lab (htr : ∀ x, Equiv.swap (c x) x ∈ S) :
         have hzσ : z ≠ σ y := fun e => hy (σ.injective (by rw [← e, hfix, e]))
         rw [Perm.mul_apply, hfix, Equiv.swap_apply_of_ne_of_ne hzy hzσ]
       · have := hsub (show y ∈ univ.filter fun z => σ z ≠ z by simpa using hy)
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and, Perm.mul_apply, τ,
-          Equiv.swap_apply_right, ne_eq, not_true_eq_false] at this
+        have hmove := (Finset.mem_filter.mp this).2
+        exact hmove (by simp [Perm.mul_apply, τ])
     have hmem := ih (τ * σ) hσ' (by have := Finset.card_lt_card hsub; omega)
     have e : σ = τ * (τ * σ) := by rw [← mul_assoc, Equiv.swap_mul_self, one_mul]
     rw [e]

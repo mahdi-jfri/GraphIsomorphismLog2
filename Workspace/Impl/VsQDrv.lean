@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQDrvC
+module
+
+public import Workspace.Impl.VsQDrvC
+
+@[expose] public section
 
 /-!
 # The driver

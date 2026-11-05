@@ -1,4 +1,8 @@
-import Workspace.Impl.VsBOrb
+module
+
+public import Workspace.Impl.VsBOrb
+
+@[expose] public section
 
 /-!
 # A chain of small orbits

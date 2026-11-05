@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCfDRead
+module
+
+public import Workspace.Impl.AggItemCfDRead
+
+@[expose] public section
 
 set_option maxHeartbeats 400000
 set_option maxRecDepth 2000

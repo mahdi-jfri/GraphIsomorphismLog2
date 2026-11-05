@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHQ
+module
+
+public import Workspace.Impl.VsHQ
+
+@[expose] public section
 
 /-!
 # The front of the hard case

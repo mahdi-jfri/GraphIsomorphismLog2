@@ -1,5 +1,9 @@
-import Workspace.Impl.LayoutAsm
-import Workspace.Assembly.ReqChildren
+module
+
+public import Workspace.Impl.LayoutAsm
+public import Workspace.Assembly.ReqChildren
+
+@[expose] public section
 
 /-!
 # Stage 2 up to the three missing steps

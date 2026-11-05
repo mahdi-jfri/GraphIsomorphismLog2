@@ -1,5 +1,9 @@
-import Workspace.Impl.LinAffineInput
-import Workspace.Impl.LinVectorTransport
+module
+
+public import Workspace.Impl.LinAffineInput
+public import Workspace.Impl.LinVectorTransport
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -28,6 +32,7 @@ def linAffineTargetSub (I : VecStabInst)
     (w : Fin I.d → ZMod I.p) : Subgroup (Equiv.Perm (Fin I.n)) :=
   vecStabSub (linVectorTarget (linAffineLayerInst I c hc) (linExtend w 1))
 
+set_option backward.isDefEq.respectTransparency false in
 theorem linAffineTargetSub_mem (I : VecStabInst)
     (c : gens I.gs → Fin I.d → ZMod I.p)
     (hc : ∀ g k, c (g * k) = (I.φ g).val.mulVec (c k) + c g)

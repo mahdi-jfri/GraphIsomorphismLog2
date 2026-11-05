@@ -1,6 +1,10 @@
-import Workspace.Impl.NClMath
-import Workspace.CitedChecks.AlgoChecks
-import Mathlib.GroupTheory.Perm.Finite
+module
+
+public import Workspace.Impl.NClMath
+public import Workspace.CitedChecks.AlgoChecks
+public import Mathlib.GroupTheory.Perm.Finite
+
+@[expose] public section
 
 /-!
 # The mathematics of the preimage

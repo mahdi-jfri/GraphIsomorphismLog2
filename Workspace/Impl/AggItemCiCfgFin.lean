@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiCfgF
-import Workspace.Impl.AggItemCiPair
+module
+
+public import Workspace.Impl.AggItemCiCfgF
+public import Workspace.Impl.AggItemCiPair
+
+@[expose] public section
 
 /-!
 # The configuration branch: `ItciCfgSpec`

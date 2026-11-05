@@ -1,4 +1,8 @@
-import Workspace.Proved.DixonCyclic
+module
+
+public import Workspace.Proved.DixonCyclic
+
+@[expose] public section
 
 /-!
 # Derived length of a solvable group acting irreducibly on a commutative group
@@ -72,7 +76,7 @@ theorem dixon_orbit_injective
   exact eq_of_smul_eq_smul (α := V) fun x => by rw [one_smul]; exact hle (mem_top x)
 
 /-- The bound through the action on one orbit. -/
-theorem dixon_orbit_derived [Finite V] [IsSolvable H] (ih : SolvDLIH.{0} (Nat.card V))
+theorem dixon_orbit_derived [Finite V] [Group.IsSolvable H] (ih : SolvDLIH.{0} (Nat.card V))
     (hirr : ∀ W : Subgroup V, (∀ h : H, ∀ w ∈ W, h • w ∈ W) → W = ⊥ ∨ W = ⊤)
     {v : V} (hv : v ≠ 1) (hlt : Nat.card (orbit H v) < Nat.card V) :
     derivedSeries H (solvL (Nat.card (orbit H v))) = ⊥ := by
@@ -86,7 +90,7 @@ theorem dixon_orbit_derived [Finite V] [IsSolvable H] (ih : SolvDLIH.{0} (Nat.ca
     (MonoidHom.rangeRestrict_injective_iff.mpr (dixon_orbit_injective hirr hv hs)) _ hr
 
 /-- **The intransitive case.** -/
-theorem dixon_intransitive [Finite V] [IsSolvable H] (ih : SolvDLIH.{0} (Nat.card V))
+theorem dixon_intransitive [Finite V] [Group.IsSolvable H] (ih : SolvDLIH.{0} (Nat.card V))
     (hirr : ∀ W : Subgroup V, (∀ h : H, ∀ w ∈ W, h • w ∈ W) → W = ⊥ ∨ W = ⊤)
     {v w : V} (hv : v ≠ 1) (hw : w ≠ 1) (hvw : w ∉ orbit H v) :
     ∃ m, 1 ≤ m ∧ 2 * m ≤ Nat.card V ∧ derivedSeries H (solvL m) = ⊥ := by
@@ -122,10 +126,10 @@ theorem dixon_intransitive [Finite V] [IsSolvable H] (ih : SolvDLIH.{0} (Nat.car
   · exact key w hw (by omega)
 
 /-- The last nontrivial term of the derived series is a commutative normal subgroup. -/
-theorem dixon_exists_abelian_normal {G : Type*} [Group G] [IsSolvable G] [Nontrivial G] :
+theorem dixon_exists_abelian_normal {G : Type*} [Group G] [Group.IsSolvable G] [Nontrivial G] :
     ∃ A : Subgroup G, A.Normal ∧ A ≠ ⊥ ∧ ∀ x ∈ A, ∀ y ∈ A, x * y = y * x := by
   classical
-  have hex : ∃ n, derivedSeries G n = ⊥ := IsSolvable.solvable
+  have hex : ∃ n, derivedSeries G n = ⊥ := Group.IsSolvable.solvable
   set n₀ := Nat.find hex with hn₀
   have hspec : derivedSeries G n₀ = ⊥ := Nat.find_spec hex
   have hn0 : n₀ ≠ 0 := by
@@ -142,7 +146,7 @@ theorem dixon_exists_abelian_normal {G : Type*} [Group G] [IsSolvable G] [Nontri
   exact hc
 
 /-- **The transitive case.** -/
-theorem dixon_transitive [Finite V] [Finite H] [IsSolvable H] [Nontrivial H] [Nontrivial V]
+theorem dixon_transitive [Finite V] [Finite H] [Group.IsSolvable H] [Nontrivial H] [Nontrivial V]
     (ih : SolvDLIH.{0} (Nat.card V))
     (htr : ∀ v w : V, v ≠ 1 → w ≠ 1 → ∃ h : H, h • v = w) :
     ∃ m, 1 ≤ m ∧ 2 * m ≤ Nat.card V ∧ derivedSeries H (solvL m + 2) = ⊥ := by
@@ -285,7 +289,7 @@ theorem dixon_transitive [Finite V] [Finite H] [IsSolvable H] [Nontrivial H] [No
   exact hK x hx y hy
 
 /-- **The core bound.** -/
-theorem dixon_core [Finite V] [Finite H] [IsSolvable H] [Nontrivial V]
+theorem dixon_core [Finite V] [Finite H] [Group.IsSolvable H] [Nontrivial V]
     (ih : SolvDLIH.{0} (Nat.card V))
     (hirr : ∀ W : Subgroup V, (∀ h : H, ∀ w ∈ W, h • w ∈ W) → W = ⊥ ∨ W = ⊤) :
     derivedSeries H (solvL (Nat.card V) - 1) = ⊥ := by

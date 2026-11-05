@@ -1,7 +1,11 @@
-import Workspace.Impl.LinOrders
-import Workspace.Impl.LinIntPad
-import Workspace.Lang.Prims.Blocks
-import Workspace.Impl.LinIntPoly
+module
+
+public import Workspace.Impl.LinOrders
+public import Workspace.Impl.LinIntPad
+public import Workspace.Lang.Prims.Blocks
+public import Workspace.Impl.LinIntPoly
+
+@[expose] public section
 
 /-! Construct the prefix permutation-group values U_i = <N,a_1,...,a_i>. -/
 namespace GI.Impl

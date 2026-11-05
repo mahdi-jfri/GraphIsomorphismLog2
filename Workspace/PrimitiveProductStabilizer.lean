@@ -1,5 +1,9 @@
-import Workspace.SocleCoordinateNaturality
-import Workspace.NormalizedCoordinateEnvelope
+module
+
+public import Workspace.SocleCoordinateNaturality
+public import Workspace.NormalizedCoordinateEnvelope
+
+@[expose] public section
 
 namespace GI.PrimitiveCartesian
 
@@ -81,10 +85,3 @@ theorem primitive_minimalNormal_product_stabilizer [MulAction G V] [Nontrivial V
     (minimalNormal_socle_eq_top hN) a i proper
 
 end GI.PrimitiveCartesian
-
-#print axioms GI.PrimitiveCartesian.normalCoordinateEmbedding
-#print axioms GI.PrimitiveCartesian.normalCoordinateEmbedding_injective
-#print axioms GI.PrimitiveCartesian.normalCoordinateEmbedding_range
-#print axioms GI.PrimitiveCartesian.normalCoordinateEmbedding_conjugation
-#print axioms GI.PrimitiveCartesian.primitive_normal_product_stabilizer
-#print axioms GI.PrimitiveCartesian.primitive_minimalNormal_product_stabilizer

@@ -12,7 +12,11 @@ Each point of `g ⊕ hat r g` is computed by `sumF` (one `if`), each generator b
 points, and the list of generators by a `map` over the generators. For `m` generators the costs
 are at most `hatValK * ((m + 2) * (n + 1)) ^ 3` and `graphValK * ((m + 2) * (n + 1)) ^ 3`.
 -/
-import Workspace.Lang.Prims.BlockMath
+module
+
+public import Workspace.Lang.Prims.BlockMath
+
+@[expose] public section
 
 namespace GI.Lang
 
@@ -319,7 +323,7 @@ theorem graphVal_spec {P : Program} {b rg hp : ℕ} (h : P.HasAt b (graphValFuns
   have w5 : (Val.list ((1 :: gs).map fun g => encPerm (sumToFin (psi r g)))).wt ≤
       13 * ((gs.length + 2) * (n + n + 1)) ^ 2 := by
     have := wt_list_encPerms_le ((1 :: gs).map fun g => sumToFin (psi r g))
-    simpa [List.map_map] using this
+    simpa [List.map_map, Function.comp_def, Nat.add_assoc] using this
   have w6 : E.wt ≤ 2 * ((encGroup gs).wt + L.wt) + 6 := wt_list2_le _ _
   have w7 : (encGroup gs).wt < E.wt := wt_le_wt_list (by simp)
   have eE : E.wt = (Val.list [encGroup gs, L]).wt := rfl
@@ -483,7 +487,7 @@ theorem hatVal_spec {P : Program} {b rg hp : ℕ} (h : P.HasAt b (hatValFuns b r
   have w5 : (Val.list ((1 :: gs).map fun g => encPerm (hat r g))).wt ≤
       13 * ((gs.length + 2) * (n + 1)) ^ 2 := by
     have := wt_list_encPerms_le ((1 :: gs).map fun g => hat r g)
-    simpa [List.map_map] using this
+    simpa [List.map_map, Function.comp_def, Nat.add_assoc] using this
   have w6 := wt_list2_le (encGroup gs) L
   have w8 := wt_list2_le L (idsVal n)
   have w9 := wt_list2_le (.list [L, idsVal n]) (.list ((1 :: gs).map encPerm))

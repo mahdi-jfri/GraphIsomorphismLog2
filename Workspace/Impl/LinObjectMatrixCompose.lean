@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectMatrixColumn
+module
+
+public import Workspace.Impl.LinObjectMatrixColumn
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

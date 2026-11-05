@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosBase6
+module
+
+public import Workspace.Impl.SCosBase6
+
+@[expose] public section
 
 /-!
 # The base case `Φ = {α}` (function 4)

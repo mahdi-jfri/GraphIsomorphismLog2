@@ -1,4 +1,8 @@
-import Workspace.Impl.SSConstrBase
+module
+
+public import Workspace.Impl.SSConstrBase
+
+@[expose] public section
 
 /-!
 # Constructive membership

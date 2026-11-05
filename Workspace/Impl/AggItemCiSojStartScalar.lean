@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojRectProg
-import Workspace.Impl.AggItemCiSojStartProg
-import Workspace.Impl.AggItemCiSojBudgetStart
+module
+
+public import Workspace.Impl.AggItemCiSojRectProg
+public import Workspace.Impl.AggItemCiSojStartProg
+public import Workspace.Impl.AggItemCiSojBudgetStart
+
+@[expose] public section
 
 /-! # Small scalar estimates for the start controller -/
 

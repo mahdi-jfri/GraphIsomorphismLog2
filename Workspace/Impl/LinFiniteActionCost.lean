@@ -1,4 +1,8 @@
-import Workspace.Impl.LinFiniteActionProg
+module
+
+public import Workspace.Impl.LinFiniteActionProg
+
+@[expose] public section
 
 /-! The full affine interpreter has a uniform polynomial bit cost in its
 actual input, including the invariant factors stored in the identity record. -/

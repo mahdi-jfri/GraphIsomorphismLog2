@@ -19,7 +19,11 @@ Every cost bound is explicit and depends on the input alone: the bounds of the p
 bound the size of their outputs (`GI.Cited.GensOf`: at most `n²` generators), so the weight of a
 primitive's result is at most a polynomial in `n`.
 -/
-import Workspace.Lang.Prims.PermGroups
+module
+
+public import Workspace.Lang.Prims.PermGroups
+
+@[expose] public section
 
 namespace GI.Lang
 

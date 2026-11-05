@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojRectLib
-import Workspace.Impl.AggItemCiSojRectNumbers
-import Workspace.Impl.AggItemCiSojCtxShape
+module
+
+public import Workspace.Impl.AggItemCiSojRectLib
+public import Workspace.Impl.AggItemCiSojRectNumbers
+public import Workspace.Impl.AggItemCiSojCtxShape
+
+@[expose] public section
 
 /-! # Every physical-query program precondition at the certified rectangle call -/
 

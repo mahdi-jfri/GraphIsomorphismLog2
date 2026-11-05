@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojModelRows
+module
+
+public import Workspace.Impl.AggItemCiSojModelRows
+
+@[expose] public section
 
 /-! # The final item output represented by all processed rectangle answers -/
 

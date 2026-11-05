@@ -1,5 +1,9 @@
-import Workspace.Impl.VsHConjMath
-import Workspace.Impl.VsQChunk
+module
+
+public import Workspace.Impl.VsHConjMath
+public import Workspace.Impl.VsQChunk
+
+@[expose] public section
 
 /-!
 # The conjugation program
@@ -105,7 +109,6 @@ structure VsHCLay (P : Program) (x : VsHCX) : Prop where
 /-- The cost of the conjugation program. -/
 def vsHConjCost (Cφ N : ℕ) : ℕ := 2 * vsPLocCost Cφ N + 10 ^ 11 * (N + 1) ^ 6
 
-set_option maxHeartbeats 8000000 in
 /-- **The conjugation program.** -/
 theorem vsHConj_spec {P : Program} {x : VsHCX} (L : VsHCLay P x) {Cφ N : ℕ}
     (hphi : ∀ g ∈ gens I.gs, FunDet P x.phi (.list [vsQGam I, encPerm g])
@@ -234,12 +237,15 @@ theorem vsHConj_spec {P : Program} {x : VsHCX} (L : VsHCLay P x) {Cφ N : ℕ}
       have hw' : w = natList (0 :: vsHKey Y) := by rw [hw.1]; rfl
       rw [List.length_map, hYl] at h2
       rw [hw'] at h2 ⊢
-      have : loopModK * ((vsQD s) * (vsQD s) + 1) * ((Val.list [.list [Val.nat 0], .list ((vsHKey Y).map Val.nat)]).wt +
+      have hKPle : loopModK * ((vsQD s) * (vsQD s) + 1) * ((Val.list [.list [Val.nat 0], .list ((vsHKey Y).map Val.nat)]).wt +
           (vsQD s) * (vsQD s) + (natList (0 :: vsHKey Y)).wt + 1) ≤ KP :=
         Nat.mul_le_mul_left _ (by omega)
+      clear rac rg d1 d2 d3 di d4 hzF hAF hmul rz rp d5 rz' rp' d6 hYsq d7 d0 dA
+      clear_value fr acl k vs E1 E2 R E3 Li z E4 X E5 Y E6 KP
       omega
   refine FunDet.intro L.hconj ((Det.letE d1 (Det.letE d2 (Det.letE d3 (Det.letE d4
     (Det.letE d5 (Det.letE d6 d8)))))).mono ?_)
+  clear rac rg d1 d2 d3 di d4 hzF hAF hmul rz rp d5 rz' rp' d6 hYsq d7 d0 dA d8 L hphi hsz hfr
   -- weights
   have wsq : ∀ Z : Matrix (Fin (vsQD s)) (Fin (vsQD s)) (ZMod I.p),
       (vsWVs (vsQL Z)).wt ≤ 11 * (N + 1) ^ 3 + 4 := fun Z => by
@@ -251,6 +257,7 @@ theorem vsHConj_spec {P : Program} {x : VsHCX} (L : VsHCLay P x) {Cφ N : ℕ}
   have wLi : Li.wt ≤ 11 * (N + 1) ^ 3 + 4 := wsq _
   have wX : X.wt ≤ 11 * (N + 1) ^ 3 + 4 := wsq _
   have wYv := wsq Y
+  clear wsq
   have wg := wt_encPerm_le g
   have wgi := wt_encPerm_le g⁻¹
   have hn2 : (I.n + 1) ^ 2 ≤ (N + 1) ^ 2 := Nat.pow_le_pow_left (by omega) 2
@@ -267,6 +274,7 @@ theorem vsHConj_spec {P : Program} {x : VsHCX} (L : VsHCLay P x) {Cφ N : ℕ}
   have m2 := hm (.nat I.p) (by simp [acl])
   have m3 := hm (.nat (vsQD s)) (by simp [acl])
   have m4 := hm (natList z) (by simp [acl, z])
+  clear hm
   have l3 := wt_list3_le (Val.nat (vsQD s)) (Val.nat (vsQD s)) (Val.list (k.map Val.nat))
   have l4 := wt_list3_le (vsQGam I) fr (encPerm g)
   have l5 := wt_list3_le (vsQGam I) fr (encPerm g⁻¹)
@@ -288,10 +296,10 @@ theorem vsHConj_spec {P : Program} {x : VsHCX} (L : VsHCLay P x) {Cφ N : ℕ}
       have : (Val.list (Val.nat 0 :: k.map Val.nat)).wt = (natList (0 :: k)).wt := rfl
       omega)
   have hT' : 1000 * (N + 1) * (15 * (N + 1) ^ 2 + 1) ≤ 16000 * (N + 1) ^ 3 := by
-    have : (N + 1) * (15 * (N + 1) ^ 2 + 1) ≤ (N + 1) * (16 * (N + 1) ^ 2) :=
+    have : 1000 * (N + 1) * (15 * (N + 1) ^ 2 + 1) ≤ 1000 * (N + 1) * (16 * (N + 1) ^ 2) :=
       Nat.mul_le_mul_left _ (by omega)
-    have e : (N + 1) * (16 * (N + 1) ^ 2) = 16 * (N + 1) ^ 3 := by ring
-    nlinarith
+    have e : 1000 * (N + 1) * (16 * (N + 1) ^ 2) = 16000 * (N + 1) ^ 3 := by ring
+    omega
   have hC : 10 ^ 8 * (N + 1) ^ 4 * (5 * (N + 1) ^ 2 + (N + 1) ^ 2) = 6 * 10 ^ 8 * (N + 1) ^ 6 := by ring
   have hKP : KP ≤ 1000 * (N + 1) * (30 * (N + 1) ^ 2) := by
     simp only [KP]
@@ -299,6 +307,7 @@ theorem vsHConj_spec {P : Program} {x : VsHCX} (L : VsHCLay P x) {Cφ N : ℕ}
   have hKP' : 1000 * (N + 1) * (30 * (N + 1) ^ 2) = 30000 * (N + 1) ^ 3 := by ring
   have ez : (natList z).wt = (natList (vsWZ (vsQD s))).wt := rfl
   have evs : (Val.list vs).wt = (Val.list [Val.list acl, encPerm g, natList (0 :: k)]).wt := rfl
+  clear_value fr acl k vs E1 E2 R E3 Li z E4 X E5 Y E6 KP
   simp only [vsHConjCost, vsPLocCost, invK] at *
   omega
 

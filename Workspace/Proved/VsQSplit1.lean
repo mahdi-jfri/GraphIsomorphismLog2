@@ -1,6 +1,10 @@
-import Workspace.Impl.VsQDrvDefs
-import Workspace.Proved.VsQLoc
-import Workspace.Proved.VsWEigCount
+module
+
+public import Workspace.Impl.VsQDrvDefs
+public import Workspace.Proved.VsQLoc
+public import Workspace.Proved.VsWEigCount
+
+@[expose] public section
 
 /-!
 # Chain splits from a local invariant subspace
@@ -68,7 +72,7 @@ theorem vsQLam_inv_gens {U : Submodule (ZMod I.p) (Fin (vsQD s) → ZMod I.p)}
       have e2 := congrArg (vsQLam s g⁻¹).mulVec e
       rw [mulVec_mulVec, mulVec_mulVec, hgi, one_mulVec, one_mulVec] at e2
       exact Subtype.ext e2
-    obtain ⟨b, hb⟩ := (LinearMap.injective_iff_surjective.mp hinj) ⟨a, ha⟩
+    obtain ⟨b, hb⟩ := (Finite.injective_iff_surjective.mp hinj) ⟨a, ha⟩
     have e : (vsQLam s g).mulVec b = a := by
       have := congrArg Subtype.val hb
       simpa [f, Matrix.toLin'_apply] using this

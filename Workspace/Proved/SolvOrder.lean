@@ -1,7 +1,11 @@
-import Workspace.Proved.SolvOrderPrimitive
-import Mathlib.GroupTheory.GroupAction.Blocks
-import Mathlib.GroupTheory.GroupAction.Primitive
-import Mathlib.Algebra.Group.Pointwise.Set.Card
+module
+
+public import Workspace.Proved.SolvOrderPrimitive
+public import Mathlib.GroupTheory.GroupAction.Blocks
+public import Mathlib.GroupTheory.GroupAction.Primitive
+public import Mathlib.Algebra.Group.Pointwise.Set.Card
+
+@[expose] public section
 
 /-!
 # Dixon's bound on the order of a solvable permutation group
@@ -48,14 +52,14 @@ def SolvOrderIH (n : ℕ) : Prop :=
     ∀ G : Subgroup (Equiv.Perm β), IsSolvable G → Nat.card G ^ 3 ≤ 24 ^ (Nat.card β - 1)
 
 /-- The induction hypothesis applied to the image of a solvable group. -/
-theorem SolvOrderIH.range {n : ℕ} (ih : SolvOrderIH.{u} n) {H : Type*} [Group H] [IsSolvable H]
+theorem SolvOrderIH.range {n : ℕ} (ih : SolvOrderIH.{u} n) {H : Type*} [Group H] [Group.IsSolvable H]
     {β : Type u} [Finite β] (hβ : 1 ≤ Nat.card β) (hβn : Nat.card β < n)
     (ρ : H →* Equiv.Perm β) : Nat.card ρ.range ^ 3 ≤ 24 ^ (Nat.card β - 1) :=
   ih β hβ hβn ρ.range (solvable_of_surjective ρ.rangeRestrict_surjective)
 
 /-- The intransitive step. -/
 theorem solvOrder_intransitive {α : Type u} [Finite α] (ih : SolvOrderIH.{u} (Nat.card α))
-    (G : Subgroup (Equiv.Perm α)) [IsSolvable G] (s : Set α)
+    (G : Subgroup (Equiv.Perm α)) [Group.IsSolvable G] (s : Set α)
     (hs : ∀ (g : G) (x : α), g • x ∈ s ↔ x ∈ s) (hne : s.Nonempty) (hne' : sᶜ.Nonempty) :
     Nat.card G ^ 3 ≤ 24 ^ (Nat.card α - 1) := by
   have hs' : ∀ (g : G) (x : α), g • x ∈ sᶜ ↔ x ∈ sᶜ := fun g x => not_congr (hs g x)
@@ -101,7 +105,7 @@ theorem solvKer_mem_iff {α : Type u} (G : Subgroup (Equiv.Perm α)) (B : Set α
 
 /-- The imprimitive step. -/
 theorem solvOrder_imprimitive {α : Type u} [Finite α] (ih : SolvOrderIH.{u} (Nat.card α))
-    (G : Subgroup (Equiv.Perm α)) [IsSolvable G] [IsPretransitive G α] (B : Set α)
+    (G : Subgroup (Equiv.Perm α)) [Group.IsSolvable G] [IsPretransitive G α] (B : Set α)
     (hB : IsBlock G B) (hBnt : ¬ IsTrivialBlock B) :
     Nat.card G ^ 3 ≤ 24 ^ (Nat.card α - 1) := by
   classical
@@ -125,7 +129,7 @@ theorem solvOrder_imprimitive {α : Type u} [Finite α] (ih : SolvOrderIH.{u} (N
   let φ := MulAction.toPermHom G Ω
   have hφ := ih.range hk1 hkn φ
   let K := φ.ker
-  haveI : IsSolvable K := solvable_of_solvable_injective K.subtype_injective
+  haveI : Group.IsSolvable K := solvable_of_solvable_injective K.subtype_injective
   let ψ : ∀ C : Ω, K →* Equiv.Perm C.1 := fun C => solvRes C.1 (fun x v => solvKer_mem_iff G B x C v)
   have hCcard : ∀ C : Ω, Nat.card C.1 = m := by
     intro C
@@ -172,6 +176,7 @@ theorem solvOrder_bound_aux : ∀ (n : ℕ) (α : Type u) [Finite α], Nat.card 
   induction n using Nat.strong_induction_on with
   | _ n ih =>
   intro α _ hα hn G hG
+  haveI : Group.IsSolvable G := hG
   subst hα
   have ih' : SolvOrderIH.{u} (Nat.card α) := fun β _ h1 hlt G hG => ih _ hlt β rfl h1 G hG
   by_cases hnt : Nontrivial G

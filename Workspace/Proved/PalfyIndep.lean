@@ -1,4 +1,8 @@
-import Workspace.Proved.PalfyBasic
+module
+
+public import Workspace.Proved.PalfyBasic
+
+@[expose] public section
 
 /-!
 # Groups whose commutators and central elements are scalar

@@ -1,4 +1,8 @@
-import Workspace.Impl.ScriptRun
+module
+
+public import Workspace.Impl.ScriptRun
+
+@[expose] public section
 
 /-!
 # Runs of a script that is a sequence of scripts

@@ -1,6 +1,10 @@
-import Workspace.Proved.HNFSylvester
-import Mathlib.Algebra.Order.AbsoluteValue.Basic
-import Mathlib.Data.List.GetD
+module
+
+public import Workspace.Proved.HNFSylvester
+public import Mathlib.Algebra.Order.AbsoluteValue.Basic
+public import Mathlib.Data.List.GetD
+
+@[expose] public section
 
 /-!
 # Bareiss elimination with row pivoting
@@ -55,7 +59,7 @@ theorem hnfMin_abs_le (A : Matrix (Fin r) (Fin c) ℤ) {M : ℤ} (hM : ∀ i j, 
     |hnfMin A n s i k j| ≤ n.factorial * M ^ n := by
   have h := Matrix.det_le (A := A.submatrix (hnfRowSel s i n) (hnfColSel k j n))
     (abv := AbsoluteValue.abs) (x := M) (fun a b => hM _ _)
-  simpa [Fintype.card_fin, nsmul_eq_mul] using h
+  simpa [hnfMin, Fintype.card_fin, nsmul_eq_mul] using h
 
 /-- The leading minor of `s ++ [p]` is the bordered minor of `s` at `p` and column `k`. -/
 theorem hnfLead_append (A : Matrix (Fin r) (Fin c) ℤ) (s : List (Fin r)) (p x : Fin r)
@@ -83,10 +87,10 @@ theorem hnfLead_append (A : Matrix (Fin r) (Fin c) ℤ) (s : List (Fin r)) (p x 
 /-! ### Sylvester's identity for bordered minors -/
 
 /-- The rows and columns of a two-row border, indexed by `Fin k ⊕ Fin 2`. -/
-private def hnfR2 (s : List (Fin r)) (p i : Fin r) : Fin s.length ⊕ Fin 2 → Fin r :=
+def hnfR2 (s : List (Fin r)) (p i : Fin r) : Fin s.length ⊕ Fin 2 → Fin r :=
   Sum.elim (fun a => s.getD a p) ![p, i]
 
-private def hnfC2 (k : ℕ) (hk : k < c) (j : Fin c) : Fin k ⊕ Fin 2 → Fin c :=
+def hnfC2 (k : ℕ) (hk : k < c) (j : Fin c) : Fin k ⊕ Fin 2 → Fin c :=
   Sum.elim (fun b => ⟨b, by omega⟩) ![⟨k, hk⟩, j]
 
 theorem hnfR2_eq (s : List (Fin r)) (p i : Fin r) :
@@ -108,9 +112,8 @@ theorem hnfC2_eq (k : ℕ) (hk : k < c) (j : Fin c) :
     hnfColSel (k + 1) j (k + 1 + 1) ∘ (finSumFinEquiv (m := k) (n := 2)) = hnfC2 k hk j := by
   funext x
   rcases x with b | b
-  · simp only [Function.comp_apply, finSumFinEquiv_apply_left, hnfColSel, hnfC2, Sum.elim_inl,
-      Fin.val_castAdd]
-    rw [dif_pos ⟨by omega, by omega⟩]
+  · simp [hnfColSel, hnfC2, show (b : ℕ) < k + 1 by omega,
+      show (b : ℕ) < c by omega]
   · fin_cases b
     · simp [hnfColSel, hnfC2, hk]
     · simp [hnfColSel, hnfC2]
@@ -134,9 +137,7 @@ theorem hnfC1_eq (k : ℕ) (hk : k < c) (j : Fin c) (b : Fin 2) :
       hnfC2 k hk j ∘ Sum.map id (fun _ : Fin 1 => b) := by
   funext x
   rcases x with a | a
-  · simp only [Function.comp_apply, finSumFinEquiv_apply_left, hnfColSel, hnfC2, Sum.elim_inl,
-      Fin.val_castAdd, Sum.map_inl, id]
-    rw [dif_pos ⟨a.isLt, by omega⟩]
+  · simp [hnfColSel, hnfC2, show (a : ℕ) < c by omega]
   · fin_cases a
     simp [hnfColSel, hnfC2]
 
@@ -192,26 +193,23 @@ theorem hnfBord_eq_border (A : Matrix (Fin r) (Fin c) ℤ) (s : List (Fin r)) (h
       fromBlocks A11 (fun a _ => A (hnfRowSel s x s.length a) ⟨s.length, hk⟩)
         (fun _ b => A i ⟨b, by omega⟩) (fun _ _ => A i ⟨s.length, hk⟩) := by
     ext (a | a) (b | b)
-    · simp only [submatrix_apply, finSumFinEquiv_apply_left, fromBlocks_apply₁₁, hA11,
-        hnfRowSel, hnfColSel, Fin.val_castAdd]
-      rw [List.getD_eq_getElem _ _ a.isLt, List.getD_eq_getElem _ _ a.isLt]
-      simp [show (b : ℕ) < c by omega]
-    · simp only [submatrix_apply, finSumFinEquiv_apply_left, finSumFinEquiv_apply_right,
-        fromBlocks_apply₁₂, hnfRowSel, hnfColSel, Fin.val_castAdd, Fin.val_natAdd]
-      rw [List.getD_eq_getElem _ _ a.isLt, List.getD_eq_getElem _ _ a.isLt]
-      simp
-    · simp only [submatrix_apply, finSumFinEquiv_apply_left, finSumFinEquiv_apply_right,
-        fromBlocks_apply₂₁, hnfRowSel, hnfColSel, Fin.val_castAdd, Fin.val_natAdd]
-      rw [List.getD_eq_default _ _ (by simp)]
-      simp [show (b : ℕ) < c by omega]
-    · simp only [submatrix_apply, finSumFinEquiv_apply_right, fromBlocks_apply₂₂, hnfRowSel,
-        hnfColSel, Fin.val_natAdd]
-      rw [List.getD_eq_default _ _ (by simp)]
-      simp
+    · simp [Matrix.fromBlocks, hA11, submatrix_apply, hnfRowSel, hnfColSel,
+        show (b : ℕ) < c by omega]
+    · fin_cases b
+      simp [Matrix.fromBlocks, submatrix_apply, hnfRowSel, hnfColSel]
+    · fin_cases a
+      simp [Matrix.fromBlocks, submatrix_apply, hnfRowSel, hnfColSel,
+        show (b : ℕ) < c by omega]
+    · fin_cases a
+      fin_cases b
+      simp [Matrix.fromBlocks, submatrix_apply, hnfRowSel, hnfColSel]
   unfold hnfBord hnfMin
-  rw [← Matrix.det_submatrix_equiv_self (finSumFinEquiv (m := s.length) (n := 1)), e,
-    hnfBorder1 _ _ _ _ hd]
+  erw [← Matrix.det_submatrix_equiv_self (finSumFinEquiv (m := s.length) (n := 1)), e,
+    hnfBorder1 _ _ _ _ (show A11.det ≠ 0 from hd)]
   simp [Matrix.mul_apply, Matrix.mulVec, dotProduct, Finset.mul_sum, hnfMin, hA11]
+  change (∑ b : Fin s.length, (∑ a : Fin s.length,
+      A i ⟨a, by omega⟩ * A11.adjugate a b) *
+        A (hnfRowSel s x s.length b) ⟨s.length, hk⟩) = _
   simp only [Finset.sum_mul, mul_assoc]
   exact Finset.sum_comm
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.TermLoop
-import Workspace.Impl.TermPrep
+module
+
+public import Workspace.Impl.TermLoop
+public import Workspace.Impl.TermPrep
+
+@[expose] public section
 
 /-!
 # The script phase of the row terminal (T1)

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJPair
+module
+
+public import Workspace.Impl.TermJPair
+
+@[expose] public section
 
 /-!
 # The `J`-correction and the output coset (group theory of `TermJSpec`)

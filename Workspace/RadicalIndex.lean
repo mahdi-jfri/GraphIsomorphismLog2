@@ -1,5 +1,9 @@
-import Workspace.RadicalFreeOrder
-import Workspace.MulticosetRadical
+module
+
+public import Workspace.RadicalFreeOrder
+public import Workspace.MulticosetRadical
+
+@[expose] public section
 
 /-!
 # The radical index bound of Corollary A.22
@@ -75,52 +79,72 @@ theorem transitiveNonabelian_univ (hTr : GMPTransitiveNonabelian)
   have h := hTr (Fintype.card B) hB H' N' hN'H' htr' _ _ hc
   exact_mod_cast h
 
-/-- **The first displayed step of the proof of Corollary A.22:**
-`[H : R] ≤ b(Q)² ≤ b^{2 log₂ b}` for `N ◁ H ≤ Sym(B)` with `N` transitive. -/
-theorem radical_index_chain (hAb : GMPAbelianFactors) (hOut : GMPOutBound)
-    (hTr : GMPTransitiveNonabelian) {H N : Subgroup (Equiv.Perm B)} (hNH : N ≤ H)
-    [(N.subgroupOf H).Normal] (htr : MulAction.IsPretransitive N B) :
-    ((radicalPreimage H N).subgroupOf H).index ≤ bFac (H ⧸ N.subgroupOf H) ^ 2 ∧
+/-- **The first displayed step of the proof of Corollary A.22 for any subgroup `R'` with
+`[H : R'] ≤ b(H/N)²`:** `[H : R'] ≤ b(Q)² ≤ b^{2 log₂ b}` for `N ◁ H ≤ Sym(B)` with `N`
+transitive. -/
+theorem sub_index_chain (hTr : GMPTransitiveNonabelian)
+    {H N R' : Subgroup (Equiv.Perm B)} (hNH : N ≤ H) [(N.subgroupOf H).Normal]
+    (htr : MulAction.IsPretransitive N B)
+    (hR' : (R'.subgroupOf H).index ≤ bFac (H ⧸ N.subgroupOf H) ^ 2) :
+    (R'.subgroupOf H).index ≤ bFac (H ⧸ N.subgroupOf H) ^ 2 ∧
     ((bFac (H ⧸ N.subgroupOf H) ^ 2 : ℕ) : ℝ) ≤
       (Fintype.card B : ℝ) ^ (2 * Real.logb 2 (Fintype.card B)) := by
-  refine ⟨?_, ?_⟩
-  · rw [index_radicalPreimage]
-    exact GI.RadicalFreeOrder.card_radical_quotient_le hAb hOut _
-  · rcases Nat.eq_zero_or_pos (Fintype.card B) with h0 | hB
-    · -- `B` is empty: everything is trivial and both sides are `1`
-      haveI : IsEmpty B := Fintype.card_eq_zero_iff.mp h0
-      haveI : Subsingleton (H ⧸ N.subgroupOf H) := by
-        refine ⟨fun x y => ?_⟩
-        obtain ⟨x, rfl⟩ := QuotientGroup.mk'_surjective _ x
-        obtain ⟨y, rfl⟩ := QuotientGroup.mk'_surjective _ y
+  refine ⟨hR', ?_⟩
+  rcases Nat.eq_zero_or_pos (Fintype.card B) with h0 | hB
+  · -- `B` is empty: everything is trivial and both sides are `1`
+    haveI : IsEmpty B := Fintype.card_eq_zero_iff.mp h0
+    haveI : Subsingleton (H ⧸ N.subgroupOf H) := by
+      refine ⟨fun x y => ?_⟩
+      obtain ⟨x, rfl⟩ := QuotientGroup.mk'_surjective _ x
+      obtain ⟨y, rfl⟩ := QuotientGroup.mk'_surjective _ y
+      congr 1
+      exact Subsingleton.elim x y
+    have hb : bFac (H ⧸ N.subgroupOf H) = 1 := by
+      have h := aFac_mul_bFac (X := H ⧸ N.subgroupOf H)
+      rw [Nat.card_unique] at h
+      exact Nat.eq_one_of_mul_eq_one_left h
+    rw [hb, h0]
+    simp
+  · have h := transitiveNonabelian_univ hTr hNH htr hB
+    have hb0 : (0 : ℝ) ≤ Fintype.card B := Nat.cast_nonneg _
+    calc ((bFac (H ⧸ N.subgroupOf H) ^ 2 : ℕ) : ℝ)
+        = (bFac (H ⧸ N.subgroupOf H) : ℝ) ^ 2 := by push_cast; rfl
+      _ ≤ ((Fintype.card B : ℝ) ^ Real.logb 2 (Fintype.card B)) ^ 2 :=
+        pow_le_pow_left₀ (Nat.cast_nonneg _) h 2
+      _ = (Fintype.card B : ℝ) ^ (2 * Real.logb 2 (Fintype.card B)) := by
+        rw [← Real.rpow_natCast, ← Real.rpow_mul hb0]
         congr 1
-        exact Subsingleton.elim x y
-      have hb : bFac (H ⧸ N.subgroupOf H) = 1 := by
-        have h := aFac_mul_bFac (X := H ⧸ N.subgroupOf H)
-        rw [Nat.card_unique] at h
-        exact Nat.eq_one_of_mul_eq_one_left h
-      rw [hb, h0]
-      simp
-    · have h := transitiveNonabelian_univ hTr hNH htr hB
-      have hb0 : (0 : ℝ) ≤ Fintype.card B := Nat.cast_nonneg _
-      calc ((bFac (H ⧸ N.subgroupOf H) ^ 2 : ℕ) : ℝ)
-          = (bFac (H ⧸ N.subgroupOf H) : ℝ) ^ 2 := by push_cast; rfl
-        _ ≤ ((Fintype.card B : ℝ) ^ Real.logb 2 (Fintype.card B)) ^ 2 :=
-          pow_le_pow_left₀ (Nat.cast_nonneg _) h 2
-        _ = (Fintype.card B : ℝ) ^ (2 * Real.logb 2 (Fintype.card B)) := by
-          rw [← Real.rpow_natCast, ← Real.rpow_mul hb0]
-          congr 1
-          push_cast
-          ring
+        push_cast
+        ring
 
-/-- The radical index bound in exactly the form of the hypothesis `hidx` of
-`GI.Paper.cor_transitive_kernel_multicoset` and `GI.Paper.thm_transitive_gat_terminal`. -/
-theorem radical_index_le (hAb : GMPAbelianFactors) (hOut : GMPOutBound)
-    (hTr : GMPTransitiveNonabelian) {H N : Subgroup (Equiv.Perm B)} (hNH : N ≤ H)
-    [(N.subgroupOf H).Normal] (htr : MulAction.IsPretransitive N B) :
-    (((radicalPreimage H N).subgroupOf H).index : ℝ) ≤
+/-- For any subgroup `R'` with `[H : R'] ≤ b(H/N)²`, we have `[H : R'] ≤ b^{2 log₂ b}`. -/
+theorem sub_index_le (hTr : GMPTransitiveNonabelian)
+    {H N R' : Subgroup (Equiv.Perm B)} (hNH : N ≤ H) [(N.subgroupOf H).Normal]
+    (htr : MulAction.IsPretransitive N B)
+    (hR' : (R'.subgroupOf H).index ≤ bFac (H ⧸ N.subgroupOf H) ^ 2) :
+    ((R'.subgroupOf H).index : ℝ) ≤
       (Fintype.card B : ℝ) ^ (2 * Real.logb 2 (Fintype.card B)) := by
-  obtain ⟨h1, h2⟩ := radical_index_chain hAb hOut hTr hNH htr
+  obtain ⟨h1, h2⟩ := sub_index_chain hTr hNH htr hR'
   exact (Nat.cast_le.mpr h1).trans h2
+
+/-- **The first displayed step of the proof of Corollary A.22:**
+`[H : R'] ≤ b(Q)² ≤ b^{2 log₂ b}` for `N ◁ H ≤ Sym(B)` with `N` transitive and
+`R' = radicalSubgroup H N`. -/
+theorem radical_index_chain (hTr : GMPTransitiveNonabelian)
+    {H N : Subgroup (Equiv.Perm B)} (hNH : N ≤ H) [(N.subgroupOf H).Normal]
+    (htr : MulAction.IsPretransitive N B) :
+    ((radicalSubgroup H N).subgroupOf H).index ≤ bFac (H ⧸ N.subgroupOf H) ^ 2 ∧
+    ((bFac (H ⧸ N.subgroupOf H) ^ 2 : ℕ) : ℝ) ≤
+      (Fintype.card B : ℝ) ^ (2 * Real.logb 2 (Fintype.card B)) :=
+  sub_index_chain hTr hNH htr (GI.RadicalFreeOrder.radicalSubgroup_index_le hNH)
+
+/-- The index bound in the form of the hypothesis `hidx` of
+`GI.Paper.cor_transitive_kernel_multicoset` and `GI.Paper.thm_transitive_gat_terminal`. -/
+theorem radical_index_le (hTr : GMPTransitiveNonabelian)
+    {H N : Subgroup (Equiv.Perm B)} (hNH : N ≤ H) [(N.subgroupOf H).Normal]
+    (htr : MulAction.IsPretransitive N B) :
+    (((radicalSubgroup H N).subgroupOf H).index : ℝ) ≤
+      (Fintype.card B : ℝ) ^ (2 * Real.logb 2 (Fintype.card B)) :=
+  sub_index_le hTr hNH htr (GI.RadicalFreeOrder.radicalSubgroup_index_le hNH)
 
 end GI.RadicalIndex

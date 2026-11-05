@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabPTop
-import Workspace.Impl.FinLayoutCos
+module
+
+public import Workspace.Impl.TermGlueLabPTop
+public import Workspace.Impl.FinLayoutCos
+
+@[expose] public section
 
 /-!
 # The label program at `flcLabIdx` in the final program
@@ -14,8 +18,8 @@ namespace GI.Impl
 
 open GI.Algorithm GI.Assembly GI.Lang Equiv Equiv.Perm
 open GI.Cited (Val PointwiseStab Preimage NormalizedFactor Membership MinimalBlocks GroupOrder
-  CameronRecognition ChiefSeriesAlgo DerivedSubgroup QuotientCentralizer NormalizedIntersection
-  SylowAlgo SylowConjugate NormalClosure)
+  CameronRecognition DerivedSubgroup NormalizedIntersection
+  NormalClosure)
 
 /-- **The label list**: the dispatch at `flcLabIdx`, the nonempty part from `flcLabIdx + 1`. -/
 def tmGLPLabF (neF : List Expr) : List Expr := tmGLPTopF (flcLabIdx + 1) :: neF
@@ -28,18 +32,18 @@ theorem tmGLPLabF_fits {neF : List Expr} (h : neF.length + 1 ≤ flcJOff - flcLa
   rw [length_tmGLPLabF]; exact h
 
 variable {hst : PointwiseStab} {hm : Membership} {hpre : Preimage} {hfac : NormalizedFactor}
-  {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition} {hcs : ChiefSeriesAlgo}
-  {hder : DerivedSubgroup} {hqc : QuotientCentralizer} {hni : NormalizedIntersection}
-  {hsy : SylowAlgo} {hsc : SylowConjugate} {hnc : NormalClosure}
+  {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition}
+  {hder : DerivedSubgroup} {hni : NormalizedIntersection}
+  {hnc : NormalClosure}
   {ext : List Prim} {gen agg recF neF jF : List Expr}
 
 /-- The nonempty part sits at `flcLabIdx + 1` in the final program. -/
 theorem flc_hasAt_ne (hg : gen.length ≤ asmSlot) (hF : FlcFits recF (tmGLPLabF neF) jF) :
-    (flcProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc ext gen recF
+    (flcProg hst hm hpre hfac hmb hO hC hder hni hnc ext gen recF
       (tmGLPLabF neF) jF agg).HasAt (flcLabIdx + 1) neF := by
   have h := (flc_hasAt (hst := hst) (hm := hm) (hpre := hpre) (hfac := hfac) (hmb := hmb)
-    (hO := hO) (hC := hC) (hcs := hcs) (hder := hder) (hqc := hqc) (hni := hni) (hsy := hsy)
-    (hsc := hsc) (hnc := hnc) (ext := ext) (agg := agg) hg hF).2.2.1
+    (hO := hO) (hC := hC) (hder := hder) (hni := hni)
+    (hnc := hnc) (ext := ext) (agg := agg) hg hF).2.2.1
   have := h.right (A := [tmGLPTopF (flcLabIdx + 1)])
   simpa using this
 
@@ -47,13 +51,13 @@ theorem flc_hasAt_ne (hg : gen.length ≤ asmSlot) (hF : FlcFits recF (tmGLPLabF
 nonempty part at `flcLabIdx + 1`. -/
 theorem flc_labSpec_of_ne (hg : gen.length ≤ asmSlot) (hF : FlcFits recF (tmGLPLabF neF) jF)
     {K D : ℕ}
-    (hne : Iface.TmGLPNeSpec (flcProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc
+    (hne : Iface.TmGLPNeSpec (flcProg hst hm hpre hfac hmb hO hC hder hni hnc
       ext gen recF (tmGLPLabF neF) jF agg) K D (flcLabIdx + 1)) :
-    Iface.TermGlueLabSpec (flcProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc ext
+    Iface.TermGlueLabSpec (flcProg hst hm hpre hfac hmb hO hC hder hni hnc ext
       gen recF (tmGLPLabF neF) jF agg) (3 * K + 100) (D + 1) flcLabIdx := by
   have h := (flc_hasAt (hst := hst) (hm := hm) (hpre := hpre) (hfac := hfac) (hmb := hmb)
-    (hO := hO) (hC := hC) (hcs := hcs) (hder := hder) (hqc := hqc) (hni := hni) (hsy := hsy)
-    (hsc := hsc) (hnc := hnc) (ext := ext) (agg := agg) hg hF).2.2.1
+    (hO := hO) (hC := hC) (hder := hder) (hni := hni)
+    (hnc := hnc) (ext := ext) (agg := agg) hg hF).2.2.1
   have hf := (h.left (A := [tmGLPTopF (flcLabIdx + 1)]) (B := neF)).single
   exact @tmGLP_top_spec _ flcLabIdx (flcLabIdx + 1) K D hf @hne
 

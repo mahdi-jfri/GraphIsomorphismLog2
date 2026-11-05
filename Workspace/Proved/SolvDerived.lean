@@ -1,5 +1,9 @@
-import Workspace.Proved.SolvOrder
-import Workspace.Cited.DixonDerivedLength
+module
+
+public import Workspace.Proved.SolvOrder
+public import Workspace.Cited.DixonDerivedLength
+
+@[expose] public section
 
 /-!
 # Derived length of solvable permutation groups: the reduction to primitive groups
@@ -58,7 +62,7 @@ def SolvDLIH (n : ℕ) : Prop :=
   ∀ (β : Type u) [Finite β], 1 ≤ Nat.card β → Nat.card β < n →
     ∀ G : Subgroup (Equiv.Perm β), IsSolvable G → derivedSeries G (solvL (Nat.card β)) = ⊥
 
-theorem SolvDLIH.range {n : ℕ} (ih : SolvDLIH.{u} n) {H : Type*} [Group H] [IsSolvable H]
+theorem SolvDLIH.range {n : ℕ} (ih : SolvDLIH.{u} n) {H : Type*} [Group H] [Group.IsSolvable H]
     {β : Type u} [Finite β] (hβ : 1 ≤ Nat.card β) (hβn : Nat.card β < n)
     (ρ : H →* Equiv.Perm β) : derivedSeries ρ.range (solvL (Nat.card β)) = ⊥ :=
   ih β hβ hβn ρ.range (solvable_of_surjective ρ.rangeRestrict_surjective)
@@ -82,7 +86,7 @@ theorem solv_map_derived_eq_one {G H : Type*} [Group G] [Group H] (ρ : G →* H
 
 /-- The intransitive step. -/
 theorem solvDL_intransitive {α : Type u} [Finite α] (ih : SolvDLIH.{u} (Nat.card α))
-    (G : Subgroup (Equiv.Perm α)) [IsSolvable G] (s : Set α)
+    (G : Subgroup (Equiv.Perm α)) [Group.IsSolvable G] (s : Set α)
     (hs : ∀ (g : G) (x : α), g • x ∈ s ↔ x ∈ s) (hne : s.Nonempty) (hne' : sᶜ.Nonempty) :
     derivedSeries G (solvL (Nat.card α)) = ⊥ := by
   have hs' : ∀ (g : G) (x : α), g • x ∈ sᶜ ↔ x ∈ sᶜ := fun g x => not_congr (hs g x)
@@ -113,7 +117,7 @@ theorem solvDL_intransitive {α : Type u} [Finite α] (ih : SolvDLIH.{u} (Nat.ca
 
 /-- The imprimitive step. -/
 theorem solvDL_imprimitive {α : Type u} [Finite α] (ih : SolvDLIH.{u} (Nat.card α))
-    (G : Subgroup (Equiv.Perm α)) [IsSolvable G] [IsPretransitive G α] (B : Set α)
+    (G : Subgroup (Equiv.Perm α)) [Group.IsSolvable G] [IsPretransitive G α] (B : Set α)
     (hB : IsBlock G B) (hBnt : ¬ IsTrivialBlock B) :
     derivedSeries G (solvL (Nat.card α)) = ⊥ := by
   classical
@@ -137,7 +141,7 @@ theorem solvDL_imprimitive {α : Type u} [Finite α] (ih : SolvDLIH.{u} (Nat.car
   let φ := MulAction.toPermHom G Ω
   have hφ := ih.range hk1 hkn φ
   let K := φ.ker
-  haveI : IsSolvable K := solvable_of_solvable_injective K.subtype_injective
+  haveI : Group.IsSolvable K := solvable_of_solvable_injective K.subtype_injective
   let ψ : ∀ C : Ω, K →* Equiv.Perm C.1 :=
     fun C => solvRes C.1 (fun x v => solvKer_mem_iff G B x C v)
   have hCcard : ∀ C : Ω, Nat.card C.1 = m := by
@@ -183,6 +187,7 @@ theorem solvDL_aux (hP : SolvDLPrimitive) : ∀ (n : ℕ) (α : Type) [Finite α
   induction n using Nat.strong_induction_on with
   | _ n ih =>
   intro α _ hα hn G hG
+  haveI : Group.IsSolvable G := hG
   subst hα
   have ih' : SolvDLIH.{0} (Nat.card α) := fun β _ h1 hlt G hG => ih _ hlt β rfl h1 G hG
   by_cases hnt : Nontrivial G

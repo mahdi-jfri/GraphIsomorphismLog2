@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimaryMatrixCell
-import Workspace.Impl.LinTabulate
+module
+
+public import Workspace.Impl.LinPrimaryMatrixCell
+public import Workspace.Impl.LinTabulate
+
+@[expose] public section
 
 /-! Tabulate the retained-coordinate field matrix from a full homogeneous
 matrix, the cyclic exponents and the current level. -/

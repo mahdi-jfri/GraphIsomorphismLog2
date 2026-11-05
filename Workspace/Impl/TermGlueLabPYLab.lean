@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPXLab
+module
+
+public import Workspace.Impl.TermGlueLabPXLab
+
+@[expose] public section
 
 /-!
 # The labels of the aligned rows `y'`

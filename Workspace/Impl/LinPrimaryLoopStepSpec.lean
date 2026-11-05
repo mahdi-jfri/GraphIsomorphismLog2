@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryLoopCost
+module
+
+public import Workspace.Impl.LinPrimaryLoopCost
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -12,9 +16,10 @@ private theorem linPrimaryLoopGuardBound {S cc : ℕ} (h : cc ≤ 2 * S + 13) : 
 set_option maxHeartbeats 3000000 in
 theorem linPrimaryLoop_step_spec (hm : ConstructiveMembership) (hv : VectorStabilizer)
     {P : Program} {b jm jv n p d : ℕ} (hat : linPrimaryLoopAt P b jm jv hm hv)
-    (gs : List (Equiv.Perm (Fin n))) (hs : IsSolvable (gens gs)) (hp : p.Prime) (hpn : p ≤ n)
+    (gs : List (Equiv.Perm (Fin n))) (hp : p.Prime) (hpn : p ≤ n)
     [NeZero n] (ν : Fin d → ℕ)
     (ρ : gens gs →* (linFiniteVec (linPrimaryOrders p ν) ≃+ linFiniteVec (linPrimaryOrders p ν)))
+    (hs : IsSolvable ρ.range)
     (c : gens gs → linFiniteVec (linPrimaryOrders p ν))
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g)
     (x : linFiniteVec (linPrimaryOrders p ν)) (acc0 : Equiv.Perm (Fin n))
@@ -45,12 +50,12 @@ theorem linPrimaryLoop_step_spec (hm : ConstructiveMembership) (hv : VectorStabi
     let accum := r.val * acc0
     let state := Val.list [linActionContext ks m ρ' c', linFinitePointVal m point, encPerm accum]
     let S := (Val.list [orig, .nat j, state]).wt
-    have hks := linPrimaryCover_solvable gs ks hs hle
+    have hks := linPrimaryRange_solvable gs ks ρ hs hle
     have hi : (linPrimaryIterationVal ks m ρ' c' point accum p ν j).wt ≤ linPrimaryIterationWeight W :=
       linPrimaryIteration_wt ks hlen hn hd m (fun i => Nat.pow_pos hp.pos) hwm ρ' c' point accum ν hν (hpn.trans hn) j hjW
     have hstep : FunAll P (b + 8) (linPrimaryIterationVal ks m ρ' c' point accum p ν j)
-        (fun out cost => linPrimaryStepOut ks hks hp hpn ν j ρ' c' hc' hofs point accum out ∧ cost ≤ (linPrimaryLoopCallBudget hm hv W)) :=
-      FunAll.mono (linPrimaryStep_spec hm hv hat.step ks hks hp hpn ν j ρ' c' hc' hofs point hpoint accum)
+        (fun out cost => linPrimaryStepOut ks hp hpn ν j ρ' hks c' hc' hofs point accum out ∧ cost ≤ (linPrimaryLoopCallBudget hm hv W)) :=
+      FunAll.mono (linPrimaryStep_spec hm hv hat.step ks hp hpn ν j ρ' hks c' hc' hofs point hpoint accum)
         (fun out cost ho => ⟨ho.1, ho.2.trans (linPrimaryLoopCallBudget_bound hm hv hi hjW)⟩)
     have da := linPrimaryLoopArg_spec (P := P) (linActionContext gs m ρ c) (linFinitePointVal m x) (encPerm acc0)
       (linActionContext ks m ρ' c') (linFinitePointVal m point) (encPerm accum) p ν j
@@ -63,7 +68,7 @@ theorem linPrimaryLoop_step_spec (hm : ConstructiveMembership) (hv : VectorStabi
     subst q
     change EvalAll P [.list [orig, .nat j, state]] (.call (b + 8) linPrimaryLoopArgE) _
     refine call.mono fun out cb ho => ?_
-    have hnext := linPrimaryLoopInv_advance gs ks hks hp hpn ν ρ c hc x acc0 j hle r hpoint hofs hcover out ho.1
+    have hnext := linPrimaryLoopInv_advance gs ks hp hpn ν ρ c hc x acc0 j hle hks r hpoint hofs hcover out ho.1
     have wn := linPrimaryLoopInv_wt gs hp ν hn hd hwm ρ c x acc0 (j + 1) out hnext
     refine ⟨hnext, ?_⟩
     norm_num only [List.length_cons, List.length_nil, Nat.add_assoc] at hcc

@@ -1,6 +1,10 @@
 -- Not assumed by the main theorem
-import Workspace.Cited.AlgoRefinement
-import Workspace.Cited.DesignLemma
+module
+
+public import Workspace.Cited.AlgoRefinement
+public import Workspace.Cited.DesignLemma
+
+@[expose] public section
 
 /-!
 # Stage 2 task: the canonical output of the Design Lemma step

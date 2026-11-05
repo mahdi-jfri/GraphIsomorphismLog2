@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojSeq
-import Workspace.Impl.AggItemCiSojQuery
-import Workspace.Impl.AggItemCiSojSpec
+module
+
+public import Workspace.Impl.AggItemCiSojSeq
+public import Workspace.Impl.AggItemCiSojQuery
+public import Workspace.Impl.AggItemCiSojSpec
+
+@[expose] public section
 
 /-! # Returning the next exact rectangle query to the aggregation interface -/
 

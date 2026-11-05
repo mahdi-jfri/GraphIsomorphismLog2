@@ -1,4 +1,8 @@
-import Workspace.Algorithm.Procedure
+module
+
+public import Workspace.Algorithm.Procedure
+
+@[expose] public section
 
 /-!
 # Exactness of every case (the steps of the proof of Lemma 6.1)

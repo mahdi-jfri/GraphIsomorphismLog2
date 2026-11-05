@@ -1,4 +1,8 @@
-import Workspace.Impl.LinVectorTransportCost
+module
+
+public import Workspace.Impl.LinVectorTransportCost
+
+@[expose] public section
 
 /-! A vector transporter with a proved empty answer or a representative and
 the target stabilizer, computed from the original group and matrix encodings. -/

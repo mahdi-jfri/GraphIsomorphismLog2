@@ -1,6 +1,10 @@
-import Workspace.QuotientChainExtension
-import Workspace.SocleOuter
-import Workspace.SocleFactorCaps
+module
+
+public import Workspace.QuotientChainExtension
+public import Workspace.SocleOuter
+public import Workspace.SocleFactorCaps
+
+@[expose] public section
 
 namespace GI.SocleOuter
 
@@ -79,7 +83,7 @@ theorem quotient_chain_zero_of_cap {b cutoff w : ℕ} (hcutoff : 5 ≤ cutoff)
     have h := bound H k (hcutoff.trans hk) s.quotient s.onto
     omega
 
-theorem cap_four_of_solvable [IsSolvable G] : Cap G 4 := by
+theorem cap_four_of_solvable [Group.IsSolvable G] : Cap G 4 := by
   intro H k hk q onto
   exact (no_alternating_surjection_of_solvable hk q onto).elim
 
@@ -90,7 +94,7 @@ theorem product_cap_four_of_solvable {I : Type*} [Fintype I]
   · intro g hg
     exact funext hg
   · intro i
-    letI := solvable i
+    letI : Group.IsSolvable (D i) := solvable i
     exact cap_four_of_solvable
 
 end GI.SectionCaps

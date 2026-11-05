@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectStabilizer
+module
+
+public import Workspace.Impl.LinObjectStabilizer
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

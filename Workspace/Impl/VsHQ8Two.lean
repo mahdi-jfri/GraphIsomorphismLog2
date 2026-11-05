@@ -1,5 +1,9 @@
-import Workspace.Impl.VsHSplitPs
-import Workspace.Proved.VsMQ8
+module
+
+public import Workspace.Impl.VsHSplitPs
+public import Workspace.Proved.VsMQ8
+
+@[expose] public section
 
 /-!
 # The second `Q₈`
@@ -15,6 +19,8 @@ open Matrix Module
 namespace GI.Impl
 
 open GI.Lang GI.Cited GI.Proved Equiv
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 variable {I : VecStabInst} {s : VsQSt I} [Fact I.p.Prime]
 

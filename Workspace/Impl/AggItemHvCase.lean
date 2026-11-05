@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemHvBr
+module
+
+public import Workspace.Impl.AggItemHvBr
+
+@[expose] public section
 
 /-!
 # Case 2a meets its contract, given the init program

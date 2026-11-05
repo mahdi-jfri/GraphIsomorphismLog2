@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepT11
+module
+
+public import Workspace.Impl.AggRectRepT11
+
+@[expose] public section
 
 /-!
 # The program in the single-label case

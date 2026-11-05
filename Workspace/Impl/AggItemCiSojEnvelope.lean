@@ -1,4 +1,8 @@
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-! # A monotone polynomial envelope for a proved own-cost bound -/
 

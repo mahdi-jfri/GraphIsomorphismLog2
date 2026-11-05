@@ -1,8 +1,12 @@
-import Workspace.Proved.VsPStep4Math
-import Workspace.Proved.VsQSplit1
-import Workspace.Proved.VsTCliff
-import Workspace.Proved.VsWKey
-import Workspace.Proved.VsQAlg
+module
+
+public import Workspace.Proved.VsPStep4Math
+public import Workspace.Proved.VsQSplit1
+public import Workspace.Proved.VsTCliff
+public import Workspace.Proved.VsWKey
+public import Workspace.Proved.VsQAlg
+
+@[expose] public section
 
 /-!
 # The algebra of an abelian normal subgroup
@@ -18,6 +22,8 @@ subgroup of `H̄`, and a list `Lb` of stored local matrices spanning `L = 𝔽_p
 -/
 
 open Matrix
+
+set_option backward.isDefEq.respectTransparency false
 
 namespace GI.Proved
 
@@ -104,7 +110,8 @@ theorem memB (h : VsQAHyp hs as Lb) (f : Module.End (ZMod I.p) (Fin (vsQD s) →
   · rintro ⟨x, hx, rfl⟩
     rw [hT, h.hspan, Subalgebra.mem_toSubmodule, vsFAlgOf, hset, vsP_adjoin_transpose,
       ← vsP_mem_vsTAlg_iff hs h.has] at hx
-    simpa using hx
+    change Matrix.toLinAlgEquiv' x ∈ vsTAlg (vsPBar hs (gens as)) at hx
+    exact hx
 
 /-- The stored matrices of `Lb` commute. -/
 theorem comm (h : VsQAHyp hs as Lb) : VsWComm I.p (vsQD s) Lb := by
@@ -168,7 +175,8 @@ theorem VsQAHyp.fix (h : VsQAHyp hs as Lb) (i) :
   refine ⟨(h.memB _).2 ⟨_, hm.1, rfl⟩, ?_⟩
   have e := congrArg (Matrix.toLinAlgEquiv' : _ ≃ₐ[ZMod I.p] _) hm.2
   rw [map_pow] at e
-  simpa only [vsQAFix, vsWLin] using e
+  change vsQAFix s Lb i ^ I.p = vsQAFix s Lb i at e
+  exact e
 
 theorem VsQAHyp.fixSpan (h : VsQAHyp hs as Lb) :
     ∀ t ∈ vsTAlg (vsPBar hs (gens as)), t ^ I.p = t →

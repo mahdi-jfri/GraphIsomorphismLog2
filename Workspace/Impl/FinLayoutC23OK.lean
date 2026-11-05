@@ -1,4 +1,8 @@
-import Workspace.Impl.FinLayoutC23
+module
+
+public import Workspace.Impl.FinLayoutC23
+
+@[expose] public section
 
 /-! # Cases 2b/3 in their final slot
 

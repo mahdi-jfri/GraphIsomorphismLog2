@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlue
+module
+
+public import Workspace.Impl.TermGlue
+
+@[expose] public section
 
 /-!
 # The `J`-part of one radical coset (Theorem A.23), as a hypothesis
@@ -136,14 +140,19 @@ def TermJSpec (K D g : ℕ) : Prop :=
         us (tmTests L.q) →
       List.Forall₂ (fun v ij => AnsC (Equiv.refl (Fin m)) v (tmCosetState S E σH ij).answer)
         vs (tmCosets L.q) →
-      ∀ r : Perm (Fin m), r ∈ ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα).Hb →
+      ∀ (R' : Subgroup (Perm (Fin m)))
+        (hRH : R' ≤ (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Hb)
+        (hNR : (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ≤ R')
+        (hsolv : ∃ ℓ, GI.Multicoset.relDerived R' (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ℓ ≤
+          (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb),
+      ∀ r : Perm (Fin m), r ∈ ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv).Hb →
       ∀ w : Val, AnsC (Equiv.refl (Fin m)) w
-        (tmGlLab ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα) r) →
+        (tmGlLab ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv) r) →
       FunAll Pg g (.list [(.list [.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
           encFun (rowLab e L.con.blocks)], .list us, .list vs]), encPerm r, w])
         (fun u cost => AnsC (finProdFinEquiv : Fin m × Fin L.q ≃ Fin (m * L.q)) u
-            (tmJSet (tmCosetT ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard
-              hsN hN hqα) r)) ∧
+            (tmJSet (tmCosetT ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard
+              hsN hN hqα R' hRH hNR hsolv) r)) ∧
           cost ≤ K * ((Val.list [(.list [.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
             encFun (rowLab e L.con.blocks)], .list us, .list vs]), encPerm r, w]).wt + 1) ^ D)
 

@@ -1,6 +1,10 @@
-import Workspace.Impl.GenProdSq
-import Workspace.Impl.GenKernel
-import Workspace.Impl.GenEnum
+module
+
+public import Workspace.Impl.GenProdSq
+public import Workspace.Impl.GenKernel
+public import Workspace.Impl.GenEnum
+
+@[expose] public section
 
 /-!
 # The product refinement: the coordinate group and its cosets

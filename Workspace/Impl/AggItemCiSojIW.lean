@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojLC
+module
+
+public import Workspace.Impl.AggItemCiSojLC
+
+@[expose] public section
 
 /-!
 # Sizes recorded in the projection input
@@ -19,7 +23,7 @@ variable {k q : ℕ}
 /-- A permutation table contains one entry for every point of its degree. -/
 theorem itcs_perm_degree (p : Perm (Fin k)) : k≤(encPerm p).wt := by
   have h:=length_lt_wt_list ((List.finRange k).map fun i=>Val.nat (p i))
-  simpa only [List.length_map,List.length_finRange] using h.le
+  rw [List.length_map,List.length_finRange] at h; exact h.le
 
 /-- The group value records every generator, in addition to its leading identity. -/
 theorem itcs_group_length (gs : List (Perm (Fin k))) : gs.length≤(encGroup gs).wt := by

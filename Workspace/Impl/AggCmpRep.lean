@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCmpKer
-import Workspace.Impl.AggCmpPhase
+module
+
+public import Workspace.Impl.AggCmpKer
+public import Workspace.Impl.AggCmpPhase
+
+@[expose] public section
 
 /-!
 # The program states of the comparison phase

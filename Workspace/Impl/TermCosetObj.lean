@@ -1,5 +1,9 @@
-import Workspace.Impl.TermCosetFirst
-import Workspace.Impl.Reduce
+module
+
+public import Workspace.Impl.TermCosetFirst
+public import Workspace.Impl.Reduce
+
+@[expose] public section
 
 /-!
 # The objects of the rows, built from the coset table

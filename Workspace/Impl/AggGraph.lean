@@ -1,5 +1,9 @@
-import Workspace.Impl.GiantSelMath
-import Workspace.Impl.DomMath
+module
+
+public import Workspace.Impl.GiantSelMath
+public import Workspace.Impl.DomMath
+
+@[expose] public section
 
 /-!
 # Subgroups of `G` with their labels: the graph form

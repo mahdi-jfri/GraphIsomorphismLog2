@@ -1,4 +1,8 @@
-import Workspace.Impl.VsPAb
+module
+
+public import Workspace.Impl.VsPAb
+
+@[expose] public section
 
 /-!
 # Commutators and their discrete logarithms

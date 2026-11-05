@@ -1,4 +1,8 @@
-import Workspace.Impl.JohnStep
+module
+
+public import Workspace.Impl.JohnStep
+
+@[expose] public section
 
 /-!
 # The fold over the pairs

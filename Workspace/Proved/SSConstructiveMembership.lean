@@ -1,4 +1,8 @@
-import Workspace.Impl.SSConstrWrap
+module
+
+public import Workspace.Impl.SSConstrWrap
+
+@[expose] public section
 
 /-!
 # Constructive membership in polynomial time

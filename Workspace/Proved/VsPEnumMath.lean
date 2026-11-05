@@ -1,5 +1,9 @@
-import Workspace.Proved.VsPSpinMath
-import Workspace.Impl.VsPEnum
+module
+
+public import Workspace.Proved.VsPSpinMath
+public import Workspace.Impl.VsPEnum
+
+@[expose] public section
 
 /-!
 # The enumerated words cover the key span

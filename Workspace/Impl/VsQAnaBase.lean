@@ -1,6 +1,10 @@
-import Workspace.Impl.VsQAnaLC
-import Workspace.Impl.VsWProgBas
-import Workspace.Proved.VsQSplit1
+module
+
+public import Workspace.Impl.VsQAnaLC
+public import Workspace.Impl.VsWProgBas
+public import Workspace.Proved.VsQSplit1
+
+@[expose] public section
 
 /-!
 # Common bounds for the analysis, and the chain split program

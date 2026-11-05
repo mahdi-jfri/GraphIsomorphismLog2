@@ -1,8 +1,12 @@
-import Workspace.Impl.LinObjectPieces
-import Workspace.Impl.LinAbelianCoordinates
-import Workspace.Impl.LinObjectLocalRelations
-import Workspace.Impl.LinObjectProductNormal
-import Workspace.Impl.LinObjectOffsetsAnswer
+module
+
+public import Workspace.Impl.LinObjectPieces
+public import Workspace.Impl.LinAbelianCoordinates
+public import Workspace.Impl.LinObjectLocalRelations
+public import Workspace.Impl.LinObjectProductNormal
+public import Workspace.Impl.LinObjectOffsetsAnswer
+
+@[expose] public section
 
 /-! Compute the abelian presentation, local relation blocks, and both
 Smith coordinate systems retained by the object glue. -/

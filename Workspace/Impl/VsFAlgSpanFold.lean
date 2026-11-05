@@ -1,4 +1,8 @@
-import Workspace.Impl.VsFAlgSpanStep
+module
+
+public import Workspace.Impl.VsFAlgSpanStep
+
+@[expose] public section
 
 /-!
 # A pass of the algebra basis program

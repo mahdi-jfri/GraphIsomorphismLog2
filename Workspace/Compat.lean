@@ -2,7 +2,11 @@
 Mathlib lemmas that older versions of mathlib provided and the pinned mathlib does not.
 They are restated under their old names.
 -/
-import Mathlib.Algebra.Group.End
+module
+
+public import Mathlib.Algebra.Group.End
+
+@[expose] public section
 
 namespace Equiv.Perm
 

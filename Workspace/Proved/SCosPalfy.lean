@@ -1,6 +1,10 @@
-import Workspace.Proved.SCosMath
-import Mathlib.GroupTheory.GroupAction.Primitive
-import Mathlib.GroupTheory.Solvable
+module
+
+public import Workspace.Proved.SCosMath
+public import Mathlib.GroupTheory.GroupAction.Primitive
+public import Mathlib.GroupTheory.Solvable
+
+@[expose] public section
 
 /-!
 # Few coset representatives for the kernel on a minimal block system
@@ -34,7 +38,7 @@ open scoped Pointwise
 permutation group of degree `n` has order at most `(n + 1)^c`. The body is the statement
 `GI.Proved.PalfyBound` of `Proved/Palfy.lean`. -/
 def ScosPalfyBound : Prop :=
-  ∃ c : ℕ, ∀ (n : ℕ) (G : Subgroup (Equiv.Perm (Fin n))), IsSolvable G →
+  ∃ c : ℕ, ∀ (n : ℕ) (G : Subgroup (Equiv.Perm (Fin n))), Group.IsSolvable G →
     MulAction.IsPreprimitive G (Fin n) → Nat.card G ≤ (n + 1) ^ c
 
 section Classes
@@ -175,7 +179,7 @@ theorem scos_isPreprimitive (hinv : InvariantLabeling H lab)
       have key : ∀ (A B : Finset (Fin k)) (ha : A.Nonempty) (hb : B.Nonempty), A = B →
           A.min' ha = B.min' hb := by
         rintro A B ha hb rfl; rfl
-      rw [key _ _ _ _ (hset i j hij)]
+      exact congrArg Fin.val (key _ _ _ _ (hset i j hij))
   -- The relation is invariant.
   have hRinv : ∀ h ∈ H, ∀ i j, R (h i) (h j) ↔ R i j := by
     intro h hh i j
@@ -232,7 +236,7 @@ every solvable transitive `H ≤ Sym(k)` and minimal block system `lab` of `H` w
 a set of elements of `H` that act pairwise differently on the classes has at most `(m + 1)^c`
 elements. -/
 theorem scos_palfy_classes (hP : ScosPalfyBound) : ∃ c : ℕ, ∀ (k : ℕ)
-    (H : Subgroup (Perm (Fin k))) (lab : Fin k → ℕ), IsSolvable H →
+    (H : Subgroup (Perm (Fin k))) (lab : Fin k → ℕ), Group.IsSolvable H →
     (∀ i j : Fin k, ∃ h ∈ H, h i = j) → IsMinimalBlocks H lab →
     ∀ S : Finset (Perm (Fin k)), (∀ s ∈ S, s ∈ H) →
       (∀ s ∈ S, ∀ t ∈ S, (∀ i, lab (s i) = lab (t i)) → s = t) →
@@ -253,8 +257,8 @@ theorem scos_palfy_classes (hP : ScosPalfyBound) : ∃ c : ℕ, ∀ (k : ℕ)
     obtain ⟨x, hx, hxy⟩ := Subgroup.mem_map.mp y.2
     exact ⟨⟨x, hx⟩, Subtype.ext hxy⟩
   -- `G'` is solvable: an image of `H`.
-  have hsol' : IsSolvable G' := by
-    have : IsSolvable ψ.range := solvable_of_surjective ψ.rangeRestrict_surjective
+  have hsol' : Group.IsSolvable G' := by
+    have : Group.IsSolvable ψ.range := solvable_of_surjective ψ.rangeRestrict_surjective
     exact solvable_of_surjective hφ
   -- `G'` is primitive: the bijection `e` carries the primitive action on the classes.
   have hpre : MulAction.IsPreprimitive ψ.range (ScosCls lab) :=

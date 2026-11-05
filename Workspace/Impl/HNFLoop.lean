@@ -1,4 +1,8 @@
-import Workspace.Impl.HNFCol
+module
+
+public import Workspace.Impl.HNFCol
+
+@[expose] public section
 
 /-!
 # The modular Hermite form, as a program

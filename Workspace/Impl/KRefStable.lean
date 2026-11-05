@@ -1,4 +1,8 @@
-import Workspace.Impl.KRefRef
+module
+
+public import Workspace.Impl.KRefRef
+
+@[expose] public section
 
 /-!
 # After `2 n^k` rounds the colorings are a correct output

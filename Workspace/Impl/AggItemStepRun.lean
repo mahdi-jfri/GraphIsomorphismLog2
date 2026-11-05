@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemStepMv
-import Workspace.Impl.AggItemTs
+module
+
+public import Workspace.Impl.AggItemStepMv
+public import Workspace.Impl.AggItemTs
+
+@[expose] public section
 
 /-!
 # The items after the structure step

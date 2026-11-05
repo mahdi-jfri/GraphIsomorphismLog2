@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemHvKer
-import Workspace.Impl.Combine
-import Workspace.Impl.AggCombExact
+module
+
+public import Workspace.Impl.AggItemHvKer
+public import Workspace.Impl.Combine
+public import Workspace.Impl.AggCombExact
+
+@[expose] public section
 
 /-!
 # Case 2a: first parts, twisted colors and the pieces

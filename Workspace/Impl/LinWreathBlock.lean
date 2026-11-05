@@ -1,5 +1,9 @@
-import Workspace.Impl.LinWreathBlockFormula
-import Workspace.Impl.AggStructDC
+module
+
+public import Workspace.Impl.LinWreathBlockFormula
+public import Workspace.Impl.AggStructDC
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang Equiv

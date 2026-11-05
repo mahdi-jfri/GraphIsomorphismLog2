@@ -1,6 +1,10 @@
-import Workspace.Impl.TermRun
-import Workspace.Impl.TermAsm
-import Workspace.Impl.RowSpecTerm
+module
+
+public import Workspace.Impl.TermRun
+public import Workspace.Impl.TermAsm
+public import Workspace.Impl.RowSpecTerm
+
+@[expose] public section
 
 /-!
 # The terminal row function (T1 with the assembly as a hypothesis)

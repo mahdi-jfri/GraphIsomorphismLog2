@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosSpec
+module
+
+public import Workspace.Impl.SCosSpec
+
+@[expose] public section
 
 /-!
 # The children of the transitive case

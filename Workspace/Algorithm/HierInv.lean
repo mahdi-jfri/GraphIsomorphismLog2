@@ -1,4 +1,8 @@
-import Workspace.Algorithm.Interfaces
+module
+
+public import Workspace.Algorithm.Interfaces
+
+@[expose] public section
 
 /-!
 # The hierarchy invariant of reachable states

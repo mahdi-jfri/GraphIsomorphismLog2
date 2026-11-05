@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepRowL
+module
+
+public import Workspace.Impl.AggRectRepRowL
+
+@[expose] public section
 
 /-!
 # The representation function and the cells the program writes

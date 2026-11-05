@@ -1,4 +1,8 @@
-import Workspace.Impl.LinWreathInput
+module
+
+public import Workspace.Impl.LinWreathInput
+
+@[expose] public section
 
 /-! The executable two-copy vector stabilizer. VectorStabilizer is its only
 cited hypothesis; the permutation and matrix tables are built by the program. -/

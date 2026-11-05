@@ -1,10 +1,14 @@
-import Workspace.Impl.AggItemCfCell
-import Workspace.Impl.AggItemCfSpec
-import Workspace.Impl.AggItemCfFr
-import Workspace.Impl.AggInc
-import Workspace.Lang.Lib.LinIntTake
-import Workspace.Lang.Lib.Tabulate
-import Workspace.Lang.Prims.Ops
+module
+
+public import Workspace.Impl.AggItemCfCell
+public import Workspace.Impl.AggItemCfSpec
+public import Workspace.Impl.AggItemCfFr
+public import Workspace.Impl.AggInc
+public import Workspace.Lang.Lib.LinIntTake
+public import Workspace.Lang.Lib.Tabulate
+public import Workspace.Lang.Prims.Ops
+
+@[expose] public section
 
 /-!
 # The orbital coloring of Case 2b, as a program (`col`)
@@ -69,7 +73,7 @@ theorem itCf_wt_tab {m N : ℕ} (F : Fin m → Val) (hF : ∀ i, ∃ n ≤ N, F 
     obtain ⟨i, -, rfl⟩ := List.mem_map.1 hv
     obtain ⟨n, hn, e⟩ := hF i
     rw [e]; have := wt_nat_le n; omega)
-  simpa using this
+  simpa [Nat.mul_add, Nat.add_assoc] using this
 
 theorem linTakeCost_mono {a b : ℕ} (h : a ≤ b) : linTakeCost a ≤ linTakeCost b :=
   Nat.mul_le_mul_left _ (Nat.pow_le_pow_left (by omega) 3)

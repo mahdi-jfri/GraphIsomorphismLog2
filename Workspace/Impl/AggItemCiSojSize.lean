@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojCT
+module
+
+public import Workspace.Impl.AggItemCiSojCT
+
+@[expose] public section
 
 /-!
 # Counting the component at the fixed source vertex
@@ -66,12 +70,19 @@ theorem itcs_size_prog {q B : ℕ} {Pg : Program} {Ii : itcsCompIdx} {f : ℕ}
   have sa := StDC.mk2 comp (get (i := 4) rfl (by have := hw.qle; omega)) hszarg (by have := hw.qle; omega)
   have sc := StDC.call sa (it_szB_spec hi.c1.sz hi.c1.cnt (itcs_lab_lt X v) x₀) hout
   clear hw hc hj hvw hqn hxn hxq hjB budget hin hqp hl hszarg hsz hout get args comp sa
-  exact StDC.funDet hf sc (by simp only [itcsSizeC, Nat.add_mul]; omega)
+  refine StDC.funDet hf sc ?_
+  unfold itcsSizeC
+  generalize itcsCompW q B = W1
+  generalize itcsCompTotal q B = T1
+  generalize (q + 1) ^ 3 = Q3
+  rw [Nat.add_mul countK 1000 Q3]
+  omega
 
 /-- Polynomial cost after inserting the round's degree and palette bound. -/
 theorem itcs_size_pbu : PBU fun _ W _ => itcsSizeC (2 * W + 3) (2 * (2 * W + 3) ^ 64) := by
-  simp only [itcsSizeC, itcsCompTotal, itcsCompC, itcsSqMapC, itcsCompW, itCfObjB,
-    itcsGenW, countK, mapK, orbitK]
-  norm_poly
+  unfold itcsSizeC
+  refine PBU.add (PBU.add ?_ itcs_comp_pbu) ?_
+  · simp only [itcsCompW, itCfObjB, itcsGenW]; norm_poly
+  · simp only [countK]; norm_poly
 
 end GI.Impl

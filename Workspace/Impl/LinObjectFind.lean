@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectClass
-import Workspace.Impl.TermRecProgPcs
+module
+
+public import Workspace.Impl.LinObjectClass
+public import Workspace.Impl.TermRecProgPcs
+
+@[expose] public section
 
 /-! Compute the first position of an object's (color, subgroup) class. -/
 namespace GI.Impl

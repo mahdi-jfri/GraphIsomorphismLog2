@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHCAb
+module
+
+public import Workspace.Impl.VsHCAb
+
+@[expose] public section
 
 namespace GI.Impl
 

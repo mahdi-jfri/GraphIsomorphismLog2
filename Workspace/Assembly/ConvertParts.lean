@@ -1,4 +1,8 @@
-import Workspace.Assembly.ConvertMath
+module
+
+public import Workspace.Assembly.ConvertMath
+
+@[expose] public section
 
 /-!
 # The parts of the converter

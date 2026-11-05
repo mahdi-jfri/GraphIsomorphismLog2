@@ -1,12 +1,16 @@
-import Workspace.Impl.AggItemCiSojRes
-import Workspace.Impl.AggItemCiSojColorsQuery
-import Workspace.Impl.AggItemCiSojPhysicalExact
-import Workspace.Impl.AggItemCiSojAP
-import Workspace.Impl.AggItemCiSojGC
-import Workspace.Impl.AggItemCiSojFP
-import Workspace.Impl.AggItemCiSojSD
-import Workspace.Impl.AggItemCiSojMK
-import Workspace.Impl.AggItemCiSojQueue
+module
+
+public import Workspace.Impl.AggItemCiSojRes
+public import Workspace.Impl.AggItemCiSojColorsQuery
+public import Workspace.Impl.AggItemCiSojPhysicalExact
+public import Workspace.Impl.AggItemCiSojAP
+public import Workspace.Impl.AggItemCiSojGC
+public import Workspace.Impl.AggItemCiSojFP
+public import Workspace.Impl.AggItemCiSojSD
+public import Workspace.Impl.AggItemCiSojMK
+public import Workspace.Impl.AggItemCiSojQueue
+
+@[expose] public section
 
 /-! # Preparing the first rectangle and asking its inherited queries -/
 

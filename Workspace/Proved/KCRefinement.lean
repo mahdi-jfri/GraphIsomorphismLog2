@@ -1,9 +1,13 @@
-import Workspace.Cited.CoherentConfig
-import Mathlib.Logic.Equiv.Fintype
-import Mathlib.Data.Countable.Basic
-import Mathlib.Data.Multiset.Basic
-import Mathlib.Logic.Encodable.Pi
-import Mathlib.Data.Fintype.Basic
+module
+
+public import Workspace.Cited.CoherentConfig
+public import Mathlib.Logic.Equiv.Fintype
+public import Mathlib.Data.Countable.Basic
+public import Mathlib.Data.Multiset.Basic
+public import Mathlib.Logic.Encodable.Pi
+public import Mathlib.Data.Fintype.Basic
+
+@[expose] public section
 
 /-!
 # Canonical `k`-ary coherent refinement (`k`-ary Weisfeiler–Leman)

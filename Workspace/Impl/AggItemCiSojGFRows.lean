@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojGB
-import Workspace.Impl.AggItemCiSojGF
-import Workspace.Impl.AggItemCiSojCCRows
+module
+
+public import Workspace.Impl.AggItemCiSojGB
+public import Workspace.Impl.AggItemCiSojGF
+public import Workspace.Impl.AggItemCiSojCCRows
+
+@[expose] public section
 
 /-! # The generator constructor returns exactly the full model group -/
 

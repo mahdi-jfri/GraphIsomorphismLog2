@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosTop2
+module
+
+public import Workspace.Impl.SCosTop2
+
+@[expose] public section
 
 /-!
 # The top level, part 3 (reading the answer)

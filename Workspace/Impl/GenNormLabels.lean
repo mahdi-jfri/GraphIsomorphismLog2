@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormInc
-import Workspace.Impl.Weights
+module
+
+public import Workspace.Impl.GenNormInc
+public import Workspace.Impl.Weights
+
+@[expose] public section
 
 /-!
 # The exact label value of a normalization child
@@ -54,7 +58,7 @@ theorem normBlockMapVal_eq [Finite Ω] {P : Params} (en : Ω ≃ Fin n)
       PrimitiveQuotient.Flip.id, blkMapVal, normBlockMapVal, NormAbove.child,
       PrimitiveQuotient.normalizationOf, State.restrict]
     intro a
-    rfl
+    congr; ext j; congr
   · simp [NormAbove.childLabels, NormAbove.labels, PrimitiveQuotient.normAboveOf,
       PrimitiveQuotient.constituent, hk, PrimitiveQuotient.johnsonBlocks,
       PrimitiveQuotient.Flip.compl, blkMapVal, normBlockMapVal, NormAbove.child,
@@ -65,7 +69,8 @@ theorem normBlockMapVal_eq [Finite Ω] {P : Params} (en : Ω ≃ Fin n)
       congr 1
       funext t
       change Fin c.m at t
-      exact normComplIndicator (Q.kset c.e (en.symm a)) t
+      convert normComplIndicator (Q.kset c.e (en.symm a)) t
+      rfl
     · simp only [ha, if_false]
 
 /-- Any bounded generating list with the recovered point images gives `LabValStd` of exactly

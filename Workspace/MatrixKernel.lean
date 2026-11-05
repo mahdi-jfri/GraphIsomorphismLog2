@@ -1,5 +1,9 @@
-import Workspace.SemiregularTwins
-import Workspace.Transport
+module
+
+public import Workspace.SemiregularTwins
+public import Workspace.Transport
+
+@[expose] public section
 
 namespace GI.Matrix
 
@@ -44,7 +48,7 @@ theorem right_kernel_left_image (M : L → R → Bool) :
     change g.val.2 = 1 at hg
     intro x
     funext y
-    simpa [hg] using g.property x y
+    simpa [left, hg] using g.property x y
   · intro hp
     exact ⟨rowLift M ⟨p, hp⟩, rfl, rfl⟩
 

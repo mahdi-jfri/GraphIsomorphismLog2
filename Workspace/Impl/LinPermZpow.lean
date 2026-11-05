@@ -1,6 +1,10 @@
-import Workspace.Impl.LinPermPow
-import Workspace.Lang.Lib.LinIntCodec
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Impl.LinPermPow
+public import Workspace.Lang.Lib.LinIntCodec
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-! Signed binary permutation powers for lifting integer-coordinate
 solutions back to the permutation cover. -/

@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojPT
-import Workspace.Impl.AggItemCiSojBP
-import Workspace.Impl.AggItemCiSojTW
+module
+
+public import Workspace.Impl.AggItemCiSojPT
+public import Workspace.Impl.AggItemCiSojBP
+public import Workspace.Impl.AggItemCiSojTW
+
+@[expose] public section
 
 /-! # Rectangle color pullback with all palette and cell-code bounds discharged -/
 

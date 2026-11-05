@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojAnswers
+module
+
+public import Workspace.Impl.AggItemCiSojAnswers
+
+@[expose] public section
 
 /-! # A polynomial cost for processing the full answer list -/
 

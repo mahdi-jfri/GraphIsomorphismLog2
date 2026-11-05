@@ -1,6 +1,10 @@
-import Workspace.Proved.VsPOrbMath
-import Workspace.Proved.VsPBridge
-import Workspace.Proved.VsPCountMath
+module
+
+public import Workspace.Proved.VsPOrbMath
+public import Workspace.Proved.VsPBridge
+public import Workspace.Proved.VsPCountMath
+
+@[expose] public section
 
 /-!
 # The orbit list as an orbit set of local units

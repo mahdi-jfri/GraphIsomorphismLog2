@@ -1,6 +1,10 @@
-import Workspace.Impl.VsQTItem
-import Workspace.Impl.VsBFldAP
-import Workspace.Impl.VsWProgComp
+module
+
+public import Workspace.Impl.VsQTItem
+public import Workspace.Impl.VsBFldAP
+public import Workspace.Impl.VsWProgComp
+
+@[expose] public section
 
 /-!
 # The action program on tuples of local subspaces

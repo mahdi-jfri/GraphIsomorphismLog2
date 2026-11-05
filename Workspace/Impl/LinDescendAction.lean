@@ -1,4 +1,9 @@
-import Workspace.Impl.LinDescendAdd
+module
+
+public import Workspace.Impl.LinDescendAdd
+public import Workspace.Impl.AddEquivGroup
+
+@[expose] public section
 
 /-! The descended maps form an action, and the projected translations retain
 the cocycle law. -/
@@ -10,7 +15,7 @@ noncomputable def linDescendAction (π : V →+ W) (hπ : Function.Surjective π
     (ρ : G →* (V ≃+ V)) (hk : ∀ g x, π x = 0 → π (ρ g x) = 0) (g : G) : W ≃+ W :=
   linDescendEquiv π hπ (ρ g) (hk g) (by
     intro x hx
-    simpa only [map_inv] using hk g⁻¹ x hx)
+    simpa only [map_inv, addEquiv_inv_apply] using hk g⁻¹ x hx)
 
 @[simp] theorem linDescendAction_image (π : V →+ W) (hπ : Function.Surjective π)
     (ρ : G →* (V ≃+ V)) (hk : ∀ g x, π x = 0 → π (ρ g x) = 0) (g : G) (x : V) :

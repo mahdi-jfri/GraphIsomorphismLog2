@@ -1,7 +1,11 @@
-import Workspace.Impl.Cases
-import Workspace.Impl.RowA18Prog
-import Workspace.Impl.RowPart
-import Workspace.Impl.Weights
+module
+
+public import Workspace.Impl.Cases
+public import Workspace.Impl.RowA18Prog
+public import Workspace.Impl.RowPart
+public import Workspace.Impl.Weights
+
+@[expose] public section
 
 /-!
 # The specification that the terminal row program must meet

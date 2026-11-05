@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectKernelCost
+module
+
+public import Workspace.Impl.LinObjectKernelCost
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -9,7 +13,7 @@ theorem linObjectKernel_step_spec {P : Program} {b jsci n i : ℕ} {hs : Solvabl
     (h : linObjectKernelAt P b jsci hs) (as : List (Equiv.Perm (Fin n))) (groups : List Val)
     (acc bv : Val) (K B : Subgroup (Equiv.Perm (Fin n)))
     (hi : groups[i]? = some bv) (hacc : GroupValC n acc K) (hB : GroupValC n bv B)
-    (hsol : IsSolvable K) :
+    (hsol : GI.Lang.Normalizes B K) :
     let input := Val.list [encGroup as,.list groups]
     EvalAll P [.list [input,.nat i,acc]] (linObjectKernelStepF jsci (b + 3))
       (fun out cost => GroupValC n out (K ⊓ B) ∧ cost ≤ linObjectKernelStepCost hs n input.wt) := by

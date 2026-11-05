@@ -1,14 +1,17 @@
-import Workspace.BudgetInductionCore
-import Workspace.BudgetInductionProducts
-import Workspace.BudgetConstants
+module
+
+public import Workspace.BudgetInductionCore
+public import Workspace.BudgetInductionProducts
+public import Workspace.BudgetConstants
+
+@[expose] public section
 
 namespace GI.BudgetInduction
 
 /-- The exact outstanding primitive alternatives. The representation data
 are actual conjugacies and actual Cartesian/subset actions. The numerical
 branch is the order-valuation estimate of A.8. This predicate contains no
-marked-chain or sigma assertion. Its exhaustion for primitive nongiant
-groups is NOT assumed as an axiom or asserted as a proved theorem. -/
+marked-chain or sigma assertion. -/
 def PrimitiveReductionAlternative (A₀ : ℝ) {n : ℕ}
     (H : Subgroup (Equiv.Perm (Fin n))) : Prop :=
   (∃ p : ℕ, (p = 3 ∨ p = 5) ∧

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPItemM
+module
+
+public import Workspace.Impl.TermGlueLabPItemM
+
+@[expose] public section
 
 /-!
 # The matrix pair of one generator (step 5, program)

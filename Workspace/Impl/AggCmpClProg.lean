@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCmpInd
-import Workspace.Impl.AggCmpStBud
+module
+
+public import Workspace.Impl.AggCmpInd
+public import Workspace.Impl.AggCmpStBud
+
+@[expose] public section
 
 /-!
 # The call of a stage: program text and the log search

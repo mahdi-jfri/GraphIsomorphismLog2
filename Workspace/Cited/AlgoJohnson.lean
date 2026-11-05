@@ -1,7 +1,11 @@
 -- Proved as `GI.Proved.johnsonIdentification` in `Workspace/Proved/JohnFinal.lean`
-import Workspace.Cited.AlgoPermGroups
-import Workspace.Cited.MarotiPrimitive
-import Mathlib.Data.Finset.Sort
+module
+
+public import Workspace.Cited.AlgoPermGroups
+public import Workspace.Cited.MarotiPrimitive
+public import Mathlib.Data.Finset.Sort
+
+@[expose] public section
 
 /-!
 # Stage 2 task: the Johnson identification of one factor `Alt(m)` on `k`-sets

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCfObj
-import Workspace.Impl.FinLayoutItems
+module
+
+public import Workspace.Impl.AggItemCfObj
+public import Workspace.Impl.FinLayoutItems
+
+@[expose] public section
 
 /-! # The object stage of Cases 2b/3 as one installed list
 

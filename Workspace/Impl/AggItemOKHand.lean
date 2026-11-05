@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemStepSpec
-import Workspace.Impl.AggCmpPhase
+module
+
+public import Workspace.Impl.AggItemStepSpec
+public import Workspace.Impl.AggCmpPhase
+
+@[expose] public section
 
 /-!
 # The hand-over to the items with length bounds

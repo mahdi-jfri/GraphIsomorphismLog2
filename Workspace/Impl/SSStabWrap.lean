@@ -1,4 +1,8 @@
-import Workspace.Impl.SSStabList
+module
+
+public import Workspace.Impl.SSStabList
+
+@[expose] public section
 
 /-!
 # The pointwise stabilizer

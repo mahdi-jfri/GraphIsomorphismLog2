@@ -1,5 +1,9 @@
-import Workspace.WreathValuation
-import Mathlib.GroupTheory.SemidirectProduct
+module
+
+public import Workspace.WreathValuation
+public import Mathlib.GroupTheory.SemidirectProduct
+
+@[expose] public section
 
 /-!
 # The wreath product `Aut(T) wr Sym(s)`

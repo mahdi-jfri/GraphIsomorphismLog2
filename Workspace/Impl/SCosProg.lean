@@ -1,9 +1,13 @@
-import Workspace.Impl.GenCosets
-import Workspace.Impl.GenCls
-import Workspace.Impl.DomRestrict
-import Workspace.Impl.NIntInter
-import Workspace.Lang.Lib.Schreier
-import Workspace.Lang.Prims.Blocks
+module
+
+public import Workspace.Impl.GenCosets
+public import Workspace.Impl.GenCls
+public import Workspace.Impl.DomRestrict
+public import Workspace.Impl.NIntInter
+public import Workspace.Lang.Lib.Schreier
+public import Workspace.Lang.Prims.Blocks
+
+@[expose] public section
 
 /-!
 # The program of the solvable coset intersection
@@ -197,10 +201,10 @@ noncomputable def scosProgram (c : ℕ) (hps : PointwiseStab) (hpre : Preimage)
   ⟨scosFuns c, [pointwiseStabPrim hps, preimagePrim hpre, minimalBlocksPrim hmb]⟩
 
 theorem length_scosFuns (c : ℕ) : (scosFuns c).length = 268 := by
-  simp [scosFuns, scosOwnFuns, appendFuns, mapFuns, countFuns, findEqFuns, eqIndFuns,
-    length_orbitFuns, rangeFuns, invFuns, composeFuns, schreierFuns, length_orbTFuns, findFuns,
-    pstabFuns, length_domFuns, mkGroupFuns, gatherFuns, length_clsFuns, kerFuns, cosetsFuns,
-    filterFuns, linTakeFuns, loopFuns, graphValFuns]
+  dsimp only [scosFuns, schreierFuns, pstabFuns, mkGroupFuns, kerFuns, cosetsFuns, invFuns,
+    findEqFuns]
+  simp only [List.length_append, length_orbitFuns, length_orbTFuns, length_domFuns, length_clsFuns]
+  rfl
 
 /-! ### Layout -/
 
@@ -210,7 +214,7 @@ variable {c : ℕ} {hps : PointwiseStab} {hpre : Preimage} {hmb : MinimalBlocks}
 
 /-- The whole function list sits at `0`. -/
 theorem scos_hasAt : (scosProgram c hps hpre hmb).HasAt 0 (scosFuns c) := by
-  simpa using Program.hasAt_append [] (scosFuns c) []
+  simpa [scosProgram] using Program.hasAt_append [] (scosFuns c) []
     [pointwiseStabPrim hps, preimagePrim hpre, minimalBlocksPrim hmb]
 
 /-- The function list, unfolded. -/

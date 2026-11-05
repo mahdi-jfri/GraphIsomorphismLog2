@@ -1,6 +1,10 @@
-import Mathlib.GroupTheory.Solvable
-import Mathlib.GroupTheory.Perm.Fin
-import Mathlib.Analysis.SpecialFunctions.Log.Base
+module
+
+public import Mathlib.GroupTheory.Solvable
+public import Mathlib.GroupTheory.Perm.Fin
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+
+@[expose] public section
 
 namespace GI.Cited
 

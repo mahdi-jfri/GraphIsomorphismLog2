@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
 
 /-!
 # Number theory for the field line
@@ -74,7 +78,9 @@ theorem vsB_prime_le {n q : ℕ} (hq : q.Prime) (h : q ∣ vsBE n) : q ≤ n := 
 theorem vsB_eq_one {M : Type*} [Monoid M] {n : ℕ} {x : M}
     (hF : ∀ q, 2 ≤ q → q ≤ max n 2 → x ^ vsBF n q = 1) : x = 1 := by
   have hpos : 0 < vsBF n 2 := Finset.prod_pos fun j hj => by
-    have := (Finset.mem_Icc.mp (Finset.mem_filter.mp hj).1).1; simpa using this
+    change 0 < j
+    have := (Finset.mem_Icc.mp (Finset.mem_filter.mp hj).1).1
+    omega
   have ho : orderOf x ∣ vsBF n 2 := orderOf_dvd_of_pow_eq_one (hF 2 le_rfl (le_max_right _ _))
   rw [← orderOf_eq_one_iff]
   by_contra hne

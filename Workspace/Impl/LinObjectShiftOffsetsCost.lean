@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectShiftOffsetsCompose
-import Workspace.Impl.LinObjectEvalWeights
+module
+
+public import Workspace.Impl.LinObjectShiftOffsetsCompose
+public import Workspace.Impl.LinObjectEvalWeights
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

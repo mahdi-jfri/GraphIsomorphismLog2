@@ -1,6 +1,10 @@
-import Workspace.Impl.TermJHCoef
-import Workspace.Impl.TermJProgLoc
-import Workspace.Impl.AggItemC1Par
+module
+
+public import Workspace.Impl.TermJHCoef
+public import Workspace.Impl.TermJProgLoc
+public import Workspace.Impl.AggItemC1Par
+
+@[expose] public section
 
 /-!
 # The transporter of one label: the layout
@@ -140,7 +144,7 @@ variable {P : Program} {p : TmJHPos} (hA : TmJHAt P p)
 include hA
 
 theorem hmain : P.funs[p.b]? = some (tmJHMainF p) := by
-  simpa using hA.hfuns 0 (by simp [tmJHFuns])
+  simpa [tmJHFuns] using hA.hfuns 0 (by simp [tmJHFuns])
 theorem htail : P.funs[p.b + 1]? = some (tmJHTailF p) := hA.hfuns 1 (by simp [tmJHFuns])
 theorem hcst : P.funs[p.b + 2]? = some (tmJHCstF p.iv p.rep p.pr) := hA.hfuns 2 (by simp [tmJHFuns])
 theorem hdec : P.funs[p.b + 3]? = some (tmJHDecF p.rg p.tbR p.tbP) := hA.hfuns 3 (by simp [tmJHFuns])

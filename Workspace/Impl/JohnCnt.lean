@@ -1,4 +1,8 @@
-import Workspace.Impl.JohnOut
+module
+
+public import Workspace.Impl.JohnOut
+
+@[expose] public section
 
 /-!
 # The counts of row `0`

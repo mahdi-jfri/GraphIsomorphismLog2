@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJVec
+module
+
+public import Workspace.Impl.TermJVec
+
+@[expose] public section
 
 /-!
 # Coordinate vectors of a list of elements of `A = N / N*` (programs)

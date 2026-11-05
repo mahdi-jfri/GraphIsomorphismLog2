@@ -5,7 +5,11 @@ first entry that passes a test), and equality of lists of numbers.
 A test is a user function `p` that, on `[c, x]`, returns `1` or `0` (`boolVal (q x)` for a
 Lean predicate `q : Val → Bool`), at cost at most `B x`. Each combinator takes `[c, xs]`.
 -/
-import Workspace.Lang.Lib.List
+module
+
+public import Workspace.Lang.Lib.List
+
+@[expose] public section
 
 namespace GI.Lang
 

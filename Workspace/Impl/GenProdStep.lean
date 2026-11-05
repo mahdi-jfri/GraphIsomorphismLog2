@@ -1,5 +1,9 @@
-import Workspace.Impl.GenProdPairs
-import Workspace.Impl.GenProdHier
+module
+
+public import Workspace.Impl.GenProdPairs
+public import Workspace.Impl.GenProdHier
+
+@[expose] public section
 
 /-!
 # The product step

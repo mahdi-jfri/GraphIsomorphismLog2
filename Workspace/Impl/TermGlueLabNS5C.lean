@@ -1,9 +1,13 @@
-import Workspace.Impl.TermGlueLabNS5G
-import Workspace.Impl.TermGlueLabPOGen
-import Workspace.Impl.TermGlueLabPOEps
-import Workspace.Impl.TermGlueLabPGen
-import Workspace.Impl.TermGlueLabPSetZ
-import Workspace.Impl.TermGlueLabPLiftS
+module
+
+public import Workspace.Impl.TermGlueLabNS5G
+public import Workspace.Impl.TermGlueLabPOGen
+public import Workspace.Impl.TermGlueLabPOEps
+public import Workspace.Impl.TermGlueLabPGen
+public import Workspace.Impl.TermGlueLabPSetZ
+public import Workspace.Impl.TermGlueLabPLiftS
+
+@[expose] public section
 
 /-!
 # The label driver: the cost bound of step 5

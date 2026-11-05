@@ -1,4 +1,8 @@
-import Workspace.Impl.AggGraphOps
+module
+
+public import Workspace.Impl.AggGraphOps
+
+@[expose] public section
 
 /-!
 # The preimage call on a graph group, in `GI.Lang`

@@ -1,6 +1,10 @@
-import Workspace.Impl.VsPRad
-import Workspace.Impl.VsPAb
-import Workspace.Proved.VsPBasMath
+module
+
+public import Workspace.Impl.VsPRad
+public import Workspace.Impl.VsPAb
+public import Workspace.Proved.VsPBasMath
+
+@[expose] public section
 
 /-!
 # The final stage

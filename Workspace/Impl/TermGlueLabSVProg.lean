@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabSVMath
-import Workspace.Impl.TermGlueLabPXs
+module
+
+public import Workspace.Impl.TermGlueLabSVMath
+public import Workspace.Impl.TermGlueLabPXs
+
+@[expose] public section
 
 /-!
 # The two label vectors of step 6: the programs

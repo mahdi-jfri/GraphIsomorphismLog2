@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojBT
+module
+
+public import Workspace.Impl.AggItemCiSojBT
+
+@[expose] public section
 
 /-!
 # Checking that target components have at least two points

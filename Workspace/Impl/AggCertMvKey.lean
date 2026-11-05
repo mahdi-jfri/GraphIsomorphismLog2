@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertMvReps
+module
+
+public import Workspace.Impl.AggCertMvReps
+
+@[expose] public section
 
 
 /-!

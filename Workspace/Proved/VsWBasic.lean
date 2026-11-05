@@ -1,7 +1,11 @@
-import Workspace.Impl.VsWDefs
-import Workspace.Proved.VStabLinUnitMath
-import Workspace.Proved.VsFMatMath
-import Workspace.Proved.VsFMatPowMath
+module
+
+public import Workspace.Impl.VsWDefs
+public import Workspace.Proved.VStabLinUnitMath
+public import Workspace.Proved.VsFMatMath
+public import Workspace.Proved.VsFMatPowMath
+
+@[expose] public section
 
 /-!
 # Readings of lists as vectors, spans and matrices

@@ -1,5 +1,9 @@
-import Workspace.Paper.TotalCost
-import Workspace.Paper.PhaseRun
+module
+
+public import Workspace.Paper.TotalCost
+public import Workspace.Paper.PhaseRun
+
+@[expose] public section
 
 /-!
 # The cost hypotheses of Lemma 7.1 from the per-node hypothesis
@@ -282,7 +286,8 @@ theorem forest_bound (hw : NodeBound w cw af) :
       · change (Run.threshold hs r₀).kind ≠ _; simp [Run.kind]
       · intro a' h
         simp only [Leaf.toP, Option.some.injEq] at h
-        subst h
+        have h := Option.some.inj h
+        subst a'
         exact ⟨rfl, (mem_orbitReps ha).1⟩
     rw [List.map_congr_left (fun a ha => by
       rw [Function.comp_apply, vcost_of (hgood a ha)])]
@@ -343,23 +348,23 @@ theorem forest_bound (hw : NodeBound w cw af) :
     linarith
   case dispatch =>
     intros
-    intro hfin hm hN hsz hok _
+    rename_i hfin hm hN hsz hok hne
     exact self_bound _ (by simp [Run.kind]) hm hN hsz hok
   case normalize =>
     intros
-    intro hfin hm hN hsz hok _
+    rename_i hfin hm hN hsz hok hne
     exact self_bound _ (by simp [Run.kind]) hm hN hsz hok
   case rowTerminal =>
     intros
-    intro hfin hm hN hsz hok _
+    rename_i hfin hm hN hsz hok hne
     exact self_bound _ (by simp [Run.kind]) hm hN hsz hok
   case rowColumns =>
     intros
-    intro hfin hm hN hsz hok _
+    rename_i hfin hm hN hsz hok hne
     exact self_bound _ (by simp [Run.kind]) hm hN hsz hok
   case aggregate =>
     intros
-    intro hfin hm hN hsz hok _
+    rename_i hfin hm hN hsz hok hne
     exact self_bound _ (by simp [Run.kind]) hm hN hsz hok
 
 end Forest

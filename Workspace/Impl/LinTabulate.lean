@@ -1,5 +1,9 @@
-import Workspace.Impl.LinMapEncoded
-import Workspace.Impl.LinSumPerm
+module
+
+public import Workspace.Impl.LinMapEncoded
+public import Workspace.Impl.LinSumPerm
+
+@[expose] public section
 
 /-! Enumerate a bounded coordinate interval and tabulate a scalar program.
 The cost counts the interval length, as required for explicit dense matrices. -/

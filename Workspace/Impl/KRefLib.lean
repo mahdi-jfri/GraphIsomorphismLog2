@@ -1,5 +1,9 @@
-import Workspace.Lang.Lib.NatList
-import Workspace.Lang.Lib.Tabulate
+module
+
+public import Workspace.Lang.Lib.NatList
+public import Workspace.Lang.Lib.Tabulate
+
+@[expose] public section
 
 /-!
 # Deterministic library combinators with one-parameter cost bounds

@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCfTr
-import Workspace.Lang.Prims.StabOrbit
-import Workspace.Lang.Lib.Loop
+module
+
+public import Workspace.Impl.AggItemCfTr
+public import Workspace.Lang.Prims.StabOrbit
+public import Workspace.Lang.Lib.Loop
+
+@[expose] public section
 
 /-!
 # The degree of transitivity as a program

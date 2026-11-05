@@ -1,5 +1,8 @@
-import Workspace.PrimitiveSocleBudget
-import Workspace.Cited.AutCardLeSq
+module
+
+public import Workspace.PrimitiveSocleBudget
+
+@[expose] public section
 
 /-!
 # The valuation estimate for groups inside a wreath product of automorphism groups

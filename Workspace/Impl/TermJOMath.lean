@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJOLink
-import Workspace.Impl.TermJTabMath
+module
+
+public import Workspace.Impl.TermJOLink
+public import Workspace.Impl.TermJTabMath
+
+@[expose] public section
 
 /-!
 # The table `O` of the `N`-tests (mathematics)

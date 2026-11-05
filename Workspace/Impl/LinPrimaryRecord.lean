@@ -1,6 +1,10 @@
-import Workspace.Impl.LinPrimaryOffset
-import Workspace.Impl.LinPrimaryMatrixFull
-import Workspace.Impl.LinMapSource
+module
+
+public import Workspace.Impl.LinPrimaryOffset
+public import Workspace.Impl.LinPrimaryMatrixFull
+public import Workspace.Impl.LinMapSource
+
+@[expose] public section
 
 /-! Reduce one retained full affine record to its field-layer matrix and
 translation. This is the scalar operation used on the current cover generators. -/

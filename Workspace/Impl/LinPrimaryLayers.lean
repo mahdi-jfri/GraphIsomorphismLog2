@@ -1,5 +1,9 @@
-import Mathlib.LinearAlgebra.Quotient.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.LinearAlgebra.Quotient.Basic
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-! The p-power filtration used after the Smith decomposition of A.20.
 The transition lemma is the reason each layer has characteristic p. -/

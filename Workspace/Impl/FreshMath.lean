@@ -1,4 +1,8 @@
-import Workspace.Impl.Reduce
+module
+
+public import Workspace.Impl.Reduce
+
+@[expose] public section
 
 /-!
 # The mathematics of the fresh state value

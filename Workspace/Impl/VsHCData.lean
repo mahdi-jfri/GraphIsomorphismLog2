@@ -1,5 +1,9 @@
-import Workspace.Impl.VsHQ8Next
-import Workspace.Impl.VsQA3M
+module
+
+public import Workspace.Impl.VsHQ8Next
+public import Workspace.Impl.VsQA3M
+
+@[expose] public section
 
 open Matrix Module
 
@@ -10,6 +14,8 @@ open GI.Lang GI.Cited GI.Proved Equiv
 variable {I : VecStabInst} {s : VsQSt I} [Fact I.p.Prime]
   {hs : VsQStOK s} {as : List (Perm (Fin I.n))} {Lb : List (List (List ℕ))}
   {ys : List (Perm (Fin I.n))} {r : ℕ}
+
+set_option backward.isDefEq.respectTransparency false
 
 /-- A hard group has a nonempty basis modulo the scalars. -/
 theorem vsHC_basis_ne_nil (h : VsHHyp hs as Lb ys r) : vsHB s Lb r ys ≠ [] := by

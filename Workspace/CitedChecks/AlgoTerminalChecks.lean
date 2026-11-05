@@ -1,5 +1,9 @@
-import Workspace.Cited.AlgoTerminal
-import Workspace.CitedChecks.AlgoDetermined
+module
+
+public import Workspace.Cited.AlgoTerminal
+public import Workspace.CitedChecks.AlgoDetermined
+
+@[expose] public section
 
 /-!
 Independent checks: the three terminal encodings determine their instances. Bounded normal-form

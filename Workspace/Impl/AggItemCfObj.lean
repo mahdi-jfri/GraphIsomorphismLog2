@@ -1,7 +1,11 @@
-import Workspace.Impl.AggItemCfCol
-import Workspace.Impl.AggItemCfDMain
-import Workspace.Impl.AggItemCfRBounds
-import Workspace.Impl.PolyBd
+module
+
+public import Workspace.Impl.AggItemCfCol
+public import Workspace.Impl.AggItemCfDMain
+public import Workspace.Impl.AggItemCfRBounds
+public import Workspace.Impl.PolyBd
+
+@[expose] public section
 
 /-!
 # The object stage of Cases 2b/3 (`ItCfObjSpec`)

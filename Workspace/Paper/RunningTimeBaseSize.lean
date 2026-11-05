@@ -1,6 +1,10 @@
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Workspace.BinomialLower
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Workspace.BinomialLower
+
+@[expose] public section
 
 /-!
 # Section 7.5: the absolute base size `N₀`
@@ -41,18 +45,18 @@ theorem sec_parameters_base_size {α γ a q₀ : ℝ} {D : ℕ} (hα : 1 / 3 < �
       (N : ℝ) < ((⌊(N : ℝ) ^ α⌋₊).choose 3 : ℝ) ∧
       (N : ℝ) ^ (1 - α) < ((⌊(N : ℝ) ^ α⌋₊).choose 2 : ℝ) ∧
       q₀ < (N : ℝ) ^ α ∧
-      (∃ k : ℕ, Odd k ∧ 8 < k ∧ 2 + Real.logb 2 N < k ∧ (2 * k - 1 : ℝ) ≤ (N : ℝ) ^ α) ∧
+      (∃ k : ℕ, Odd k ∧ 63 < k ∧ 12 * Real.logb 2 N < k ∧ (2 * k - 1 : ℝ) ≤ (N : ℝ) ^ α) ∧
       6 ≤ (N : ℝ) ^ γ ∧ ⌈(N : ℝ) ^ γ⌉₊ < N ∧ 2 ≤ (N : ℝ) ^ (γ * D - a) := by
   have hα0 : 0 < α := by linarith
   have hγ0 : 0 < γ := by linarith
   have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
   have hev : ∀ᶠ N : ℕ in atTop,
       217 ≤ (N : ℝ) ^ (3 * α - 1) ∧ 6 ≤ (N : ℝ) ^ α ∧ q₀ + 1 ≤ (N : ℝ) ^ α ∧
-      42 ≤ (N : ℝ) ^ α ∧ Real.log N ≤ Real.log 2 / 8 * (N : ℝ) ^ α ∧
+      266 ≤ (N : ℝ) ^ α ∧ Real.log N ≤ Real.log 2 / 48 * (N : ℝ) ^ α ∧
       6 ≤ (N : ℝ) ^ γ ∧ 2 ≤ (N : ℝ) ^ (1 - γ) ∧ 3 ≤ N ∧ 2 ≤ (N : ℝ) ^ (γ * D - a) := by
     filter_upwards [eventually_rpow_ge (by linarith : (0 : ℝ) < 3 * α - 1) 217,
-      eventually_rpow_ge hα0 6, eventually_rpow_ge hα0 (q₀ + 1), eventually_rpow_ge hα0 42,
-      eventually_log_le_rpow hα0 (by positivity : (0 : ℝ) < Real.log 2 / 8),
+      eventually_rpow_ge hα0 6, eventually_rpow_ge hα0 (q₀ + 1), eventually_rpow_ge hα0 266,
+      eventually_log_le_rpow hα0 (by positivity : (0 : ℝ) < Real.log 2 / 48),
       eventually_rpow_ge hγ0 6, eventually_rpow_ge (by linarith : (0 : ℝ) < 1 - γ) 2,
       eventually_ge_atTop 3, eventually_rpow_ge (by linarith : (0 : ℝ) < γ * D - a) 2]
       with N h1 h2 h3 h4 h5 h6 h7 h8 h9
@@ -93,15 +97,17 @@ theorem sec_parameters_base_size {α γ a q₀ : ℝ} {D : ℕ} (hα : 1 / 3 < �
     have hc' : (m : ℝ) ^ 2 ≤ (m.choose 2 : ℝ) * 4 := by exact_mod_cast hc
     have hm2' : (P / 2) ^ 2 ≤ (m : ℝ) ^ 2 := pow_le_pow_left₀ (by linarith) hm2 2
     nlinarith
-  · -- The odd row threshold `k = 2⌈log₂ N⌉ + 9`.
-    set l := Real.logb 2 N
-    have hl0 : 0 ≤ l := Real.logb_nonneg (by norm_num) (by linarith)
+  · -- The odd row threshold `k = 2⌈6 log₂ N⌉ + 65`.
+    set l := 6 * Real.logb 2 N
+    have hl0 : 0 ≤ l := by
+      have := Real.logb_nonneg (by norm_num : (1 : ℝ) < 2) (by linarith : (1 : ℝ) ≤ N)
+      linarith
     have hlP : l ≤ P / 8 := by
       simp only [l, Real.logb]
-      rw [div_le_iff₀ hl2]; linarith
+      rw [mul_div_assoc', div_le_iff₀ hl2]; linarith
     have hc1 : (⌈l⌉₊ : ℝ) < l + 1 := Nat.ceil_lt_add_one hl0
     have hc2 : l ≤ ⌈l⌉₊ := Nat.le_ceil l
-    refine ⟨2 * ⌈l⌉₊ + 9, ⟨⌈l⌉₊ + 4, by ring⟩, by omega, ?_, ?_⟩
+    refine ⟨2 * ⌈l⌉₊ + 65, ⟨⌈l⌉₊ + 32, by ring⟩, by omega, ?_, ?_⟩
     · push_cast; linarith
     · push_cast; linarith
   · -- `⌈N^γ⌉ < N^γ + 1 ≤ N/2 + 1 < N`, since `N^γ N^{1-γ} = N`.
@@ -122,7 +128,7 @@ theorem sec_parameters_base_size_example (q₀ a : ℝ) (D : ℕ) (hD : a < 9 / 
       (N : ℝ) < ((⌊(N : ℝ) ^ (2 / 5 : ℝ)⌋₊).choose 3 : ℝ) ∧
       (N : ℝ) ^ (1 - 2 / 5 : ℝ) < ((⌊(N : ℝ) ^ (2 / 5 : ℝ)⌋₊).choose 2 : ℝ) ∧
       q₀ < (N : ℝ) ^ (2 / 5 : ℝ) ∧
-      (∃ k : ℕ, Odd k ∧ 8 < k ∧ 2 + Real.logb 2 N < k ∧
+      (∃ k : ℕ, Odd k ∧ 63 < k ∧ 12 * Real.logb 2 N < k ∧
         (2 * k - 1 : ℝ) ≤ (N : ℝ) ^ (2 / 5 : ℝ)) ∧
       6 ≤ (N : ℝ) ^ (9 / 10 : ℝ) ∧ ⌈(N : ℝ) ^ (9 / 10 : ℝ)⌉₊ < N ∧
       2 ≤ (N : ℝ) ^ (9 / 10 * D - a) :=

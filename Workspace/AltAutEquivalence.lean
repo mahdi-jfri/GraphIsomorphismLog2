@@ -1,5 +1,9 @@
-import Workspace.AltAutConjugation
-import Mathlib.GroupTheory.GroupAction.ConjAct
+module
+
+public import Workspace.AltAutConjugation
+public import Mathlib.GroupTheory.GroupAction.ConjAct
+
+@[expose] public section
 
 /-! The natural symmetric-group realization of alternating-group automorphisms.
 Surjectivity uses the fully proved small pinned conjugation branch; injectivity

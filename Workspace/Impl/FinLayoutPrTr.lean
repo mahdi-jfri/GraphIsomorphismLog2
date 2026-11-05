@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiPair
+module
+
+public import Workspace.Impl.AggItemCiPair
+
+@[expose] public section
 
 /-!
 # A trampoline for the init program of `sojItem`

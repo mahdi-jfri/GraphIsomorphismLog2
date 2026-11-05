@@ -1,6 +1,10 @@
-import Workspace.Impl.NClPreEntry
-import Workspace.Proved.NClNormal
-import Workspace.Proved.SSPointwiseStab
+module
+
+public import Workspace.Impl.NClPreEntry
+public import Workspace.Proved.NClNormal
+public import Workspace.Proved.SSPointwiseStab
+
+@[expose] public section
 
 /-!
 # The preimage from the pointwise stabilizer
@@ -114,7 +118,7 @@ noncomputable def preProgram (h : PointwiseStab) : Program := ⟨preFuns 0 0, [p
 theorem preProgram_at (h : PointwiseStab) : PreAt (preProgram h) 0 0 h := by
   refine preAt_of ?_ rfl
   have hA := Program.hasAt_append [] (preFuns 0 0) [] [pointwiseStabPrim h]
-  simpa using hA
+  simpa [preProgram] using hA
 
 /-- **The preimage from the pointwise stabilizer.** -/
 theorem preimage_of (h : PointwiseStab) : Preimage := by

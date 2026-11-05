@@ -1,6 +1,10 @@
-import Workspace.Cited.AlgoTerminal
-import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.LinearAlgebra.Matrix.Adjugate
+module
+
+public import Workspace.Cited.AlgoTerminal
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Mathlib.LinearAlgebra.Matrix.Adjugate
+
+@[expose] public section
 
 /-!
 # Triangular matrices under a Hermite step (Smith form)
@@ -141,7 +145,7 @@ theorem snf_eq_of_prod_eq {a b : Fin n → ℤ} (ha : ∀ l, 0 < a l) (hab : ∀
     (hp : ∏ l, a l = ∏ l, b l) (l : Fin n) : a l = b l := by
   by_contra hne
   have hlt : ∏ l, a l < ∏ l, b l :=
-    Finset.prod_lt_prod (fun l _ => ha l) (fun i _ => hab i)
+    Finset.prod_lt_prod₀ (fun l _ => ha l) (fun i _ => hab i)
       ⟨l, Finset.mem_univ _, lt_of_le_of_ne (hab l) hne⟩
   omega
 

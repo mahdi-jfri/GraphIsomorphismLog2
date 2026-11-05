@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryLayerTransport
+module
+
+public import Workspace.Impl.LinPrimaryLayerTransport
+
+@[expose] public section
 
 /-! After choosing a representative for one quotient layer, full transport
 continues inside the target-fiber subgroup. This is the coset invariant of the
@@ -63,7 +67,7 @@ theorem linFiniteAffineResidual (ρ : G →* (V ≃+ V)) (c : G → V)
     let k := h * g⁻¹
     have he : linFiniteEval ρ c k (linFiniteEval ρ c g x) = 0 := by
       rw [← linFiniteEval_mul ρ c hc]
-      simpa only [k, mul_assoc, inv_mul_cancel, mul_one] using hh
+      simpa only [Set.mem_setOf_eq, k, mul_assoc, inv_mul_cancel, mul_one] using hh
     have hk : c k ∈ S := by
       have hs := hρ k (linFiniteEval ρ c g x) hg
       have hn : c k = -(ρ k (linFiniteEval ρ c g x)) :=

@@ -1,4 +1,8 @@
-import Workspace.StabilizerOrbit
+module
+
+public import Workspace.StabilizerOrbit
+
+@[expose] public section
 
 namespace GI.StabilizerQuotient
 

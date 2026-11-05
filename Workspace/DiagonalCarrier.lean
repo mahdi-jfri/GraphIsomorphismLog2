@@ -1,5 +1,9 @@
-import Workspace.AlternatingSections
-import Workspace.BlockPartition
+module
+
+public import Workspace.AlternatingSections
+public import Workspace.BlockPartition
+
+@[expose] public section
 
 /-!
 # Width bounds through invariant labelings and partitions

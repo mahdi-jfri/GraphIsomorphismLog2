@@ -1,5 +1,9 @@
-import Workspace.Impl.JohnProg
-import Workspace.Proved.JohnOrbital
+module
+
+public import Workspace.Impl.JohnProg
+public import Workspace.Proved.JohnOrbital
+
+@[expose] public section
 
 /-!
 # The pair generators and their orbits

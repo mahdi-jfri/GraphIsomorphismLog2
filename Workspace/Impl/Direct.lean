@@ -1,5 +1,9 @@
-import Workspace.Impl.Fresh
-import Workspace.Impl.DirectCoset
+module
+
+public import Workspace.Impl.Fresh
+public import Workspace.Impl.DirectCoset
+
+@[expose] public section
 
 /-!
 # The direct step of `Solve`

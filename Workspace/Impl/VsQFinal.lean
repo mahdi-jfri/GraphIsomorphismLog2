@@ -1,6 +1,10 @@
-import Workspace.Impl.VsQRoots
-import Workspace.Impl.VsQSize
-import Workspace.Impl.VsQDrv
+module
+
+public import Workspace.Impl.VsQRoots
+public import Workspace.Impl.VsQSize
+public import Workspace.Impl.VsQDrv
+
+@[expose] public section
 
 /-!
 # The whole program on one instance
@@ -14,6 +18,9 @@ open Matrix Module
 namespace GI.Impl
 
 open GI.Lang GI.Cited GI.Proved Equiv
+
+set_option backward.isDefEq.respectTransparency false
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 /-- The indices of all parts. -/
 structure VsQAllX where
@@ -158,7 +165,7 @@ theorem vsQAll_spec {P : Program} {x : VsQAllX} {hps : PointwiseStab} {hm : Memb
             rintro _ ⟨y, hy, rfl⟩
             have : y = 1 := Subtype.ext hy
             subst this
-            simp
+            exact (Proved.vsQRho hs).map_one
           rw [this]; exact bot_le)
       rw [e3]
       exact this

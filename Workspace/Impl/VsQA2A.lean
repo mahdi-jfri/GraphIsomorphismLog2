@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQA2S
+module
+
+public import Workspace.Impl.VsQA2S
+
+@[expose] public section
 
 /-!
 # The front
@@ -21,6 +25,8 @@ open GI.Lang GI.Cited GI.Proved Equiv
 open GI.Machine (BinOp)
 
 variable {I : VecStabInst}
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 /-- The front of step 2, on `[lc, encGroup as]`. -/
 def vsQA2AE (bm bas ann nil eig fix spl s2s : ℕ) : Expr :=

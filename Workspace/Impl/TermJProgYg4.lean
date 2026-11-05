@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJProgYg3
+module
+
+public import Workspace.Impl.TermJProgYg3
+
+@[expose] public section
 
 /-!
 # The generators of `Aut_{N ≀ Sym(q)}(X)` (program, part 4)

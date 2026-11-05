@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormGlue
-import Workspace.Impl.PolyBd
+module
+
+public import Workspace.Impl.GenNormGlue
+public import Workspace.Impl.PolyBd
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemRun
+module
+
+public import Workspace.Impl.AggItemRun
+
+@[expose] public section
 
 /-!
 # The program of the aggregation round and its step specification
@@ -265,7 +269,7 @@ theorem as_agg_spec (I : Iface) (hpre : Preimage) (hfac : NormalizedFactor) (hm 
     Nat.mul_le_mul (Nat.mul_le_mul_left _ (by omega)) (by omega)
   have P3 : ceCost hm k (Val.list [pv, .list (cps.map encPiece)]).wt ≤
       asMax (ceCost hm k) (asWc k Y) := le_asMax _ hWc
-  have hWn := hW rr.node (by simpa using hkind)
+  have hWn := hW rr.node hkind
   have hown : (asOwn hpre hfac hm krC X (Nat.card rr.node.Ω) (I.inW .giant rr.node.S) : ℝ) =
       ((100 * (W₀ + Y + asWl Y + asWw k Y + asWc k Y + ansW k + 10) +
         Y * asMax (lcB (preimagePrim hpre) (normalizedFactorPrim hfac) krC) (2 * asWl Y + 6) +

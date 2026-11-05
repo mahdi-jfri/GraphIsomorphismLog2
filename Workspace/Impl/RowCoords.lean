@@ -1,4 +1,8 @@
-import Workspace.Impl.RowProg
+module
+
+public import Workspace.Impl.RowProg
+
+@[expose] public section
 
 /-!
 # The coordinates of Theorem A.17, as a program

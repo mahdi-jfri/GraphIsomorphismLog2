@@ -1,5 +1,9 @@
-import Workspace.Impl.GenSpecMath
-import Workspace.Impl.GenBranch
+module
+
+public import Workspace.Impl.GenSpecMath
+public import Workspace.Impl.GenBranch
+
+@[expose] public section
 
 /-!
 # The own cost of the general dispatcher, as a function of the number of points

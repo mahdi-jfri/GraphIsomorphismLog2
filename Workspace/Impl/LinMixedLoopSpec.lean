@@ -1,5 +1,9 @@
-import Workspace.Impl.LinMixedStepSpec
-import Workspace.Impl.LinMixedTerminal
+module
+
+public import Workspace.Impl.LinMixedStepSpec
+public import Workspace.Impl.LinMixedTerminal
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -18,9 +22,11 @@ set_option maxHeartbeats 1500000 in
 set_option maxRecDepth 16000 in
 theorem linMixedLoop_spec (hm : ConstructiveMembership) (hv : VectorStabilizer)
     {P : Program} {b jm jv n d : ℕ} (hat : linMixedLoopAt P b jm jv hm hv)
-    (gs : List (Equiv.Perm (Fin n))) (hlen : gs.length ≤ n ^ 2) (hs : IsSolvable (gens gs))
+    (gs : List (Equiv.Perm (Fin n))) (hlen : gs.length ≤ n ^ 2)
     (m : Fin d → ℕ) (hmpos : ∀ i, 0 < m i)
-    (ρ : gens gs →* (linFiniteVec m ≃+ linFiniteVec m)) (c : gens gs → linFiniteVec m)
+    (ρ : gens gs →* (linFiniteVec m ≃+ linFiniteVec m))
+    (hs : IsSolvable ρ.range)
+    (c : gens gs → linFiniteVec m)
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g)
     (x : linFiniteVec m) (acc0 : Equiv.Perm (Fin n)) :
     let a := linMixedLoopInputVal gs m ρ c x acc0
@@ -39,7 +45,7 @@ theorem linMixedLoop_spec (hm : ConstructiveMembership) (hv : VectorStabilizer)
     (Inv := linMixedLoopInv gs m hmpos ρ c x acc0) h0 hM
     (D := fun _ => linMixedStepBudget hm hv W) (by
       intro j v hj hInv
-      have he := linMixedLoop_step_spec hm hv hat gs hs m hmpos ρ c hc x acc0 j hj v hInv
+      have he := linMixedLoop_step_spec hm hv hat gs m hmpos ρ hs c hc x acc0 j hj v hInv
       exact he.mono fun out cost ho => ⟨ho.1, ho.2.trans (Nat.le_add_right _ _)⟩)
   refine run.mono fun out cost ho => ⟨ho.1, ?_⟩
   have hcost := ho.2
@@ -50,9 +56,11 @@ theorem linMixedLoop_spec (hm : ConstructiveMembership) (hv : VectorStabilizer)
 set_option maxHeartbeats 1000000 in
 theorem linMixedLoop_spec_poly (hm : ConstructiveMembership) (hv : VectorStabilizer) :
     ∃ K D : ℕ, ∀ {P : Program} {b jm jv n d : ℕ}, linMixedLoopAt P b jm jv hm hv →
-      ∀ (gs : List (Equiv.Perm (Fin n))), gs.length ≤ n ^ 2 → IsSolvable (gens gs) →
+      ∀ (gs : List (Equiv.Perm (Fin n))), gs.length ≤ n ^ 2 →
       ∀ (m : Fin d → ℕ) (hmpos : ∀ i, 0 < m i)
-        (ρ : gens gs →* (linFiniteVec m ≃+ linFiniteVec m)) (c : gens gs → linFiniteVec m),
+        (ρ : gens gs →* (linFiniteVec m ≃+ linFiniteVec m)),
+      IsSolvable ρ.range →
+      ∀ (c : gens gs → linFiniteVec m),
       (∀ g k, c (g * k) = ρ g (c k) + c g) →
       ∀ (x : linFiniteVec m) (acc0 : Equiv.Perm (Fin n)),
       let a := linMixedLoopInputVal gs m ρ c x acc0
@@ -60,8 +68,8 @@ theorem linMixedLoop_spec_poly (hm : ConstructiveMembership) (hv : VectorStabili
         cost ≤ K * (a.wt + 1) ^ D) := by
   obtain ⟨K, D, hKD⟩ := linPoly_source_bound (linMixedLoopCost_poly hm hv)
   refine ⟨K, D, ?_⟩
-  intro P b jm jv n d hat gs hlen hs m hmpos ρ c hc x acc0
-  exact FunAll.mono (linMixedLoop_spec hm hv hat gs hlen hs m hmpos ρ c hc x acc0)
+  intro P b jm jv n d hat gs hlen m hmpos ρ hs c hc x acc0
+  exact FunAll.mono (linMixedLoop_spec hm hv hat gs hlen m hmpos ρ hs c hc x acc0)
     (fun out cost ho => ⟨ho.1, ho.2.trans (hKD 0 _ _ (Nat.zero_le _) le_rfl)⟩)
 
 end GI.Impl

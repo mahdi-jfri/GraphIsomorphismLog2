@@ -1,10 +1,14 @@
-import Mathlib.GroupTheory.SpecificGroups.Alternating.KleinFour
-import Mathlib.GroupTheory.SpecificGroups.ZGroup
-import Mathlib.GroupTheory.Sylow
-import Mathlib.GroupTheory.Nilpotent
-import Mathlib.GroupTheory.GroupAction.Quotient
-import Mathlib.Data.Finite.Perm
-import Mathlib.Data.Nat.Squarefree
+module
+
+public import Mathlib.GroupTheory.SpecificGroups.Alternating.KleinFour
+public import Mathlib.GroupTheory.SpecificGroups.ZGroup
+public import Mathlib.GroupTheory.Sylow
+public import Mathlib.GroupTheory.Nilpotent
+public import Mathlib.GroupTheory.GroupAction.Quotient
+public import Mathlib.Data.Finite.Perm
+public import Mathlib.Data.Nat.Squarefree
+
+@[expose] public section
 
 /-!
 # Nonabelian finite simple groups have order at least 34
@@ -25,13 +29,13 @@ namespace GI.SmallSimple
 open Equiv
 
 theorem isSolvable_of_pGroup {G : Type*} [Group G] [Finite G] {p n : ℕ} (hp : p.Prime)
-    (h : Nat.card G = p ^ n) : IsSolvable G := by
+    (h : Nat.card G = p ^ n) : Group.IsSolvable G := by
   haveI : Fact p.Prime := ⟨hp⟩
   haveI := (IsPGroup.of_card h).isNilpotent
   infer_instance
 
 theorem isSolvable_alternatingGroup_four {α : Type*} [Fintype α] [DecidableEq α]
-    (hα : Nat.card α = 4) : IsSolvable (alternatingGroup α) := by
+    (hα : Nat.card α = 4) : Group.IsSolvable (alternatingGroup α) := by
   haveI : Nontrivial α := by
     rw [← Finite.one_lt_card_iff_nontrivial, hα]; norm_num
   haveI := alternatingGroup.normal_kleinFour hα
@@ -45,9 +49,9 @@ theorem isSolvable_alternatingGroup_four {α : Type*} [Fintype α] [DecidableEq 
     have h := Subgroup.card_eq_card_quotient_mul_card_subgroup (alternatingGroup.kleinFour α)
     rw [hA, hV] at h
     omega
-  haveI : IsSolvable (alternatingGroup.kleinFour α) :=
+  haveI : Group.IsSolvable (alternatingGroup.kleinFour α) :=
     isSolvable_of_pGroup (p := 2) (n := 2) Nat.prime_two (by rw [hV]; norm_num)
-  haveI : IsSolvable (alternatingGroup α ⧸ alternatingGroup.kleinFour α) :=
+  haveI : Group.IsSolvable (alternatingGroup α ⧸ alternatingGroup.kleinFour α) :=
     isSolvable_of_pGroup (p := 3) (n := 1) Nat.prime_three (by rw [hQ]; norm_num)
   refine solvable_of_ker_le_range (alternatingGroup.kleinFour α).subtype
     (QuotientGroup.mk' (alternatingGroup.kleinFour α)) ?_
@@ -68,7 +72,7 @@ theorem squarefree_factorial_le_three (k : ℕ) (hk : k ≤ 3) : Squarefree k.fa
 
 /-- `Sym(α)` is solvable when `|α| ≤ 4`. -/
 theorem isSolvable_perm_of_card_le_four {α : Type*} [Finite α] (hα : Nat.card α ≤ 4) :
-    IsSolvable (Perm α) := by
+    Group.IsSolvable (Perm α) := by
   classical
   letI := Fintype.ofFinite α
   rcases Nat.lt_or_ge (Nat.card α) 4 with h | h
@@ -79,7 +83,7 @@ theorem isSolvable_perm_of_card_le_four {α : Type*} [Finite α] (hα : Nat.card
     infer_instance
   · have h4 : Nat.card α = 4 := le_antisymm hα h
     haveI := isSolvable_alternatingGroup_four h4
-    haveI : IsSolvable ℤˣ := isSolvable_of_comm (fun a b => mul_comm a b)
+    haveI : Group.IsSolvable ℤˣ := isSolvable_of_comm (fun a b => mul_comm a b)
     refine solvable_of_ker_le_range (alternatingGroup α).subtype Perm.sign ?_
     intro x hx
     exact ⟨⟨x, hx⟩, rfl⟩
@@ -97,7 +101,7 @@ theorem five_le_index [IsSimpleGroup T] (hT : ¬ ∀ x y : T, x * y = y * x) {H 
   push Not at hlt
   let φ := MulAction.toPermHom T (T ⧸ H)
   have hker : φ.ker = ⊥ := by
-    rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal φ.ker inferInstance with h | h
+    rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal φ.ker with h | h
     · exact h
     · exfalso
       apply hH
@@ -105,9 +109,9 @@ theorem five_le_index [IsSimpleGroup T] (hT : ¬ ∀ x y : T, x * y = y * x) {H 
       exact eq_top_iff.mpr (h ▸ Subgroup.normalCore_le H)
   have hinj : Function.Injective φ := (MonoidHom.ker_eq_bot_iff φ).mp hker
   haveI : Finite (T ⧸ H) := inferInstance
-  haveI : IsSolvable (Perm (T ⧸ H)) :=
+  haveI : Group.IsSolvable (Perm (T ⧸ H)) :=
     isSolvable_perm_of_card_le_four (by rw [← Subgroup.index]; omega)
-  haveI : IsSolvable T := solvable_of_solvable_injective hinj
+  haveI : Group.IsSolvable T := solvable_of_solvable_injective hinj
   exact hT (IsSimpleGroup.comm_iff_isSolvable.mpr inferInstance)
 
 /-- The arithmetic part: for each order `n < 34` other than `30`, a prime `p` such that no
@@ -183,7 +187,7 @@ theorem thirtyfour_le_card [IsSimpleGroup T] (hT : ¬ ∀ x y : T, x * y = y * x
   by_cases hN : Subgroup.normalizer (P : Set T) = ⊤
   · -- `P` is normal, so it is trivial or everything
     haveI : (P : Subgroup T).Normal := Subgroup.normalizer_eq_top_iff.mp hN
-    rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal (P : Subgroup T) inferInstance with h | h
+    rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal (P : Subgroup T) with h | h
     · exact P.ne_bot_of_dvd_card hpn h
     · have hPg : IsPGroup p T := by
         have := P.isPGroup'

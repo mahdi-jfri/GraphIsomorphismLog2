@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQABlkP
+module
+
+public import Workspace.Impl.VsQABlkP
+
+@[expose] public section
 
 /-!
 # The orbit sum of piece `0`

@@ -1,19 +1,25 @@
-import Workspace.Impl.TermSplitMath
-import Workspace.Impl.TermSplitCost
-import Workspace.RadicalIndex
+module
+
+public import Workspace.Impl.TermSplitMath
+public import Workspace.Impl.TermSplitCost
+public import Workspace.RadicalIndex
+
+@[expose] public section
 
 /-!
-# T7 from the radical cosets: the split of `TermDomSpec`
+# T7 from the cosets of `R'`: the split of `TermDomSpec`
 
-Corollary A.22: "enumerate the radical cosets, solve each by Theorem A.20". Theorem A.23 then
+Corollary A.22: "enumerate the cosets of `R'`, solve each by Theorem A.20". Here `R'` is the
+subgroup of Lemma A.21′: `N ≤ R' ≤ H`, `R'/N` solvable and `[H : R'] ≤ b(H/N)^2`. Theorem A.23 then
 keeps above each residual element the `J`-elements that pass the label test, and returns the
 union. This file reduces `Iface.TermDomSpec` (the table transport on the domain positions, as
 one coset) to two hypotheses that follow the paper's steps:
 
-* `Iface.TermRepsSpec` (T2, T3): a list of right coset representatives of the radical preimage
-  `R` in `H`, one per coset (`[H : R]` of them);
+* `Iface.TermRepsSpec` (T2, T3): generators of `R'` and a list of representatives `r ∈ H` of
+  the cosets `R' r` in `H`, one per coset (`[H : R']` of them);
 * `Iface.TermCosetSpec` (T4–T6): for a representative `r ∈ H`, a canonical answer on the domain
-  positions of the piece `tmCosetT ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα) r` of the table transport above `R r`.
+  positions of the piece `tmCosetT (… .rowTerminalWith … R' …) r` of the table transport above
+  `R' r`.
 
 The function `tmSplitBody`: the representatives; the identity on the `s` domain positions
 (`range`); the map of `tmPieceF` (the piece `[1, answer of r]`) over the representatives; and
@@ -22,9 +28,9 @@ canonical coset (T7's "compressed to generators and one representative"). The un
 whole table transport (`tm_exactT_eq_iUnion`) and is empty or a coset
 (`tm_domSet_cosetOrEmpty`).
 
-Cost: `[H : R] ≤ b^{2 log₂ b}` calls of the piece function ([GMP, Theorem 1.4] and Lemma A.21,
-`radical_index_le`, cited `GMPAbelianFactors`, `GMPOutBound`, `GMPTransitiveNonabelian`) and a
-polynomial in the weight of the pieces, all within `expLogSq`.
+Cost: `[H : R'] ≤ b^{2 log₂ b}` calls of the piece function ([GMP, Theorem 1.4] and
+Lemma A.21′, `sub_index_le`, cited `GMPTransitiveNonabelian`) and a polynomial in the weight of
+the pieces, all within `expLogSq`.
 -/
 
 namespace GI.Impl
@@ -37,9 +43,10 @@ namespace Iface
 
 variable (Pg : Program)
 
-/-- **The radical coset representatives** (T2, T3; Corollary A.22: "enumerate the radical
-cosets"): on the input of `TermAsmSpec`, a list of right coset representatives `r ∈ H` of the
-radical preimage `R`, one for each coset (so `[H : R]` of them), at cost at most `expLogSq A N`. -/
+/-- **The coset representatives** (T2, T3; Corollary A.22: "enumerate the cosets of `R'`"): on
+the input of `TermAsmSpec`, generators `uR` of a subgroup `R'` with `N ≤ R' ≤ H`, `R'/N` solvable
+and `[H : R'] ≤ b(H/N)^2` (Lemma A.21′), and a list of representatives `r ∈ H` of the cosets
+`R' r`, one for each coset (so `[H : R']` of them), at cost at most `expLogSq A N`. -/
 def TermRepsSpec (A : ℝ) (g : ℕ) : Prop :=
   ∀ {Ω C : Type} [Finite Ω] (S : State Ω C) (k : ℕ) (e : Ω ≃ Fin k) (c : C → ℕ),
     Function.Injective c →
@@ -65,15 +72,28 @@ def TermRepsSpec (A : ℝ) (g : ℕ) : Prop :=
         vs (tmCosets L.q) →
       FunAll Pg g (.list [.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
           encFun (rowLab e L.con.blocks)], .list us, .list vs])
-        (fun u cost => ∃ reps : List (Perm (Fin m)), u = .list (reps.map encPerm) ∧
-          (∀ r ∈ reps, r ∈ ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα).Hb) ∧
-          (∀ h : Perm (Fin m), h ∈ ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα).Hb → ∃ r ∈ reps, ∃ x : Perm (Fin m), x ∈ tmRad ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα) ∧ h = x * r) ∧
-          reps.length = ((tmRad ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα)).subgroupOf ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα).Hb).index ∧
-          (cost : ℝ) ≤ expLogSq A S.N)
+        (fun u cost =>
+          ∃ (R' : Subgroup (Perm (Fin m)))
+            (hRH : R' ≤ (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Hb)
+            (hNR : (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ≤ R')
+            (hsolv : ∃ ℓ, GI.Multicoset.relDerived R' (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ℓ ≤
+              (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb)
+            (uR : Val) (reps : List (Perm (Fin m))),
+            u = .list [uR, .list (reps.map encPerm)] ∧
+            GI.Cited.GensOf R' uR ∧
+            (∀ [((gens σN).subgroupOf (gens σH)).Normal],
+              (R'.subgroupOf (gens σH)).index ≤
+                GI.Composition.bFac (gens σH ⧸ (gens σN).subgroupOf (gens σH)) ^ 2) ∧
+            (∀ r ∈ reps, r ∈ ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv).Hb) ∧
+            (∀ h : Perm (Fin m), h ∈ ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv).Hb →
+              ∃ r ∈ reps, ∃ x : Perm (Fin m), x ∈ tmRad ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv) ∧ h = x * r) ∧
+            reps.length = ((tmRad ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv)).subgroupOf ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv).Hb).index ∧
+            (cost : ℝ) ≤ expLogSq A S.N)
 
-/-- **One radical coset** (T4–T6; Theorem A.20 in `R r`, then the labels of A.23): on the input
-of `TermAsmSpec` and a representative `r ∈ H`, a canonical answer on the domain positions of the
-piece `tmCosetT ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα) r` of the table transport, at cost at most `expLogSq A N`. -/
+/-- **One coset of `R'`** (T4–T6; Theorem A.20 in `R' r`, then the labels of A.23): on the input
+of `TermAsmSpec`, generators `uR` of `R'` and a representative `r ∈ H`, a canonical answer on the
+domain positions of the
+piece `tmCosetT ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv) r` of the table transport, at cost at most `expLogSq A N`. -/
 def TermCosetSpec (A : ℝ) (g : ℕ) : Prop :=
   ∀ {Ω C : Type} [Finite Ω] (S : State Ω C) (k : ℕ) (e : Ω ≃ Fin k) (c : C → ℕ),
     Function.Injective c →
@@ -97,17 +117,26 @@ def TermCosetSpec (A : ℝ) (g : ℕ) : Prop :=
         us (tmTests L.q) →
       List.Forall₂ (fun v ij => AnsC (Equiv.refl (Fin m)) v (tmCosetState S E σH ij).answer)
         vs (tmCosets L.q) →
-      ∀ r : Perm (Fin m), r ∈ ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα).Hb →
+      ∀ (R' : Subgroup (Perm (Fin m)))
+        (hRH : R' ≤ (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Hb)
+        (hNR : (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ≤ R')
+        (hsolv : ∃ ℓ, GI.Multicoset.relDerived R' (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ℓ ≤
+          (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb)
+        (_hidx : ∀ [((gens σN).subgroupOf (gens σH)).Normal],
+          (R'.subgroupOf (gens σH)).index ≤
+            GI.Composition.bFac (gens σH ⧸ (gens σN).subgroupOf (gens σH)) ^ 2)
+        (uR : Val), GI.Cited.GensOf R' uR →
+      ∀ r : Perm (Fin m), r ∈ ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv).Hb →
       FunAll Pg g (.list [(.list [.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
-          encFun (rowLab e L.con.blocks)], .list us, .list vs]), encPerm r])
-        (fun u cost => AnsC (domEquiv e S.dom) u (tmDomSet ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα).e (tmCosetT ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα) r)) ∧
+          encFun (rowLab e L.con.blocks)], .list us, .list vs]), encPerm r, uR])
+        (fun u cost => AnsC (domEquiv e S.dom) u (tmDomSet ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv).e (tmCosetT ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv) r)) ∧
           (cost : ℝ) ≤ expLogSq A S.N)
 
 end Iface
 
-/-- The piece of one representative, on `[[V, 1], encPerm r]`: `[1, answer of r]`. -/
+/-- The piece of one representative, on `[[V, 1, uR], encPerm r]`: `[1, answer of r]`. -/
 def tmPieceF (g2 : ℕ) : Expr :=
-  .letE (.call g2 (mk2 (.get (arg 0) (.nat 0)) (arg 1)))
+  .letE (.call g2 (mk3 (.get (arg 0) (.nat 0)) (arg 1) (.get (arg 0) (.nat 2))))
     (mk2 (.get (arg 0) (.nat 1)) (.var 1))
 
 /-- The number `m * q` of domain positions, read off the coordinates. -/
@@ -119,7 +148,7 @@ def tmSExpr : Expr :=
 def tmSplitBody (g1 rg mp ce : ℕ) : Expr :=
   .letE (.call g1 (.var 0))
   (.letE (.call rg tmSExpr)
-  (.letE (.call mp (mk2 (mk2 (.var 0) (.var 2)) (.var 1)))
+  (.letE (.call mp (mk2 (mk3 (.var 0) (.var 2) (.get (.var 1) (.nat 0))) (.get (.var 1) (.nat 1))))
   (.call ce (mk2 .nil (.var 3)))))
 
 /-- Where the modules of the split sit in the program. -/
@@ -178,12 +207,30 @@ noncomputable def tmSplitPoly (hm : Membership) (Z : ℕ) : ℕ :=
 `Y = tmVB N`. -/
 def tmSplitZ (n Y : ℕ) : ℕ := 10 ^ 6 * (n + 1) * Y
 
+/-- `N` is normal in `H` and transitive on `B`, in the form of `sub_index_le`. -/
+theorem tm_index_le
+    (hTr : GI.Cited.GMPTransitiveNonabelian) {Ω C : Type} {P : Params} {S : State Ω C}
+    {L : GiantLabels S} (I : RowTerminal P S L)
+    (hR' : ∀ [(I.Nb.subgroupOf I.Hb).Normal],
+      ((tmRad I).subgroupOf I.Hb).index ≤ GI.Composition.bFac (I.Hb ⧸ I.Nb.subgroupOf I.Hb) ^ 2) :
+    (((tmRad I).subgroupOf I.Hb).index : ℝ) ≤
+      (Fintype.card I.B : ℝ) ^ (2 * Real.logb 2 (Fintype.card I.B)) := by
+  haveI : (I.Nb.subgroupOf I.Hb).Normal := by
+    change ((I.Nl.map I.Hb.subtype).comap I.Hb.subtype).Normal
+    rw [Subgroup.comap_map_eq_self_of_injective I.Hb.subtype_injective]
+    infer_instance
+  have htr : MulAction.IsPretransitive I.Nb I.B := by
+    refine ⟨fun b b' => ?_⟩
+    obtain ⟨n, hn⟩ := I.transitive.exists_smul_eq b b'
+    exact ⟨⟨((n : I.Hb) : Perm I.B), n, n.2, rfl⟩, hn⟩
+  exact GI.RadicalIndex.sub_index_le hTr I.Nb_le htr hR'
+
 namespace Iface
 
 variable (Pg : Program)
 
 /-- **The split on one input.** -/
-theorem tm_split_main (hm : Membership)
+theorem tm_split_main (hm : Membership) (hTr : GI.Cited.GMPTransitiveNonabelian)
     {f g1 g2 rg mp pf ce bapp bc gc comp inv app bn jm : ℕ}
     (h : TmSplitAt Pg f g1 g2 rg mp pf ce bapp bc gc comp inv app bn jm)
     (hjm : Pg.prims[jm]? = some (membershipPrim hm)) {A : ℝ}
@@ -213,10 +260,12 @@ theorem tm_split_main (hm : Membership)
     FunAll Pg f (.list [.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
           encFun (rowLab e L.con.blocks)], .list us, .list vs])
       (fun u cost => AnsC (domEquiv e S.dom) u (tmDomSet ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hNpos hqα).e (tmExactT ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hNpos hqα))) ∧
-        (cost : ℝ) ≤ expLogSq A S.N + (((tmRad ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hNpos hqα)).subgroupOf ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hNpos hqα).Hb).index : ℝ) *
-          (expLogSq A S.N + 1 + (10 ^ 4 * tmVB S.N : ℕ)) +
-          (tmSplitPoly hm (tmSplitZ ((tmRad ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hNpos hqα)).subgroupOf ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hNpos hqα).Hb).index (tmVB S.N)) : ℕ)) := by
-  set T := ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hNpos hqα) with hT
+        ∃ n : ℕ, (n : ℝ) ≤ (Fintype.card ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hNpos hqα).B : ℝ) ^
+            (2 * Real.logb 2 (Fintype.card ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hNpos hqα).B)) ∧
+          (cost : ℝ) ≤ expLogSq A S.N + (n : ℝ) *
+            (expLogSq A S.N + 1 + (10 ^ 4 * tmVB S.N : ℕ)) +
+            (tmSplitPoly hm (tmSplitZ n (tmVB S.N)) : ℕ)) := by
+  set T₀ := ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hNpos hqα) with hT₀
   set tin := Val.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
     encFun (rowLab e L.con.blocks)] with htin
   set V := Val.list [tin, .list us, .list vs] with hV
@@ -230,10 +279,12 @@ theorem tm_split_main (hm : Membership)
   refine EvalAll.letE (EvalAll.call_spec (Det.var' (P := Pg) (env := [V]) (i := 0) (v := V) rfl)
     (hreps S k e c hc sv lv L hsv hlv hq0 hgood hrow label hnat hq h0 E hP σH σN σS hH hNg hS htr
       hlH hlN hlS hcard hsN hNpos hqα us vs hus hvs)) ?_
-  rintro w1 c1 ⟨cb1, ⟨reps, rfl, hrH, hcov, hlen, hcb1⟩, hc1⟩
+  rintro w1 c1 ⟨cb1, ⟨R', hRH, hNR, hsolv, uR, reps, rfl, hGensR, hidx, hrH, hcov, hlen, hcb1⟩, hc1⟩
+  set T := ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hNpos hqα R' hRH hNR hsolv) with hT
+  have ⟨hsR, huR_eq, hslR, _⟩ := hGensR
   -- 2. the identity on the domain positions
   have dtin := Det.arg' (P := Pg) (vs := [tin, .list us, .list vs])
-    (rest := [.list (reps.map encPerm)]) (j := 0) (v := tin) rfl
+    (rest := [.list [uR, .list (reps.map encPerm)]]) (j := 0) (v := tin) rfl
   have dco := Det.get' dtin (Det.nat 2) (vs := [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
     encFun (rowLab e L.con.blocks)]) (v := coordsVal e S E) rfl
   rw [coordsVal_eq_list] at dco
@@ -271,7 +322,7 @@ theorem tm_split_main (hm : Membership)
   have e2 : (Val.list ((List.finRange L.q).map fun j =>
       natList ((List.finRange m).map fun β => ((e (E (β, j)).val : Fin k) : ℕ)))).wt =
       (coordsVal e S E).wt := by rw [coordsVal_eq_list]
-  have dS' : Det Pg [V, .list (reps.map encPerm)] tmSExpr (.nat s) (20 * V.wt + 40) :=
+  have dS' : Det Pg [V, .list [uR, .list (reps.map encPerm)]] tmSExpr (.nat s) (20 * V.wt + 40) :=
     dS.mono (by
       have r1 : (Val.list (List.map Val.nat (List.map (fun β => ((e (E (β, ⟨0, by omega⟩)).val : Fin k) : ℕ))
         (List.finRange m)))).wt = (natList ((List.finRange m).map fun β =>
@@ -297,6 +348,12 @@ theorem tm_split_main (hm : Membership)
   have hmk : m ≤ k := m_le_n e E ⟨0, by omega⟩
   have hmY : 4 * (m + 1) ^ 2 ≤ Y := by
     have := Nat.pow_le_pow_left (show m + 1 ≤ S.N + 1 by omega) 2; omega
+  have wuR : uR.wt ≤ Y := by
+    rw [huR_eq]
+    have h1 := wt_list_encPerms_le_sq hslR
+    have h2 : (m + 1) ^ 6 ≤ (S.N + 1) ^ 6 :=
+      Nat.pow_le_pow_left (show m + 1 ≤ S.N + 1 by omega) 6
+    omega
   have hAY : ansW s ≤ Y := by
     have h1 := ansW_le s
     have := Nat.pow_le_pow_left (show s + 1 ≤ S.N + 1 by omega) 6; omega
@@ -305,40 +362,46 @@ theorem tm_split_main (hm : Membership)
   set one := encPerm (1 : Perm (Fin s)) with hone
   set E0 := expLogSq A S.N with hE0
   set Bp := ⌈E0⌉₊ + 10 ^ 4 * Y with hBp
-  have hpiece : ∀ x ∈ reps.map encPerm, FunAll Pg pf (.list [.list [V, one], x]) (fun w cost =>
+  have hpiece : ∀ x ∈ reps.map encPerm, FunAll Pg pf (.list [.list [V, one, uR], x]) (fun w cost =>
       (∃ r, x = encPerm r ∧ ∃ u, w = .list [one, u] ∧
         AnsC (domEquiv e S.dom) u (tmDomSet T.e (tmCosetT T r))) ∧ cost ≤ Bp) := by
     intro x hx
     obtain ⟨r, hr, rfl⟩ := List.mem_map.1 hx
     refine FunAll.intro h.piece ?_
     unfold tmPieceF
-    have dV := Det.get' (Det.arg' (P := Pg) (vs := [.list [V, one], encPerm r]) (rest := []) (j := 0)
-      rfl) (Det.nat 0) (vs := [V, one]) (v := V) rfl
-    have dr := Det.arg' (P := Pg) (vs := [.list [V, one], encPerm r]) (rest := []) (j := 1)
+    have d0p := Det.arg' (P := Pg) (vs := [.list [V, one, uR], encPerm r]) (rest := []) (j := 0) rfl
+    have dV := Det.get' d0p (Det.nat 0) (vs := [V, one, uR]) (v := V) rfl
+    have dr := Det.arg' (P := Pg) (vs := [.list [V, one, uR], encPerm r]) (rest := []) (j := 1)
       (v := encPerm r) rfl
-    refine EvalAll.letE (EvalAll.call_spec (Det.mk2 dV dr) (hcos S k e c hc sv lv L hsv hlv hq0
+    have duR := Det.get' d0p (Det.nat 2) (vs := [V, one, uR]) (v := uR) rfl
+    refine EvalAll.letE (EvalAll.call_spec (Det.mk3 dV dr duR) (hcos S k e c hc sv lv L hsv hlv hq0
       hgood hrow label hnat hq h0 E hP σH σN σS hH hNg hS htr hlH hlN hlS hcard hsN hNpos hqα us vs
-      hus hvs r (hrH r hr))) ?_
+      hus hvs R' hRH hNR hsolv hidx uR hGensR r (hrH r hr))) ?_
     rintro u cu ⟨cb, ⟨hu, hcb⟩, hcu⟩
-    have d1 := Det.get' (Det.arg' (P := Pg) (vs := [.list [V, one], encPerm r]) (rest := [u]) (j := 0)
-      rfl) (Det.nat 1) (vs := [V, one]) (v := one) rfl
-    have d2 := Det.var' (P := Pg) (env := [.list [.list [V, one], encPerm r], u]) (i := 1) (v := u) rfl
+    have d1 := Det.get' (Det.arg' (P := Pg) (vs := [.list [V, one, uR], encPerm r]) (rest := [u]) (j := 0)
+      rfl) (Det.nat 1) (vs := [V, one, uR]) (v := one) rfl
+    have d2 := Det.var' (P := Pg) (env := [.list [.list [V, one, uR], encPerm r], u]) (i := 1) (v := u) rfl
     refine (Det.mk2 d1 d2).post fun cw hcw => ⟨⟨r, rfl, u, rfl, hu⟩, ?_⟩
     have hcb' : cb ≤ ⌈E0⌉₊ := by exact_mod_cast hcb.trans (Nat.le_ceil E0)
     have wu := hu.wt_le
     have wr := wt_encPerm_le r
-    have a1 := wt_list2_le V one
-    have a2 := wt_list2_le (.list [V, one]) (encPerm r)
-    have a3 := wt_list2_le V (encPerm r)
+    have a1 := wt_list3_le V one uR
+    have a2 := wt_list2_le (.list [V, one, uR]) (encPerm r)
+    have a3 := wt_list3_le V (encPerm r) uR
     have a4 := wt_list2_le one u
-    have a5 := wt_list2_le (.list [.list [V, one], encPerm r]) u
+    have a5 := wt_list2_le (.list [.list [V, one, uR], encPerm r]) u
     have wu' : u.wt ≤ Y := wu.trans hAY
     omega
-  have hmap := map_spec h.map (c := .list [V, one]) (xs := reps.map encPerm) (B := fun _ => Bp)
+  have hmap := map_spec h.map (c := .list [V, one, uR]) (xs := reps.map encPerm) (B := fun _ => Bp)
     hpiece
-  have dc := Det.mk2 (P := Pg) (env := [V, .list (reps.map encPerm), one])
-    (Det.mk2 (Det.var' (i := 0) (v := V) rfl) (Det.var' (i := 2) (v := one) rfl))
-    (Det.var' (i := 1) (v := .list (reps.map encPerm)) rfl)
+  have dv1 := Det.var' (P := Pg) (env := [V, .list [uR, .list (reps.map encPerm)], one])
+    (i := 1) (v := .list [uR, .list (reps.map encPerm)]) rfl
+  have duR' := Det.get' dv1 (Det.nat 0) (vs := [uR, .list (reps.map encPerm)]) (v := uR) rfl
+  have dreps := Det.get' dv1 (Det.nat 1) (vs := [uR, .list (reps.map encPerm)])
+    (v := .list (reps.map encPerm)) rfl
+  have dc := Det.mk2 (P := Pg) (env := [V, .list [uR, .list (reps.map encPerm)], one])
+    (Det.mk3 (Det.var' (i := 0) (v := V) rfl) (Det.var' (i := 2) (v := one) rfl) duR')
+    dreps
   refine EvalAll.letE (EvalAll.call_spec dc hmap) ?_
   rintro w3 c3 ⟨cb3, ⟨ws, rfl, hws, hcb3⟩, hc3⟩
   -- the pieces as values of `CombineExact`
@@ -353,28 +416,42 @@ theorem tm_split_main (hm : Membership)
   obtain ⟨cps, hcps, hU⟩ := tm_pieces (domEquiv e S.dom)
     (fun r : Perm (Fin m) => tmDomSet T.e (tmCosetT T r)) hws'
   have hUnion : unionSet ([] ++ cps) = toFin (domEquiv e S.dom) '' tmDomSet T.e (tmExactT T) := by
-    rw [List.nil_append, hU, tm_exactT_eq_iUnion T (reps := reps) hcov, tmDomSet_iUnion,
-      Set.image_iUnion₂]
-    rfl
+    rw [List.nil_append, hU, tm_exactT_eq_iUnion T (reps := reps) hcov]
+    exact (Set.image_iUnion₂ _ _).symm.trans (congrArg (Set.image _) (tmDomSet_iUnion _ _ _).symm)
   have hce := ce_spec hm h.ce h.ap h.fold h.step h.comp h.inv h.app h.nf hjm [] cps
     (by rw [hUnion]; exact tm_domSet_cosetOrEmpty e T)
-  have da := Det.mk2 (P := Pg) (env := [V, .list (reps.map encPerm), one, .list ws]) Det.nil
+  have da := Det.mk2 (P := Pg) (env := [V, .list [uR, .list (reps.map encPerm)], one, .list ws]) Det.nil
     (Det.var' (i := 3) (v := .list ws) rfl)
   subst hcps
   refine (EvalAll.call_spec da hce).mono ?_
   rintro u c4 ⟨cb4, ⟨hC, hcb4⟩, hc4⟩
-  have hAns : AnsC (domEquiv e S.dom) u (tmDomSet T.e (tmExactT T)) :=
-    CosetC.ansC (by rw [← hUnion]; exact hC)
-  refine ⟨hAns, ?_⟩
-  -- the cost
+  have hTT₀ : tmDomSet T.e (tmExactT T) = tmDomSet T₀.e (tmExactT T₀) := rfl
+  have hAns : AnsC (domEquiv e S.dom) u (tmDomSet T₀.e (tmExactT T₀)) :=
+    CosetC.ansC (by rw [← hTT₀, ← hUnion]; exact hC)
   set n := reps.length with hn
   have hn' : ((tmRad T).subgroupOf T.Hb).index = n := hlen.symm
-  rw [hn']
+  have hn_le : (n : ℝ) ≤ (Fintype.card T₀.B : ℝ) ^ (2 * Real.logb 2 (Fintype.card T₀.B)) := by
+    set F := RowForm.ofPure hnat hq E hP ⟨0, h0⟩
+    have hNH : gens σN ≤ gens σH := by rw [hH, hNg]; exact F.Nb_le
+    have hnorm : GI.Multicoset.Normalizes (gens σH) (gens σN) := by rw [hH, hNg]; exact F.normalizes
+    have : ((gens σN).subgroupOf (gens σH)).Normal := GI.Multicoset.normal_of_normalizes hnorm
+    have htrN : MulAction.IsPretransitive (gens σN) (Fin m) := by
+      rw [hNg]; change MulAction.IsPretransitive F.Nb F.B
+      refine ⟨fun b b' => ?_⟩
+      obtain ⟨n, hn⟩ := htr.exists_smul_eq b b'
+      exact ⟨⟨((n : F.Hb) : Perm F.B), n, n.2, rfl⟩, hn⟩
+    have hn'' : (R'.subgroupOf (gens σH)).index = n := by
+      rw [hH]; exact hn'
+    rw [← hn'']
+    exact GI.RadicalIndex.sub_index_le hTr hNH htrN hidx
+  refine ⟨hAns, n, hn_le, ?_⟩
+  -- the cost
   have wu : u.wt ≤ Y := hAns.wt_le.trans hAY
   have hone1 : one.wt ≤ Y := w1.trans (by omega)
   have Y1 : 1 ≤ Y := by omega
   have wR : (Val.list (reps.map encPerm)).wt ≤ n * (2 * Y + 1) + 4 :=
     wt_list_map_le reps encPerm (W := Y) fun r _ => (wt_encPerm_le r).trans (by omega)
+  have wuR_reps := wt_list2_le uR (.list (reps.map encPerm))
   have wC : (Val.list (cps.map encPiece)).wt ≤ n * (2 * (5 * Y) + 1) + 4 := by
     have := tm_wt_forall₂ (W := 5 * Y) (R := fun w r => ∃ u, w = .list [one, u] ∧
       AnsC (domEquiv e S.dom) u (tmDomSet T.e (tmCosetT T r))) (fun w r ⟨u', hw, hu'⟩ => by
@@ -392,8 +469,8 @@ theorem tm_split_main (hm : Membership)
   have hs1 : s + 1 ≤ Y := by
     have : s + 1 ≤ (s + 1) ^ 2 := Nat.le_self_pow (by norm_num) _
     omega
-  have l1 := wt_list2_le V one
-  have l2 := wt_list2_le (.list [V, one]) (.list (reps.map encPerm))
+  have l1 := wt_list3_le V one uR
+  have l2 := wt_list2_le (.list [V, one, uR]) (.list (reps.map encPerm))
   have l3 := wt_list2_le (.list []) (.list (cps.map encPiece))
   have l0 : (Val.list []).wt ≤ 5 := by decide
   have hsum : (List.map (fun _ => Bp) (List.map encPerm reps)).sum = n * Bp := by
@@ -402,7 +479,7 @@ theorem tm_split_main (hm : Membership)
   rw [hsum] at hcb3
   simp only [List.length_map] at hcb3
   rw [← hn] at hcb3
-  set W2 := (Val.list [Val.list [V, one], Val.list (List.map encPerm reps)]).wt with hW2
+  set W2 := (Val.list [Val.list [V, one, uR], Val.list (List.map encPerm reps)]).wt with hW2
   set W3 := (Val.list (List.map encPiece cps)).wt with hW3
   have hW23 : W2 + W3 + 1 ≤ 50 * T1 := by omega
   have hm3 : mapK * (n + 1) * (W2 + W3 + 1) ≤ 50000 * (T1 * T1) := by
@@ -456,22 +533,6 @@ theorem tm_split_main (hm : Membership)
   linarith
 
 end Iface
-
-/-- `N` is normal in `H` and transitive on `B`, in the form of `radical_index_le`. -/
-theorem tm_index_le (hAb : GI.Cited.GMPAbelianFactors) (hOut : GI.Cited.GMPOutBound)
-    (hTr : GI.Cited.GMPTransitiveNonabelian) {Ω C : Type} {P : Params} {S : State Ω C}
-    {L : GiantLabels S} (I : RowTerminal P S L) :
-    (((tmRad I).subgroupOf I.Hb).index : ℝ) ≤
-      (Fintype.card I.B : ℝ) ^ (2 * Real.logb 2 (Fintype.card I.B)) := by
-  haveI : (I.Nb.subgroupOf I.Hb).Normal := by
-    change ((I.Nl.map I.Hb.subtype).comap I.Hb.subtype).Normal
-    rw [Subgroup.comap_map_eq_self_of_injective I.Hb.subtype_injective]
-    infer_instance
-  have htr : MulAction.IsPretransitive I.Nb I.B := by
-    refine ⟨fun b b' => ?_⟩
-    obtain ⟨n, hn⟩ := I.transitive.exists_smul_eq b b'
-    exact ⟨⟨((n : I.Hb) : Perm I.B), n, n.2, rfl⟩, hn⟩
-  exact GI.RadicalIndex.radical_index_le hAb hOut hTr I.Nb_le htr
 
 /-- The constant of the weights in `tmSplitPoly`. -/
 noncomputable def tmSplitKP (hm : Membership) : ℕ :=
@@ -598,8 +659,7 @@ variable (Pg : Program)
 /-- **T7 from the radical cosets.** The split meets `TermDomSpec`, from the representatives
 (`TermRepsSpec`) and the pieces (`TermCosetSpec`), with cited Membership (`CombineExact`) and the
 cited bounds of [GMP] for the number of radical cosets. -/
-theorem tm_termDomSpec (hm : Membership) (hAb : GI.Cited.GMPAbelianFactors)
-    (hOut : GI.Cited.GMPOutBound) (hTr : GI.Cited.GMPTransitiveNonabelian)
+theorem tm_termDomSpec (hm : Membership) (hTr : GI.Cited.GMPTransitiveNonabelian)
     {f g1 g2 rg mp pf ce bapp bc gc comp inv app bn jm : ℕ}
     (h : TmSplitAt Pg f g1 g2 rg mp pf ce bapp bc gc comp inv app bn jm)
     (hjm : Pg.prims[jm]? = some (membershipPrim hm)) {A : ℝ} (hA : 0 ≤ A)
@@ -607,11 +667,10 @@ theorem tm_termDomSpec (hm : Membership) (hAb : GI.Cited.GMPAbelianFactors)
     TermDomSpec Pg (tmSplitA hm A) f := by
   intro Ω C _ S k e c hc sv lv L hsv hlv hq0 hgood hrow label hnat hq m h0 E hP σH σN σS hH hNg hS
     htr hlH hlN hlS hcard hsN hN hqα us vs hus hvs
-  refine (tm_split_main Pg hm h hjm hreps hcos S k e c hc sv lv L hsv hlv hq0 hgood hrow label hnat
+  refine (tm_split_main Pg hm hTr h hjm hreps hcos S k e c hc sv lv L hsv hlv hq0 hgood hrow label hnat
     hq h0 E hP σH σN σS hH hNg hS htr hlH hlN hlS hcard hsN hN hqα us vs hus hvs).mono ?_
-  rintro u cost ⟨hu, hcost⟩
-  refine ⟨hu, hcost.trans (tm_split_cost_le hm hA ?_)⟩
-  refine (tm_index_le hAb hOut hTr ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα)).trans ?_
+  rintro u cost ⟨hu, n, hn_le, hcost⟩
+  refine ⟨hu, hcost.trans (tm_split_cost_le hm hA (hn_le.trans ?_))⟩
   have hB : Fintype.card ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα).B ≤ S.N := by
     have h1 : Fintype.card ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα).B = m := by
       change Fintype.card (Fin m) = m

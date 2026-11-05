@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabNVec
+module
+
+public import Workspace.Impl.TermGlueLabNVec
+
+@[expose] public section
 
 /-!
 # The vector wrapper of the label driver: the contract

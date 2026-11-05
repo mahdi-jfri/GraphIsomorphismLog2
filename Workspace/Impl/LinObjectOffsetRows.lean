@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectOffsetWindow
-import Workspace.Impl.LinObjectLocalRelations
+module
+
+public import Workspace.Impl.LinObjectOffsetWindow
+public import Workspace.Impl.LinObjectLocalRelations
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

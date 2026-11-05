@@ -1,7 +1,11 @@
-import Workspace.Impl.LinObjectDataFrames
-import Workspace.Impl.LinObjectPrimeBound
-import Mathlib.GroupTheory.Coset.Card
-import Mathlib.Data.Fintype.Perm
+module
+
+public import Workspace.Impl.LinObjectDataFrames
+public import Workspace.Impl.LinObjectPrimeBound
+public import Mathlib.GroupTheory.Coset.Card
+public import Mathlib.Data.Fintype.Perm
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Multicoset

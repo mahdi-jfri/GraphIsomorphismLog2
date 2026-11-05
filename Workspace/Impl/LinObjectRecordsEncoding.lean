@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectRecordsSpec
-import Workspace.Impl.LinAffineCallerSpec
+module
+
+public import Workspace.Impl.LinObjectRecordsSpec
+public import Workspace.Impl.LinAffineCallerSpec
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

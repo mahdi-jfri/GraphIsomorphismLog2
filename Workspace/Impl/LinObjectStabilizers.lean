@@ -1,5 +1,9 @@
-import Workspace.MulticosetPieces
-import Workspace.MulticosetTransport
+module
+
+public import Workspace.MulticosetPieces
+public import Workspace.MulticosetTransport
+
+@[expose] public section
 
 /-! Local stabilizers in the abelian layer contain the kernel and are
 normal in `A`. This justifies the quotients used in the object glue. -/

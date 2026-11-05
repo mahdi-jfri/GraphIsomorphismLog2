@@ -1,6 +1,10 @@
-import Workspace.Compat
-import Workspace.BochertRelation
-import Workspace.BochertThreeCycle
+module
+
+public import Workspace.Compat
+public import Workspace.BochertRelation
+public import Workspace.BochertThreeCycle
+
+@[expose] public section
 
 open scoped commutatorElement
 

@@ -1,6 +1,10 @@
-import Workspace.Impl.TermGlueLabNProg
-import Workspace.Impl.TermGlueLabSVPt
-import Workspace.Impl.LinIntTrim
+module
+
+public import Workspace.Impl.TermGlueLabNProg
+public import Workspace.Impl.TermGlueLabSVPt
+public import Workspace.Impl.LinIntTrim
+
+@[expose] public section
 
 /-!
 # The vector wrapper of the label driver: the program
@@ -258,7 +262,7 @@ theorem tmGLN_vec_disp {P : Program} {b pl orf : ℕ} (hf : P.funs[b]? = some (t
   cases hx
   have he : (if GI.Machine.BinOp.eval .sub ds.length t = 0 then Expr.call pl (.var 0)
       else .call orf (.var 0)) = .call g (.var 0) := by
-    rw [hg]; simp only [GI.Machine.BinOp.eval_sub]; split <;> rfl
+    rw [hg]; by_cases h0 : ds.length - t = 0 <;> simp [GI.Machine.BinOp.eval_sub, h0]
   rw [he]
   refine EvalAll.call_funAll (Det.var' (P := P) (env := [a, ctx]) (i := 0) rfl)
     fun v ca hv => ?_

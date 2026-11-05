@@ -1,4 +1,8 @@
-import Workspace.Impl.KRefMainSpec
+module
+
+public import Workspace.Impl.KRefMainSpec
+
+@[expose] public section
 
 /-!
 # The task `KaryRefinementTask k` as a program fact

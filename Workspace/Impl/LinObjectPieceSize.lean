@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectMovedMath
+module
+
+public import Workspace.Impl.LinObjectMovedMath
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -22,7 +26,7 @@ theorem linObjectPieces_wt {n : ℕ} (Ps : List (List (TmRiO n))) :
     apply List.sum_le_sum
     intro S hS
     have hh := length_lt_wt_list (S.map tmGlObjVal)
-    simpa only [List.length_map] using hh.le
+    simpa only [tmGlObjsVal, List.length_map] using hh.le
   have hs := sum_wt_lt_wt_list (Ps.map tmGlObjsVal)
   simp only [List.map_map,Function.comp_def] at hs
   rw [List.length_flatten]

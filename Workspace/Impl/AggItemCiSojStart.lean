@@ -1,8 +1,12 @@
-import Workspace.Impl.AggItemCiSojFront
-import Workspace.Impl.AggItemCiSojIItem
-import Workspace.Impl.AggItemCiSojBP
-import Workspace.Impl.AggItemCiSojBW
-import Workspace.Impl.AggItemCiSojRes
+module
+
+public import Workspace.Impl.AggItemCiSojFront
+public import Workspace.Impl.AggItemCiSojIItem
+public import Workspace.Impl.AggItemCiSojBP
+public import Workspace.Impl.AggItemCiSojBW
+public import Workspace.Impl.AggItemCiSojRes
+
+@[expose] public section
 
 /-! # The full first-rectangle start program's source dispatch -/
 

@@ -1,4 +1,8 @@
-import Workspace.Algorithm.RowExpose
+module
+
+public import Workspace.Algorithm.RowExpose
+
+@[expose] public section
 
 /-!
 # The column step at a chosen switch and base point
@@ -154,11 +158,13 @@ noncomputable def colStep [Finite Ω] (hint : 2 ≤ Nat.card (Quotient (MulActio
         linarith
     tower_mono := P.localTower_mono
     tower_ratio := fun j hj => by
-      show (F.expLoc b₀)[j].ratio = _
+      have hj' : j < (F.expLoc b₀).length := hj
+      show ((F.expLoc b₀)[j]'hj').ratio =
+        (RowForm.localTower F.e F.i0 (F.expLoc b₀) b₀ j).relIndex
+          (RowForm.localTower F.e F.i0 (F.expLoc b₀) b₀ (j + 1))
       rw [F.expLoc_ratio]
       unfold RowForm.expRatio
-      rw [localTower_congr _ _ _ (F.lvl_expLoc b₀).symm]
-      rfl }
+      rw [localTower_congr _ _ _ (F.lvl_expLoc b₀).symm] }
 
 end Col
 

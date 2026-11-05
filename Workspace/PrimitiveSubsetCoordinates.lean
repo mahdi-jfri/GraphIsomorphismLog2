@@ -1,6 +1,10 @@
-import Workspace.AlternatingSubsetTransitive
-import Workspace.PrimitiveActionCoordinates
-import Workspace.IntransitiveInvariantSubset
+module
+
+public import Workspace.AlternatingSubsetTransitive
+public import Workspace.PrimitiveActionCoordinates
+public import Workspace.IntransitiveInvariantSubset
+
+@[expose] public section
 
 namespace GI.AlternatingActions
 

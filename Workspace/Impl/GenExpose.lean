@@ -1,4 +1,8 @@
-import Workspace.Impl.GenExposeCand
+module
+
+public import Workspace.Impl.GenExposeCand
+
+@[expose] public section
 
 /-!
 # The exposure program

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggStructDesSplit
+module
+
+public import Workspace.Impl.AggStructDesSplit
+
+@[expose] public section
 
 /-!
 # The Case 3 test as a program: the hit test

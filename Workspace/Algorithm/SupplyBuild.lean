@@ -1,6 +1,10 @@
-import Workspace.Algorithm.Existence
-import Workspace.Algorithm.SingleFactor
-import Workspace.Algorithm.NormLabels
+module
+
+public import Workspace.Algorithm.Existence
+public import Workspace.Algorithm.SingleFactor
+public import Workspace.Algorithm.NormLabels
+
+@[expose] public section
 
 /-!
 # Building the subroutine data from the giant-step data

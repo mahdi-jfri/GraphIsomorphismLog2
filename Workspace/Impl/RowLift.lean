@@ -1,4 +1,8 @@
-import Workspace.Impl.RowClean
+module
+
+public import Workspace.Impl.RowClean
+
+@[expose] public section
 
 /-!
 # Localized lifts of window cycles, and the A.17 coordinates
@@ -21,8 +25,7 @@ Each cycle is even, since `k` is odd (`winL_even`).
 **Lifts** (`WinLift`). A lift of a window `t` is an element of `G` with top `formPerm t` that
 fixes every point of the domain whose row is not in `t`. Its restriction to the domain is a
 localized lift of `formPerm t` (`WinLift.localized`). Lifts exist under the logarithmic
-threshold (`winLift_exists`); this is (LG2), and it uses the cited `TransitiveAffected` through
-`localLiftAvailable_log`.
+threshold (`winLift_exists`); this is (LG2), through `localLiftAvailable_log`.
 
 **Coordinates** (`pureCoords_of_lifts`). Given lifts `g₁, h₁` of `win1, win2` and `hⱼ` of
 `winJ j`, put `c = [g₁, h₁]` and `dⱼ = [c, hⱼ]` (`rightLocalCommutator`). On the domain, `c`
@@ -299,9 +302,9 @@ theorem kkOf_le (q : ℕ) (hq : 1 ≤ q) : 2 * kkOf q ≤ q + 1 := by
 /-- **The window length meets (LG1)** when `q` passes the logarithmic threshold of Algorithm 4
 for a row size `f ≤ s`. -/
 theorem kkOf_thr {q f s : ℕ} (hf : f ≤ s) (hfpos : 0 < f)
-    (hthr : 2 * max 8 (2 + Real.logb 2 s) + 3 ≤ (q : ℝ)) :
-    WinLen q (kkOf q) ∧ max 8 (2 + Real.logb 2 f) < (kkOf q : ℝ) := by
-  have h8 : (8 : ℝ) ≤ max 8 (2 + Real.logb 2 s) := le_max_left _ _
+    (hthr : 2 * max 63 (12 * Real.logb 2 s) + 3 ≤ (q : ℝ)) :
+    WinLen q (kkOf q) ∧ max 63 (12 * Real.logb 2 f) < (kkOf q : ℝ) := by
+  have h63 : (63 : ℝ) ≤ max 63 (12 * Real.logb 2 s) := le_max_left _ _
   have hq19 : 19 ≤ q := by
     have : (19 : ℝ) ≤ q := by linarith
     exact_mod_cast this
@@ -310,7 +313,7 @@ theorem kkOf_thr {q f s : ℕ} (hf : f ≤ s) (hfpos : 0 < f)
   refine ⟨⟨by omega, kkOf_odd q (by omega), hle⟩, ?_⟩
   have hlog : Real.logb 2 f ≤ Real.logb 2 s :=
     Real.logb_le_logb_of_le (by norm_num) (by exact_mod_cast hfpos) (by exact_mod_cast hf)
-  have hmax : max 8 (2 + Real.logb 2 f) ≤ max 8 (2 + Real.logb 2 s) :=
+  have hmax : max 63 (12 * Real.logb 2 f) ≤ max 63 (12 * Real.logb 2 s) :=
     max_le_max le_rfl (by linarith)
   have hk : (q : ℝ) ≤ 2 * (kkOf q : ℝ) + 2 := by exact_mod_cast hge
   linarith
@@ -364,13 +367,12 @@ theorem card_fiber_eq [Fintype S.dom] (hnat : NaturalRows S L label) (hq : 3 ≤
 
 /-- **Lifts exist** (LG2): for a window `t` without repeats, of odd length `k ≥ 5` above the
 logarithmic threshold of the row size, some element of `G` lifts `formPerm t` and fixes every
-point of the domain outside the rows of `t`. This is where the cited `TransitiveAffected` is
-used (`localLiftAvailable_log`). -/
-theorem winLift_exists (hcite : GI.Cited.TransitiveAffected) [Finite Ω]
+point of the domain outside the rows of `t` (`localLiftAvailable_log`). -/
+theorem winLift_exists [Finite Ω]
     (hnat : NaturalRows S L label) (hq : 5 ≤ L.q) (t : List (Fin L.q)) (hnd : t.Nodup)
     (h5 : 5 ≤ t.length) (hodd : Odd t.length) (f : ℕ)
     (hf : ∀ [Fintype S.dom], Fintype.card {x : S.dom // label x = ⟨0, by omega⟩} = f)
-    (hthr : max 8 (2 + Real.logb 2 f) < (t.length : ℝ)) :
+    (hthr : max 63 (12 * Real.logb 2 f) < (t.length : ℝ)) :
     ∃ g, WinLift S L label t g := by
   classical
   haveI : Fintype S.dom := Fintype.ofFinite _
@@ -383,11 +385,11 @@ theorem winLift_exists (hcite : GI.Cited.TransitiveAffected) [Finite Ω]
     rw [topHom_apply, hk1]
   have hthrA : A.BelowLogThreshold t.length := by
     intro i
-    change max 8 (2 + Real.logb 2 (Fintype.card {x : S.dom // label x = i})) < _
+    change max 63 (12 * Real.logb 2 (Fintype.card {x : S.dom // label x = i})) < _
     rw [card_fiber_eq hnat (by omega) i, hf]
     exact hthr
   have hT : t.toFinset.card = t.length := List.toFinset_card_of_nodup hnd
-  have hLA := localLiftAvailable_log hcite A hker hthrA t.toFinset hT h5
+  have hLA := localLiftAvailable_log A hker hthrA t.toFinset hT h5
   obtain ⟨g', hg'top, hg'fix⟩ := hLA ⟨t.formPerm, formPerm_even t hnd (by omega) hodd⟩
     (fun i hi => List.formPerm_apply_of_notMem (by simpa using hi))
   obtain ⟨g0, hg0⟩ := S.domHom.rangeRestrict_surjective g'
@@ -398,7 +400,7 @@ theorem winLift_exists (hcite : GI.Cited.TransitiveAffected) [Finite Ω]
     rw [h2, this]
     exact congrArg Subtype.val hg'top
   · intro v hv hvt
-    have h1 := hg'fix ⟨v, hv⟩ (by simpa using hvt)
+    have h1 := hg'fix ⟨v, hv⟩ (by simpa [A, rowAction] using hvt)
     have h2 : (g'.val ⟨v, hv⟩ : Ω) = g0.val v := by
       rw [← hg0]; rfl
     rw [← h2, h1]
@@ -475,6 +477,8 @@ noncomputable def Lifts.cycleData (hnat : NaturalRows S L label)
       (meetJ hk j hj)
     rw [formPerm_winJ_zero hk j hj] at this
     convert this using 2
+    · rfl
+    · simp [cleanCycle, row0, swap_apply_def]
   undo j hj x hx := by
     rw [dif_pos hj, H.d_eq j hj]
     have h5 := hk.five

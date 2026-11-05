@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimaryInstance
-import Workspace.Impl.LinActionItem
+module
+
+public import Workspace.Impl.LinPrimaryInstance
+public import Workspace.Impl.LinActionItem
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

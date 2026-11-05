@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojTab
-import Workspace.Impl.AggItemCfObW
+module
+
+public import Workspace.Impl.AggItemCiSojTab
+public import Workspace.Impl.AggItemCfObW
+
+@[expose] public section
 
 /-!
 # Weight bounds for the component-table program

@@ -1,5 +1,9 @@
-import Workspace.Impl.VsQAL
-import Workspace.Impl.VsBOne
+module
+
+public import Workspace.Impl.VsQAL
+public import Workspace.Impl.VsBOne
+
+@[expose] public section
 
 /-!
 # The analysis of a state

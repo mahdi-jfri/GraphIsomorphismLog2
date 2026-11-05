@@ -1,7 +1,11 @@
-import Workspace.Impl.VsPBas
-import Workspace.Proved.VStabLinMath
-import Workspace.Proved.VsWBasic
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+module
+
+public import Workspace.Impl.VsPBas
+public import Workspace.Proved.VStabLinMath
+public import Workspace.Proved.VsWBasic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+
+@[expose] public section
 
 /-!
 # The greedy basis spans the orbit keys
@@ -15,6 +19,8 @@ by one. Hence the number of kept elements is the dimension of that span (`vsPBas
 namespace GI.Proved
 
 open GI.Impl Equiv Module
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 variable {n r : ℕ} [hr : Fact r.Prime] {kf : Perm (Fin n) → List ℕ} {k : ℕ}
 

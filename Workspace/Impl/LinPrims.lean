@@ -1,7 +1,12 @@
-import Workspace.Impl.LinMembership
-import Workspace.Impl.LinNormal
-import Workspace.Lang.Prims.Other
-import Workspace.Lang.Prims.PermGroups
+module
+
+public import Workspace.Impl.LinMembership
+public import Workspace.Impl.LinNormal
+public import Workspace.Impl.NormCosetInt
+public import Workspace.Lang.Prims.Other
+public import Workspace.Lang.Prims.PermGroups
+
+@[expose] public section
 
 /-! The fixed A.20 primitive block. Final assembly places it at index 14;
 the specifications continue to accept an arbitrary base. -/

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojQuery
-import Workspace.Impl.AggItemCiSojSG
+module
+
+public import Workspace.Impl.AggItemCiSojQuery
+public import Workspace.Impl.AggItemCiSojSG
+
+@[expose] public section
 
 /-!
 # Assembling the canonical inherited query value

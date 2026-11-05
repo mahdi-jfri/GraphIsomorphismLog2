@@ -1,6 +1,10 @@
-import Workspace.Proved.VsBFldNT
-import Workspace.Proved.VsBAff
-import Workspace.Impl.VsQSot
+module
+
+public import Workspace.Proved.VsBFldNT
+public import Workspace.Proved.VsBAff
+public import Workspace.Impl.VsQSot
+
+@[expose] public section
 
 /-!
 # The λ-chain of the field line
@@ -116,9 +120,8 @@ theorem vsB_orb_le (hab : s.Ab) (hD : 1 ≤ vsQD s) (hdom : VsBDom s) {q : ℕ} 
     (vsQOrb (vsBAq s q) gs (vsBe0 s hD)).ncard ≤ I.n + 1 := by
   classical
   haveI : NeZero I.p := ⟨I.prime.ne_zero⟩
-  have hcomm : ∀ a ∈ {X | ∃ g ∈ s.hs, vsQLam s g = X}, ∀ b ∈ {X | ∃ g ∈ s.hs, vsQLam s g = X},
-      a * b = b * a := by
-    rintro _ ⟨g, hg, rfl⟩ _ ⟨h, hh, rfl⟩
+  have hcomm : ({X | ∃ g ∈ s.hs, vsQLam s g = X} : Set _).Pairwise Commute := by
+    rintro _ ⟨g, hg, rfl⟩ _ ⟨h, hh, rfl⟩ _
     exact vsB_comm hs hab (Subgroup.subset_closure hg) (Subgroup.subset_closure hh)
   letI : CommRing (vsBLamA s) := Algebra.adjoinCommRingOfComm (ZMod I.p) hcomm
   haveI : Nontrivial (vsBLamA s) := by

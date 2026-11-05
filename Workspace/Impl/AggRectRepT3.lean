@@ -1,6 +1,10 @@
-import Workspace.Impl.AggRectRepT2
-import Workspace.Impl.AggPre
-import Workspace.Impl.GenNormBudget
+module
+
+public import Workspace.Impl.AggRectRepT2
+public import Workspace.Impl.AggPre
+public import Workspace.Impl.GenNormBudget
+
+@[expose] public section
 
 /-!
 # Stage 3 of the representation program, pairs

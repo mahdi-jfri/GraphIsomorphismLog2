@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabPSup
-import Workspace.Impl.TermGlueLabRT
+module
+
+public import Workspace.Impl.TermGlueLabPSup
+public import Workspace.Impl.TermGlueLabRT
+
+@[expose] public section
 
 /-!
 # The preconditions of the supplement call (step 4 of the label program)
@@ -66,7 +70,9 @@ theorem tmGLS_t4_pre :
     ∃ _ : (I.Nb.subgroupOf (Aut I.Hb (types I.Nb (rowTuple I.e S.x)) ⊓ tmRad I)).Normal,
       IsSolvable ((Aut I.Hb (types I.Nb (rowTuple I.e S.x)) ⊓ tmRad I : Subgroup (Perm I.B)) ⧸
         I.Nb.subgroupOf (Aut I.Hb (types I.Nb (rowTuple I.e S.x)) ⊓ tmRad I)) := by
-  obtain ⟨hRH, hNR, ℓ, hℓ⟩ := radicalPreimage_spec I.Nb_le I.normalizes
+  have hRH := I.rad_le
+  have hNR := I.Nb_le_rad
+  obtain ⟨ℓ, hℓ⟩ := I.rad_solv
   set D' := Aut I.Hb (types I.Nb (rowTuple I.e S.x)) ⊓ tmRad I
   -- `N ≤ D`: `N ≤ H`, and `N` fixes the types
   have hND : I.Nb ≤ D' := fun n hn =>
@@ -105,20 +111,26 @@ theorem tmGLS_t4_gens (hnat : NaturalRows S L label) (hq : 5 ≤ L.q) {m : ℕ} 
     (htr : MulAction.IsPretransitive (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nl
       (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).B)
     (hcard : Fintype.card (Fin m) * L.q = S.size) (hsN : S.size ≤ S.N) (hN : 0 < S.N)
-    (hqα : (S.N : ℝ) ^ P.α < L.q) {σN U : List (Perm (Fin m))}
+    (hqα : (S.N : ℝ) ^ P.α < L.q)
+    {R' : Subgroup (Perm (Fin m))}
+    (hRH : R' ≤ (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Hb)
+    (hNR : (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ≤ R')
+    (hsolv : ∃ ℓ, GI.Multicoset.relDerived R' (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ℓ ≤
+      (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb)
+    {σN U : List (Perm (Fin m))}
     (hσN : gens σN = (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb) {r τ : Perm (Fin m)}
     (hw : AnsC (Equiv.refl (Fin m)) (.list [encPerm τ, encGroup U])
-      (tmGlRes ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P htr hcard hsN hN hqα) r)) :
+      (tmGlRes ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P htr hcard hsN hN hqα R' hRH hNR hsolv) r)) :
     gens (U.map fun x => τ * x * τ⁻¹) =
-      Aut ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P htr hcard hsN hN hqα).Hb
-        (types ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P htr hcard hsN hN hqα).Nb
-          (rowTuple ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P htr hcard hsN hN hqα).e
-            S.x)) ⊓ tmRad ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P htr hcard hsN hN hqα) ∧
+      Aut ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P htr hcard hsN hN hqα R' hRH hNR hsolv).Hb
+        (types ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P htr hcard hsN hN hqα R' hRH hNR hsolv).Nb
+          (rowTuple ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P htr hcard hsN hN hqα R' hRH hNR hsolv).e
+            S.x)) ⊓ tmRad ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P htr hcard hsN hN hqα R' hRH hNR hsolv) ∧
     gens σN ≤ gens (U.map fun x => τ * x * τ⁻¹) ∧
     ∃ _ : ((gens σN).subgroupOf (gens (U.map fun x => τ * x * τ⁻¹))).Normal,
       IsSolvable ((gens (U.map fun x => τ * x * τ⁻¹)) ⧸
         (gens σN).subgroupOf (gens (U.map fun x => τ * x * τ⁻¹))) := by
-  set I := (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P htr hcard hsN hN hqα
+  set I := (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P htr hcard hsN hN hqα R' hRH hNR hsolv
   -- the residual set is `τ ⟨U⟩`
   have hres : tmGlRes I r = τ • ((gens U : Subgroup (Perm (Fin m))) : Set (Perm (Fin m))) :=
     tmCs_ansC_cons hw rfl

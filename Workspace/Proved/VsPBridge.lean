@@ -1,5 +1,9 @@
-import Workspace.Proved.VsPKeyMath
-import Workspace.Proved.VsPSpinMath
+module
+
+public import Workspace.Proved.VsPKeyMath
+public import Workspace.Proved.VsPSpinMath
+
+@[expose] public section
 
 /-!
 # From permutations to local units

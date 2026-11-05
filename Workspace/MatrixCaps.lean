@@ -1,5 +1,9 @@
-import Workspace.MatrixKernel
-import Workspace.AlternatingSections
+module
+
+public import Workspace.MatrixKernel
+public import Workspace.AlternatingSections
+
+@[expose] public section
 
 namespace GI.Matrix
 

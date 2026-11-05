@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCmpStBud
+module
+
+public import Workspace.Impl.AggCmpStBud
+
+@[expose] public section
 
 /-!
 # The start of a pair: `CmStartOK`

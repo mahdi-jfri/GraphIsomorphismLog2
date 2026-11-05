@@ -1,8 +1,12 @@
-import Workspace.Impl.AggRectRepFinH
-import Workspace.Impl.AggCertBud
-import Workspace.Impl.AggInc
-import Workspace.Lang.Prims.BlockHom
-import Workspace.Lang.Lib.Tabulate
+module
+
+public import Workspace.Impl.AggRectRepFinH
+public import Workspace.Impl.AggCertBud
+public import Workspace.Impl.AggInc
+public import Workspace.Lang.Prims.BlockHom
+public import Workspace.Lang.Lib.Tabulate
+
+@[expose] public section
 
 /-!
 # The rectangle representation program

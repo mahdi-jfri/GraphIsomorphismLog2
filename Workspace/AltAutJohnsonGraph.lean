@@ -2,10 +2,14 @@
 69cb972f587a3ecc035e092253167ff2e303c962, file
 CFSG/Permutation/AlternatingAutomorphism/JohnsonGraph.lean.
 Licensed under the Apache License 2.0; see `licenses/CFSG-Apache-2.0.txt`.
-Modified for this project: module names, and changes to build with Lean v4.30.0-rc2 and
-mathlib 2f9133a. The SHA-256 of the original file is in `licenses/AltAut-provenance.json`. -/
+Modified for this project: module names, and proof changes for the Lean and mathlib versions
+used here. The SHA-256 of the original file is in `licenses/AltAut-provenance.json`. -/
 
-import Mathlib.Combinatorics.SimpleGraph.Clique
+module
+
+public import Mathlib.Combinatorics.SimpleGraph.Clique
+
+@[expose] public section
 
 namespace GI
 
@@ -17,8 +21,8 @@ variable {α : Type*} [DecidableEq α] {k : ℕ}
 
 def johnsonGraph (α : Type*) [DecidableEq α] (k : ℕ) : SimpleGraph {s : Finset α // #s = k} where
   Adj s t := #(s.1 ∩ t.1) + 1 = k
-  symm := fun s t h => by
-    simpa only [inter_comm] using h
+  symm := ⟨fun s t h => by
+    simpa only [inter_comm] using h⟩
   loopless := ⟨fun s h => by simp [s.2] at h⟩
 
 namespace johnsonGraph

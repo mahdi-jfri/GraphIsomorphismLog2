@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojBS
-import Workspace.Impl.AggItemCiSojTP
+module
+
+public import Workspace.Impl.AggItemCiSojBS
+public import Workspace.Impl.AggItemCiSojTP
+
+@[expose] public section
 
 /-!
 # The balance-test callback and finite conjunction
@@ -99,6 +103,6 @@ theorem itcs_bal_all_prog {Pg : Program} {all f Ct : ℕ}
       obtain ⟨i, hi, rfl⟩ := List.mem_map.1 ha
       simpa only [itcsBTQ, dif_pos i.isLt] using hf i (itci_mem_fl.1 hi))
   simpa only [List.map_map, Function.comp_def, List.map_const', List.sum_replicate, List.length_map, itciFl_length,
-    itcqFV, natList, List.map_map, Function.comp_def] using h
+    itcqFV, natList, smul_eq_mul] using h
 
 end GI.Impl

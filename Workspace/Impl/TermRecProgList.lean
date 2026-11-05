@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecProgMath
+module
+
+public import Workspace.Impl.TermRecProgMath
+
+@[expose] public section
 
 /-!
 # Lists of objects: pieces, counts and the object test (T5, mathematics)

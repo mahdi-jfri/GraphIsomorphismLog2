@@ -1,4 +1,8 @@
-import Workspace.Algorithm.CertificatePhase
+module
+
+public import Workspace.Algorithm.CertificatePhase
+
+@[expose] public section
 
 /-!
 # The comparison phase of an aggregation round

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojSpec
+module
+
+public import Workspace.Impl.AggItemCiSojSpec
+
+@[expose] public section
 
 /-!
 # The partition branch and the rectangle call preconditions
@@ -26,7 +30,7 @@ theorem itcs_bal_iff (σ : Perm (Fin q)) (X Y : PairCfg q) (x₀ y₀ : Fin q) :
   constructor
   · intro h a
     have hc := congrArg (fun z : ColPart (Fin q) => z.col (σ a)) h
-    simpa only [ColPart.smul_col, Perm.inv_apply_self] using hc.symm
+    simpa only [ColPart.smul_col, Perm.inv_apply_self, itcsBal] using hc.symm
   · intro h
     apply ColPart.ext
     · funext a
@@ -91,7 +95,7 @@ theorem itcs_rect_conds {L : GiantLabels S} (X : PairCfg L.q) (i₀ : Fin X.fibe
   refine ⟨lt_of_not_ge hq, hd, h3, ?_, ?_⟩
   · exact ⟨_, Finset.mem_map_of_mem _
       ((mem_colorClass _ _ _ _ _).2 cert.rightPoint.property)⟩
-  · simpa only [Fintype.card_fin] using ha
+  · simpa only [Fintype.card_fin, rectW, rectR] using ha
 
 /-- The good source and fiber membership come from the round that supplies the objects. -/
 theorem itcs_obj_good {k : ℕ} {e : Ω ≃ Fin k} {c : C → ℕ} {L : SuppliedLabels S}

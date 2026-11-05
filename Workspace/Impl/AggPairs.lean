@@ -1,6 +1,10 @@
-import Workspace.Impl.AggGraph
-import Workspace.Impl.Lift
-import Workspace.Impl.GiantNat
+module
+
+public import Workspace.Impl.AggGraph
+public import Workspace.Impl.Lift
+public import Workspace.Impl.GiantNat
+
+@[expose] public section
 
 /-!
 # Splitting an encoded pair, in `GI.Lang`

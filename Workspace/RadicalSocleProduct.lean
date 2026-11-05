@@ -1,5 +1,9 @@
-import Workspace.RadicalSocleStructure
-import Mathlib.GroupTheory.NoncommPiCoprod
+module
+
+public import Workspace.RadicalSocleStructure
+public import Mathlib.GroupTheory.NoncommPiCoprod
+
+@[expose] public section
 
 namespace GI.RadicalSocle
 

@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQA2TM
+module
+
+public import Workspace.Impl.VsQA2TM
+
+@[expose] public section
 
 /-!
 # The transitive case

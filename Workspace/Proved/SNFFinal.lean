@@ -1,5 +1,9 @@
-import Workspace.Impl.SNFMainP
-import Workspace.Proved.HNFFinal
+module
+
+public import Workspace.Impl.SNFMainP
+public import Workspace.Proved.HNFFinal
+
+@[expose] public section
 
 /-!
 # Smith normal form of a nonsingular matrix, proved

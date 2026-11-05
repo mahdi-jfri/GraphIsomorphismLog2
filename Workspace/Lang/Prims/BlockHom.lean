@@ -14,8 +14,12 @@ format `HomVal` of the homomorphism tasks (`blkHom_spec`). Its cost is at most
 
 `tailFuns` (drop the first entry of a list) is a library function that this uses.
 -/
-import Workspace.Lang.Prims.Graph
-import Workspace.Lang.Lib.SmallGroup
+module
+
+public import Workspace.Lang.Prims.Graph
+public import Workspace.Lang.Lib.SmallGroup
+
+@[expose] public section
 
 namespace GI.Lang
 

@@ -1,4 +1,8 @@
-import Workspace.Impl.SSSiftStep
+module
+
+public import Workspace.Impl.SSSiftStep
+
+@[expose] public section
 
 /-!
 # The sifting loop as a program

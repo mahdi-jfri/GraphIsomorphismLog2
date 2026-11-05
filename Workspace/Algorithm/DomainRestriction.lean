@@ -1,4 +1,8 @@
-import Workspace.Algorithm.Interfaces
+module
+
+public import Workspace.Algorithm.Interfaces
+
+@[expose] public section
 
 /-!
 # The faithful action of a state on its domain

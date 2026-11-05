@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertRep
+module
+
+public import Workspace.Impl.AggCertRep
+
+@[expose] public section
 
 /-!
 # The moves of the certificate phase on program data

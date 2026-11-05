@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimaryFieldMatrix
-import Mathlib.Algebra.BigOperators.Ring.Finset
+module
+
+public import Workspace.Impl.LinPrimaryFieldMatrix
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+
+@[expose] public section
 
 /-! Computable coordinates on a primary layer. They divide the canonical
 integer coordinates by p^j and reduce modulo p. -/

@@ -1,5 +1,9 @@
-import Workspace.CertificateLockstep
-import Workspace.LocalPermFamilies
+module
+
+public import Workspace.CertificateLockstep
+public import Workspace.LocalPermFamilies
+
+@[expose] public section
 
 /-!
 # Ordered comparisons of local certificates

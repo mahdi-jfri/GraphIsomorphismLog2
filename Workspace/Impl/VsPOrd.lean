@@ -1,5 +1,9 @@
-import Workspace.Impl.VsPCtx
-import Workspace.Impl.VsQPow
+module
+
+public import Workspace.Impl.VsPCtx
+public import Workspace.Impl.VsQPow
+
+@[expose] public section
 
 /-!
 # Powers of permutations, and an element of prime order

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojComp
-import Workspace.Lang.Lib.Orbit
+module
+
+public import Workspace.Impl.AggItemCiSojComp
+public import Workspace.Lang.Lib.Orbit
+
+@[expose] public section
 
 /-!
 # Computing the component labels with the orbit table program

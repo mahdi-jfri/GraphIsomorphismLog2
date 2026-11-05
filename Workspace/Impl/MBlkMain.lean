@@ -1,5 +1,9 @@
-import Workspace.Impl.MBlkOuter
-import Workspace.Impl.CamCells
+module
+
+public import Workspace.Impl.MBlkOuter
+public import Workspace.Impl.CamCells
+
+@[expose] public section
 
 /-!
 # The whole program

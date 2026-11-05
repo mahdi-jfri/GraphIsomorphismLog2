@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojBP
-import Workspace.Impl.AggItemCiSojAlign
+module
+
+public import Workspace.Impl.AggItemCiSojBP
+public import Workspace.Impl.AggItemCiSojAlign
+
+@[expose] public section
 
 /-!
 # Constructing the two rectangle side colors

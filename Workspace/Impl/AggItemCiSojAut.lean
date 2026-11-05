@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojAns
+module
+
+public import Workspace.Impl.AggItemCiSojAns
+
+@[expose] public section
 
 /-!
 # Rebuilding the matrix automorphism generators from complete transporter cosets

@@ -1,6 +1,10 @@
-import Workspace.Impl.SCosSolve1
-import Workspace.Impl.SCosTop5
-import Workspace.Impl.SCosPaste1
+module
+
+public import Workspace.Impl.SCosSolve1
+public import Workspace.Impl.SCosTop5
+public import Workspace.Impl.SCosPaste1
+
+@[expose] public section
 
 /-!
 # From the transitive step to the task

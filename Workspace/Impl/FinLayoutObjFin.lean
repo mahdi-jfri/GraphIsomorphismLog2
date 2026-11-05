@@ -1,5 +1,9 @@
-import Workspace.Impl.FinLayoutObj
-import Workspace.Impl.FinLayoutC23OK
+module
+
+public import Workspace.Impl.FinLayoutObj
+public import Workspace.Impl.FinLayoutC23OK
+
+@[expose] public section
 
 /-! # The object stage in its final slot
 

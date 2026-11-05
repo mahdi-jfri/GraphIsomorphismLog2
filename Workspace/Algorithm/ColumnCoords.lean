@@ -1,6 +1,10 @@
-import Workspace.Algorithm.RowSteps
-import Workspace.Algorithm.HierInv
-import Workspace.NormalTransposeOrbits
+module
+
+public import Workspace.Algorithm.RowSteps
+public import Workspace.Algorithm.HierInv
+public import Workspace.NormalTransposeOrbits
+
+@[expose] public section
 
 /-!
 # The column step in row coordinates
@@ -121,7 +125,8 @@ theorem caps_towerSplit_fst (fe : ℕ → Setoid Ω) (hfe : ∀ k, fe (k + 1) = 
   | _, [], _ => trivial
   | j, I :: l, h => by
     simp only [towerSplit, List.map_cons, Caps]
-    refine ⟨by simpa using h 0 (by simp), ?_⟩
+    have h0 := h 0 (by simp)
+    refine ⟨by simpa using h0, ?_⟩
     rw [← hfe j]
     exact caps_towerSplit_fst fe hfe (j + 1) l fun i hi => by
       have := h (i + 1) (by simpa using hi)
@@ -137,7 +142,8 @@ theorem caps_towerSplit_snd (fe : ℕ → Setoid Ω) (hfe : ∀ k, fe (k + 1) = 
   | _, [], _ => trivial
   | j, I :: l, h => by
     simp only [towerSplit, List.map_cons, Caps]
-    refine ⟨by simpa using h 0 (by simp), ?_⟩
+    have h0 := h 0 (by simp)
+    refine ⟨by simpa using h0, ?_⟩
     rw [← hfe j]
     exact caps_towerSplit_snd fe hfe (j + 1) l fun i hi => by
       have := h (i + 1) (by simpa using hi)
@@ -448,7 +454,7 @@ theorem upperPart_le (j : ℕ) : I.upperPart j ≤ S.domKer fun v => I.sat (j + 
     rw [I.eq_e v.2, I.eq_e w.2] at h0
     have h' := (I.locRow_e j _ _ _ _).1 h0
     rw [I.sat_eq_iff]
-    exact ⟨1, by simpa using h'.2⟩
+    exact ⟨1, by simpa [blk] using h'.2⟩
   · rw [I.sat_eq_iff]
     have h' := (I.cols_e (I.cB v) (I.cB w) (I.cI v) (I.cI w)).1 (by
       rw [← I.eq_e v.2, ← I.eq_e w.2]

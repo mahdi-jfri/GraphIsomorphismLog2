@@ -1,7 +1,11 @@
-import Workspace.Proved.VsQProb
-import Workspace.Lang.Prims.Reduce
-import Workspace.Proved.VsWBasic
-import Workspace.Proved.VsQCost
+module
+
+public import Workspace.Proved.VsQProb
+public import Workspace.Lang.Prims.Reduce
+public import Workspace.Proved.VsWBasic
+public import Workspace.Proved.VsQCost
+
+@[expose] public section
 
 /-!
 # Answers of the driver and how they are pasted
@@ -185,7 +189,6 @@ theorem vsQ_chain_ans {H : Subgroup (Perm (Fin I.n))} {W W' U : Submodule (ZMod 
     · rw [hks']
       ext g
       have := congrArg (g ∈ ·) hst
-      simp only at this
       change g ∈ vsQSol I (gens ks) W' x x ↔ g ∈ vsQSol I H W' x x
       rw [← this, hks]
 
@@ -233,7 +236,9 @@ theorem vsQDims_chain : ∀ (a : List (List ℕ)) (L : List (List (List ℕ))), 
   | a, b :: L, h => by
     haveI : Fact I.p.Prime := ⟨I.prime⟩
     have hab : vsQSp I b < vsQSp I a := (List.isChain_cons_cons.mp h).1
-    have hlt : vsQRk I b < vsQRk I a := Submodule.finrank_lt_finrank_of_lt hab
+    have hlt : vsQRk I b < vsQRk I a := by
+      set_option backward.isDefEq.respectTransparency false in
+        exact Submodule.finrank_lt_finrank_of_lt hab
     obtain ⟨ih1, ih2⟩ := vsQDims_chain b L (List.isChain_cons_cons.mp h).2
     rw [vsQDims_cons_cons]
     refine ⟨fun e he => ?_, ?_⟩

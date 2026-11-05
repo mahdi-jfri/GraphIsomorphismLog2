@@ -14,7 +14,11 @@ pointwise-stabilizer task on at most `T + 3` cells, where `T` is the weight of t
 at most `n²` generators (`GI.Cited.GensOf`). The large constant comes from
 `pstabK * (20 T) ^ 9`.
 -/
-import Workspace.Lang.Prims.Blocks
+module
+
+public import Workspace.Lang.Prims.Blocks
+
+@[expose] public section
 
 namespace GI.Lang
 

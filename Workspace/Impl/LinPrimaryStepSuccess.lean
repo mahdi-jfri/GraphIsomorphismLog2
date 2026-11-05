@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimaryStep
-import Workspace.Impl.LinPrimaryContext
+module
+
+public import Workspace.Impl.LinPrimaryStep
+public import Workspace.Impl.LinPrimaryContext
+
+@[expose] public section
 
 /-! The successful branch of one primary step evaluates the chosen element
 in the full affine action and rebases the complete generator dictionary. -/

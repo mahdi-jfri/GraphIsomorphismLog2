@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHQ8Out
+module
+
+public import Workspace.Impl.VsHQ8Out
+
+@[expose] public section
 
 /-!
 # Continuing after a `Q₈`
@@ -12,6 +16,8 @@ open Matrix
 namespace GI.Impl
 
 open GI.Lang GI.Cited GI.Proved Equiv
+
+set_option backward.isDefEq.respectTransparency false
 
 variable {I : VecStabInst} {s : VsQSt I} [Fact I.p.Prime] {hs : VsQStOK s}
   {as : List (Perm (Fin I.n))} {Lb : List (List (List ℕ))} {ys : List (Perm (Fin I.n))} {r : ℕ}

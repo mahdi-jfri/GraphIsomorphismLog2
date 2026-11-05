@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectPieceSize
-import Workspace.Impl.LinObjectAffineEval
+module
+
+public import Workspace.Impl.LinObjectPieceSize
+public import Workspace.Impl.LinObjectAffineEval
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -19,7 +23,7 @@ theorem linObjectOffsets_moved_spec {P : Program} {b jsci jder jmem jm n : ℕ}
     (h : linObjectOffsetsAt P b jsci jder jmem jm hs hd hm hc)
     {Q : Type*} [CommGroup Q] (as ns : List (Equiv.Perm (Fin n))) (π : gens as →* Q)
     (Y : List (TmRiO n)) (hok : TmRecObjOK Y.length Y)
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : TmRiListNorm (gens as) Y) (hNA : gens ns ≤ gens as)
     (H : Subgroup (Equiv.Perm (Fin n))) (hAH : gens as ≤ H)
     (hA : GI.Multicoset.Normalizes H (gens as)) (hN : GI.Multicoset.Normalizes H (gens ns))
     (hcomm : ∀ a ∈ gens as, ∀ b ∈ gens as, a * b * a⁻¹ * b⁻¹ ∈ gens ns)
@@ -65,8 +69,15 @@ theorem linObjectOffsets_moved_spec {P : Program} {b jsci jder jmem jm n : ℕ}
   have hTar : ∀ S ∈ targets, tmGlMs S ∈ pieces (gens as) (tmGlMs targets.flatten) :=
     linObjectMovedPieces_piece as Y z H hA g hg
   have hCover := linObjectPieces_cover (gens as) targets (tmGlMs targets.flatten) hTar rfl
+  have hnorm : TmRiListNorm (gens as) (refs ++ targets).flatten := by
+    intro o ho
+    rw [List.flatten_append] at ho
+    rcases List.mem_append.mp ho with ho | ho
+    · obtain ⟨S, hS, ho⟩ := List.mem_flatten.mp ho
+      exact linObjectReference_norm as Y hsol S hS o ho
+    · exact linObjectMovedPieces_norm as Y hsol z H hA g hg o ho
   exact linObjectOffsets_spec h as ns π (tmGlMs Y) (tmGlMs targets.flatten) hZ refs targets
-    hsol hNA (hN.mono hAH) hcomm hal hpc hlen hok' hRef hTar hCover
+    hnorm hNA (hN.mono hAH) hcomm hal hpc hlen hok' hRef hTar hCover
     (linObjectOffsets_size as ns Y z g)
 
 theorem linObjectAffineEval_offsets_spec {P : Program} {b jsci jder jmem jm jh n : ℕ}
@@ -74,7 +85,7 @@ theorem linObjectAffineEval_offsets_spec {P : Program} {b jsci jder jmem jm jh n
     (h : linObjectAffineEvalAt P b jsci jder jmem jm jh hs hd hm hc)
     {Q : Type*} [CommGroup Q] (as ns : List (Equiv.Perm (Fin n))) (π : gens as →* Q)
     (Y : List (TmRiO n)) (hok : TmRecObjOK Y.length Y)
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : TmRiListNorm (gens as) Y) (hNA : gens ns ≤ gens as)
     (H : Subgroup (Equiv.Perm (Fin n))) (hAH : gens as ≤ H)
     (hA : GI.Multicoset.Normalizes H (gens as)) (hN : GI.Multicoset.Normalizes H (gens ns))
     (hcomm : ∀ a ∈ gens as, ∀ b ∈ gens as, a * b * a⁻¹ * b⁻¹ ∈ gens ns)

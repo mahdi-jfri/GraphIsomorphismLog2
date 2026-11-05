@@ -1,6 +1,10 @@
-import Workspace.Impl.TermGlueLabPMat
-import Workspace.Impl.TermGlueLabPPoly
-import Workspace.Impl.TermGlueLabPOff
+module
+
+public import Workspace.Impl.TermGlueLabPMat
+public import Workspace.Impl.TermGlueLabPPoly
+public import Workspace.Impl.TermGlueLabPOff
+
+@[expose] public section
 
 /-!
 # The matrices of one generator (step 5)

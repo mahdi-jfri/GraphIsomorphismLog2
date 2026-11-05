@@ -1,4 +1,8 @@
-import Workspace.Impl.SmallZ
+module
+
+public import Workspace.Impl.SmallZ
+
+@[expose] public section
 
 /-!
 # Step 1 of `camProg`: the order test

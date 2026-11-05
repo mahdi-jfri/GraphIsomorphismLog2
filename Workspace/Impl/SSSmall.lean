@@ -1,4 +1,8 @@
-import Workspace.Impl.SSSiftLoop
+module
+
+public import Workspace.Impl.SSSiftLoop
+
+@[expose] public section
 
 /-!
 # Every state of the algorithm is small

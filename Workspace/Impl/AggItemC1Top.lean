@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemC1Chk
+module
+
+public import Workspace.Impl.AggItemC1Chk
+
+@[expose] public section
 
 /-!
 # Case 1 as a program: the item

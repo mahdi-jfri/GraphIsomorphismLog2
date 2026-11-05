@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPRep
+module
+
+public import Workspace.Impl.TermGlueLabPRep
+
+@[expose] public section
 
 /-!
 # The labels of `x` from the `N`-test table

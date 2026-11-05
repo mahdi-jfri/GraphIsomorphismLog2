@@ -1,5 +1,9 @@
-import Workspace.Impl.NClPreLift
-import Workspace.Impl.Reduce
+module
+
+public import Workspace.Impl.NClPreLift
+public import Workspace.Impl.Reduce
+
+@[expose] public section
 
 /-!
 # The entry of the preimage program

@@ -1,5 +1,9 @@
-import Workspace.SocleFactorDegree
-import Workspace.SocleOuterBudget
+module
+
+public import Workspace.SocleFactorDegree
+public import Workspace.SocleOuterBudget
+
+@[expose] public section
 
 namespace GI.SocleOuter
 

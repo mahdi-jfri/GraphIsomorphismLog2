@@ -1,5 +1,9 @@
-import Workspace.Proved.DesignClique
-import Mathlib.Data.Fintype.EquivFin
+module
+
+public import Workspace.Proved.DesignClique
+public import Mathlib.Data.Fintype.EquivFin
+
+@[expose] public section
 
 /-!
 # The Design Lemma ([H, Proposition 5.1])

@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormNumbering
-import Workspace.Impl.GenExpose
+module
+
+public import Workspace.Impl.GenNormNumbering
+public import Workspace.Impl.GenExpose
+
+@[expose] public section
 
 /-!
 # The exposure program
@@ -95,7 +99,7 @@ theorem hierOut_val {e : Ω ≃ Fin k} {vs : List Val} {hier : List (Interval Ω
       List.nil_append]
     rw [hdiv] at hmid
     have := List.rel_append (List.rel_append htake (.cons hmid (.cons htop .nil))) hdrop
-    simpa only [List.append_assoc, List.singleton_append, List.cons_append] using this
+    simpa only [List.append_assoc, List.singleton_append, List.cons_append, List.nil_append] using this
 
 /-! ### The program -/
 

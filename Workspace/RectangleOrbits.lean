@@ -1,5 +1,9 @@
-import Workspace.RectangleActions
-import Workspace.PairCardinalities
+module
+
+public import Workspace.RectangleActions
+public import Workspace.PairCardinalities
+
+@[expose] public section
 
 namespace GI.Rectangle
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormGraph
-import Workspace.Impl.GenNormReduce
+module
+
+public import Workspace.Impl.GenNormGraph
+public import Workspace.Impl.GenNormReduce
+
+@[expose] public section
 
 /-!
 # Computing normalization coset representatives by membership

@@ -1,13 +1,17 @@
 -- Proved in `Impl/CamFinal.lean` (`cameronRecognition_of_johnson`)
-import Workspace.Cited.AlgoPermGroups
-import Workspace.Cited.MarotiPrimitive
-import Mathlib.Data.Finset.Sort
+module
+
+public import Workspace.Cited.AlgoPermGroups
+public import Workspace.Cited.MarotiPrimitive
+public import Mathlib.Data.Finset.Sort
+
+@[expose] public section
 
 /-!
 # Stage 2 task: constructive Cameron–Maróti recognition
 
 **Proved in `Impl/CamFinal.lean` (`cameronRecognition_of_johnson`), from Maróti's theorem and
-the tasks `JohnsonIdentification`, `GroupOrder`, `ChiefSeriesAlgo` and `QuotientCentralizer`.**
+the tasks `JohnsonIdentification` and `GroupOrder`.**
 
 [H] = Helfgott, Bajpai, Dona, arXiv:1710.04574v1, Section 3.1, after Theorem 3.1: "It is
 possible [BLS] to find in polynomial time the normal subgroup `M` and the blocks of the action

@@ -1,8 +1,12 @@
-import Workspace.BochertIndex
-import Workspace.AlternatingSections
-import Mathlib.Data.Nat.Choose.Bounds
-import Workspace.DiagonalCarrier
-import Workspace.RectangleLeftCap
+module
+
+public import Workspace.BochertIndex
+public import Workspace.AlternatingSections
+public import Mathlib.Data.Nat.Choose.Bounds
+public import Workspace.DiagonalCarrier
+public import Workspace.RectangleLeftCap
+
+@[expose] public section
 
 /-!
 # Alternating-section width of a primitive nongiant group
@@ -163,7 +167,7 @@ theorem imprimitive_cap {P : Subgroup (Perm D)} [MulAction.IsPretransitive P D]
       preserved := by
         intro h x y hxy g
         have := hxy (g * h)
-        simpa only [mul_smul] using this }
+        simpa only [mul_smul, Subgroup.smul_def, Equiv.Perm.smul_def] using this }
   -- Every class is a translate `g⁻¹ • B`, of size `|B|`.
   have hclass : ∀ x : D, ∃ g : P, g • x ∈ B ∧ ∀ y, p.setoid.r y x ↔ g • y ∈ B := by
     intro x

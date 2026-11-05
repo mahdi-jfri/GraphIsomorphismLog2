@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojFinalSpec
-import Workspace.Impl.AggItemCiSojQueryPost
+module
+
+public import Workspace.Impl.AggItemCiSojFinalSpec
+public import Workspace.Impl.AggItemCiSojQueryPost
+
+@[expose] public section
 
 /-! # The fixed semantic and encoded data of one rectangle continuation -/
 

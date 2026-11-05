@@ -1,6 +1,10 @@
-import Workspace.Impl.VsPOrb
-import Workspace.Impl.VsPBas
-import Workspace.Impl.VsPEnum
+module
+
+public import Workspace.Impl.VsPOrb
+public import Workspace.Impl.VsPBas
+public import Workspace.Impl.VsPEnum
+
+@[expose] public section
 
 /-!
 # The dimension of a spin

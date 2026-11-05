@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectConfigAction
-import Workspace.Impl.LinAffineFromAction
+module
+
+public import Workspace.Impl.LinObjectConfigAction
+public import Workspace.Impl.LinAffineFromAction
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Multicoset
@@ -70,7 +74,8 @@ theorem linObjectConfigCoord_self (A : Subgroup (Equiv.Perm (Fin n))) (π : A �
   have hh := linObjectConfigOf_coord A π Y hker (fun _ => 1) (fun _ _ => A.one_mem) T
   have hh' : linObjectConfigCoord A π Y Y T =
       (linObjectGroupImage A π (Aut A T.val)).mkQ (Additive.ofMul (π 1)) := by
-    simpa only [he] using hh
+    have h_one : (⟨1, A.one_mem⟩ : A) = 1 := rfl
+    simpa only [he, h_one] using hh
   simpa using hh'
 
 set_option maxHeartbeats 1000000 in

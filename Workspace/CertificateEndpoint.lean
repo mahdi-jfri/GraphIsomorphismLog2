@@ -1,7 +1,11 @@
-import Workspace.Transport
-import Workspace.Localization
-import Workspace.OrbitLocalization
-import Mathlib.GroupTheory.GroupAction.FixingSubgroup
+module
+
+public import Workspace.Transport
+public import Workspace.Localization
+public import Workspace.OrbitLocalization
+public import Mathlib.GroupTheory.GroupAction.FixingSubgroup
+
+@[expose] public section
 
 /-!
 # The endpoint procedure of a constant-size local certificate

@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHCtx
+module
+
+public import Workspace.Impl.VsHCtx
+
+@[expose] public section
 
 /-!
 # The numbers `Q = p^(dim L) - 1` and `dv = (r ∣ Q)`
@@ -104,7 +108,7 @@ theorem vsHC2_spec {P : Program} {f it st : ℕ} (hf : P.funs[f]? = some (vsHC2E
   have deq := Det.arith (op := .eq) dmod (Det.nat (P := P) (env := E2) 0)
   have ebool : Val.nat (BinOp.eval .eq (BinOp.eval .mod Q r) 0) = boolVal (decide (r ∣ Q)) := by
     simp only [BinOp.eval, Nat.dvd_iff_mod_eq_zero]
-    split <;> simp_all
+    split_ifs <;> simp_all
   rw [ebool] at deq
   have d4 := Det.mk4 b0 b1 v2 deq
   refine FunDet.intro hf ((Det.letE dI (Det.letE dQ d4)).mono ?_)

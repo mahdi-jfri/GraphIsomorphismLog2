@@ -1,7 +1,11 @@
-import Workspace.Impl.AggLiftHier
-import Workspace.Impl.AggPre
-import Workspace.Impl.LabelLift
-import Workspace.Impl.GenEnum
+module
+
+public import Workspace.Impl.AggLiftHier
+public import Workspace.Impl.AggPre
+public import Workspace.Impl.LabelLift
+public import Workspace.Impl.GenEnum
+
+@[expose] public section
 
 /-!
 # `LiftAndContinue` on one overcoset, as a program
@@ -237,7 +241,7 @@ theorem lcChild_spec (I : Iface) (hpre : Preimage) (hfac : NormalizedFactor) {Pg
   have hq : L.q < (encPerm (σ : Perm (Fin L.q))).wt := by
     rw [encPerm_eq_natList]
     have := length_lt_wt_list ((List.finRange L.q).map fun i => Val.nat ((σ : Perm (Fin L.q)) i))
-    simpa [natList] using this
+    simpa [natList, Function.comp_def] using this
   have hpsl : ps.length < (Val.list (ps.map pairV)).wt := by
     have := length_lt_wt_list (ps.map pairV); simpa using this
   have hmsl : ms.length < (Val.list (ms.map encPerm)).wt := by

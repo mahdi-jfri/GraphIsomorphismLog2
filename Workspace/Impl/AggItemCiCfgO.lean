@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgOs
+module
+
+public import Workspace.Impl.AggItemCiCfgOs
+
+@[expose] public section
 
 /-!
 # The configuration query: the overcoset from the extension and the generators

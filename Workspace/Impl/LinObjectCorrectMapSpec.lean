@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectCorrectMap
+module
+
+public import Workspace.Impl.LinObjectCorrectMap
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset

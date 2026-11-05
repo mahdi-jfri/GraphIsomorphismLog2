@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCertRep
-import Workspace.Impl.AggStructDesSrc
+module
+
+public import Workspace.Impl.AggCertRep
+public import Workspace.Impl.AggStructDesSrc
+
+@[expose] public section
 
 /-!
 # The order of the test sets that the program builds

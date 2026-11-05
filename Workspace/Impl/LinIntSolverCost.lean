@@ -1,4 +1,8 @@
-import Workspace.Impl.LinIntPoly
+module
+
+public import Workspace.Impl.LinIntPoly
+
+@[expose] public section
 
 /-! A uniform K (weight+1)^D bound for the complete Hermite row solver. -/
 namespace GI.Impl

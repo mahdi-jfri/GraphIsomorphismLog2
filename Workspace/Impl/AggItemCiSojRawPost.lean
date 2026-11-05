@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojDone
-import Workspace.Impl.AggItemCiSojBudgetStart
+module
+
+public import Workspace.Impl.AggItemCiSojDone
+public import Workspace.Impl.AggItemCiSojBudgetStart
+
+@[expose] public section
 
 /-! # The raw finished branches meet the full start postcondition -/
 

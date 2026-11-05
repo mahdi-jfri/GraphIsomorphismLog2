@@ -1,6 +1,10 @@
-import Workspace.Impl.LinPrimaryFieldMatrix
-import Workspace.Impl.LinMapEncoded
-import Workspace.Impl.AggStructDC
+module
+
+public import Workspace.Impl.LinPrimaryFieldMatrix
+public import Workspace.Impl.LinMapEncoded
+public import Workspace.Impl.AggStructDC
+
+@[expose] public section
 
 /-! One explicit field-layer matrix cell, with fixed inactive coordinates. -/
 namespace GI.Impl

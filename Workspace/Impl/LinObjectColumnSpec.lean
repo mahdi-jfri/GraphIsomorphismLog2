@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectMatrixCost
+module
+
+public import Workspace.Impl.LinObjectMatrixCost
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

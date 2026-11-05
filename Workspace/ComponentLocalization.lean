@@ -1,4 +1,8 @@
-import Workspace.CartesianCover
+module
+
+public import Workspace.CartesianCover
+
+@[expose] public section
 
 open scoped commutatorElement
 
@@ -45,7 +49,7 @@ theorem exists_component_kernel_killed [Fintype I] [Fintype D] [IsSimpleGroup S]
   refine ⟨i, ?_⟩
   intro k hk
   have hm := Subgroup.mem_map_of_mem ψ hk
-  simpa only [hbot, Subgroup.mem_bot] using hm
+  simpa only [hbot, Subgroup.mem_bot, ψ, MonoidHom.comp_apply, Subgroup.coe_subtype] using hm
 
 /-- Centerlessness promotes visibility in a position-kernel component to
 visibility in the full stabilizer of that coordinate. -/

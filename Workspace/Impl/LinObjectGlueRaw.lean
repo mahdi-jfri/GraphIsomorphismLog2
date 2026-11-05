@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectGlue
-import Workspace.Impl.LinObjectGlueCoreSpec
+module
+
+public import Workspace.Impl.LinObjectGlue
+public import Workspace.Impl.LinObjectGlueCoreSpec
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -13,7 +17,8 @@ structure linObjectGlueRaw (n : ℕ) where
   Y : List (TmRiO n)
   bs : List (Equiv.Perm (Fin n))
   τ : Equiv.Perm (Fin n)
-  solvable : IsSolvable (gens hs)
+  solvable : ∀ [((gens ns).subgroupOf (gens hs)).Normal], IsSolvable ((gens hs) ⧸ (gens ns).subgroupOf (gens hs))
+  objsIn : TmRiListIn (gens hs) (X ++ Y)
   NA : gens ns ≤ gens as
   AH : gens as ≤ gens hs
   normalN : GI.Multicoset.Normalizes (gens hs) (gens ns)
@@ -47,6 +52,12 @@ noncomputable def linObjectGlueRaw.normalize : linObjectGlueProblem n :=
     bs := I.bs
     τ := I.τ
     solvable := I.solvable
+    objsIn := by
+      intro o ho
+      rw [← List.map_append] at ho
+      obtain ⟨o₀, ho₀, rfl⟩ := List.mem_map.mp ho
+      rw [tmRiStab_linObjectNorm]
+      exact I.objsIn o₀ ho₀
     NA := by simpa only [gens_keepList] using I.NA
     AH := by simpa only [gens_keepList] using I.AH
     normalN := I.normalN

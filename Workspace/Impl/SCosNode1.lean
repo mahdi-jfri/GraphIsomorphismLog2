@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosNodeMath
+module
+
+public import Workspace.Impl.SCosNodeMath
+
+@[expose] public section
 
 /-!
 # Functions 0–3, the pieces

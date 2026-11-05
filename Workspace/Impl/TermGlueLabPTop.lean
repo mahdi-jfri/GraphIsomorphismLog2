@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabMain
-import Workspace.Impl.TermGlue
+module
+
+public import Workspace.Impl.TermGlueLabMain
+public import Workspace.Impl.TermGlue
+
+@[expose] public section
 
 /-!
 # The label program: the empty case and the dispatch (step 1)
@@ -52,14 +56,19 @@ def TmGLPNeSpec (Pg : Program) (K D g : ℕ) : Prop :=
         us (tmTests L.q) →
       List.Forall₂ (fun v ij => AnsC (Equiv.refl (Fin m)) v (tmCosetState S E σH ij).answer)
         vs (tmCosets L.q) →
-      ∀ r : Perm (Fin m), r ∈ ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα).Hb →
+      ∀ (R' : Subgroup (Perm (Fin m)))
+        (hRH : R' ≤ (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Hb)
+        (hNR : (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ≤ R')
+        (hsolv : ∃ ℓ, GI.Multicoset.relDerived R' (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ℓ ≤
+          (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb),
+      ∀ r : Perm (Fin m), r ∈ ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv).Hb →
       ∀ w : Val, AnsC (Equiv.refl (Fin m)) w
-        (tmGlRes ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα) r) →
+        (tmGlRes ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv) r) →
       w ≠ .list [] →
       FunAll Pg g (.list [(.list [.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
           encFun (rowLab e L.con.blocks)], .list us, .list vs]), encPerm r, w])
         (fun u cost => AnsC (Equiv.refl (Fin m)) u
-            (tmGlLab ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminal P₀ htr hcard hsN hN hqα) r) ∧
+            (tmGlLab ((RowForm.ofPure hnat hq E hP ⟨0, h0⟩).rowTerminalWith P₀ htr hcard hsN hN hqα R' hRH hNR hsolv) r) ∧
           cost ≤ K * ((Val.list [(.list [.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
             encFun (rowLab e L.con.blocks)], .list us, .list vs]), encPerm r, w]).wt + 1) ^ D)
 
@@ -79,7 +88,7 @@ private theorem tmGLP_ans_len {m : ℕ} {w : Val} {T : Set (Perm (Fin m))}
 theorem tmGLP_top_spec {P : Program} {f ne K D : ℕ} (hf : P.funs[f]? = some (tmGLPTopF ne))
     (hne : Iface.TmGLPNeSpec P K D ne) : Iface.TermGlueLabSpec P (3 * K + 100) (D + 1) f := by
   intro Ω C _ S k e c hc sv lv L hcan hlab hq0 hgood hrow label hnat hq m h0 E hP σH σN σS
-    hH hN hS htr hlH hlN hlS hcard hsN hN0 hqα us vs hus hvs r hr w hw
+    hH hN hS htr hlH hlN hlS hcard hsN hN0 hqα us vs hus hvs R' hRH hNR hsolv r hr w hw
   set V : Val := .list [.list [sv, lv, coordsVal e S E, a18Out σH σN σS 0,
     encFun (rowLab e L.con.blocks)], .list us, .list vs]
   set a : Val := .list [V, encPerm r, w]
@@ -107,7 +116,7 @@ theorem tmGLP_top_spec {P : Program} {f ne K D : ℕ} (hf : P.funs[f]? = some (t
       omega
   · -- the nonempty part
     have hne' := hne S k e c hc sv lv L hcan hlab hq0 hgood hrow label hnat hq h0 E hP σH σN σS
-      hH hN hS htr hlH hlN hlS hcard hsN hN0 hqα us vs hus hvs r hr (.list ws) hw
+      hH hN hS htr hlH hlN hlS hcard hsN hN0 hqα us vs hus hvs R' hRH hNR hsolv r hr (.list ws) hw
       (by intro h; injection h with h; subst h; simp at hlen)
     have dl := Det.length dw
     rw [hlen] at dl

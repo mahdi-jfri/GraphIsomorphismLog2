@@ -1,6 +1,10 @@
-import Workspace.Impl.AggLiftChild
-import Workspace.Impl.MapGhost
-import Workspace.Impl.AggCombExact
+module
+
+public import Workspace.Impl.AggLiftChild
+public import Workspace.Impl.MapGhost
+public import Workspace.Impl.AggCombExact
+
+@[expose] public section
 
 /-!
 # `LiftAndContinue` on all overcosets of a round, as a program

@@ -1,6 +1,10 @@
-import Workspace.Impl.GenProdCoord
-import Workspace.Impl.GenProdSplice
-import Workspace.Impl.GenProdTabs
+module
+
+public import Workspace.Impl.GenProdCoord
+public import Workspace.Impl.GenProdSplice
+public import Workspace.Impl.GenProdTabs
+
+@[expose] public section
 
 /-!
 # The product refinement: the new hierarchy

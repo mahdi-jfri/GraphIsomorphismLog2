@@ -1,5 +1,9 @@
-import Workspace.Impl.TermCosetObj
-import Workspace.Lang.Lib.Search
+module
+
+public import Workspace.Impl.TermCosetObj
+public import Workspace.Lang.Lib.Search
+
+@[expose] public section
 
 /-!
 # The lists of objects of the rows

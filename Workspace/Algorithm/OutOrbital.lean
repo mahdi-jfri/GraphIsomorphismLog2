@@ -1,15 +1,19 @@
-import Workspace.Algorithm.OutDesign
-import Workspace.Algorithm.RefineFn
-import Workspace.Cited.SixTransitive
-import Mathlib.SetTheory.Cardinal.Embedding
+module
+
+public import Workspace.Algorithm.OutDesign
+public import Workspace.Algorithm.RefineFn
+public import Workspace.Proved.WielTheorem
+public import Mathlib.SetTheory.Cardinal.Embedding
+
+@[expose] public section
 
 /-!
 # Case 2b of the aggregation: anchors, an orbital, and its coherent refinement
 
 Section A.3, "Aggregation and orbital colors": "In Case 2b of that aggregation, let `Φ` be the
-dominant orbit of the ideal image of `F`, and let `d ≤ 5` be its maximal degree of
-transitivity, using the CFSG bound stated there. Fix an ordered source tuple of `d - 1`
-distinct points and branch over its at most `q^{d-1}` possible target images. On
+dominant orbit of the ideal image of `F`, and let `d ≤ 7` be its maximal degree of
+transitivity, using Wielandt's bound together with Schreier's conjecture. Fix an ordered source
+tuple of `d - 1` distinct points and branch over its at most `q^{d-1}` possible target images. On
 `C = Φ \ {x₁, …, x_{d-1}}`, the resulting subgroup `U` is transitive but not two-transitive.
 Choose one proper non-diagonal source orbital `𝒪 ⊂ C²`. Branch over its at most `|C|² ≤ q²`
 possible target orbitals. For each branch, color the directed graph by membership in `𝒪`, and
@@ -34,9 +38,9 @@ Here `H` is the ideal certificate group (`Canon.grp`) and `t` the individualized
   transitive, and refinement preserves all these automorphisms"); it is nontrivial because some
   pair of distinct points of `C` is outside `𝒪` (otherwise `H` would be `(d+1)`-transitive) and
   "refinement never merges their colors".
-* `transDeg_le_five`: `d ≤ 5` when `H` is not giant on `Φ` and `|Φ| ≥ 6`
-  (`GI.Cited.SixTransitiveContainsAlt`), so the source tuple has a bounded length.
-* `exists_orbitalOut_good`: in Case 2b a good source tuple of any length `ℓ ≥ 6` exists.
+* `transDeg_le_seven`: `d ≤ 7` when `H` is not giant on `Φ` and `|Φ| ≥ 8`
+  (`GI.Proved.eightTransitiveContainsAlt`), so the source tuple has a bounded length.
+* `exists_orbitalOut_good`: in Case 2b a good source tuple of any length `ℓ ≥ 8` exists.
 -/
 
 namespace GI.Algorithm
@@ -126,21 +130,19 @@ theorem TransOn.mono {H : Subgroup (Perm (Fin q))} {Φ : Finset (Fin q)} {r s : 
     (fun i j e => Ea.injective (Subtype.ext e)) (fun i j e => Eb.injective (Subtype.ext e))
     (fun i => (Ea i).2) (fun i => (Eb i).2)
   refine ⟨g, hg, fun i => ?_⟩
-  have h1 : (Ea (Fin.castLE hsr i)).1 = a i := by
-    have := congrArg (fun e : Fin s ↪ Φ => (e i).1) hEa
-    simpa [ea] using this
-  have h2 : (Eb (Fin.castLE hsr i)).1 = b i := by
-    have := congrArg (fun e : Fin s ↪ Φ => (e i).1) hEb
-    simpa [eb] using this
+  have h1 : (Ea (Fin.castLE hsr i)).1 = a i :=
+    congrArg (fun e : Fin s ↪ Φ => (e i).1) hEa
+  have h2 : (Eb (Fin.castLE hsr i)).1 = b i :=
+    congrArg (fun e : Fin s ↪ Φ => (e i).1) hEb
   rw [← h1, ← h2]
   exact hgab _
 
-/-- **A `6`-transitive group is giant** (`GI.Cited.SixTransitiveContainsAlt`, transported from
-`Fin |Φ|` to `Φ`): if `H` preserves `Φ`, `|Φ| ≥ 6` and `H` is `6`-transitive on `Φ`, then `H`
+/-- **An `8`-transitive group is giant** (`GI.Proved.eightTransitiveContainsAlt`, transported from
+`Fin |Φ|` to `Φ`): if `H` preserves `Φ`, `|Φ| ≥ 8` and `H` is `8`-transitive on `Φ`, then `H`
 induces `Alt(Φ)` on `Φ`. -/
-theorem giantOn_of_transOn_six (h6 : SixTransitiveContainsAlt) {H : Subgroup (Perm (Fin q))}
-    {Φ : Finset (Fin q)} (hpres : ∀ h ∈ H, ∀ a ∈ Φ, h a ∈ Φ) (hΦ : 6 ≤ Φ.card)
-    (ht : TransOn H Φ 6) : GiantOn H Φ := by
+theorem giantOn_of_transOn_eight {H : Subgroup (Perm (Fin q))}
+    {Φ : Finset (Fin q)} (hpres : ∀ h ∈ H, ∀ a ∈ Φ, h a ∈ Φ) (hΦ : 8 ≤ Φ.card)
+    (ht : TransOn H Φ 8) : GiantOn H Φ := by
   classical
   have hiff : ∀ h ∈ H, ∀ a, a ∈ Φ ↔ h a ∈ Φ := by
     intro h hh a
@@ -157,7 +159,7 @@ theorem giantOn_of_transOn_six (h6 : SixTransitiveContainsAlt) {H : Subgroup (Pe
       hpres h h.2 a ha⟩ := by
     intro h a ha
     simp [ρ, Equiv.permCongr_apply]
-  have h6' : ∀ a b : Fin 6 ↪ Fin n, ∃ g ∈ ρ.range, ∀ i, g (a i) = b i := by
+  have h8' : ∀ a b : Fin 8 ↪ Fin n, ∃ g ∈ ρ.range, ∀ i, g (a i) = b i := by
     intro a b
     obtain ⟨h, hh, hab⟩ := ht (fun i => (e.symm (a i)).1) (fun i => (e.symm (b i)).1)
       (fun i j h => a.injective (e.symm.injective (Subtype.ext h)))
@@ -170,7 +172,7 @@ theorem giantOn_of_transOn_six (h6 : SixTransitiveContainsAlt) {H : Subgroup (Pe
     have hb : (⟨h (e.symm (a i)).1, hpres h hh _ (e.symm (a i)).2⟩ : Φ) = e.symm (b i) :=
       Subtype.ext (hab i)
     rw [hb, Equiv.apply_symm_apply]
-  have halt := h6 n hΦ ρ.range h6'
+  have halt := GI.Proved.eightTransitiveContainsAlt n hΦ ρ.range h8'
   intro σ hσ hfix
   have hmaps : ∀ x, x ∈ Φ ↔ σ x ∈ Φ := by
     intro x
@@ -195,21 +197,20 @@ theorem giantOn_of_transOn_six (h6 : SixTransitiveContainsAlt) {H : Subgroup (Pe
   obtain ⟨h, hh⟩ := halt hτ
   refine ⟨h, h.2, fun a ha => ?_⟩
   have := congrArg (fun p : Perm (Fin n) => p (e ⟨a, ha⟩)) hh
-  simp only at this
   rw [hρ h a ha] at this
   have h2 : e.permCongr σ' (e ⟨a, ha⟩) = e ⟨σ a, (hmaps a).1 ha⟩ := by
     simp [Equiv.permCongr_apply, σ']
   rw [h2] at this
   exact congrArg Subtype.val (e.injective this)
 
-/-- **The degree of transitivity is at most `5`** in Case 2b ("let `d ≤ 5` be its maximal degree
-of transitivity, using the CFSG bound stated there"). -/
-theorem transDeg_le_five (h6 : SixTransitiveContainsAlt) {H : Subgroup (Perm (Fin q))}
-    {Φ : Finset (Fin q)} (hpres : ∀ h ∈ H, ∀ a ∈ Φ, h a ∈ Φ) (hΦ : 6 ≤ Φ.card)
-    (hng : ¬ GiantOn H Φ) : transDeg H Φ ≤ 5 := by
+/-- **The degree of transitivity is at most `7`** in Case 2b ("let `d ≤ 7` be its maximal degree
+of transitivity"). -/
+theorem transDeg_le_seven {H : Subgroup (Perm (Fin q))}
+    {Φ : Finset (Fin q)} (hpres : ∀ h ∈ H, ∀ a ∈ Φ, h a ∈ Φ) (hΦ : 8 ≤ Φ.card)
+    (hng : ¬ GiantOn H Φ) : transDeg H Φ ≤ 7 := by
   by_contra hd
   obtain ⟨htr, hle⟩ := transDeg_spec H Φ
-  exact hng (giantOn_of_transOn_six h6 hpres hΦ (htr.mono (by omega) hle))
+  exact hng (giantOn_of_transOn_eight hpres hΦ (htr.mono (by omega) hle))
 
 /-- A group with one orbit `Φ` is `1`-transitive on it. -/
 theorem transOn_one_of_orbit {H : Subgroup (Perm (Fin q))} {Φ : Finset (Fin q)}
@@ -514,10 +515,10 @@ theorem padTuple₂_nil_one (a b : Fin q) : (padTuple₂ nilT a b : Fin 2 → Fi
 /-- **The object of Case 2b is good** (Section A.3, "Aggregation and orbital colors": "The
 resulting coherent configuration is homogeneous … It is nontrivial"; "Balance parameters":
 "`|C| ≥ δq` for `0 < δ ≤ 1/4`, above a fixed absolute base degree"). Let `Φ` be the dominant
-orbit, `1 ≤ d ≤ 5`, `H` `d`-transitive and not `(d+1)`-transitive on `Φ`, `q ≥ 16`, and let
+orbit, `1 ≤ d ≤ 7`, `H` `d`-transitive and not `(d+1)`-transitive on `Φ`, `q ≥ 24`, and let
 `t_0, …, t_d` be distinct points of `Φ`. -/
 theorem orbitalAt_good {R : Refiner2 q} (hR : SideOK R) {H : Subgroup (Perm (Fin q))}
-    {t : Fin ℓ → Fin q} {d : ℕ} (hq : 16 ≤ q) (hd : d < ℓ) (hd1 : 1 ≤ d) (hd5 : d ≤ 5)
+    {t : Fin ℓ → Fin q} {d : ℕ} (hq : 24 ≤ q) (hd : d < ℓ) (hd1 : 1 ≤ d) (hd7 : d ≤ 7)
     (hdom : q < 2 * (domSet H).card)
     (htr : TransOn H (domSet H) d) (hntr : ¬ TransOn H (domSet H) (d + 1))
     (hinj : ∀ i j : Fin ℓ, i.val ≤ d → j.val ≤ d → t i = t j → i = j)
@@ -662,7 +663,7 @@ theorem orbitalAt_good {R : Refiner2 q} (hR : SideOK R) {H : Subgroup (Perm (Fin
   refine ⟨skelCfg_good (refine2_spec hR c0).1 (refine2_spec hR c0).2 (by omega) nilT _ ?_ ?_,
     hCfib u huC⟩
   · -- `|C| ≥ q/4`
-    have hAcard : A.card ≤ 4 := by
+    have hAcard : A.card ≤ 6 := by
       have h1 : A.card ≤ (Finset.univ.filter fun i : Fin ℓ => i.val + 1 < d).card :=
         Finset.card_image_le
       have h2 : (Finset.univ.filter fun i : Fin ℓ => i.val + 1 < d).card ≤
@@ -746,22 +747,22 @@ theorem orbitalAt_good {R : Refiner2 q} (hR : SideOK R) {H : Subgroup (Perm (Fin
 
 /-- **A good source tuple exists for Case 2b** (Section A.3: "Fix an ordered source tuple of
 `d - 1` distinct points … Choose one proper non-diagonal source orbital"): if the dominant orbit
-`Φ` is nonempty, `H` is not giant on it, `q ≥ 16` and `ℓ ≥ 6`, some tuple `t` makes the object
-good. The degree `d` of transitivity is between `1` (one orbit) and `5`
-(`GI.Cited.SixTransitiveContainsAlt`), so `d + 1 ≤ 6 ≤ |Φ|` distinct points of `Φ` fill the first
+`Φ` is nonempty, `H` is not giant on it, `q ≥ 24` and `ℓ ≥ 8`, some tuple `t` makes the object
+good. The degree `d` of transitivity is between `1` (one orbit) and `7`
+(`GI.Proved.eightTransitiveContainsAlt`), so `d + 1 ≤ 8 ≤ |Φ|` distinct points of `Φ` fill the first
 `d + 1` positions of `t`. -/
-theorem exists_orbitalOut_good (h6 : SixTransitiveContainsAlt)
-    {H : Subgroup (Perm (Fin q))} (hq : 16 ≤ q) (hℓ : 6 ≤ ℓ) (hne : (domSet H).Nonempty)
+theorem exists_orbitalOut_good
+    {H : Subgroup (Perm (Fin q))} (hq : 24 ≤ q) (hℓ : 8 ≤ ℓ) (hne : (domSet H).Nonempty)
     (hng : ¬ GiantOn H (domSet H)) {β : ℝ} :
     ∃ t : Fin ℓ → Fin q, ∀ R : Refiner2 q, SideOK R → (orbitalOut R H t).Good β := by
   classical
   set Φ := domSet H with hΦdef
   have hdom : q < 2 * Φ.card := domSet_card_lt hne
-  have hΦ9 : 9 ≤ Φ.card := by omega
+  have hΦ13 : 13 ≤ Φ.card := by omega
   have hpres : ∀ h ∈ H, ∀ a ∈ Φ, h a ∈ Φ := fun h hh a ha => apply_mem_domSet hh ha
   set d := transDeg H Φ with hddef
   obtain ⟨htr, -⟩ := transDeg_spec H Φ
-  have hd5 : d ≤ 5 := transDeg_le_five h6 hpres (by omega) hng
+  have hd7 : d ≤ 7 := transDeg_le_seven hpres (by omega) hng
   have hd1 : 1 ≤ d := by
     refine le_transDeg (by omega) (transOn_one_of_orbit fun a ha b hb => ?_)
     have hb' : b ∈ lorb H a := by rw [← domSet_eq_lorb ha]; exact hb
@@ -776,7 +777,7 @@ theorem exists_orbitalOut_good (h6 : SixTransitiveContainsAlt)
   let t : Fin ℓ → Fin q := fun i => if h : i.val < d + 1 then f ⟨i.val, h⟩ else f 0
   refine ⟨t, fun R hR => ?_⟩
   unfold orbitalOut
-  refine orbitalAt_good hR hq (by omega) hd1 hd5 hdom htr hntr (fun i j hi hj e => ?_)
+  refine orbitalAt_good hR hq (by omega) hd1 hd7 hdom htr hntr (fun i j hi hj e => ?_)
     (fun i hi => ?_)
   · simp only [t, dif_pos (show i.val < d + 1 by omega), dif_pos (show j.val < d + 1 by omega)]
       at e

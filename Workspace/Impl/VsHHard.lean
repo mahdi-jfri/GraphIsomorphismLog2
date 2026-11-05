@@ -1,7 +1,11 @@
-import Workspace.Impl.VsHSplitOK
-import Workspace.Impl.VsHPowIt
-import Workspace.Impl.VsHFront
-import Workspace.Impl.VsQTSplit
+module
+
+public import Workspace.Impl.VsHSplitOK
+public import Workspace.Impl.VsHPowIt
+public import Workspace.Impl.VsHFront
+public import Workspace.Impl.VsQTSplit
+
+@[expose] public section
 
 /-!
 # The hard case
@@ -80,7 +84,6 @@ noncomputable def vsHHardCost (hps : PointwiseStab) (hm : Membership) (Cφ N N2 
   16 * (vsHFrontCost Cφ N W + vsHQ8Cost hps hm Cφ N n Ss + vsHPsCost Cφ N2 +
     10 ^ 7 * (300 * (S + 1) + 900) + vsHWCost hps hm n S Cφ Bv) + 10 ^ 3 * (N + N2 + S + W + Ss + Bv)
 
-set_option maxHeartbeats 16000000 in
 /-- **The hard case.** -/
 theorem vsHHard_spec [Fact I.p.Prime] {P : Program} {x : VsHHX} {hps : PointwiseStab}
     {hm : Membership} (L : VsHHLay P x hps hm) {Cφ N N2 W Ss S Tm : ℕ}
@@ -120,6 +123,8 @@ theorem vsHHard_spec [Fact I.p.Prime] {P : Program} {x : VsHHX} {hps : Pointwise
   set C2 := vsHGc (vsPCtx I s.ws' (vsQCs s) (vsPRows I.p Lb) s.hs) r
     (I.p ^ (vsPRows I.p Lb).length - 1) (decide (r ∣ I.p ^ (vsPRows I.p Lb).length - 1))
   set FV := Val.list [C2, .list (B.map encPerm), .list (K.map encPerm)]
+  set Ps := vsHPs s ((1 :: as) ++ K)
+  set Bv := (Ps.length + 1) ^ 278
   have a1 := Det.arg' (P := P) (vs := [lc, A]) (rest := []) (j := 1) rfl
   have hFr : FunDet P x.fr A FV (vsHFrontCost Cφ N W) :=
     vsHFront_spec L.hf L.F hphi1 h H hA hD hyl hr hLbl
@@ -163,20 +168,21 @@ theorem vsHHard_spec [Fact I.p.Prime] {P : Program} {x : VsHHX} {hps : Pointwise
         exact vsPRho_mem_vsPBar hs hg (hcc hg)
       rw [hLo.length_eq]
       exact (vsH_q8_orbit hs hB hK hCb hBY).trans hidx
-    · have l1 := wt_list2_le lc A
+    · clear a1 hFr dF E1 dK dKl hB hBl hBY hidx hDD1 hQ b1 dBv hw1 hLo hks hksl
+      have l1 := wt_list2_le lc A
       have hBw : (Val.list (B.map encPerm)).wt < FV.wt := wt_le_wt_list (by simp [FV])
       have hKw : (Val.list (K.map encPerm)).wt < FV.wt := wt_le_wt_list (by simp [FV])
       have l2 := wt_list2_le A (Val.list (B.map encPerm))
       have eF : (Val.list [C2, Val.list (List.map encPerm B), Val.list (List.map encPerm K)]).wt = FV.wt := rfl
-      have := wt_nat_le 1; have := wt_nat_le 2
+      have n1 := wt_nat_le 1; have n2 := wt_nat_le 2
       have wF' : FV.wt < vsHFrontCost Cφ N W := wF
       have hv : lc.wt ≤ N2 := hlc
       have hu : A.wt ≤ N2 := hAN
       unfold vsHHardCost
-      omega
+      clear_value A lc B K C2 FV Ps Bv
+      linarith only [hc1, hck, hca, hc, hwc, hK0, l1, hBw, hKw, l2, eF, n1, n2, wF, wF', hv, hu]
   · rw [if_neg hK0]
     have hk : 1 ≤ K.length := Nat.one_le_iff_ne_zero.2 hK0
-    set Ps := vsHPs s ((1 :: as) ++ K)
     obtain ⟨hPf, -, h2le, hind, hdim, htop, horb⟩ := h.pieces hk
     have hKs : ∀ g ∈ K, g ∈ gens s.hs := (h.split).1
     have hKl : K.length ≤ vsQD s ^ 2 := by
@@ -217,7 +223,6 @@ theorem vsHHard_spec [Fact I.p.Prime] {P : Program} {x : VsHHX} {hps : Pointwise
       omega
     have hPw := vsHPowIt_spec L.F.hitq L.F.hstq hM
     have dB := Det.call (Det.mk3 dc (Det.nat (P := P) (env := E2) 278) (Det.nat (P := P) (env := E2) 1)) hPw
-    set Bv := (Ps.length + 1) ^ 278
     -- the split
     have hsum : (Ps.map List.length).sum ≤ S := by
       have := (vsFEigL_cnt I.prime (vsHFx s ((1 :: as) ++ K)) (vsHFx_sq _)).2
@@ -239,7 +244,8 @@ theorem vsHHard_spec [Fact I.p.Prime] {P : Program} {x : VsHHX} {hps : Pointwise
     refine ⟨Or.inr ⟨_, ks, _, hw1, h.splitOK hk hLo hks hksl ?_ hnab⟩, ?_⟩
     · rw [hLo.length_eq]
       refine horb.trans ((Nat.pow_le_pow_left (show Ps.length + 1 ≤ I.d + 1 by omega) 278).trans hTm)
-    · have l1 := wt_list2_le lc A
+    · clear a1 hFr dF E1 dK dKl hK0 hPf h2le hind hdim htop horb hKs hKl hN' hLl hPsS b1 dPs hcnt hPsl hDd hSd dl dc ec hPw dB hsum hbS hW E3 c0 hw1 hLo hks hksl
+      have l1 := wt_list2_le lc A
       have hKw : (Val.list (K.map encPerm)).wt < FV.wt := wt_le_wt_list (by simp [FV])
       have eF : (Val.list [C2, Val.list (List.map encPerm B), Val.list (List.map encPerm K)]).wt = FV.wt := rfl
       have wF' : FV.wt < vsHFrontCost Cφ N W := wF
@@ -267,21 +273,23 @@ theorem vsHHard_spec [Fact I.p.Prime] {P : Program} {x : VsHHX} {hps : Pointwise
       have eWC : vsHWCost hps hm I.n S Cφ Bv = vsQSotCost hps hm I.n (vsQTS S Bv) (Cφ + 10 ^ 15 * (S ^ 3 + 1) ^ 7) +
           10 ^ 20 * (S ^ 3 + 1) ^ 12 + 10 ^ 8 * vsQTS S Bv ^ 4 + 10 ^ 30 * (S ^ 3 + 1) ^ 13 := rfl
       have hcW : c ≤ vsHWCost hps hm I.n S Cφ Bv := by rw [eWC]; exact hc
-      have hc1' : c1 ≤ 2 * vsHFrontCost Cφ N W + 8 * N2 + 40 := by
-        linarith only [hc1, hv, hu, l1, l2, l3, l4, wF, wF', eF, hKw, wPs, wPs', wBv, wc1, w278, hPV, hlP, hpw, n0, n1, n2]
       have hKlw := length_lt_wt_list (K.map encPerm)
       rw [List.length_map] at hKlw
-      have hck' : ck ≤ 3 * vsHFrontCost Cφ N W + 20 := by
-        linarith only [hck, hKlw, hv, hu, l1, l2, l3, l4, wF, wF', eF, hKw, wPs, wPs', wBv, wc1, w278, hPV, hlP, hpw, n0, n1, n2]
-      have hc2' : c2 ≤ 2 * vsHPsCost Cφ N2 + 20 * N2 + 10 * vsHFrontCost Cφ N W + 100 := by
-        linarith only [hc2, hv, hu, l1, l2, l3, l4, wF, wF', eF, hKw, wPs, wPs', wBv, wc1, w278, hPV, hlP, hpw, n0, n1, n2]
-      have hc3' : c3 ≤ 3 * vsHPsCost Cφ N2 + 10 ^ 7 * (300 * (S + 1) + 900) + 10 * M + 2000 := by
-        linarith only [hc3, hv, hu, l1, l2, l3, l4, wF, wF', eF, hKw, wPs, wPs', wBv, wc1, w278, hPV, hlP, hpw, n0, n1, n2]
-      have hca' : ca ≤ 20 * N2 + 10 * vsHPsCost Cφ N2 + 10 * M + 200 := by
-        linarith only [hca, hv, hu, l1, l2, l3, l4, wF, wF', eF, hKw, wPs, wPs', wBv, wc1, w278, hPV, hlP, hpw, n0, n1, n2]
       have hMS : M ≤ 300 * (S + 1) + 900 := by omega
+      have eBv : (Val.nat ((Ps.length + 1) ^ 278)).wt = (Val.nat Bv).wt := rfl
+      rw [eBv] at hc3
       unfold vsHHardCost
-      clear_value M
+      clear_value A lc B K C2 FV Ps PV M Bv E2
+      have hc1' : c1 ≤ 2 * vsHFrontCost Cφ N W + 8 * N2 + 40 := by
+        linarith only [hc1, hv, hu, l1, wF, wF', eF, n1]
+      have hck' : ck ≤ 3 * vsHFrontCost Cφ N W + 20 := by
+        linarith only [hck, hKlw, wF, wF', eF, hKw, n1, n2]
+      have hc2' : c2 ≤ 2 * vsHPsCost Cφ N2 + 20 * N2 + 10 * vsHFrontCost Cφ N W + 100 := by
+        linarith only [hc2, hv, hu, l1, l2, wF, wF', eF, hKw, wPs, wPs', n1, n2]
+      have hc3' : c3 ≤ 3 * vsHPsCost Cφ N2 + 10 ^ 7 * (300 * (S + 1) + 900) + 10 * M + 2000 := by
+        linarith only [hc3, l4, wPs, wPs', wBv, wc1, w278, hPV, hlP, hpw, n1]
+      have hca' : ca ≤ 20 * N2 + 10 * vsHPsCost Cφ N2 + 10 * M + 200 := by
+        linarith only [hca, hv, hu, l1, l3, wPs, wPs', wBv, n0]
       linarith only [hwc, hcW, hc1', hck', hc2', hc3', hca', hMS]
 
 end GI.Impl

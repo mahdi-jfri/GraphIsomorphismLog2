@@ -1,4 +1,8 @@
-import Workspace.Impl.NIntFac
+module
+
+public import Workspace.Impl.NIntFac
+
+@[expose] public section
 
 /-!
 # Intersection with a normalized subgroup, as a program
@@ -59,7 +63,7 @@ section Layout
 variable (hp : PointwiseStab)
 
 theorem nintInter_hasAt : (nintInterProgram hp).HasAt 0 nintInterFuns := by
-  simpa using Program.hasAt_append [] nintInterFuns [] [pointwiseStabPrim hp]
+  simpa [nintInterProgram] using Program.hasAt_append [] nintInterFuns [] [pointwiseStabPrim hp]
 
 theorem nintInter_entry : (nintInterProgram hp).funs[0]? = some nintInterEntry := rfl
 theorem nintInter_shift : (nintInterProgram hp).funs[1]? = some (shiftAppF 2 5) := rfl

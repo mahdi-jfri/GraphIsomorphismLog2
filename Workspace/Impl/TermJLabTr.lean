@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJAutJ3
+module
+
+public import Workspace.Impl.TermJAutJ3
+
+@[expose] public section
 
 /-!
 # Two presentations of `A = N/N*`

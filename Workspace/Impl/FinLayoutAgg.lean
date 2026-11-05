@@ -1,10 +1,14 @@
-import Workspace.Impl.FinLayoutCos
-import Workspace.Impl.RowReq
-import Workspace.Impl.GenSpecLayout
-import Workspace.Impl.AggSpecLayout
-import Workspace.Impl.AggReadOK
-import Workspace.Impl.AggCertHand
-import Workspace.Impl.AggItemStepSpec
+module
+
+public import Workspace.Impl.FinLayoutCos
+public import Workspace.Impl.RowReq
+public import Workspace.Impl.GenSpecLayout
+public import Workspace.Impl.AggSpecLayout
+public import Workspace.Impl.AggReadOK
+public import Workspace.Impl.AggCertHand
+public import Workspace.Impl.AggItemStepSpec
+
+@[expose] public section
 
 /-!
 # The aggregation round in the final program
@@ -43,8 +47,8 @@ namespace GI.Impl
 
 open GI.Algorithm GI.Assembly GI.Lang Equiv Equiv.Perm
 open GI.Cited (Val PointwiseStab Preimage NormalizedFactor Membership MinimalBlocks GroupOrder
-  CameronRecognition ChiefSeriesAlgo DerivedSubgroup QuotientCentralizer NormalizedIntersection
-  SylowAlgo SylowConjugate NormalClosure)
+  CameronRecognition DerivedSubgroup NormalizedIntersection
+  NormalClosure)
 
 set_option maxRecDepth 100000
 
@@ -119,7 +123,7 @@ theorem fag_hasAt_rest {P : Program} {rd cr cm it : Expr} {rest : List Expr}
     simp only [List.length_append, List.length_replicate]
     rfl
   rw [hA] at hG
-  simpa [hl] using hG.right
+  simpa [asb, hl] using hG.right
 
 set_option maxHeartbeats 4000000 in
 /-- **The parts of the round** at their indices, from `HasAt` of the round at `asmAggBase`. -/
@@ -145,32 +149,31 @@ theorem fag_hasAt_parts {P : Program} {crE cmE itE : Expr} {crF cmF itF : List E
 section Asm
 
 variable {hst : PointwiseStab} {hm : Membership} {hpre : Preimage} {hfac : NormalizedFactor}
-  {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition} {hcs : ChiefSeriesAlgo}
-  {hder : DerivedSubgroup} {hqc : QuotientCentralizer} {hni : NormalizedIntersection}
-  {hsy : SylowAlgo} {hsc : SylowConjugate} {hnc : NormalClosure}
+  {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition}
+  {hder : DerivedSubgroup} {hni : NormalizedIntersection}
+  {hnc : NormalClosure}
   {ext : List Prim} {recF labF jF : List Expr}
 
 /-- **The final program** with the coset slot `flcCos recF labF jF` and the round
 `fagAgg crE cmE itE crF cmF itF`. -/
 noncomputable abbrev fagProg (hst : PointwiseStab) (hm : Membership) (hpre : Preimage)
     (hfac : NormalizedFactor) (hmb : MinimalBlocks) (hO : GroupOrder) (hC : CameronRecognition)
-    (hcs : ChiefSeriesAlgo) (hder : DerivedSubgroup) (hqc : QuotientCentralizer)
-    (hni : NormalizedIntersection) (hsy : SylowAlgo) (hsc : SylowConjugate)
-    (hnc : NormalClosure) (ext : List Prim) (recF labF jF : List Expr) (crE cmE itE : Expr)
-    (crF cmF itF : List Expr) : Program :=
-  flcProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc ext gsGen recF labF jF
+    (hder : DerivedSubgroup)
+    (hni : NormalizedIntersection) (hnc : NormalClosure) (ext : List Prim)
+    (recF labF jF : List Expr) (crE cmE itE : Expr) (crF cmF itF : List Expr) : Program :=
+  flcProg hst hm hpre hfac hmb hO hC hder hni hnc ext gsGen recF labF jF
     (fagAgg crE cmE itE crF cmF itF)
 
 /-- **The interface of the final program**, for the constants `Kl Dl Kj Dj Kc Dc` of the coset
 program and the phase bound `X` of the round (the one of `final_modulo_cos`). -/
 noncomputable abbrev fagIface (hst : PointwiseStab) (hm : Membership) (hpre : Preimage)
     (hfac : NormalizedFactor) (hmb : MinimalBlocks) (hO : GroupOrder) (hC : CameronRecognition)
-    (hcs : ChiefSeriesAlgo) (hder : DerivedSubgroup) (hqc : QuotientCentralizer)
-    (hni : NormalizedIntersection) (hsy : SylowAlgo) (hsc : SylowConjugate)
-    (hnc : NormalClosure) (Kl Dl Kj Dj Kc Dc : ℕ) (X : ℕ → ℕ) : Iface :=
+    (hder : DerivedSubgroup)
+    (hni : NormalizedIntersection) (hnc : NormalClosure) (Kl Dl Kj Dj Kc Dc : ℕ) (X : ℕ → ℕ) :
+    Iface :=
   (asmRest hst hm hpre hfac (gsWg hst hm hpre hmb hO hC)
-    (rqWr hst hfac (rqAa hst hm hpre hfac (flRadK hcs hder hqc hni hm)
-      (flRadD hcs hder hqc hni hm) (flcA hst hm hO hcs hder hqc hni hsy hsc hnc Kl Dl Kj Dj Kc
+    (rqWr hst hfac (rqAa hst hm hpre hfac (flRadK hder hni hm hpre hO)
+      (flRadD hder hni hm hpre hO) (flcA hst hm hpre hO hder hni hnc Kl Dl Kj Dj Kc
         Dc))) (asWa hst hm hpre hfac X)).iface
 
 theorem fag_row_le (hF : FlcFits recF labF jF) :
@@ -183,7 +186,7 @@ theorem fag_row_le (hF : FlcFits recF labF jF) :
 certificate, comparison and items phases prove their contracts. -/
 theorem fag_hasAt (hF : FlcFits recF labF jF) {crE cmE itE : Expr} {crF cmF itF : List Expr}
     (hA : FagFits crF cmF) :
-    let P := fagProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc ext recF labF jF
+    let P := fagProg hst hm hpre hfac hmb hO hC hder hni hnc ext recF labF jF
       crE cmE itE crF cmF itF
     P.funs[asb 1]? = some (rdF fagRdIdx) ∧ P.funs[asb 2]? = some crE ∧
       P.funs[asb 3]? = some cmE ∧ P.funs[asb 4]? = some itE ∧ P.HasAt fagRdIdx fagRd ∧
@@ -193,7 +196,7 @@ theorem fag_hasAt (hF : FlcFits recF labF jF) {crE cmE itE : Expr} {crF cmF itF 
 
 /-- The reading's primitive `2` is **Preimage** in the final program. -/
 theorem fag_prim_pre {crE cmE itE : Expr} {crF cmF itF : List Expr} :
-    (fagProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc ext recF labF jF crE cmE itE
+    (fagProg hst hm hpre hfac hmb hO hC hder hni hnc ext recF labF jF crE cmE itE
       crF cmF itF).prims[2]? = some (preimagePrim hpre) := rfl
 
 end Asm
@@ -261,24 +264,24 @@ theorem fag_le_i (hpre : Preimage) (Xc Xm Xi : ℕ → ℕ) (W : ℕ) :
 
 /-- **`AsReadOK` in the final program**, for the hand-over `asHandImpl` and any bound above
 `rdX` (in particular `fagX`). The cited results enter through `rd_asReadOK`. -/
-theorem fag_asReadOK (hcite : GI.Cited.TransitiveAffected)
-    (hK : GI.Cited.KaryCoherentRefinement) (h6 : GI.Cited.SixTransitiveContainsAlt)
+theorem fag_asReadOK
+    (hK : GI.Cited.KaryCoherentRefinement)
     (hDl : GI.Cited.DesignLemma) {hst : PointwiseStab} {hm : Membership} {hpre : Preimage}
     {hfac : NormalizedFactor} {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition}
-    {hcs : ChiefSeriesAlgo} {hder : DerivedSubgroup} {hqc : QuotientCentralizer}
-    {hni : NormalizedIntersection} {hsy : SylowAlgo} {hsc : SylowConjugate}
-    {hnc : NormalClosure} {ext : List Prim} {recF labF jF : List Expr}
+    {hder : DerivedSubgroup}
+    {hni : NormalizedIntersection} {hnc : NormalClosure} {ext : List Prim}
+    {recF labF jF : List Expr}
     (hF : FlcFits recF labF jF) {crE cmE itE : Expr} {crF cmF itF : List Expr}
     (hA : FagFits crF cmF) {Kl Dl Kj Dj Kc Dc : ℕ} {X X' : ℕ → ℕ}
     (hX : ∀ W, rdX hpre W ≤ X W) :
-    AsReadOK (fagIface hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc Kl Dl Kj Dj Kc Dc X')
-      (fagProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc ext recF labF jF crE cmE
+    AsReadOK (fagIface hst hm hpre hfac hmb hO hC hder hni hnc Kl Dl Kj Dj Kc Dc X')
+      (fagProg hst hm hpre hfac hmb hO hC hder hni hnc ext recF labF jF crE cmE
         itE crF cmF itF) asmF asHandImpl X (asb 1) := by
   obtain ⟨h1, -, -, -, hrd, -⟩ := fag_hasAt (hst := hst) (hm := hm) (hpre := hpre) (hfac := hfac)
-    (hmb := hmb) (hO := hO) (hC := hC) (hcs := hcs) (hder := hder) (hqc := hqc) (hni := hni)
-    (hsy := hsy) (hsc := hsc) (hnc := hnc) (ext := ext) hF (crE := crE) (cmE := cmE) (itE := itE)
+    (hmb := hmb) (hO := hO) (hC := hC) (hder := hder) (hni := hni)
+    (hnc := hnc) (ext := ext) hF (crE := crE) (cmE := cmE) (itE := itE)
     (itF := itF) hA
-  exact rd_asReadOK_mono (rd_asReadOK hpre hcite hK h6 hDl _ _ asmF h1 hrd fag_prim_pre
+  exact rd_asReadOK_mono (rd_asReadOK hpre hK hDl _ _ asmF h1 hrd fag_prim_pre
     (fun _ _ _ _ h => h) asHandImpl (fun _ _ _ _ _ _ h => h)) hX
 
 end GI.Impl

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectRelations
-import Workspace.Impl.TermGlueLabQMath
+module
+
+public import Workspace.Impl.LinObjectRelations
+public import Workspace.Impl.TermGlueLabQMath
+
+@[expose] public section
 
 /-! The Hermite–Smith output supplies finite coordinates for the exact
 object quotient, with the coordinate map specified on integer vectors. -/

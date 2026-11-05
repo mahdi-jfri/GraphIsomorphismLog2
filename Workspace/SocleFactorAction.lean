@@ -1,4 +1,8 @@
-import Workspace.RadicalSocleIdempotent
+module
+
+public import Workspace.RadicalSocleIdempotent
+
+@[expose] public section
 namespace GI.RadicalSocle
 
 variable {G : Type*} [Group G]

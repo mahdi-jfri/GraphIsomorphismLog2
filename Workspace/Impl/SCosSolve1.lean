@@ -1,6 +1,10 @@
-import Workspace.Impl.SCosNode
-import Workspace.Impl.SCosBase
-import Workspace.Impl.SCosSolveMath
+module
+
+public import Workspace.Impl.SCosNode
+public import Workspace.Impl.SCosBase
+public import Workspace.Impl.SCosSolveMath
+
+@[expose] public section
 
 /-!
 # The recursion, by induction on `|Φ|`

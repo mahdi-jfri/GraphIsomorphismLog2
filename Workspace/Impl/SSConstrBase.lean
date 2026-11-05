@@ -1,4 +1,8 @@
-import Workspace.Impl.SSMember
+module
+
+public import Workspace.Impl.SSMember
+
+@[expose] public section
 
 /-!
 # Facts for the constructive membership wrapper

@@ -1,5 +1,9 @@
-import Workspace.JohnsonChains
-import Mathlib.Data.Fintype.Powerset
+module
+
+public import Workspace.JohnsonChains
+public import Mathlib.Data.Fintype.Powerset
+
+@[expose] public section
 
 namespace GI.Johnson
 

@@ -1,6 +1,10 @@
-import Workspace.CartesianStep
-import Workspace.AlternatingSimple
-import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+module
+
+public import Workspace.CartesianStep
+public import Workspace.AlternatingSimple
+public import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+
+@[expose] public section
 
 open scoped BigOperators
 

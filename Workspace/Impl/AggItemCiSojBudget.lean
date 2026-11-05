@@ -1,9 +1,13 @@
-import Workspace.Impl.AggItemCiSojFinalSpec
-import Workspace.Impl.AggItemCiSojGB
-import Workspace.Impl.AggItemCiSojEnvelope
-import Workspace.Impl.AggItemCiSojRectStart
-import Workspace.Impl.AggItemCiSojStart
-import Workspace.Impl.AggItemCiSojAnswersB
+module
+
+public import Workspace.Impl.AggItemCiSojFinalSpec
+public import Workspace.Impl.AggItemCiSojGB
+public import Workspace.Impl.AggItemCiSojEnvelope
+public import Workspace.Impl.AggItemCiSojRectStart
+public import Workspace.Impl.AggItemCiSojStart
+public import Workspace.Impl.AggItemCiSojAnswersB
+
+@[expose] public section
 
 /-! # A common polynomial budget for the first-rectangle pipelines -/
 

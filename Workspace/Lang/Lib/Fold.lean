@@ -7,7 +7,11 @@ Both may be nondeterministic: they are described by an invariant `Inv i acc` tha
 weight of the accumulators by `M`. The cost is the sum of the bounds `B i` of the calls plus
 `loopModK * (n + 1) * (a.wt + n + M + 1)`.
 -/
-import Workspace.Lang.Lib.Search
+module
+
+public import Workspace.Lang.Lib.Search
+
+@[expose] public section
 
 namespace GI.Lang
 
@@ -53,7 +57,6 @@ theorem foldl_spec {P : Program} {b g : ℕ} (h : P.HasAt b (foldlFuns b g)) {c 
   obtain ⟨rfl, hca'⟩ := hv
   refine ((hg i acc hi hinv).wt_lt).mono fun w cb hw => ⟨hw.1.1, ?_⟩
   have := hM (i + 1) w hi hw.1.1
-  simp only [List.getD_eq_getElem?_getD, List.getElem?_eq_getElem hi, Option.getD_some] at *
   omega
 
 /-- **Foldl with a function.** If `g` computes `G acc x`, then `foldl g` computes

@@ -1,4 +1,8 @@
-import Workspace.CleanComplementLocalization
+module
+
+public import Workspace.CleanComplementLocalization
+
+@[expose] public section
 
 /-! LG2 under the unconditional linear fiber bound k > f. The source group,
 outside-block permutation actions, and simultaneous fixed-point lift are constructed. -/

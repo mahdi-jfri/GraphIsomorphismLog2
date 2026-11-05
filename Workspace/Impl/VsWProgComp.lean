@@ -1,5 +1,9 @@
-import Workspace.Impl.VsWProgImg
-import Workspace.Proved.VsWFrameMath
+module
+
+public import Workspace.Impl.VsWProgImg
+public import Workspace.Proved.VsWFrameMath
+
+@[expose] public section
 
 /-!
 # The complement as a program

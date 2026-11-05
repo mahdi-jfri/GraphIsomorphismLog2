@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertClose
+module
+
+public import Workspace.Impl.AggCertClose
+
+@[expose] public section
 
 /-!
 # The next window call of a round, on program data

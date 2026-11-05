@@ -1,10 +1,14 @@
-import Workspace.Lang.Prims.LinMembership
-import Workspace.Impl.LinGroupSlp
-import Workspace.Impl.GenNormPoly
-import Workspace.Impl.Lift
-import Workspace.Impl.CamCells
-import Workspace.Lang.Lib.Tabulate
-import Workspace.Impl.LinIntSolverCost
+module
+
+public import Workspace.Lang.Prims.LinMembership
+public import Workspace.Impl.LinGroupSlp
+public import Workspace.Impl.GenNormPoly
+public import Workspace.Impl.Lift
+public import Workspace.Impl.CamCells
+public import Workspace.Lang.Lib.Tabulate
+public import Workspace.Impl.LinIntSolverCost
+
+@[expose] public section
 
 /-!
 # Small helpers for the programs of `NIntFac` and `NIntInter`

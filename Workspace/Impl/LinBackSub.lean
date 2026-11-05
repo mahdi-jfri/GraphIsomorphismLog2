@@ -1,4 +1,8 @@
-import Workspace.Impl.LinSolve
+module
+
+public import Workspace.Impl.LinSolve
+
+@[expose] public section
 
 /-! Exact integer substitution for the upper triangular Hermite block.
 A row equation is solved from the first column onward. A failed pivot division

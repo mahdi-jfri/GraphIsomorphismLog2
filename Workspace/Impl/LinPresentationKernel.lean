@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPresentationExtend
+module
+
+public import Workspace.Impl.LinPresentationExtend
+
+@[expose] public section
 
 /-! The determinant certificate identifies the whole relation kernel. This
 is the equality used when appending the subgroup and diagonal relations. -/

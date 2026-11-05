@@ -1,6 +1,10 @@
-import Workspace.Impl.VsHConjT
-import Workspace.Proved.VsMQ8
-import Workspace.Proved.VsMHardB
+module
+
+public import Workspace.Impl.VsHConjT
+public import Workspace.Proved.VsMQ8
+public import Workspace.Proved.VsMHardB
+
+@[expose] public section
 
 /-!
 # The `Q₈` centralizer as a stabilizer
@@ -106,6 +110,7 @@ section
 variable [Fact I.p.Prime] {hs : VsQStOK s} {as : List (Perm (Fin I.n))} {Lb : List (List (List ℕ))}
   {ys : List (Perm (Fin I.n))} {r : ℕ}
 
+set_option backward.isDefEq.respectTransparency false in
 /-- **The `Q₈` case.** With no isotropic element, `r = 2` and the centralizer of `Ȳ` has index at
 most `24` in `C̄`. -/
 theorem VsHHyp.q8 (h : VsHHyp hs as Lb ys r) (hK0 : (vsHK s Lb r ys).length = 0)

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgH
+module
+
+public import Workspace.Impl.AggItemCiCfgH
+
+@[expose] public section
 
 /-!
 # The configuration query: lifting a diagonal permutation, as a program
@@ -153,7 +157,7 @@ theorem itcq_rho_spec {mb fr : ℕ} (hm : P.HasAt mb (mapFuns mb fr))
   have hlg : X.fiber.card * X.fiber.card < (encPerm (itciD X.fiber.card a)).wt := by
     have := length_lt_wt_list ((List.finRange (X.fiber.card * X.fiber.card)).map fun i =>
       Val.nat (itciD X.fiber.card a i))
-    simpa using this
+    simpa [encPerm, encFun] using this
   have key := itcq_mapPos_spec (P := P) hm
     (c := .list [encPerm (itciD X.fiber.card a), .nat X.fiber.card]) (m := q)
     (g := fun t => (itcqRho X a t : ℕ)) (Bd := 100 * (5 * M + 12)) (fun t => by

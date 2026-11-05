@@ -1,5 +1,9 @@
-import Workspace.CleanRowQuotients
-import Workspace.Paper.RowNormalFormDefs
+module
+
+public import Workspace.CleanRowQuotients
+public import Workspace.Paper.RowNormalFormDefs
+
+@[expose] public section
 
 /-! Theorem A.18 for a clean complement, stated with the paper's groups in `G`.
 
@@ -202,9 +206,8 @@ theorem isRowNormalForm :
       mr_normal := by rw [← hθker]; infer_instance }
   · -- `[N, N] ≤ N*`: commutators of transfers on `(1,2)` and `(1,3)`.
     intro a ha b hb
-    have hc := row_kernel_commutator_le_single K' hinv h5 hij
+    exact row_kernel_commutator_le_single K' hinv h5 hij
       (Subgroup.commutator_mem_commutator ha hb)
-    rwa [commutatorElement_def] at hc
   · -- `(N*)^m ≤ K`.
     rintro _ ⟨x, hx, rfl⟩
     exact (c.mem_normalRows_iff h5 i0 x).mp (row_single_power_le K' hinv h4 hij x hx)

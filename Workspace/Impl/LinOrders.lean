@@ -1,5 +1,9 @@
-import Workspace.Impl.LinChain
-import Workspace.Lang.Prims.PermGroups
+module
+
+public import Workspace.Impl.LinChain
+public import Workspace.Lang.Prims.PermGroups
+
+@[expose] public section
 
 /-! The successive cyclic orders in A.20, computed from permutation-group values.
 The two group-order calls return binary natural values. The cost bound uses their

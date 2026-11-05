@@ -1,5 +1,9 @@
-import Workspace.MulticosetDerived
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+module
+
+public import Workspace.MulticosetDerived
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+
+@[expose] public section
 
 /-!
 # Pieces, abelian coordinates and the affine action (proof of Theorem A.20)

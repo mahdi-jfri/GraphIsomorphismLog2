@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabSVProg
+module
+
+public import Workspace.Impl.TermGlueLabSVProg
+
+@[expose] public section
 
 /-!
 # The label point vector of step 6 (orientation coordinate in front)

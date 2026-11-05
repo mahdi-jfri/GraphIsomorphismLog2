@@ -1,5 +1,9 @@
-import Workspace.Impl.AggStructCase
-import Workspace.Lang.Lib.OrbitMath
+module
+
+public import Workspace.Impl.AggStructCase
+public import Workspace.Lang.Lib.OrbitMath
+
+@[expose] public section
 
 /-!
 # The case of a branch from orbit labels: the list form

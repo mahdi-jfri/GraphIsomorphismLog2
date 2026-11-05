@@ -1,7 +1,10 @@
-import Workspace.Impl.NIntInter
-import Workspace.Axioms.AlgoPermGroups
-import Workspace.Proved.SSPointwiseStab
-import Workspace.Proved.SSConstructiveMembership
+module
+
+public import Workspace.Impl.NIntInter
+public import Workspace.Proved.SSPointwiseStab
+public import Workspace.Proved.SSConstructiveMembership
+
+@[expose] public section
 
 /-!
 # Normalized intersection and factorization

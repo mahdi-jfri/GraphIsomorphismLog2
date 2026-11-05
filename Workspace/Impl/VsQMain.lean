@@ -1,12 +1,16 @@
-import Workspace.Impl.VsQProg
-import Workspace.Impl.NIntLib
-import Workspace.Impl.SSWrapProg
-import Workspace.Proved.SSPointwiseStab
-import Workspace.Proved.SSMembership
-import Workspace.Proved.MBlk
-import Workspace.Proved.NClNormal
-import Workspace.Proved.NClDerived
-import Workspace.Proved.SSConstructiveMembership
+module
+
+public import Workspace.Impl.VsQProg
+public import Workspace.Impl.NIntLib
+public import Workspace.Impl.SSWrapProg
+public import Workspace.Proved.SSPointwiseStab
+public import Workspace.Proved.SSMembership
+public import Workspace.Proved.MBlk
+public import Workspace.Proved.NClNormal
+public import Workspace.Proved.NClDerived
+public import Workspace.Proved.SSConstructiveMembership
+
+@[expose] public section
 
 /-!
 # The vector stabilizer, given the hard case

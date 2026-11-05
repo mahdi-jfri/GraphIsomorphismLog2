@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryLoopTerminal
+module
+
+public import Workspace.Impl.LinPrimaryLoopTerminal
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

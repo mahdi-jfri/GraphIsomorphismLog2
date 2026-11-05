@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQDrvDefs
+module
+
+public import Workspace.Impl.VsQDrvDefs
+
+@[expose] public section
 
 /-!
 # The chain of the driver

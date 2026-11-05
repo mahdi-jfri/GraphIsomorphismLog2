@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabLift
+module
+
+public import Workspace.Impl.TermGlueLabLift
+
+@[expose] public section
 
 /-!
 # The label coset of one radical coset through the affine action

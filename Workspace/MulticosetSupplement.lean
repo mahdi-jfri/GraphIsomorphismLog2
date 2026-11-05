@@ -1,6 +1,10 @@
-import Workspace.MulticosetDerived
-import Mathlib.GroupTheory.Nilpotent
-import Mathlib.GroupTheory.Sylow
+module
+
+public import Workspace.MulticosetDerived
+public import Mathlib.GroupTheory.Nilpotent
+public import Mathlib.GroupTheory.Sylow
+
+@[expose] public section
 
 /-!
 # Lemma A.19: the Frattini descent to a solvable supplement
@@ -25,8 +29,8 @@ variable {G : Type*} [Group G]
 /-- The nilpotent end of the descent: if `S ≤ H`, `SN = H` and `S ∩ N` is nilpotent, then
 `S` is solvable, because `S/(S ∩ N)` embeds in the solvable `H/N`. -/
 theorem solvable_of_nilpotent_kernel {H N S : Subgroup G} [(N.subgroupOf H).Normal]
-    [IsSolvable (H ⧸ N.subgroupOf H)] (hSH : S ≤ H)
-    [Group.IsNilpotent (N.subgroupOf S)] : IsSolvable S := by
+    [Group.IsSolvable (H ⧸ N.subgroupOf H)] (hSH : S ≤ H)
+    [Group.IsNilpotent (N.subgroupOf S)] : Group.IsSolvable S := by
   let ψ : S →* H ⧸ N.subgroupOf H :=
     (QuotientGroup.mk' (N.subgroupOf H)).comp (Subgroup.inclusion hSH)
   apply solvable_of_ker_le_range (N.subgroupOf S).subtype ψ
@@ -47,7 +51,7 @@ theorem frattini_step [Finite G] {N S : Subgroup G} (hn : Normalizes S N)
     change ((s : G) * k * (s : G)⁻¹) ∈ N
     exact hn s s.2 k hk⟩
   -- a nonnormal Sylow subgroup `P` of `K`
-  have htfae := (isNilpotent_of_finite_tfae (G := K)).out 0 3
+  have htfae := (isNilpotent_of_finite_tfae (G := K)).out 1 4
   obtain ⟨p, hp, P, hP⟩ : ∃ (p : ℕ) (_ : Fact p.Prime) (P : Sylow p K),
       ¬ (P : Subgroup K).Normal := by
     by_contra h
@@ -83,9 +87,9 @@ theorem frattini_step [Finite G] {N S : Subgroup G} (hn : Normalizes S N)
 /-- The descent: from any `S ≤ H` with `S N = H`, the Frattini steps reach a solvable
 `S' ≤ S` with `S' N = H`. Induction on `|N ∩ S|`, which drops at each step. -/
 theorem frattini_descent [Finite G] {H N : Subgroup G} [(N.subgroupOf H).Normal]
-    [IsSolvable (H ⧸ N.subgroupOf H)] (hNH : N ≤ H) (hn : Normalizes H N) :
+    [Group.IsSolvable (H ⧸ N.subgroupOf H)] (hNH : N ≤ H) (hn : Normalizes H N) :
     ∀ (k : ℕ) (S : Subgroup G), Nat.card (N ⊓ S : Subgroup G) ≤ k → S ≤ H → S ⊔ N = H →
-      ∃ S' : Subgroup G, S' ≤ S ∧ IsSolvable S' ∧ S' ⊔ N = H := by
+      ∃ S' : Subgroup G, S' ≤ S ∧ Group.IsSolvable S' ∧ S' ⊔ N = H := by
   intro k
   induction k with
   | zero =>
@@ -109,8 +113,8 @@ theorem frattini_descent [Finite G] {H N : Subgroup G} [(N.subgroupOf H).Normal]
 
 /-- Existence form of Lemma A.19, by the descent started at `(S, K) = (H, N)`. -/
 theorem exists_solvable_supplement_descent [Finite G] {H N : Subgroup G}
-    [(N.subgroupOf H).Normal] [IsSolvable (H ⧸ N.subgroupOf H)] (hNH : N ≤ H)
-    (hn : Normalizes H N) : ∃ S : Subgroup G, S ≤ H ∧ IsSolvable S ∧ S ⊔ N = H := by
+    [(N.subgroupOf H).Normal] [Group.IsSolvable (H ⧸ N.subgroupOf H)] (hNH : N ≤ H)
+    (hn : Normalizes H N) : ∃ S : Subgroup G, S ≤ H ∧ Group.IsSolvable S ∧ S ⊔ N = H := by
   obtain ⟨S, hSH, hs, hSN⟩ := frattini_descent hNH hn _ H le_rfl le_rfl (sup_eq_left.mpr hNH)
   exact ⟨S, hSH, hs, hSN⟩
 

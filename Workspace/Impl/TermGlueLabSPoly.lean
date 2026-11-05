@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabS6
-import Workspace.Impl.TermGlueLabPPoly
+module
+
+public import Workspace.Impl.TermGlueLabS6
+public import Workspace.Impl.TermGlueLabPPoly
+
+@[expose] public section
 
 /-!
 # Polynomial bounds of step 6 of the label program

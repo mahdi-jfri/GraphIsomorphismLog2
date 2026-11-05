@@ -5,8 +5,12 @@ log-cost machine is a sum of such lengths, so these lemmas are used everywhere.
 The main tool is `GI.Machine.len_le_iff`: `len a ≤ k` exactly when `a < 2 ^ k`. Every other
 lemma here follows from it.
 -/
-import Workspace.Machine.StatementFacts
-import Mathlib.Analysis.SpecialFunctions.Log.Base
+module
+
+public import Workspace.Machine.StatementFacts
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+
+@[expose] public section
 
 namespace GI.Machine
 

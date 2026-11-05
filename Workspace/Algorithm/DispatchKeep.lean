@@ -1,5 +1,9 @@
-import Workspace.Algorithm.CarrierKeep
-import Workspace.Algorithm.DispatchInv
+module
+
+public import Workspace.Algorithm.CarrierKeep
+public import Workspace.Algorithm.DispatchInv
+
+@[expose] public section
 
 /-!
 # The dispatcher's children keep the carrier

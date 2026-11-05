@@ -1,4 +1,8 @@
-import Workspace.CoherentValencies
+module
+
+public import Workspace.CoherentValencies
+
+@[expose] public section
 
 namespace GI.CoherentEntrance
 
@@ -80,7 +84,3 @@ theorem fiberMatrix_semiregular (c : Coloring n) (hc : Coherent c)
       (r.property.trans b.property.symm)).2.2 _ _
 
 end GI.CoherentEntrance
-
-#print axioms GI.CoherentEntrance.fiber_row_intersection
-#print axioms GI.CoherentEntrance.fiber_column_intersection
-#print axioms GI.CoherentEntrance.fiberMatrix_semiregular

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinVectorTargetCall
-import Workspace.Impl.LinFiniteActionCost
+module
+
+public import Workspace.Impl.LinVectorTargetCall
+public import Workspace.Impl.LinFiniteActionCost
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

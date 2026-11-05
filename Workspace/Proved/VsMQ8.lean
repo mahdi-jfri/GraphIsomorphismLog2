@@ -1,4 +1,8 @@
-import Workspace.Proved.VsMHardB
+module
+
+public import Workspace.Proved.VsMHardB
+
+@[expose] public section
 
 /-!
 # The `Q₈` case (**M7**, LM Proposition 5.11)

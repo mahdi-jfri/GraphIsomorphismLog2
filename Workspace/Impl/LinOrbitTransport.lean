@@ -1,5 +1,9 @@
-import Workspace.Impl.TermRecInd
-import Workspace.Impl.LinObjectNormalize
+module
+
+public import Workspace.Impl.TermRecInd
+public import Workspace.Impl.LinObjectNormalize
+
+@[expose] public section
 
 /-! The abelian-orbit transport subroutine of A.20. The existing point-image
 loop is used only with recursive fuel zero, so this block has no glue premise. -/
@@ -41,7 +45,7 @@ theorem linOrbitZero_spec {P : Program} {b jsci jder jmem gObj n M : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hmem : Membership}
     (hp : TmRiAt P b jsci jder jmem gObj hsci hder hmem) :
     TmRiIH P b n M 0 (linOrbitZeroBudget hsci n M) := by
-  intro σH σN X Y hsol hNH hNn hfuel hℓ hNX hNY hHl hNl hX hY hok
+  intro σH σN X Y _hsol hNH hNn hfuel hℓ hNX hNY hHl hNl hX hY hok
   have hw := tmRi_in_wt hℓ hHl hNl hX hY hok
   exact tmRi_main_spec hp hw (fun _ => tmRi_base_spec hp hfuel hNX hHl hok hw)
     (fun h => absurd rfl h)
@@ -58,7 +62,7 @@ theorem linOrbitTransport_spec {P : Program} {b jsci jder jmem n M : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hm : Membership}
     (hp : linOrbitTransportAt P b jsci jder jmem hsci hder hm)
     (as ns : List (Perm (Fin n))) (S T : List (TmRiO n))
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : TmRiListNorm (gens as) (S ++ T)) (hNA : gens ns ≤ gens as)
     (hNn : GI.Multicoset.Normalizes (gens as) (gens ns))
     (hc : ∀ a ∈ gens as, ∀ b ∈ gens as, a * b * a⁻¹ * b⁻¹ ∈ gens ns)
     (hNT : Fixes (gens ns) (tmGlMs T)) (hal : as.length ≤ n ^ 2)
@@ -89,8 +93,9 @@ theorem linOrbitTransport_spec {P : Program} {b jsci jder jmem n M : ℕ}
     rw [Subgroup.commutator_le]
     intro a ha b hb
     simpa only [commutatorElement_def] using hc a ha b hb
-  have hh := tmRi_pair_spec hp.inner (linOrbitZero_spec hp.inner) hsol hal hal hNA hNn
-    rfl hFuel (by omega) hSo hTo hNT hSl hTl hok hT0 ww
+  have hh := tmRi_pair_spec hp.inner (linOrbitZero_spec hp.inner) hsol (Kg := 0) (Dg := 0)
+    (Or.inl ⟨rfl, le_rfl⟩) hal hal hNA hNn
+    rfl (Or.inl hFuel) (by omega) hSo hTo hNT hSl hTl hok hT0 ww
   have de (i : ℕ) {v : Val} (hv : vs[i]? = some v) :=
     Det.arg' (P := P) (vs := vs) (rest := []) (j := i) hv
   have dc := Det.mk4 (Det.nat 0) (de 0 rfl) (de 0 rfl) Det.nil

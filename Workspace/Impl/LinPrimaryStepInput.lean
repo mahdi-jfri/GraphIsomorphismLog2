@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryStepSuccess
+module
+
+public import Workspace.Impl.LinPrimaryStepSuccess
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

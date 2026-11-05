@@ -1,7 +1,11 @@
-import Workspace.Impl.GenNormBlockMap
-import Workspace.Impl.AggPre
-import Workspace.Impl.GenNormFiber
-import Workspace.Impl.GenNormSel
+module
+
+public import Workspace.Impl.GenNormBlockMap
+public import Workspace.Impl.AggPre
+public import Workspace.Impl.GenNormFiber
+public import Workspace.Impl.GenNormSel
+
+@[expose] public section
 
 /-!
 # Assembling the computed normalization label value

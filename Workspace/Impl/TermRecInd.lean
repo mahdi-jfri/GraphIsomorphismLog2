@@ -1,5 +1,9 @@
-import Workspace.Impl.TermRecPoly
-import Workspace.Impl.TermRecSpec
+module
+
+public import Workspace.Impl.TermRecPoly
+public import Workspace.Impl.TermRecSpec
+
+@[expose] public section
 
 /-!
 # T5, the recursion of Theorem A.20 by induction on the fuel
@@ -57,7 +61,7 @@ theorem tmRi_main_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     (hw : (tmRecIn ℓ σH σN X Y).wt ≤ tmRiVs n M)
     (h0 : ℓ = 0 → FunAll P (b + 1) (tmRecIn ℓ σH σN X Y) (fun u c =>
       CosetC n u (Iso (gens σH) (tmGlMs X) (tmGlMs Y)) ∧ c ≤ T))
-    (h1 : ℓ ≠ 0 → FunAll P (b + 2) (tmRecIn ℓ σH σN X Y) (fun u c =>
+    (h1 : ℓ ≠ 0 → FunAll P (b + 105) (tmRecIn ℓ σH σN X Y) (fun u c =>
       CosetC n u (Iso (gens σH) (tmGlMs X) (tmGlMs Y)) ∧ c ≤ T)) :
     FunAll P b (tmRecIn ℓ σH σN X Y) (fun u c =>
       CosetC n u (Iso (gens σH) (tmGlMs X) (tmGlMs Y)) ∧ c ≤ T + 10 * tmRiVs n M) := by
@@ -91,30 +95,48 @@ def tmRiA (M : ℕ) : ℕ := 5 * (M + 1) ^ 3 + 1
 own cost of one level. -/
 theorem tmRi_ind {P : Program} {b jsci jder jmem gObj : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hmem : Membership}
-    (hP : TmRiAt P b jsci jder jmem gObj hsci hder hmem) {Kg Dg : ℕ}
+    (hP : TmRiAt P b jsci jder jmem gObj hsci hder hmem)
+    (hReb : P.HasAt (b + 96) (tmRiRebFuns b gObj)) {Kg Dg : ℕ}
     (hglue : Iface.TermGlueObjSpec P Kg Dg gObj) (M : ℕ) :
-    ∀ ℓ, TmRiIH P b n M ℓ (tmRiA M ^ ℓ * tmRiOwnC hsci hder hmem Kg Dg n M) := by
+    ∀ ℓ (σH σN : List (Perm (Fin n))) (X Y : List (TmRiO n)),
+      (0 < ℓ → TmRiListNorm (gens σH) (X ++ Y)) →
+      gens σN ≤ gens σH → GI.Multicoset.Normalizes (gens σH) (gens σN) →
+      relDerived (gens σH) (gens σN) ℓ ≤ gens σN → ℓ ≤ n ^ 2 + 5 →
+      Fixes (gens σN) (tmGlMs X) → Fixes (gens σN) (tmGlMs Y) →
+      σH.length ≤ n ^ 2 → σN.length ≤ n ^ 2 → X.length ≤ M → Y.length ≤ M →
+      TmRecObjOK M (X ++ Y) →
+      FunAll P b (tmRecIn ℓ σH σN X Y) (fun u cost =>
+        CosetC n u (Iso (gens σH) (tmGlMs X) (tmGlMs Y)) ∧
+        cost ≤ tmRiA M ^ ℓ * tmRiOwnC hsci hder hmem Kg Dg n M) := by
   obtain ⟨Q, hQ⟩ : ∃ q, q = tmRiOwnC hsci hder hmem Kg Dg n M := ⟨_, rfl⟩
   rw [← hQ]
-  have hQs : tmRiStepO hsci hder hmem Kg Dg n M + 10 * tmRiVs n M ≤ Q := by
+  have hQs : tmRiNormStepO hsci hder hmem Kg Dg n M + 10 * tmRiVs n M ≤ Q := by
     rw [hQ]; unfold tmRiOwnC; omega
   have hQb : tmRiBaseC (tmRiObjPC (solvableCosetIntersectionPrim hsci) n (2 * M)) n
       (tmRiVs n M) + 10 * tmRiVs n M ≤ Q := by
     rw [hQ]; unfold tmRiOwnC; omega
+  have ih0 : TmRiIH P b n M 0 (tmRiBaseC (tmRiObjPC (solvableCosetIntersectionPrim hsci) n (2 * M)) n
+      (tmRiVs n M) + 10 * tmRiVs n M) := by
+    intro σH σN X Y _hsol hNH hNn hfuel hℓ hNX hNY hHl hNl hX hY hok
+    have hw := tmRi_in_wt hℓ hHl hNl hX hY hok
+    exact tmRi_main_spec hP hw (T := tmRiBaseC (tmRiObjPC (solvableCosetIntersectionPrim hsci)
+      n (2 * M)) n (tmRiVs n M)) (fun _ => tmRi_base_spec hP hfuel hNX hHl hok hw)
+      (fun h => absurd rfl h)
   intro ℓ
   induction ℓ with
   | zero =>
-    intro σH σN X Y hsol hNH hNn hfuel hℓ hNX hNY hHl hNl hX hY hok
-    have hw := tmRi_in_wt hℓ hHl hNl hX hY hok
-    refine (tmRi_main_spec hP hw (T := tmRiBaseC (tmRiObjPC (solvableCosetIntersectionPrim hsci)
-      n (2 * M)) n (tmRiVs n M)) (fun _ => tmRi_base_spec hP hfuel hNX hHl hok hw)
-      (fun h => absurd rfl h)).mono fun u c h => ⟨h.1, ?_⟩
+    intro σH σN X Y _hsol hNH hNn hfuel hℓ hNX hNY hHl hNl hX hY hok
+    refine (ih0 σH σN X Y (fun h => absurd h (Nat.lt_irrefl 0)) hNH hNn hfuel hℓ hNX hNY
+      hHl hNl hX hY hok).mono fun u c h => ⟨h.1, ?_⟩
     simp only [pow_zero, one_mul]
     omega
   | succ ℓ ih =>
     intro σH σN X Y hsol hNH hNn hfuel hℓ hNX hNY hHl hNl hX hY hok
     have hw := tmRi_in_wt hℓ hHl hNl hX hY hok
-    have hst := tmRi_step_spec hP hglue ih hsol hNH hNn hfuel hℓ hNX hNY hHl hNl hX hY hok
+    have ih' : TmRiIH P b n M ℓ (tmRiA M ^ ℓ * Q) :=
+      fun σH' σN' X' Y' hIn' => ih σH' σN' X' Y' (fun hpos => (hIn' hpos).norm_self)
+    have hst := tmRi_normStep_spec hP hReb hglue ih0 ih' (hsol (Nat.succ_pos ℓ)) hNH hNn hfuel hℓ
+      hNX hNY hHl hNl hX hY hok
     refine (tmRi_main_spec hP hw (fun h => absurd h (by omega)) fun _ => hst).mono
       fun u c h => ⟨h.1, ?_⟩
     have hQ1 : Q ≤ tmRiA M ^ ℓ * Q := Nat.le_mul_of_pos_left _ (pow_pos (by
@@ -137,12 +159,15 @@ cited algorithms and on the glue's constants `Kg, Dg`. -/
 theorem tmRi_termRecSpec (hsci : SolvableCosetIntersection) (hder : DerivedSubgroup)
     (hmem : Membership) (Kg Dg : ℕ) :
     ∃ K D : ℕ, ∀ {P : Program} {b jsci jder jmem gObj : ℕ},
-      TmRiAt P b jsci jder jmem gObj hsci hder hmem → Iface.TermGlueObjSpec P Kg Dg gObj →
+      TmRiAt P b jsci jder jmem gObj hsci hder hmem →
+      P.HasAt (b + 96) (tmRiRebFuns b gObj) →
+      Iface.TermGlueObjSpec P Kg Dg gObj →
       Iface.TermRecSpec P K D b := by
   obtain ⟨C, D, hC⟩ := tmRiOwn_poly hsci hder hmem Kg Dg
-  refine ⟨C, D, fun {P b jsci jder jmem gObj} hP hglue => ?_⟩
+  refine ⟨C, D, fun {P b jsci jder jmem gObj} hP hReb hglue => ?_⟩
   intro n M ℓ σH σN X Y hsol hNH hNn hfuel hℓ hNX hNY hHl hNl hX hY hok
-  refine (tmRi_ind hP hglue M ℓ σH σN X Y hsol hNH hNn hfuel hℓ hNX hNY hHl hNl hX hY hok).mono
+  refine (tmRi_ind hP hReb hglue M ℓ σH σN X Y (fun _ => hsol) hNH hNn hfuel hℓ hNX hNY
+    hHl hNl hX hY hok).mono
     fun u c h => ⟨tmRi_ansC_iff.2 h.1, ?_⟩
   have h1 : c ≤ tmRiA M ^ ℓ * (C * (n + M + 2) ^ D) :=
     h.2.trans (Nat.mul_le_mul_left _ (hC n M))

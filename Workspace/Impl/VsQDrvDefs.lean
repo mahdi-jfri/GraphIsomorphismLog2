@@ -1,6 +1,10 @@
-import Workspace.Impl.VsQPaste
-import Workspace.Impl.VsQApp
-import Workspace.Impl.VsWProgKer
+module
+
+public import Workspace.Impl.VsQPaste
+public import Workspace.Impl.VsQApp
+public import Workspace.Impl.VsWProgKer
+
+@[expose] public section
 
 /-!
 # The driver, definitions

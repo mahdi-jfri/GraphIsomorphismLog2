@@ -1,4 +1,8 @@
-import Workspace.Impl.GenNormGraph
+module
+
+public import Workspace.Impl.GenNormGraph
+
+@[expose] public section
 
 /-!
 # A canonical normalized group and its raw generator list

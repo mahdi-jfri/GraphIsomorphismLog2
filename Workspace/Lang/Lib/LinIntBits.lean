@@ -1,4 +1,8 @@
-import Workspace.Lang.Prims.LinNormal
+module
+
+public import Workspace.Lang.Prims.LinNormal
+
+@[expose] public section
 
 /-! Binary codecs for the signed integer programs. The cited encInt format stores
 least-significant bits first. The programs below use natural arithmetic internally,

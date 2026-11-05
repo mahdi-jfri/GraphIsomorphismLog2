@@ -1,6 +1,10 @@
-import Workspace.CleanComplementFinite
-import Workspace.CleanComplementOdd
-import Workspace.CleanComplementAssemble
+module
+
+public import Workspace.CleanComplementFinite
+public import Workspace.CleanComplementOdd
+public import Workspace.CleanComplementAssemble
+
+@[expose] public section
 
 /-! Genuine clean complements under a linear fiber threshold. These conclusions
 are constructed from numeric bounds and the supplied top action alone; the

@@ -1,4 +1,8 @@
-import Workspace.Impl.SNFCoef
+module
+
+public import Workspace.Impl.SNFCoef
+
+@[expose] public section
 
 /-!
 # One pair step as a program (Smith form)

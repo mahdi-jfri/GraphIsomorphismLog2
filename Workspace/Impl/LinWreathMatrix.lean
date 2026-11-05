@@ -1,6 +1,10 @@
-import Workspace.Impl.LinWreathGroup
-import Workspace.Impl.LinAffineMatrixGroup
-import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
+module
+
+public import Workspace.Impl.LinWreathGroup
+public import Workspace.Impl.LinAffineMatrixGroup
+public import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
+
+@[expose] public section
 
 /-! The two-copy representation on numbered dense coordinates. The permutation
 cover and the vector space use the same first-copy, second-copy convention. -/
@@ -51,6 +55,7 @@ def linWreathNumberRep (ρ : H →* ((Fin d → R) ≃ₗ[R] (Fin d → R))) :
     linWreathNumberRep ρ a x (linWreathNumber d (i, q)) =
       ρ (a.left q) (fun j => x (linWreathNumber d (j, a.right⁻¹ * q))) i := by
   simp [linWreathNumberRep, linWreathNumberLinear]
+  rfl
 
 /-- The actual dense invertible matrices supplied to VectorStabilizer. -/
 def linWreathMatrixRep (φ : H →* Matrix.GeneralLinearGroup (Fin d) R) :
@@ -111,5 +116,37 @@ theorem linWreathMatrixRep_entry
         (linWreathNumber d (k, a.right⁻¹ * q)))) i at hh
   rw [hs] at hh
   split_ifs at hh ⊢ <;> simpa [Matrix.mulVec_single_one] using hh
+
+def linWreathRangeHom (φ : H →* Matrix.GeneralLinearGroup (Fin d) R) :
+    (H ≀ᵣ linTwo) →* (φ.range ≀ᵣ linTwo) where
+  toFun a := ⟨fun q => φ.rangeRestrict (a.left q), a.right⟩
+  map_one' := by ext q <;> simp
+  map_mul' a b := by ext q <;> simp
+
+theorem linWreathMatrixRep_range_solvable
+    (φ : H →* Matrix.GeneralLinearGroup (Fin d) R) (hsol : IsSolvable φ.range) :
+    IsSolvable (linWreathMatrixRep φ).range := by
+  have : Group.IsSolvable φ.range := hsol
+  have : Group.IsSolvable (φ.range ≀ᵣ linTwo) := linWreath_solvable (H := φ.range)
+  have hfrange : IsSolvable (linWreathRangeHom φ).range :=
+    solvable_of_solvable_injective (linWreathRangeHom φ).range.subtype_injective
+  refine solvable_range_of_ker_le (linWreathRangeHom φ) (linWreathMatrixRep φ) ?_ hfrange
+  intro a ha
+  rw [MonoidHom.mem_ker] at ha ⊢
+  have har : a.right = 1 := by
+    simpa [linWreathRangeHom] using congrArg RegularWreathProduct.right ha
+  have hal (q : linTwo) : φ (a.left q) = 1 :=
+    congrArg Subtype.val (congrFun (congrArg RegularWreathProduct.left ha) q)
+  apply linMatrixLinearEquiv.injective
+  rw [map_one]
+  ext x m
+  change (linWreathMatrixRep φ a).val.mulVec x m = x m
+  rw [linWreathMatrixRep_mulVec]
+  obtain ⟨⟨i, q⟩, rfl⟩ := (linWreathNumber d).surjective m
+  rw [linWreathNumberRep_apply]
+  change (φ (a.left q)).val.mulVec (fun j => x (linWreathNumber d (j, a.right⁻¹ * q))) i =
+    x (linWreathNumber d (i, q))
+  simp [hal q, har]
+  rcases linTwo_cases q with rfl | rfl <;> rfl
 
 end GI.Impl

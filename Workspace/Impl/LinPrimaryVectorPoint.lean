@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryVector
+module
+
+public import Workspace.Impl.LinPrimaryVector
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

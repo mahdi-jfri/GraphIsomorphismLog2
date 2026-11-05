@@ -1,5 +1,9 @@
-import Workspace.CoherentDominantWitness
-import Mathlib.Logic.Relation
+module
+
+public import Workspace.CoherentDominantWitness
+public import Mathlib.Logic.Relation
+
+@[expose] public section
 
 namespace GI.CoherentEntrance
 
@@ -80,8 +84,3 @@ theorem colorReach_equivalence (c : Coloring n) (side : Bool) (k : Color n) :
   trans := Relation.ReflTransGen.trans
 
 end GI.CoherentEntrance
-
-#print axioms GI.CoherentEntrance.coherent_middle_witness
-#print axioms GI.CoherentEntrance.colorSaturated_reflTransGen
-#print axioms GI.CoherentEntrance.colorReach_saturated
-#print axioms GI.CoherentEntrance.colorReach_equivalence

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCfDAt
-import Workspace.Impl.AggItemCfDCost
+module
+
+public import Workspace.Impl.AggItemCfDAt
+public import Workspace.Impl.AggItemCfDCost
+
+@[expose] public section
 
 namespace GI.Impl
 

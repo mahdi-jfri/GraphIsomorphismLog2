@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojRows
+module
+
+public import Workspace.Impl.AggItemCiSojRows
+
+@[expose] public section
 
 /-! # Collecting representatives from the nonempty projected answer rows -/
 

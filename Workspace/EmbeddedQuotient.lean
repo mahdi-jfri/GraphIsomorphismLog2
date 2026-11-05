@@ -1,4 +1,8 @@
-import Workspace.KernelQuotientFacts
+module
+
+public import Workspace.KernelQuotientFacts
+
+@[expose] public section
 
 namespace GI.EmbeddedQuotient
 

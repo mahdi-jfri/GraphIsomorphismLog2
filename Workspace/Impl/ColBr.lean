@@ -1,4 +1,8 @@
-import Workspace.Impl.ColLevProg
+module
+
+public import Workspace.Impl.ColLevProg
+
+@[expose] public section
 
 /-!
 # The column branch of the row step, as a program

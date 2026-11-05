@@ -1,4 +1,8 @@
-import Workspace.Impl.LinAffineRows
+module
+
+public import Workspace.Impl.LinAffineRows
+
+@[expose] public section
 
 /-! The row-append program works on signed integer entries as well as fields.
 No arithmetic is performed by this shared list routine. -/
@@ -68,7 +72,7 @@ theorem linIntAffineRows_spec {P : Program} {b r c : ℕ}
     have ht : rows.take (k + 1) = rows.take k ++
         [.list (((List.finRange c).map fun j => encInt (A i j)) ++ [encInt (v i)])] := by
       rw [List.take_add_one, List.getElem?_eq_getElem (by simp [rows]; exact hk)]; simp [rows, i]
-    refine step.post fun cost hcost => ⟨by dsimp only; rw [ht], ?_⟩
+    refine step.post fun cost hcost => ⟨by rw [ht], ?_⟩
     have wo := wacc k
     have wn := wacc (k + 1)
     rw [ht] at wn

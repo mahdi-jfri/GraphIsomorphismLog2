@@ -1,5 +1,9 @@
-import Workspace.Impl.SmallInv
-import Workspace.Algorithm.DispatchKeep
+module
+
+public import Workspace.Impl.SmallInv
+public import Workspace.Algorithm.DispatchKeep
+
+@[expose] public section
 
 /-!
 # The children of a dispatcher step keep `SmallInv`

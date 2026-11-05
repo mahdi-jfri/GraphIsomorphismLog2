@@ -1,5 +1,10 @@
-import Workspace.Impl.TermCosetObjs
-import Workspace.Impl.TermCosetMath
+module
+
+public import Workspace.Impl.TermCosetObjs
+public import Workspace.Impl.TermCosetMath
+public import Workspace.OutbRebMath
+
+@[expose] public section
 
 /-!
 # The computed objects are the coset objects of the types
@@ -200,19 +205,46 @@ section Res
 
 variable {H N : Subgroup (Perm (Fin n))} {q : ℕ} {x y : Fin q → Ω}
 
-/-- The residual set of Corollary A.22 in the radical coset `R r`. -/
-def tmCsResSet (H N : Subgroup (Perm (Fin n))) (x y : Fin q → Ω) (r : Perm (Fin n)) :
+/-- The residual set of Corollary A.22 in the coset `R r`. -/
+def tmCsResSet (H N R : Subgroup (Perm (Fin n))) (x y : Fin q → Ω) (r : Perm (Fin n)) :
     Set (Perm (Fin n)) :=
-  {h | h ∈ Iso H (types N x) (types N y) ∧ ∃ z ∈ radicalPreimage H N, h = z * r}
+  {h | h ∈ Iso H (types N x) (types N y) ∧ ∃ z ∈ R, h = z * r}
 
-/-- **No partner, no transporter.** -/
-theorem tmCs_res_empty (hNH : N ≤ H) (hn : GI.Multicoset.Normalizes H N) {r : Perm (Fin n)}
-    (h : ¬((∀ i, ∃ j, (Iso H (x i) (y j)).Nonempty) ∧ (∀ j, ∃ i, (Iso H (x i) (y j)).Nonempty))) :
-    tmCsResSet H N x y r = ∅ := by
+/-- Acting on `types N y` by `k ∈ H` shifts each row `y j` by `k`. -/
+theorem tmCs_types_act (hn : GI.Multicoset.Normalizes H N) {k : Perm (Fin n)} (hk : k ∈ H)
+    (y : Fin q → Ω) :
+    types N y ↼ k = types N (fun j => y j ↼ k) := by
+  unfold types
+  rw [multiset_act_def, Multiset.map_map]
+  exact Multiset.map_congr rfl fun j _ => orbitN_act hn hk (y j)
+
+/-- **Rebasing the residual set**: the transporters of the types in `R r` are the `R`-transporters
+from `types N x` to `types N (fun j => y j ↼ r⁻¹)`, multiplied on the right by `r`. -/
+theorem tmCs_resSet_eq_image {R : Subgroup (Perm (Fin n))} (hRH : R ≤ H)
+    (hn : GI.Multicoset.Normalizes H N) {r : Perm (Fin n)} (hr : r ∈ H) :
+    tmCsResSet H N R x y r =
+      (fun z => z * r) '' Iso R (types N x) (types N (fun j => y j ↼ r⁻¹)) := by
+  rw [← tmCs_types_act hn (H.inv_mem hr) y, outbReb_iso_eq hRH hr (types N x) (types N y)]
+  ext h
+  simp only [tmCsResSet, Set.mem_setOf_eq, Set.mem_image]
+  constructor
+  · rintro ⟨hh, z, hz, rfl⟩
+    exact ⟨z, ⟨hz, hh⟩, rfl⟩
+  · rintro ⟨z, ⟨hz, hh⟩, rfl⟩
+    exact ⟨hh, z, hz, rfl⟩
+
+/-- **No partner in `R`, no transporter in `R r`.** -/
+theorem tmCs_res_empty {R : Subgroup (Perm (Fin n))} (hRH : R ≤ H) (hNR : N ≤ R)
+    (hn : GI.Multicoset.Normalizes H N) {r : Perm (Fin n)} (hr : r ∈ H)
+    (h : ¬((∀ i, ∃ j, (Iso R (x i) (y j ↼ r⁻¹)).Nonempty) ∧
+      (∀ j, ∃ i, (Iso R (x i) (y j ↼ r⁻¹)).Nonempty))) :
+    tmCsResSet H N R x y r = ∅ := by
+  rw [tmCs_resSet_eq_image hRH hn hr]
+  have hRN : GI.Multicoset.Normalizes R N := hn.mono hRH
   ext g
-  simp only [Set.mem_empty_iff_false, iff_false]
-  rintro ⟨hg, -⟩
-  exact h ⟨tmCs_partner_x hNH hn hg, tmCs_partner_y hNH hn hg⟩
+  simp only [Set.mem_image, Set.mem_empty_iff_false, iff_false, not_exists, not_and]
+  intro z hz _
+  exact h ⟨tmCs_partner_x hNR hRN hz, tmCs_partner_y hNR hRN hz⟩
 
 /-- A supplement `S` of `N` in `R` covers `R` as `N S`. -/
 theorem tmCs_cover {R S : Subgroup (Perm (Fin n))} (hSN : GI.Multicoset.Normalizes S N)

@@ -1,7 +1,11 @@
-import Workspace.Algorithm.RowTerminalOf
-import Workspace.Algorithm.ColumnStepOf
-import Workspace.Algorithm.HierInv
-import Workspace.Algorithm.ColumnDrop
+module
+
+public import Workspace.Algorithm.RowTerminalOf
+public import Workspace.Algorithm.ColumnStepOf
+public import Workspace.Algorithm.HierInv
+public import Workspace.Algorithm.ColumnDrop
+
+@[expose] public section
 
 /-!
 # The row step: the row terminal and the column step (Algorithm 4)
@@ -222,6 +226,12 @@ structure RowTerminal (P : Params) (S : State Ω C) (L : GiantLabels S) extends 
   cosets : List (Fin L.q × Fin L.q)
   cosets_nodup : cosets.Nodup
   mem_cosets : ∀ ij, ij ∈ cosets
+  /-- A solvable-quotient subgroup `R' ≤ H` with `N ≤ R'` and `R'/N` solvable (by default,
+  `radicalSubgroup Hb Nb` of Lemma A.21). -/
+  rad : Subgroup (Perm B)
+  rad_le : rad ≤ toRowForm.Hb
+  Nb_le_rad : toRowForm.Nb ≤ rad
+  rad_solv : ∃ ℓ, GI.Multicoset.relDerived rad toRowForm.Nb ℓ ≤ toRowForm.Nb
 
 attribute [instance] RowTerminal.commA
 

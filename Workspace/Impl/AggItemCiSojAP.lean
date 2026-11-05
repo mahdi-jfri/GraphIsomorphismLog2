@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojAlign
+module
+
+public import Workspace.Impl.AggItemCiSojAlign
+
+@[expose] public section
 
 /-!
 # The fixed rectangle alignment as a program

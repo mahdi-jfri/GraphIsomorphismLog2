@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectOffsetsAnswer
-import Workspace.Impl.GenNormGlue
+module
+
+public import Workspace.Impl.LinObjectOffsetsAnswer
+public import Workspace.Impl.GenNormGlue
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset

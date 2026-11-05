@@ -1,5 +1,9 @@
-import Workspace.DependentFiberCoordinates
-import Mathlib.GroupTheory.GroupAction.Basic
+module
+
+public import Workspace.DependentFiberCoordinates
+public import Mathlib.GroupTheory.GroupAction.Basic
+
+@[expose] public section
 
 namespace GI.CartesianCoordinates
 
@@ -59,8 +63,3 @@ theorem uniformCoordinates_fibers (background : ∀ i, D i)
   exact hxy
 
 end GI.CartesianCoordinates
-
-#print axioms GI.CartesianCoordinates.actionInCoordinates
-#print axioms GI.CartesianCoordinates.coordinateTransport
-#print axioms GI.CartesianCoordinates.uniformCoordinates
-#print axioms GI.CartesianCoordinates.uniformCoordinates_fibers

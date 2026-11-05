@@ -1,4 +1,8 @@
-import Workspace.CleanRowSubdirect
+module
+
+public import Workspace.CleanRowSubdirect
+
+@[expose] public section
 
 /-! The supplied original group is the actual row semidirect product. This
 connects the concrete clean complement to the A.18 row-normal-form modules. -/
@@ -74,8 +78,10 @@ theorem commonRowAction_compatible (s : alternatingGroup I) :
 with H extracted as its actual common local image and K proved subdirect. -/
 noncomputable def commonSemidirectEquiv :
     (c.commonRows hcard i) ⋊[rowAltAction (c.commonRows hcard i) (c.commonRows_invariant hcard i)]
-      alternatingGroup I ≃* G :=
-  (SemidirectProduct.congr (commonRowEquiv c.rowKernel c.rowKernel_invariant hcard i)
+      alternatingGroup I ≃* G := by
+  let e : c.rowKernel ≃* c.commonRows hcard i :=
+    commonRowEquiv c.rowKernel c.rowKernel_invariant hcard i
+  exact (SemidirectProduct.congr e
     (MulEquiv.refl (alternatingGroup I)) (c.commonRowAction_compatible hcard i)).symm.trans c.semidirectEquiv
 
 end GI.PureComplement

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecProgPair
+module
+
+public import Workspace.Impl.TermRecProgPair
+
+@[expose] public section
 
 /-!
 # T5, the table of pairwise transporters
@@ -19,48 +23,6 @@ open GI.Cited (Val encPerm encGroup gens SolvableCosetIntersection DerivedSubgro
 
 variable {n : ℕ}
 
-/-- **The map with uniform bounds.** -/
-theorem tmRi_mapU {P : Program} {b f : ℕ} (h : P.HasAt b (mapFuns b f)) {c : Val}
-    {xs : List Val} {R : Val → Val → Prop} {Wx K : ℕ}
-    (hf : ∀ x ∈ xs, FunAll P f (.list [c, x]) (fun w cost => R x w ∧ w.wt ≤ Wx ∧ cost ≤ K)) :
-    FunAll P b (.list [c, .list xs]) (fun w cost => ∃ ws, w = .list ws ∧ List.Forall₂ R xs ws ∧
-      w.wt ≤ xs.length * (2 * Wx + 1) + 4 ∧
-      cost ≤ xs.length * K +
-        mapK * (xs.length + 1) * ((Val.list [c, .list xs]).wt + xs.length * (2 * Wx + 1) + 5)) := by
-  refine (map_spec h (R := fun x w => R x w ∧ w.wt ≤ Wx) (B := fun _ => K) fun x hx =>
-    (hf x hx).mono fun w cw hw => ⟨⟨hw.1, hw.2.1⟩, hw.2.2⟩).mono fun w cw ⟨ws, hw, hR, hc⟩ => ?_
-  have hlen : ws.length = xs.length := hR.length_eq.symm
-  have hwt : w.wt ≤ xs.length * (2 * Wx + 1) + 4 := by
-    rw [hw]
-    have := tmRi_wt_list_le ws (c := Wx) fun v hv => by
-      obtain ⟨x, -, hxv⟩ := (tmRi_forall₂_mem hR).1 v hv
-      exact hxv.2
-    rwa [hlen] at this
-  refine ⟨ws, hw, hR.imp fun _ _ h => h.1, hwt, ?_⟩
-  have h1 := tmRi_sum_const xs (fun _ => K) (K := K) fun _ _ => le_rfl
-  have h2 : mapK * (xs.length + 1) * ((Val.list [c, .list xs]).wt + w.wt + 1) ≤
-      mapK * (xs.length + 1) * ((Val.list [c, .list xs]).wt + xs.length * (2 * Wx + 1) + 5) :=
-    Nat.mul_le_mul_left _ (by omega)
-  omega
-
-/-- The list of objects in the pieces. -/
-def tmRiFlat (Ps : List (List (TmRiO n))) : List (TmRiO n) := Ps.flatten
-
-theorem TmRecObjOK.sub {M : ℕ} {Z Z' : List (TmRiO n)} (h : TmRecObjOK M Z)
-    (hs : ∀ o ∈ Z', o ∈ Z) : TmRecObjOK M Z' := fun o ho =>
-  ⟨(h o (hs o ho)).1, (h o (hs o ho)).2.1, fun o' ho' => (h o (hs o ho)).2.2 o' (hs o' ho')⟩
-
-/-- What the table needs of each piece. -/
-def TmRiPc (σA σN : List (Perm (Fin n))) (M : ℕ) (S : List (TmRiO n)) : Prop :=
-  S ≠ [] ∧ S.length ≤ M ∧ (∀ s ∈ tmGlMs S, ∀ s' ∈ tmGlMs S, SameOrb (gens σA) s s') ∧
-    Fixes (gens σN) (tmGlMs S)
-
-/-- The encoded table: row `S`, entry `T`, is `Iso_H(S, T)` as a coset. -/
-def TmRiTab (H : Subgroup (Perm (Fin n))) (Ps : List (List (TmRiO n))) (tab : List Val) : Prop :=
-  List.Forall₂ (fun SV row => ∃ S ∈ Ps, SV = tmGlObjsVal S ∧ ∃ us, row = .list us ∧
-    List.Forall₂ (fun TV u => ∃ T ∈ Ps, TV = tmGlObjsVal T ∧ CosetC n u (Iso H (tmGlMs S)
-      (tmGlMs T))) (Ps.map tmGlObjsVal) us) (Ps.map tmGlObjsVal) tab
-
 /-- The cost of the table besides the recursive calls, for `m` pieces. -/
 noncomputable def tmRiTabC (hm : Membership) (n M m W : ℕ) : ℕ :=
   m * (m * tmRiPairC hm n M (10 * W + 20) +
@@ -68,19 +30,26 @@ noncomputable def tmRiTabC (hm : Membership) (n M m W : ℕ) : ℕ :=
       m * (1400 * (n + 1) ^ 6 + 1)) +
     mapK * (m + 1) * (W + m * (2 * (m * (1400 * (n + 1) ^ 6 + 1) + 4) + 1) + 5)
 
-theorem tmRi_obj_mem {S : List (TmRiO n)} {o : TmRiO n} (h : o ∈ S) : tmRiObj o ∈ tmGlMs S := by
-  simp only [tmGlMs, Multiset.mem_coe, List.mem_map]
-  exact ⟨o, h, rfl⟩
+theorem tmRiTabC_mono (hm : Membership) (n M : ℕ) {m m' : ℕ} (h : m ≤ m') (W : ℕ) :
+    tmRiTabC hm n M m W ≤ tmRiTabC hm n M m' W := by
+  unfold tmRiTabC
+  gcongr
 
 /-- **The table.** -/
 theorem tmRi_table_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hmem : Membership}
     (hP : TmRiAt P b jsci jder jmem gObj hsci hder hmem) {M ℓ T : ℕ} (ih : TmRiIH P b n M ℓ T)
     {σH σN σA : List (Perm (Fin n))} {Ps : List (List (TmRiO n))} {Z : List (TmRiO n)}
-    (hsol : IsSolvable (gens σH)) (hHl : σH.length ≤ n ^ 2) (hAl : σA.length ≤ n ^ 2)
+    {Kg Dg T' : ℕ} (hsol : TmRiListNorm (gens σH) Z)
+    (hReb : (ℓ = 0 ∧ T ≤ T') ∨
+      (TmRiListIn (gens σH) Z ∧ P.HasAt (b + 96) (tmRiRebFuns b gObj) ∧
+        Iface.TermGlueObjSpec P Kg Dg gObj ∧
+        T + tmRiRebC (solvableCosetIntersectionPrim hsci) hmem Kg Dg n M ≤ T'))
+    (hHl : σH.length ≤ n ^ 2) (hAl : σA.length ≤ n ^ 2)
     (hNH : gens σN ≤ gens σH) (hNn : GI.Multicoset.Normalizes (gens σH) (gens σN))
     (hA : gens σA = relDerived (gens σH) (gens σN) ℓ)
-    (hfuel : relDerived (gens σH) (gens σN) (ℓ + 1) ≤ gens σN) (hℓ : ℓ ≤ n ^ 2 + 5)
+    (hfuel : relDerived (gens σH) (gens σN) (ℓ + 1) ≤ gens σN ∨
+      (ℓ = 0 ∧ ∀ S ∈ Ps, ∀ s ∈ tmGlMs S, ∀ s' ∈ tmGlMs S, s = s')) (hℓ : ℓ ≤ n ^ 2 + 5)
     (hPs : ∀ S ∈ Ps, TmRiPc σA σN M S) (hok : TmRecObjOK M Z) (hZ : ∀ S ∈ Ps, ∀ o ∈ S, o ∈ Z)
     {W : ℕ} (hW : (Val.list [.list [.nat ℓ, encGroup σH, encGroup σA, .list (Ps.map tmGlObjsVal)],
       .list (Ps.map tmGlObjsVal)]).wt ≤ W) :
@@ -89,12 +58,12 @@ theorem tmRi_table_spec {P : Program} {b jsci jder jmem gObj : ℕ}
       (fun w cost => ∃ tab, w = .list tab ∧ TmRiTab (gens σH) Ps tab ∧
         w.wt ≤ Ps.length * (2 * (Ps.length * (1400 * (n + 1) ^ 6 + 1) + 4) + 1) + 4 ∧
         cost ≤ Ps.length * Ps.length *
-            (M * (T + tmRiYC (solvableCosetIntersectionPrim hsci) n M (4 * (10 * W + 20) + 10))) +
+            (M * (T' + tmRiYC (solvableCosetIntersectionPrim hsci) n M (4 * (10 * W + 20) + 10))) +
           tmRiTabC hmem n M Ps.length W) := by
   set PV : Val := .list (Ps.map tmGlObjsVal) with hPV
   set c : Val := .list [.nat ℓ, encGroup σH, encGroup σA, PV] with hc
   set m := Ps.length with hm
-  set Cp := M * (T + tmRiYC (solvableCosetIntersectionPrim hsci) n M (4 * (10 * W + 20) + 10)) +
+  set Cp := M * (T' + tmRiYC (solvableCosetIntersectionPrim hsci) n M (4 * (10 * W + 20) + 10)) +
     tmRiPairC hmem n M (10 * W + 20) with hCp
   have hcw : c.wt < W := by
     have : c.wt < (Val.list [c, PV]).wt := wt_le_wt_list (by simp)
@@ -132,12 +101,18 @@ theorem tmRi_table_spec {P : Program} {b jsci jder jmem gObj : ℕ}
         have := hSw S hS
         have := hSw Tl hT
         omega
-      refine (tmRi_pair_spec hP ih hsol hHl hAl hNH hNn hA hfuel hℓ hSo hTo hNT hSl hTl
-        (hok.sub fun o ho => ?_) hox hW').mono fun w cw h => ⟨⟨Tl, hT, rfl, h.1⟩,
+      have hsub : ∀ o ∈ S ++ Tl, o ∈ Z := by
+        intro o ho
+        rcases List.mem_append.1 ho with ho | ho
+        · exact hZ S hS o ho
+        · exact hZ Tl hT o ho
+      refine (tmRi_pair_spec hP ih (fun o ho => hsol o (hsub o ho))
+        (hReb.imp id fun ⟨hIn, h1, h2, h3⟩ => ⟨fun o ho => hIn o (hsub o ho), h1, h2, h3⟩)
+        hHl hAl hNH hNn hA
+        (hfuel.imp id fun ⟨he, hP1⟩ => ⟨he, hP1 S hS, hP1 Tl hT⟩)
+        hℓ hSo hTo hNT hSl hTl
+        (hok.sub hsub) hox hW').mono fun w cw h => ⟨⟨Tl, hT, rfl, h.1⟩,
           tmRi_wt_ansC h.1, h.2⟩
-      rcases List.mem_append.1 ho with ho | ho
-      · exact hZ S hS o ho
-      · exact hZ Tl hT o ho
     have hmap := tmRi_mapU hP.mapPair (c := .list [c, tmGlObjsVal S]) hpair
     refine FunAll.intro hP.row (EvalAll.call_funAll (Det.mk2
       (Det.var' (P := P) (env := [.list [c, tmGlObjsVal S]]) (i := 0) rfl)
@@ -176,7 +151,7 @@ theorem tmRi_table_spec {P : Program} {b jsci jder jmem gObj : ℕ}
   simp only [hq1, hq2] at hcw'
   have e0 : (Val.list [c, Val.list (List.map tmGlObjsVal Ps)]).wt = (Val.list [c, PV]).wt := rfl
   have hY : m * (m * Cp + mapK * (m + 1) * (10 * W + 20 + m * (1400 * (n + 1) ^ 6 + 1) + 5) +
-      50 * W + 100 + m * (1400 * (n + 1) ^ 6 + 1)) = m * m * (M * (T + tmRiYC
+      50 * W + 100 + m * (1400 * (n + 1) ^ 6 + 1)) = m * m * (M * (T' + tmRiYC
         (solvableCosetIntersectionPrim hsci) n M (4 * (10 * W + 20) + 10))) +
       m * (m * tmRiPairC hmem n M (10 * W + 20) +
         mapK * (m + 1) * (10 * W + 20 + m * (1400 * (n + 1) ^ 6 + 1) + 5) + 50 * W + 100 +

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCertBound
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Impl.AggCertBound
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-!
 # The certificate phase: `AsCertOK`

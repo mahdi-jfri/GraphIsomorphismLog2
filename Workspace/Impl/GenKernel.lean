@@ -1,7 +1,11 @@
-import Workspace.Lang.Prims.Blocks
-import Workspace.Lang.Prims.Reduce
-import Workspace.Impl.Canon
-import Workspace.Impl.GenCosetsMath
+module
+
+public import Workspace.Lang.Prims.Blocks
+public import Workspace.Lang.Prims.Reduce
+public import Workspace.Impl.Canon
+public import Workspace.Impl.GenCosetsMath
+
+@[expose] public section
 
 /-!
 # The block kernel as a canonical group value

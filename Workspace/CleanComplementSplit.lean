@@ -1,5 +1,9 @@
-import Workspace.CleanCompletionCoordinates
-import Mathlib.GroupTheory.Complement
+module
+
+public import Workspace.CleanCompletionCoordinates
+public import Mathlib.GroupTheory.Complement
+
+@[expose] public section
 
 /-! A pure alternating subgroup contained in the supplied block group is an
 actual complement to the kernel of that supplied action. -/

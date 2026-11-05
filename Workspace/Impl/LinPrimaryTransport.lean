@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryInstance
+module
+
+public import Workspace.Impl.LinPrimaryInstance
+
+@[expose] public section
 
 /-! An executable transporter for one primary layer, starting from retained
 full affine records and using VectorStabilizer only at its parameter index. -/
@@ -68,22 +72,23 @@ set_option maxHeartbeats 2000000 in
 set_option maxRecDepth 7000 in
 theorem linPrimaryTransport_spec (h : VectorStabilizer) {P : Program} {b j n p d : ℕ}
     (hat : linPrimaryTransportAt P b j h) (gs : List (Equiv.Perm (Fin n)))
-    (hs : IsSolvable (gens gs)) (hp : p.Prime) (hpn : p ≤ n) [NeZero n]
+    (hp : p.Prime) (hpn : p ≤ n) [NeZero n]
     (ν : Fin d → ℕ) (level : ℕ)
     (ρ : gens gs →* (linFiniteVec (linPrimaryOrders p ν) ≃+ linFiniteVec (linPrimaryOrders p ν)))
+    (hs : IsSolvable ρ.range)
     (c : gens gs → linFiniteVec (linPrimaryOrders p ν))
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g)
     (hf : ∀ g, linPrimaryFiber p ν level (c g))
     (x : linFiniteVec (linPrimaryOrders p ν)) (w : Fin d → ZMod p) :
-    let I := linPrimaryLayerInst gs hs hp hpn ν level ρ x
+    let I := linPrimaryLayerInst gs hp hpn ν level ρ hs x
     let c' := fun g => linPrimaryCoord p ν level (c g)
-    let hc' := linPrimaryLayer_cocycle gs hs hp hpn ν level ρ c hc hf x
+    let hc' := linPrimaryLayer_cocycle gs hp hpn ν level ρ hs c hc hf x
     let a := Val.list [linPrimaryInputVal gs ν level ρ c x, encVec w]
     FunAll P b a (fun out cost => linAffineTransportOut I c' hc' w out ∧
       cost ≤ linPrimaryTransportCost h a.wt level) := by
-  let I := linPrimaryLayerInst gs hs hp hpn ν level ρ x
+  let I := linPrimaryLayerInst gs hp hpn ν level ρ hs x
   let c' := fun g => linPrimaryCoord p ν level (c g)
-  let hc' := linPrimaryLayer_cocycle gs hs hp hpn ν level ρ c hc hf x
+  let hc' := linPrimaryLayer_cocycle gs hp hpn ν level ρ hs c hc hf x
   let input := linPrimaryInputVal gs ν level ρ c x
   let a := Val.list [input, encVec w]
   let W := a.wt
@@ -92,7 +97,7 @@ theorem linPrimaryTransport_spec (h : VectorStabilizer) {P : Program} {b j n p d
   letI : NeZero I.n := inferInstanceAs (NeZero n)
   have wi : input.wt < W := wt_le_wt_list (by simp [W, a])
   have ww : (encVec w).wt < W := wt_le_wt_list (by simp [W, a])
-  have hd := (linPrimaryInput_layer_spec hat.input gs hs hp hpn ν level ρ c x).mono
+  have hd := (linPrimaryInput_layer_spec hat.input gs hp hpn ν level ρ hs c x).mono
     (linPrimaryInputCost_mono wi.le le_rfl)
   change FunDet P (b + 1) input data (linPrimaryTransportInputBudget W level) at hd
   have wd := hd.wt_lt.le

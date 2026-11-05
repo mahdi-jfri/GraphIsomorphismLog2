@@ -1,4 +1,8 @@
-import Workspace.Impl.GenNormStep
+module
+
+public import Workspace.Impl.GenNormStep
+
+@[expose] public section
 
 /-! # The recursive induction hypothesis applies to the computed children -/
 namespace GI.Impl

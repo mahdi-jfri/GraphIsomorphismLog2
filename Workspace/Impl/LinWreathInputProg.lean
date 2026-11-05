@@ -1,14 +1,18 @@
-import Workspace.Impl.LinWreathPerm
-import Workspace.Impl.LinWreathTaskData
-import Workspace.Lang.Prims.Ops
+module
+
+public import Workspace.Impl.LinWreathPerm
+public import Workspace.Impl.LinWreathTaskData
+public import Workspace.Lang.Prims.Ops
+
+@[expose] public section
 
 /-! Build the complete input of the two-copy vector task. -/
 namespace GI.Impl
 open GI.Cited GI.Lang
 
-private def linWreathSource (i : ℕ) : Expr := .get (arg 0) (.nat i)
-private def linWreathSourceN : Expr := .get (linWreathSource 0) (.nat 0)
-private def linWreathSourcePerms : Expr := .get (linWreathSource 0) (.nat 1)
+def linWreathSource (i : ℕ) : Expr := .get (arg 0) (.nat i)
+def linWreathSourceN : Expr := .get (linWreathSource 0) (.nat 0)
+def linWreathSourcePerms : Expr := .get (linWreathSource 0) (.nat 1)
 
 def linWreathInputF (tail perms group matrices append : ℕ) : Expr :=
   .letE (.call tail linWreathSourcePerms)

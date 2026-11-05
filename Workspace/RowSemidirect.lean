@@ -1,5 +1,9 @@
-import Workspace.RowQuotients
-import Mathlib.GroupTheory.SemidirectProduct
+module
+
+public import Workspace.RowQuotients
+public import Mathlib.GroupTheory.SemidirectProduct
+
+@[expose] public section
 
 /-! The group with a pure alternating row action and its diagonal quotient. -/
 namespace GI

@@ -1,4 +1,8 @@
-import Workspace.SplitSubdirect
+module
+
+public import Workspace.SplitSubdirect
+
+@[expose] public section
 
 namespace GI.PrimitiveProducts
 
@@ -55,10 +59,3 @@ theorem tailImage_noFull_of_unique_first (H : Subgroup (Fin (n + 1) → S))
   exact Fin.succ_ne_zero i (onlyZero i.succ hs)
 
 end GI.PrimitiveProducts
-
-#print axioms GI.PrimitiveProducts.mem_of_full_first
-#print axioms GI.PrimitiveProducts.fullFactorProductEquiv
-#print axioms GI.PrimitiveProducts.card_full_first
-#print axioms GI.PrimitiveProducts.splitImage_full_first
-#print axioms GI.PrimitiveProducts.card_eq_mul_tailImage
-#print axioms GI.PrimitiveProducts.tailImage_noFull_of_unique_first

@@ -1,10 +1,14 @@
-import Workspace.CitedChecks.AlgoTotality
+module
+
+public import Workspace.CitedChecks.AlgoTotality
+
+@[expose] public section
 
 /-!
 # The encodings determine the instances
 
 A program reads only the encoding `enc x` of an instance `x`. If two instances had the same
-encoding but no common correct output, no program could solve the task, and the axiom
+encoding but no common correct output, no program could solve the task, and the statement
 `∃ p, PolyTimeAt t p` would be false. This file checks, for the tasks that the implementation
 uses, that the encoding determines the instance (up to its proof fields, which are equal by
 proof irrelevance). Then the correct outputs of the two instances are the same. Nothing here is

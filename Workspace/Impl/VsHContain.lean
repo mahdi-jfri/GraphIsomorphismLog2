@@ -1,4 +1,8 @@
-import Workspace.Impl.VsPFin
+module
+
+public import Workspace.Impl.VsPFin
+
+@[expose] public section
 
 namespace GI.Impl
 

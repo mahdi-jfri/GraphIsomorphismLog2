@@ -1,4 +1,8 @@
-import Workspace.ActiveLocalization
+module
+
+public import Workspace.ActiveLocalization
+
+@[expose] public section
 
 namespace GI
 

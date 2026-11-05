@@ -1,6 +1,10 @@
-import Workspace.Proved.VsQLoc
-import Workspace.Impl.VsBAct
-import Workspace.Impl.VsQSot
+module
+
+public import Workspace.Proved.VsQLoc
+public import Workspace.Impl.VsBAct
+public import Workspace.Impl.VsQSot
+
+@[expose] public section
 
 /-!
 # The affine action of a state on local coordinates

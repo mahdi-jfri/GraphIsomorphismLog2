@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectBasisEval
-import Workspace.Impl.LinMapEncoded
+module
+
+public import Workspace.Impl.LinObjectBasisEval
+public import Workspace.Impl.LinMapEncoded
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset

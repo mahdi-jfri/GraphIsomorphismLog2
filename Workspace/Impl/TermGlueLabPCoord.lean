@@ -1,6 +1,10 @@
-import Workspace.Impl.TermGlueLabQStack
-import Workspace.Impl.LinPresentationKernel
-import Workspace.Impl.LinElementMap
+module
+
+public import Workspace.Impl.TermGlueLabQStack
+public import Workspace.Impl.LinPresentationKernel
+public import Workspace.Impl.LinElementMap
+
+@[expose] public section
 
 /-!
 # Finite abelian coordinates of the label group `A/B(x)`

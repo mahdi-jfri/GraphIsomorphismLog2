@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojStepNext
+module
+
+public import Workspace.Impl.AggItemCiSojStepNext
+
+@[expose] public section
 
 /-! # The complete actual first-rectangle step program -/
 

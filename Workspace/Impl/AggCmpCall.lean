@@ -1,6 +1,10 @@
-import Workspace.Impl.AggCmpHand
-import Workspace.Impl.AggCertPos
-import Workspace.Impl.ScriptCmp
+module
+
+public import Workspace.Impl.AggCmpHand
+public import Workspace.Impl.AggCertPos
+public import Workspace.Impl.ScriptCmp
+
+@[expose] public section
 
 /-!
 # One call of the comparison phase

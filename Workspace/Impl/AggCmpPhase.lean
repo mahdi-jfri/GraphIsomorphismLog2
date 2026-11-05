@@ -1,7 +1,11 @@
-import Workspace.Impl.AggCmpHand
-import Workspace.Impl.AggCmpCall
-import Workspace.Impl.AggCmpWalk
-import Workspace.Impl.AggCertLoop
+module
+
+public import Workspace.Impl.AggCmpHand
+public import Workspace.Impl.AggCmpCall
+public import Workspace.Impl.AggCmpWalk
+public import Workspace.Impl.AggCertLoop
+
+@[expose] public section
 
 /-!
 # The comparison phase, from a move function, and the hand-over to the items

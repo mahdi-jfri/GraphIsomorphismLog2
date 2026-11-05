@@ -1,9 +1,13 @@
-import Workspace.TowerRank
-import Mathlib.GroupTheory.Index
-import Mathlib.GroupTheory.QuotientGroup.Basic
-import Mathlib.GroupTheory.GroupAction.Quotient
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Group
+module
+
+public import Workspace.TowerRank
+public import Mathlib.GroupTheory.Index
+public import Mathlib.GroupTheory.QuotientGroup.Basic
+public import Mathlib.GroupTheory.GroupAction.Quotient
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Group
+
+@[expose] public section
 
 /-! Group theory used in the proof of Lemma A.14 (`lem:normal-transpose`).
 

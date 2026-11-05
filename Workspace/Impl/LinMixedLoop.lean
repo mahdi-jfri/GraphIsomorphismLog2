@@ -1,6 +1,10 @@
-import Workspace.Impl.LinPrimePassSpec
-import Workspace.Impl.LinPrimeTestSpec
-import Workspace.Impl.LinMixedInvariant
+module
+
+public import Workspace.Impl.LinPrimePassSpec
+public import Workspace.Impl.LinPrimeTestSpec
+public import Workspace.Impl.LinMixedInvariant
+
+@[expose] public section
 
 /-! Process the prime characteristics up to the explicit cover degree. Every
 successful pass returns a full mixed-order context for the next pass. -/

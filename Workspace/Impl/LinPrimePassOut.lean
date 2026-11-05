@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimePass
-import Workspace.Impl.LinPrimeEval
+module
+
+public import Workspace.Impl.LinPrimePass
+public import Workspace.Impl.LinPrimeEval
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

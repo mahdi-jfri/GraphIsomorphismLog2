@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojFinalNone
+module
+
+public import Workspace.Impl.AggItemCiSojFinalNone
+
+@[expose] public section
 
 /-! # Reading the surviving typed rows with the actual list programs -/
 

@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQTopM
+module
+
+public import Workspace.Impl.VsQTopM
+
+@[expose] public section
 
 /-!
 # The entry
@@ -67,7 +71,6 @@ theorem vsQFact_take (n i : ℕ) (hi : i ≤ n) :
     rw [List.getElem?_eq_getElem hi']
     simp [vsQFactG, Nat.factorial_succ, mul_comm]
 
-set_option maxHeartbeats 4000000 in
 /-- **The factorial.** On `[0, range n, 1]` the fold returns `n!`. -/
 theorem vsQFact_spec {P : Program} {fold st : ℕ} (hfold : P.HasAt fold (foldlFuns fold st))
     (hst : P.funs[st]? = some vsQFactStepE) (n : ℕ) :
@@ -97,6 +100,7 @@ theorem vsQFact_spec {P : Program} {fold st : ℕ} (hfold : P.HasAt fold (foldlF
       rw [e]
       refine d.mono ?_
       have hin : i < n := by simpa using hi
+      clear a1 a2 d hfold hst hfin hi hx e
       have w1 := vsQ_wt_fact i
       have w2 := wt_nat_le i
       have w3 := wt_nat_le 0
@@ -112,10 +116,10 @@ theorem vsQFact_spec {P : Program} {fold st : ℕ} (hfold : P.HasAt fold (foldlF
       have q1 : i ^ 2 ≤ (n + 1) ^ 2 := Nat.pow_le_pow_left (by omega) 2
       have q2 : (i + 1) ^ 2 ≤ (n + 1) ^ 2 := Nat.pow_le_pow_left (by omega) 2
       have q3 : n + 1 ≤ (n + 1) ^ 2 := Nat.le_self_pow (by norm_num) _
-
       beta_reduce
       omega)
   refine hsp.mono ?_ |> fun h => by rw [hfin] at h; exact h
+  clear hsp hfold hst hfin
   simp only [Finset.sum_const, Finset.card_range, smul_eq_mul, List.length_map, List.length_range]
   have wr : (natList (List.range n)).wt ≤ 5 * (n + 1) ^ 2 :=
     wt_natList_le_sq (fun y hy => by simp at hy; omega) (by simp)
@@ -143,7 +147,6 @@ def vsQTblItE (tr : ℕ) : Expr :=
   mk4 (.get (arg 0) (.nat 0)) (.get (arg 0) (.nat 1)) (.get (arg 0) (.nat 2))
     (.call tr (mk2 (arg 1) (.get (arg 0) (.nat 3))))
 
-set_option maxHeartbeats 4000000 in
 theorem vsQTblIt_spec {P : Program} {it tr : ℕ} (hit : P.funs[it]? = some (vsQTblItE tr))
     (htr : P.HasAt tr (vsQTrFuns tr)) {N E : ℕ} (hpN : I.p ≤ N) (hdN : I.d ≤ N) (hE : (Val.nat E).wt ≤ N)
     (M : Matrix (Fin I.d) (Fin I.d) (ZMod I.p)) :
@@ -166,6 +169,7 @@ theorem vsQTblIt_spec {P : Program} {it tr : ℕ} (hit : P.funs[it]? = some (vsQ
   rw [vsQL_tr] at dtr
   have dout := Det.mk4 c0 c1 c2 dtr
   refine FunDet.intro hit (dout.mono ?_)
+  clear g0 g1 c0 c1 c2 c3 dtr dout hit htr
   have wz : (natList (List.replicate I.d 0)).wt ≤ 5 * (N + 1) ^ 2 :=
     wt_natList_le_sq (fun y hy => by simp at hy; omega) (by simp; omega)
   have wM : (Val.list ((vsQL M).map natList)).wt ≤ 11 * (N + 1) ^ 3 + 4 := wt_vsFSq_le hpN hdN (vsQL_sq M)
@@ -238,7 +242,8 @@ theorem vsQ_in_sizes (I : VecStabInst) :
   simp only [List.length_map, List.length_finRange, List.length_cons] at h4 h6 h7
   omega
 
-set_option maxHeartbeats 16000000 in
+private theorem spd_vsQTop_nt {X : ℕ} (hX2 : 2 ≤ X) : X ^ 2 + X + 3 + 1 ≤ 2 * (X + 1) ^ 2 := by nlinarith
+
 /-- **The entry.** -/
 theorem vsQTop_spec {P : Program} {f rng fold st idp rep tbm it tr red jm drv tl : ℕ} {hm : Membership}
     (hf : P.funs[f]? = some (vsQTopE rng fold idp rep tbm red drv tl))
@@ -354,6 +359,7 @@ theorem vsQTop_spec {P : Program} {f rng fold st idp rep tbm it tr red jm drv tl
   obtain ⟨rfl, hc5⟩ := hv5
   refine EvalAll.letE dred fun v6 c6 hv6 => ?_
   obtain ⟨rfl, hc6⟩ := hv6
+  clear dd dn hr dfold dE dId hz dz htbl dctx dtbl dred E2 E3 E4 E5
   -- 7. the driver
   have hs0 := vsQ0_ok (I := I)
   obtain ⟨CS, hCS, dS'⟩ : ∃ CS, CS = _ ∧ Det P E6 _ (vsQStV I (vsQ0 I)) CS := ⟨_, rfl, dS⟩
@@ -364,6 +370,8 @@ theorem vsQTop_spec {P : Program} {f rng fold st idp rep tbm it tr red jm drv tl
   · obtain ⟨rfl, hca⟩ := hv
     refine (hDrv (vsQ0 I) hs0).wt_lt.mono fun w cc hw => ?_
     obtain ⟨⟨a, rfl, ha, hc⟩, hwc⟩ := hw
+    clear a0 a1 a2 a3 dG dS dS'
+    clear_value EG ML MV EV A E Z NT TB HS E6
     exact ⟨⟨a, rfl, ha⟩, by omega, by omega⟩
   obtain ⟨⟨a, rfl, ha⟩, hc7, hw7⟩ := hv7
   -- the answer is not empty
@@ -381,6 +389,7 @@ theorem vsQTop_spec {P : Program} {f rng fold st idp rep tbm it tr red jm drv tl
   refine Det.post dout fun c hc => ⟨⟨ks, rfl, hksl, ?_⟩, ?_⟩
   · rw [hks]; exact vsQ0_stab
   · -- the cost
+    clear a0 a1 a2 a3 dG dS dS' d72 d72' d721 dout hf hrng hfold hst hidp hrep htbm hit htr hred hjm htl hDrv E6 E7
     have hXA : A.wt = X := hX.symm
     have q1 : 1 ≤ (X + 1) ^ 2 := Nat.one_le_pow _ _ (by omega)
     have pw : ∀ i j, i ≤ j → (X + 1) ^ i ≤ (X + 1) ^ j := fun i j h => Nat.pow_le_pow_right (by omega) h
@@ -398,13 +407,7 @@ theorem vsQTop_spec {P : Program} {f rng fold st idp rep tbm it tr red jm drv tl
         (by omega), by rw [(vsWId_fit I.prime.one_lt I.d u hu).2]; exact hdX⟩) (by simp [vsWId]; omega)
     have wZ : Z.wt ≤ 5 * (X + 1) ^ 2 := wt_natList_le_sq (fun y hy => by simp at hy; omega) (by simp; omega)
     have hX2 : 2 ≤ X := by have := I.prime.two_le; omega
-    have hNT : NT + 1 ≤ 2 * (X + 1) ^ 2 := by simp only [NT]; nlinarith
-    have hNT3 : (NT + 1) ^ 3 ≤ 8 * (X + 1) ^ 6 := by
-      calc (NT + 1) ^ 3 ≤ (2 * (X + 1) ^ 2) ^ 3 := Nat.pow_le_pow_left hNT 3
-        _ = 8 * (X + 1) ^ 6 := by ring
-    have hNT5 : (NT + 1) ^ 5 ≤ 32 * (X + 1) ^ 10 := by
-      calc (NT + 1) ^ 5 ≤ (2 * (X + 1) ^ 2) ^ 5 := Nat.pow_le_pow_left hNT 5
-        _ = 32 * (X + 1) ^ 10 := by ring
+    have hNT : NT + 1 ≤ 2 * (X + 1) ^ 2 := spd_vsQTop_nt hX2
     have hML : ML.length = I.gs.length := by simp [ML]
     -- the table and the context
     have wE1 : ∀ M : Matrix (Fin I.d) (Fin I.d) (ZMod I.p), (vsQE I.p I.d E M).wt ≤ 100 * (X + 1) ^ 6 := by
@@ -415,6 +418,7 @@ theorem vsQTop_spec {P : Program} {f rng fold st idp rep tbm it tr red jm drv tl
       have eE : (vsQE I.p I.d E M).wt = (Val.list [.nat I.p, Z, .nat E,
         .list ((vsQL Mᵀ).map natList)]).wt := rfl
       have := pw 3 6 (by omega); have := pw 2 6 (by omega)
+      clear_value X EG ML MV EV A E Z NT TB HS BD
       omega
     have wTB : TB.wt ≤ 300 * (X + 1) ^ 7 := by
       have h1 := vs_wt_list_le_of (ML.map (vsQE I.p I.d E)) (c := 100 * (X + 1) ^ 6) (by
@@ -425,6 +429,7 @@ theorem vsQTop_spec {P : Program} {f rng fold st idp rep tbm it tr red jm drv tl
       have eTB' : TB.wt = (Val.list (ML.map (vsQE I.p I.d E))).wt := rfl
       have h2 : I.gs.length * (2 * (100 * (X + 1) ^ 6) + 1) ≤ (X + 1) * (201 * (X + 1) ^ 6) :=
         Nat.mul_le_mul (by omega) (by have := pw 0 6 (by omega); simp at this; omega)
+      clear_value X EG ML MV EV A E Z NT TB HS BD
       have e : (X + 1) * (201 * (X + 1) ^ 6) = 201 * (X + 1) ^ 7 := by ring
       have := pw 0 7 (by omega); simp at this
       omega
@@ -433,6 +438,7 @@ theorem vsQTop_spec {P : Program} {f rng fold st idp rep tbm it tr red jm drv tl
       have e : (vsQGam I).wt = (Val.list [EG, TB, vsQE I.p I.d E 1]).wt := by rw [eTB]; rfl
       have hEG : EG.wt < A.wt := wt_le_wt_list (by simp [A])
       have := wE1 1; have := pw 6 7 (by omega); have : X + 1 ≤ (X + 1) ^ 7 := Nat.le_self_pow (by norm_num) _
+      clear_value X EG ML MV EV A E Z NT TB HS BD
       omega
     have wHS : HS.wt ≤ 320 * (X + 1) ^ 6 :=
       (wt_encGroup_le_sq (length_keepList_le _)).trans (Nat.mul_le_mul_left _ (Nat.pow_le_pow_left (by omega) 6))
@@ -443,6 +449,30 @@ theorem vsQTop_spec {P : Program} {f rng fold st idp rep tbm it tr red jm drv tl
     have hEGA : EG.wt < A.wt := wt_le_wt_list (by simp [A])
     have hMVA : MV.wt < A.wt := wt_le_wt_list (by simp [A])
     have hEVA : EV.wt < A.wt := wt_le_wt_list (by simp [A])
+    have hBD : BD ≤ cD * (X + 1) ^ K := by
+      have hD1 : 1 ≤ max (vsQ0 I).dim 1 := le_max_right _ _
+      have e1 : BD = vsQBd cD K (max (vsQ0 I).dim 1) (vsQ0 I).Ab := by
+        simp only [BD, vsQBd, max_eq_left hD1]
+      rw [e1]
+      refine (vsQBd_le_Fn _ hD1 hK).trans ?_
+      unfold vsQFn
+      refine Nat.mul_le_mul_left _ (Nat.pow_le_pow_left ?_ K)
+      have := vsQD_le hs0
+      have := vsQD_eq hs0
+      omega
+    have hE2 : (Val.nat (GI.Machine.BinOp.eval .sub I.n.factorial 2)).wt ≤ NT := hEw
+    have eMV : (Val.list (List.map encModMatrix ML)).wt = MV.wt := rfl
+    have eMV2 : (Val.list [Val.list [Val.nat I.p, Z, Val.nat E, Val.nat I.d], Val.list (List.map encModMatrix ML)]).wt =
+      (Val.list [Val.list [Val.nat I.p, Z, Val.nat E, Val.nat I.d], MV]).wt := rfl
+    have eS' : (vsQStV I (vsQ0 I)).wt = (Val.list ([vsQGam I, HS, Val.list [], vsWVs (vsWId I.d)] ++ [EV] ++ [EV])).wt := by
+      rw [← eS]
+    clear_value X EG ML MV EV A E Z NT TB HS BD
+    have hNT3 : (NT + 1) ^ 3 ≤ 8 * (X + 1) ^ 6 := by
+      calc (NT + 1) ^ 3 ≤ (2 * (X + 1) ^ 2) ^ 3 := Nat.pow_le_pow_left hNT 3
+        _ = 8 * (X + 1) ^ 6 := by ring
+    have hNT5 : (NT + 1) ^ 5 ≤ 32 * (X + 1) ^ 10 := by
+      calc (NT + 1) ^ 5 ≤ (2 * (X + 1) ^ 2) ^ 5 := Nat.pow_le_pow_left hNT 5
+        _ = 32 * (X + 1) ^ 10 := by ring
     have mk : mapK = 1000 := rfl
     have mk2 : loopModK = 1000 := rfl
     have t1 : c1 ≤ 10 * X + 20 := by omega
@@ -453,8 +483,6 @@ theorem vsQTop_spec {P : Program} {f rng fold st idp rep tbm it tr red jm drv tl
         Nat.mul_le_mul (Nat.mul_le_mul (le_refl _) (by omega)) (by omega)
       have e1 : 1000 * (X + 1) * (20 * (X + 1) ^ 2) = 2 * 10 ^ 4 * (X + 1) ^ 3 := by ring
       have := pw 2 4 (by omega); have := pw 3 4 (by omega)
-      have hE2 : (Val.nat (GI.Machine.BinOp.eval .sub I.n.factorial 2)).wt ≤ NT := hEw
-      clear_value EG MV EV A E Z TB HS NT
       omega
     have t3 : c3 ≤ 3 * 10 ^ 8 * (X + 1) ^ 4 := by
       have := pw 3 4 (by omega); have := pw 2 4 (by omega)
@@ -470,9 +498,6 @@ theorem vsQTop_spec {P : Program} {f rng fold st idp rep tbm it tr red jm drv tl
     have t5 : c5 ≤ 10 ^ 10 * (X + 1) ^ 12 := by
       have l4 := wt_list4_le (.nat I.p) Z (.nat E) (.nat I.d)
       have l2 := wt_list2_le (.list [.nat I.p, Z, .nat E, .nat I.d]) MV
-      have eMV : (Val.list (List.map encModMatrix ML)).wt = MV.wt := rfl
-      have eMV2 : (Val.list [Val.list [Val.nat I.p, Z, Val.nat E, Val.nat I.d], Val.list (List.map encModMatrix ML)]).wt =
-        (Val.list [Val.list [Val.nat I.p, Z, Val.nat E, Val.nat I.d], MV]).wt := rfl
       have h1 : ML.length * (10 ^ 7 * (NT + 1) ^ 5) ≤ (X + 1) * (10 ^ 7 * (32 * (X + 1) ^ 10)) :=
         Nat.mul_le_mul (by omega) (Nat.mul_le_mul_left _ hNT5)
       have e1 : (X + 1) * (10 ^ 7 * (32 * (X + 1) ^ 10)) = 32 * 10 ^ 7 * (X + 1) ^ 11 := by ring
@@ -480,14 +505,12 @@ theorem vsQTop_spec {P : Program} {f rng fold st idp rep tbm it tr red jm drv tl
           Val.list (List.map encModMatrix ML)]).wt + TB.wt + 1) ≤ 1000 * (X + 1) * (10 ^ 4 * (X + 1) ^ 7) :=
         Nat.mul_le_mul (Nat.mul_le_mul (le_refl _) (by omega)) (by
           have q27 := pw 2 7 (by omega); have q17 : X + 1 ≤ (X + 1) ^ 7 := Nat.le_self_pow (by norm_num) _
-          clear_value EG MV EV A E Z TB HS NT
           clear * - l4 l2 eMV eMV2 wp wd wZ hEw hNT hpX hdX hMVA hXA wTB q27 q17
           omega)
       have e2 : 1000 * (X + 1) * (10 ^ 4 * (X + 1) ^ 7) = 10 ^ 7 * (X + 1) ^ 8 := by ring
       have := pw 11 12 (by omega); have := pw 8 12 (by omega); have := pw 7 12 (by omega)
       have := pw 2 12 (by omega)
       have : X + 1 ≤ (X + 1) ^ 12 := Nat.le_self_pow (by norm_num) _
-      clear_value EG MV EV A E Z TB HS NT
       omega
     have t6 : c6 ≤ 2 * X + reduceCost hm X X + 320 * (X + 1) ^ 6 + 6 := by
       have h1 := reduceCost_mono hm I.n (show I.gs.length ≤ X from hgX)
@@ -502,22 +525,8 @@ theorem vsQTop_spec {P : Program} {f rng fold st idp rep tbm it tr red jm drv tl
       simp only [List.map_append, List.map_cons, List.map_nil, List.sum_append, List.sum_cons, List.sum_nil,
         List.length_append, List.length_cons, List.length_nil] at l5 l6
       have w0 : (Val.list []).wt ≤ 10 := (wt_list_le []).trans (by simp)
-      have eS' : (vsQStV I (vsQ0 I)).wt = (Val.list ([vsQGam I, HS, Val.list [], vsWVs (vsWId I.d)] ++ [EV] ++ [EV])).wt := by
-        rw [← eS]
       have q67 := pw 6 7 (by omega); have q37 := pw 3 7 (by omega); have q27 := pw 2 7 (by omega)
       have : X + 1 ≤ (X + 1) ^ 7 := Nat.le_self_pow (by norm_num) _
-      clear_value EG MV EV A E Z TB HS NT
-      omega
-    have hBD : BD ≤ cD * (X + 1) ^ K := by
-      have hD1 : 1 ≤ max (vsQ0 I).dim 1 := le_max_right _ _
-      have e1 : BD = vsQBd cD K (max (vsQ0 I).dim 1) (vsQ0 I).Ab := by
-        simp only [BD, vsQBd, max_eq_left hD1]
-      rw [e1]
-      refine (vsQBd_le_Fn _ hD1 hK).trans ?_
-      unfold vsQFn
-      refine Nat.mul_le_mul_left _ (Nat.pow_le_pow_left ?_ K)
-      have := vsQD_le hs0
-      have := vsQD_eq hs0
       omega
     have hEk : (Val.list (encPerm (1 : Perm (Fin I.n)) :: List.map encPerm ks)).wt < (encGroup ks).wt :=
       wt_le_wt_list (show Val.list (encPerm (1 : Perm (Fin I.n)) :: List.map encPerm ks) ∈
@@ -544,7 +553,6 @@ theorem vsQTop_spec {P : Program} {f rng fold st idp rep tbm it tr red jm drv tl
     have := pw 6 12 (by omega)
     have : X + 1 ≤ (X + 1) ^ 12 := Nat.le_self_pow (by norm_num) _
     have hBD2 : 2 * BD ≤ 2 * cD * (X + 1) ^ K := by rw [mul_assoc]; omega
-    clear_value EG MV EV A E Z TB HS NT BD
     omega
 
 end GI.Impl

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggPT
-import Workspace.Impl.AggMTProg
+module
+
+public import Workspace.Impl.AggPT
+public import Workspace.Impl.AggMTProg
+
+@[expose] public section
 
 /-!
 # `P_T` in graph form, in `GI.Lang`

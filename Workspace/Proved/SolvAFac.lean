@@ -1,8 +1,12 @@
-import Workspace.CompositionFactors
-import Workspace.RadicalSocleHomogeneous
-import Workspace.RadicalSocleQuotient
-import Mathlib.GroupTheory.Sylow
-import Mathlib.GroupTheory.Nilpotent
+module
+
+public import Workspace.CompositionFactors
+public import Workspace.RadicalSocleHomogeneous
+public import Workspace.RadicalSocleQuotient
+public import Mathlib.GroupTheory.Sylow
+public import Mathlib.GroupTheory.Nilpotent
+
+@[expose] public section
 
 /-!
 # `a(X)` is at most the order of a solvable subgroup
@@ -113,8 +117,9 @@ theorem solvAFac_le_solvable_aux : ∀ (n : ℕ) (X : Type u) [Group X] [Finite 
       exact lt_mul_left h3 h2
     obtain ⟨T, hTs, hT⟩ := ih _ hlt (X ⧸ N) rfl
     refine ⟨T.comap (QuotientGroup.mk' N), ?_, ?_⟩
-    · haveI : IsSolvable (QuotientGroup.mk' N).ker := by
+    · haveI : Group.IsSolvable (QuotientGroup.mk' N).ker := by
         rw [QuotientGroup.ker_mk']; exact hNs
+      haveI : Group.IsSolvable T := hTs
       exact solvable_preimage (QuotientGroup.mk' N) T
     · rw [solvAFac_card_comap_mk, aFac_mul N]
       exact Nat.mul_le_mul aFac_le_card hT
@@ -123,7 +128,7 @@ theorem solvAFac_le_solvable_aux : ∀ (n : ℕ) (X : Type u) [Group X] [Finite 
     have radicalFree : ∀ N : Subgroup X, N.Normal → IsSolvable N → N = ⊥ :=
       fun N h1 h2 => hrad N h1 h2
     by_cases htriv : (⊤ : Subgroup X) = ⊥
-    · refine ⟨⊥, inferInstance, ?_⟩
+    · refine ⟨⊥, (inferInstance : Group.IsSolvable (⊥ : Subgroup X)), ?_⟩
       have hs : Subsingleton X := by
         rw [← Subgroup.subsingleton_iff]
         exact subsingleton_of_bot_eq_top htriv.symm
@@ -150,7 +155,7 @@ theorem solvAFac_le_solvable_aux : ∀ (n : ℕ) (X : Type u) [Group X] [Finite 
         exact P.ne_bot_of_dvd_card hpd
           ((Subgroup.map_eq_bot_iff_of_injective _ N.subtype_injective).mp hb)
       have hP'eq : P' = N := (hN.2.2 P' inferInstance hP'N).resolve_left hP'b
-      have hPs : IsSolvable (P : Subgroup N) := by
+      haveI : Group.IsSolvable (P : Subgroup N) := by
         haveI := P.isPGroup'.isNilpotent
         infer_instance
       have hP's : IsSolvable P' :=
@@ -162,7 +167,8 @@ theorem solvAFac_le_solvable_aux : ∀ (n : ℕ) (X : Type u) [Group X] [Finite 
       exact solvAFac_card_lt hY
     obtain ⟨S, hSs, hS⟩ := ih _ hlt Y rfl
     refine ⟨S.map Y.subtype, ?_, ?_⟩
-    · exact solvable_of_surjective (f := (S.equivMapOfInjective Y.subtype
+    · haveI : Group.IsSolvable S := hSs
+      exact solvable_of_surjective (f := (S.equivMapOfInjective Y.subtype
         Y.subtype_injective).toMonoidHom) (MulEquiv.surjective _)
     · rw [Subgroup.card_map_of_injective Y.subtype_injective, aFac_mul N, hNa, one_mul]
       exact (solvAFac_quotient_le_of_sup Y hsup).trans hS

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemStepSpec
-import Workspace.Impl.AggRectSpec
+module
+
+public import Workspace.Impl.AggItemStepSpec
+public import Workspace.Impl.AggRectSpec
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3: the contracts of the two stages

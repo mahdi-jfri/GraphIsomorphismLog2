@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertMvInd
+module
+
+public import Workspace.Impl.AggCertMvInd
+
+@[expose] public section
 
 /-!
 # The move program: the end of a round

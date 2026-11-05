@@ -1,7 +1,11 @@
-import Workspace.Impl.AggCertHand
-import Workspace.Impl.AggSubProg
-import Workspace.Impl.RowProg
-import Workspace.Impl.DomRestrict
+module
+
+public import Workspace.Impl.AggCertHand
+public import Workspace.Impl.AggSubProg
+public import Workspace.Impl.RowProg
+public import Workspace.Impl.DomRestrict
+
+@[expose] public section
 
 /-!
 # The reading of the aggregation round, as a program

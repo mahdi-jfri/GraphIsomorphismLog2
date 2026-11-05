@@ -1,10 +1,14 @@
-import Workspace.Impl.TermGlueLabNDef
-import Workspace.Impl.TermGlueLabPLiftS
-import Workspace.Impl.TermGlueLabPXLab
-import Workspace.Impl.TermGlueLabPYLab
-import Workspace.Impl.TermGlueLabPSup
-import Workspace.Impl.TermGlueLabPTop
-import Workspace.Impl.TermGlueLabPBs
+module
+
+public import Workspace.Impl.TermGlueLabNDef
+public import Workspace.Impl.TermGlueLabPLiftS
+public import Workspace.Impl.TermGlueLabPXLab
+public import Workspace.Impl.TermGlueLabPYLab
+public import Workspace.Impl.TermGlueLabPSup
+public import Workspace.Impl.TermGlueLabPTop
+public import Workspace.Impl.TermGlueLabPBs
+
+@[expose] public section
 
 /-!
 # The driver of the label program: the program and the contracts of its callees
@@ -142,7 +146,9 @@ def TmGLNSupOK (P : Program) (sup : ℕ) (F : ℕ → ℕ) : Prop :=
     ∀ B : ℕ, (Val.list [encGroup σN, .list [encPerm τ, encGroup U]]).wt ≤ B →
     FunAll P sup (.list [encGroup σN, .list [encPerm τ, encGroup U]]) (fun u c =>
       ∃ S : Subgroup (Perm (Fin n)), GensOf S u ∧
-        S ≤ gens (U.map fun x => τ * x * τ⁻¹) ∧ IsSolvable S ∧
+        S ≤ gens (U.map fun x => τ * x * τ⁻¹) ∧
+        (∃ _ : ((gens σN).subgroupOf S).Normal,
+          Group.IsSolvable (S ⧸ (gens σN).subgroupOf S)) ∧
         S ⊔ gens σN = gens (U.map fun x => τ * x * τ⁻¹) ∧ c ≤ F B)
 
 /-! ### Contracts of the callees in progress -/
@@ -183,10 +189,9 @@ def TmGLNS5OK (P : Program) (s5 : ℕ) (F : ℕ → ℕ) : Prop :=
     Subgroup.closure {p | p ∈ ps'} =
       (tmGLPχ e E hnat (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).e_label ⟨0, by omega⟩).range →
     gs.length ≤ m ^ 2 →
-    gens gs ⊔ gens σN = Aut (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).Hb
+    gens gs ≤ Aut (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).Hb
       (types (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).Nb
-        (rowTuple (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).e S.x)) ⊓
-      tmRad (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα) →
+        (rowTuple (tmGLSI Pp hnat hq h0 E hP htr hcard hsN hN hqα).e S.x)) →
     ∀ B : ℕ, (tmGLPStep5In σS σN bs vs L.q xl (.list [liftLabCtx k m ps', coordsVal e S E])
       gs).wt ≤ B →
     FunAll P s5 (tmGLPStep5In σS σN bs vs L.q xl (.list [liftLabCtx k m ps', coordsVal e S E]) gs)

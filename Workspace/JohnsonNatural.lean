@@ -1,5 +1,9 @@
-import Workspace.JohnsonOrbits
-import Workspace.JohnsonEntropy
+module
+
+public import Workspace.JohnsonOrbits
+public import Workspace.JohnsonEntropy
+
+@[expose] public section
 
 namespace GI.Johnson
 

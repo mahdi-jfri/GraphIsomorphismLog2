@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQTActP
+module
+
+public import Workspace.Impl.VsQTActP
+
+@[expose] public section
 
 /-!
 # The small orbit transporter on tuples of local subspaces

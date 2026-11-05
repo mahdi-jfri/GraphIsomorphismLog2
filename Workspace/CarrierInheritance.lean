@@ -1,5 +1,9 @@
-import Mathlib.GroupTheory.QuotientGroup.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+module
+
+public import Mathlib.GroupTheory.QuotientGroup.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+@[expose] public section
 
 /-! "Inheritance of the retained row action" (`subsec:carrier-inheritance`,
 the faithful-image assertion) and eq. `promotion-product` of

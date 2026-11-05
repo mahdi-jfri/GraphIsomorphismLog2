@@ -1,7 +1,11 @@
-import Workspace.Impl.TermGlueLabQMath
-import Workspace.Impl.LinNormal
-import Workspace.Impl.LinIntSolverCost
-import Workspace.Lang.Lib.LinIntTake
+module
+
+public import Workspace.Impl.TermGlueLabQMath
+public import Workspace.Impl.LinNormal
+public import Workspace.Impl.LinIntSolverCost
+public import Workspace.Lang.Lib.LinIntTake
+
+@[expose] public section
 
 /-!
 # The quotient program: moduli and coordinate map of `ℤ^c / ⟨rows of M⟩`
@@ -57,7 +61,7 @@ theorem tmGLQDiag_spec {P : Program} {b : ℕ} (hp : P.HasAt b (tmGLQDiagFuns b)
   have hrows : a = .list ((List.finRange c).map fun i => linVecVal (D i)) := rfl
   have hcW : c < W := by
     have := length_lt_wt_list ((List.finRange c).map fun i => linVecVal (D i))
-    simpa [W, a, encIntMatrix] using this
+    simpa [W, a, encIntMatrix, linVecVal] using this
   have hacc (i : ℕ) : (Val.list (ds.take i)).wt ≤ 2 * (W * W) + W + 4 := by
     have hl := linWtList (vs := ds.take i) (B := W) (by
       intro v hv

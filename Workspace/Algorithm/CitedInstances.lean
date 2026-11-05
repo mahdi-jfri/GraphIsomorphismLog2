@@ -1,15 +1,19 @@
-import Workspace.Algorithm.Interfaces
-import Workspace.Paper.Caps
-import Workspace.Cited.MarotiPrimitive
-import Workspace.Cited.SixTransitive
-import Mathlib.Analysis.SpecialFunctions.Log.Base
+module
+
+public import Workspace.Algorithm.Interfaces
+public import Workspace.Paper.Caps
+public import Workspace.Cited.MarotiPrimitive
+public import Workspace.Proved.WielTheorem
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+
+@[expose] public section
 
 /-!
 # The cited inputs of the dispatcher and of the aggregation round
 
 This file instantiates as much of the interfaces `Reduction` (`Workspace/Algorithm/Interfaces.lean`)
 and `Aggregation` (`Workspace/Algorithm/Aggregation.lean`) as the cited statements allow. The cited statements
-enter as hypotheses, never as axioms.
+enter as hypotheses.
 
 ## Which cited results instantiate `Reduction`
 
@@ -57,9 +61,9 @@ A.27–A.30 and the certificate tables of Lemma 4.1. The paper cites for it:
   analysis that the paper re-proves for its constant-size certificates (Section A.3,
   "Aggregation and orbital colors", "The remaining aggregation branches at constant certificate
   size", "Case 1 and balanced colored partitions"). It contains two cited mathematical facts:
-  - Case 2b: "By CFSG, `d ≤ 5`" — `GI.Cited.SixTransitiveContainsAlt`. This file proves the
-    form used (`exists_transitivity_degree_le_five`): a transitive group of degree `≥ 6` not
-    containing the alternating group has a maximal transitivity degree `1 ≤ d ≤ 5`.
+  - Case 2b: `d ≤ 7` — `GI.Proved.eightTransitiveContainsAlt`. This file proves the
+    form (`exists_transitivity_degree_le_seven`): a transitive group of degree `≥ 8` not
+    containing the alternating group has a maximal transitivity degree `1 ≤ d ≤ 7`.
   - Case 3: the Design Lemma ([H, Proposition 5.1]) — `GI.Cited.DesignLemma`, applied to the
     canonical `k`-ary coherent refinement — `GI.Cited.KaryCoherentRefinement` ([H, Sections
     2.3, 2.5]).
@@ -312,42 +316,41 @@ noncomputable def Reduction.ofProduct [Finite Ω] (P : Params) (S : State Ω C)
       exact h2'
     · exact (hierRho_split pre post js I he (by omega) hI hjs hjr).trans hρ
 
-/-! ### Case 2b of the aggregation: the transitivity degree is at most five -/
+/-! ### Case 2b of the aggregation: the transitivity degree is at most seven -/
 
 /-- `G ≤ Sym(n)` is `d`-transitive: transitive on injective `d`-tuples. -/
 def MultTransitive {n : ℕ} (G : Subgroup (Perm (Fin n))) (d : ℕ) : Prop :=
   ∀ a b : Fin d ↪ Fin n, ∃ g ∈ G, ∀ i, g (a i) = b i
 
-/-- **"By CFSG, `d ≤ 5`"** ([H, Section 6.2, Case 2b]; paper, Section A.3, "Aggregation and
-orbital colors": "let `d ≤ 5` be its maximal degree of transitivity, using the CFSG bound
-stated there"). For a transitive `G ≤ Sym(n)`, `n ≥ 6`, that does not contain `Alt(n)`, there
-is a `d` with `1 ≤ d ≤ 5` such that `G` is `d`-transitive but not `(d+1)`-transitive. -/
-theorem exists_transitivity_degree_le_five (h6 : GI.Cited.SixTransitiveContainsAlt) {n : ℕ}
-    (hn : 6 ≤ n) (G : Subgroup (Perm (Fin n))) (h1 : MultTransitive G 1)
+/-- **`d ≤ 7`** (paper, Section A.3, "Aggregation and orbital colors": "let `d ≤ 7` be its maximal
+degree of transitivity"). For a transitive `G ≤ Sym(n)`, `n ≥ 8`, that does not contain `Alt(n)`,
+there is a `d` with `1 ≤ d ≤ 7` such that `G` is `d`-transitive but not `(d+1)`-transitive. -/
+theorem exists_transitivity_degree_le_seven {n : ℕ}
+    (hn : 8 ≤ n) (G : Subgroup (Perm (Fin n))) (h1 : MultTransitive G 1)
     (hAlt : ¬ alternatingGroup (Fin n) ≤ G) :
-    ∃ d, 1 ≤ d ∧ d ≤ 5 ∧ MultTransitive G d ∧ ¬ MultTransitive G (d + 1) := by
+    ∃ d, 1 ≤ d ∧ d ≤ 7 ∧ MultTransitive G d ∧ ¬ MultTransitive G (d + 1) := by
   classical
-  -- the largest `d ≤ 5` with `G` `d`-transitive
-  have hex : ∃ d, d ≤ 4 ∧ MultTransitive G (5 - d) := by
+  -- the largest `d ≤ 7` with `G` `d`-transitive
+  have hex : ∃ d, d ≤ 6 ∧ MultTransitive G (7 - d) := by
     by_contra hno
     push Not at hno
-    -- then not 1-transitive: `5 - 4 = 1`
-    exact hno 4 le_rfl h1
+    -- then not 1-transitive: `7 - 6 = 1`
+    exact hno 6 le_rfl h1
   let d₀ := Nat.find hex
-  have hd₀ : d₀ ≤ 4 ∧ MultTransitive G (5 - d₀) := Nat.find_spec hex
-  refine ⟨5 - d₀, by omega, by omega, hd₀.2, ?_⟩
+  have hd₀ : d₀ ≤ 6 ∧ MultTransitive G (7 - d₀) := Nat.find_spec hex
+  refine ⟨7 - d₀, by omega, by omega, hd₀.2, ?_⟩
   intro hnext
   by_cases hz : d₀ = 0
-  · -- `G` would be 6-transitive
+  · -- `G` would be 8-transitive
     apply hAlt
-    apply h6 n hn G
-    have : 5 - d₀ + 1 = 6 := by omega
+    apply GI.Proved.eightTransitiveContainsAlt n hn G
+    have : 7 - d₀ + 1 = 8 := by omega
     rw [this] at hnext
     exact hnext
   · have hmin := Nat.find_min hex (show d₀ - 1 < d₀ by omega)
     apply hmin
     refine ⟨by omega, ?_⟩
-    have : 5 - (d₀ - 1) = 5 - d₀ + 1 := by omega
+    have : 7 - (d₀ - 1) = 7 - d₀ + 1 := by omega
     rw [this]
     exact hnext
 

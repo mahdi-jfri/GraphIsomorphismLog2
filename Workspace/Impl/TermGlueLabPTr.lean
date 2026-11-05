@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPMat
+module
+
+public import Workspace.Impl.TermGlueLabPMat
+
+@[expose] public section
 
 /-!
 # Transposing an integer matrix

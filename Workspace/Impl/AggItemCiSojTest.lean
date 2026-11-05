@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojScan
-import Workspace.Impl.AggItemCiSojSize
+module
+
+public import Workspace.Impl.AggItemCiSojScan
+public import Workspace.Impl.AggItemCiSojSize
+
+@[expose] public section
 
 /-!
 # The numeric callback of the primitive/implication scan

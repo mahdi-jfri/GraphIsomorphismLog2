@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJLabTr
+module
+
+public import Workspace.Impl.TermJLabTr
+
+@[expose] public section
 
 /-!
 # The correcting element of the zero-sum route

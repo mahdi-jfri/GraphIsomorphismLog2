@@ -1,6 +1,10 @@
-import Workspace.Impl.RowLift
-import Workspace.Impl.LabelLift
-import Workspace.Lang.Lib.SmallGroup
+module
+
+public import Workspace.Impl.RowLift
+public import Workspace.Impl.LabelLift
+public import Workspace.Lang.Lib.SmallGroup
+
+@[expose] public section
 
 /-!
 # Windows, their cycles and the points outside them, in `GI.Lang`
@@ -420,7 +424,6 @@ theorem outList_spec {P : Program} {b f : ℕ} (hb : P.HasAt b (filterFuns b f))
       have : i < n := List.mem_range.mp hi
       have e : (Val.list [Val.list [natList rl, encPerm σ], Val.nat i]).wt =
         (Val.list [c, Val.nat i]).wt := rfl
-      dsimp only
       unfold outK; omega)
   rw [← hxs] at hF
   refine hF.mono fun w cost ⟨hw, hc⟩ => ⟨?_, ?_⟩

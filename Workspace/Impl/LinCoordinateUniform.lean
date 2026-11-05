@@ -1,4 +1,8 @@
-import Workspace.Impl.LinCoordinateCost
+module
+
+public import Workspace.Impl.LinCoordinateCost
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,5 +1,9 @@
-import Workspace.CleanComplementLinear
-import Workspace.Paper.SupportThresholds
+module
+
+public import Workspace.CleanComplementLinear
+public import Workspace.Paper.SupportThresholds
+
+@[expose] public section
 
 /-! (LG2) of Theorem A.17 under the logarithmic threshold (LG1).
 
@@ -23,16 +27,17 @@ alternating quotient", for an abstract group `U` with a quotient map `q` onto
 `Alt(k)` (kernel playing the role of `K`) and an action `f` on one block `B`.
 
 Lemma A.15 is applied to `E = f(U)` and its normal subgroup `f(ker q)`. -/
-theorem kernel_surjects_of_transitive_kernel (hcite : GI.Cited.TransitiveAffected)
+theorem kernel_surjects_of_transitive_kernel
     {U : Type*} [Group U] {B : Type} [Fintype B] {k : ℕ}
-    (hthr : max 8 (2 + Real.logb 2 (Fintype.card B)) < (k : ℝ))
+    (hthr : max 63 (12 * Real.logb 2 (Fintype.card B)) < (k : ℝ))
     (q : U →* alternatingGroup (Fin k)) (hq : Function.Surjective q)
     (f : U →* Perm B) (htrans : ∀ x y : B, ∃ g : U, g ∈ q.ker ∧ f g x = y) :
     f.ker.map q = ⊤ := by
   classical
   have hk : 9 ≤ k := by
-    have : (8 : ℝ) < k := lt_of_le_of_lt (le_max_left _ _) hthr
-    exact_mod_cast this
+    have h63 : (63 : ℝ) < k := lt_of_le_of_lt (le_max_left _ _) hthr
+    have : 63 < k := by exact_mod_cast h63
+    omega
   letI : IsSimpleGroup (alternatingGroup (Fin k)) := AlternatingSimple.isSimple_fin (by omega)
   -- `E = L_T[B]` and its normal subgroup `N = K[B]`.
   let E : Subgroup (Perm B) := f.range
@@ -62,7 +67,7 @@ theorem kernel_surjects_of_transitive_kernel (hcite : GI.Cited.TransitiveAffecte
   let ψ := HomDescent.factor q hq π hker
   have hψ : Function.Surjective ψ := HomDescent.factor_surjective q hq π hker hπ
   rcases (inferInstance : ψ.ker.Normal).eq_bot_or_eq_top with hbot | htop
-  · -- The quotient is `Alt(k)`: Lemma A.15 gives `k ≤ max 8 (2 + log₂ |B|)`.
+  · -- The quotient is `Alt(k)`: Lemma A.15 gives `k ≤ max 63 (12 * log₂ |B|)`.
     exfalso
     have hinj : Function.Injective ψ := (MonoidHom.ker_eq_bot_iff ψ).mp hbot
     haveI : MulAction.IsPretransitive N B := by
@@ -72,7 +77,7 @@ theorem kernel_surjects_of_transitive_kernel (hcite : GI.Cited.TransitiveAffecte
       exact ⟨⟨f g, g, hg, rfl⟩, hxy⟩
     let e : E ⧸ N.subgroupOf E ≃* alternatingGroup (Fin k) :=
       (MulEquiv.ofBijective ψ ⟨hinj, hψ⟩).symm
-    have hle := GI.Paper.lem_transitive_kernel_giant_threshold hcite E N hNE e
+    have hle := GI.Paper.lem_transitive_kernel_giant_threshold E N hNE e
     linarith
   · -- The quotient is trivial: `L_T[B] = K[B]`.
     have hall : ∀ u : U, f u ∈ N := by
@@ -138,10 +143,10 @@ variable {G : Subgroup (Perm V)} (A : CleanBlockAction G I)
 /-- (LG2) for one `k`-set `T` under the logarithmic threshold: every even top
 permutation supported on `T` lifts to an element fixing every point outside
 the blocks of `T`. The threshold is needed only for the blocks outside `T`. -/
-theorem localLiftAvailable_of_transitive_kernel (hcite : GI.Cited.TransitiveAffected)
+theorem localLiftAvailable_of_transitive_kernel
     [Fintype V] (hker : A.KernelTransitive) (T : Finset I) {k : ℕ} (e : Fin k ≃ T)
     (hk : 5 ≤ k) (hthr : ∀ i, i ∉ T →
-      max 8 (2 + Real.logb 2 (Fintype.card {x : V // A.label x = i})) < (k : ℝ)) :
+      max 63 (12 * Real.logb 2 (Fintype.card {x : V // A.label x = i})) < (k : ℝ)) :
     LocalLiftAvailable A (T : Set I) := by
   classical
   intro p hp
@@ -149,7 +154,7 @@ theorem localLiftAvailable_of_transitive_kernel (hcite : GI.Cited.TransitiveAffe
   obtain ⟨g, hg, hfix⟩ := simultaneous_lift_of_kernels_surject
     (fun j : {i : I // i ∉ T} => {x : V // A.label x = j.val}) hk
     (localTop A T e) (localTop_surjective A T e) (outsideAction A T e)
-    (fun j => kernel_surjects_of_transitive_kernel hcite (hthr j.val j.property)
+    (fun j => kernel_surjects_of_transitive_kernel (hthr j.val j.property)
       (localTop A T e) (localTop_surjective A T e) (outsideAction A T e j) (by
         intro x y
         obtain ⟨g, hg1, hgxy⟩ := hker x.val y.val (x.property.trans y.property.symm)

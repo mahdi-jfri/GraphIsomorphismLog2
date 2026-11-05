@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabNTest
-import Workspace.Impl.TermGlueLabPXLab
+module
+
+public import Workspace.Impl.TermGlueLabNTest
+public import Workspace.Impl.TermGlueLabPXLab
+
+@[expose] public section
 
 /-!
 # The label driver: the test "all types are distinct"
@@ -33,7 +37,7 @@ def tmGLNDistFuns (b : ℕ) : List Expr :=
 theorem length_tmGLNDistFuns (b : ℕ) : (tmGLNDistFuns b).length = 3 := rfl
 
 /-- The flag after the entries `j < i`. -/
-private abbrev tmGLNDInv (xl : List Val) (i : ℕ) (acc : Val) : Prop :=
+abbrev tmGLNDInv (xl : List Val) (i : ℕ) (acc : Val) : Prop :=
   acc = boolVal (decide (∀ j (hj : j < xl.length), j < i → tmGLNFst xl[j] = j))
 
 private theorem tmGLN_dist_succ (xl : List Val) (i : ℕ) (hi : i < xl.length) :

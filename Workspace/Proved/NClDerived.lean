@@ -1,5 +1,9 @@
-import Workspace.Impl.NClDerProg
-import Workspace.Proved.NClNormal
+module
+
+public import Workspace.Impl.NClDerProg
+public import Workspace.Proved.NClNormal
+
+@[expose] public section
 
 /-!
 # The derived subgroup from the normal closure
@@ -44,7 +48,7 @@ noncomputable def derProgram (h : NormalClosure) : Program :=
 theorem derProgram_at (h : NormalClosure) : DerAt (derProgram h) 0 0 h := by
   refine derAt_of ?_ rfl
   have hA := Program.hasAt_append [] (derFuns 0 0) [] [normalClosurePrim h]
-  simpa using hA
+  simpa [derProgram] using hA
 
 /-- **The derived subgroup from the normal closure.** -/
 theorem derivedSubgroup_of (h : NormalClosure) : DerivedSubgroup := by

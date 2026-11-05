@@ -1,4 +1,8 @@
-import Workspace.DiagonalCarrier
+module
+
+public import Workspace.DiagonalCarrier
+
+@[expose] public section
 
 /-!
 # The cap of a colored partition
@@ -35,7 +39,7 @@ instance [DecidableEq V] : MulAction (Perm V) (ColPart V) where
   one_smul z := by
     ext a b
     · change b ∈ (z.blk ((1 : Perm V)⁻¹ a)).map (1 : Perm V).toEmbedding ↔ b ∈ z.blk a
-      simp
+      simp [Equiv.Perm.one_def]
     · rfl
   mul_smul σ τ z := by
     ext a b
@@ -98,7 +102,7 @@ theorem colPart_cap {V : Type*} [Fintype V] [DecidableEq V] (z : ColPart V)
           right_inv := fun B => by
             apply Subtype.ext
             simp [Finset.map_map] }
-      map_one' := by ext B b; simp
+      map_one' := by ext B b; simp [Equiv.Perm.one_def]
       map_mul' := fun σ τ => by
         refine Equiv.ext fun B => Subtype.ext ?_
         change B.val.map ((σ * τ : H) : Perm V).toEmbedding =

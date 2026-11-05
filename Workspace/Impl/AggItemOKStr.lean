@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemOK
+module
+
+public import Workspace.Impl.AggItemOK
+
+@[expose] public section
 
 /-!
 # The structure step meets `ItSStrOK`

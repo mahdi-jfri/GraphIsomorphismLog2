@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojModelRows
+module
+
+public import Workspace.Impl.AggItemCiSojModelRows
+
+@[expose] public section
 
 /-! # Filtering the actual encodings of the processed occurrence rows -/
 

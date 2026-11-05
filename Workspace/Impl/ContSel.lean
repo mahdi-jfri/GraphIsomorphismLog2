@@ -1,4 +1,8 @@
-import Workspace.Impl.Size
+module
+
+public import Workspace.Impl.Size
+
+@[expose] public section
 
 /-!
 # The choice of case of `Continue`: the phase threshold

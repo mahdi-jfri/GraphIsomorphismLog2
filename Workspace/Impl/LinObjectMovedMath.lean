@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectBasisMath
+module
+
+public import Workspace.Impl.LinObjectBasisMath
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Multicoset
@@ -130,5 +134,35 @@ theorem linObjectOrigins_tmRiOK {n C : ℕ} (Y Z : List (TmRiO n))
   obtain ⟨o₁,ho₁,hc',hg'⟩ := h o' ho'
   rw [hg,hg']
   exact (hok o₀ ho₀).2.2 o₁ ho₁ (hc.symm.trans (he.trans hc'))
+
+theorem linObjectReference_norm {n : ℕ} (as : List (Equiv.Perm (Fin n))) (Y : List (TmRiO n))
+    (hY : TmRiListNorm (gens as) Y) (S : List (TmRiO n)) (hS : S ∈ tmRiPcsO (gens as) Y) :
+    TmRiListNorm (gens as) S := by
+  obtain ⟨a, ha, rfl⟩ := tmRiPcsO_mem hS
+  exact hY.sub fun o ho => (List.mem_filter.mp ho).1
+
+theorem linObjectWordPieces_norm {n : ℕ} (as : List (Equiv.Perm (Fin n))) (Y : List (TmRiO n))
+    (hY : TmRiListNorm (gens as) Y)
+    (z : Fin (as.length * (tmRiPcsO (gens as) Y).length) → ℤ) :
+    TmRiListNorm (gens as) (linObjectWordPieces as Y z).flatten := by
+  intro o ho
+  obtain ⟨S, hS, ho⟩ := List.mem_flatten.mp ho
+  obtain ⟨i, rfl⟩ := List.mem_ofFn.mp hS
+  have hAn : GI.Multicoset.Normalizes (gens as) (gens as) :=
+    fun _ hh _ ha => (gens as).mul_mem ((gens as).mul_mem hh ha) ((gens as).inv_mem hh)
+  exact TmRiListNorm.map_sh hAn (linPermWord_mem as _)
+    (linObjectReference_norm as Y hY _ (List.get_mem _ i)) o ho
+
+theorem linObjectMovedPieces_norm {n : ℕ} (as : List (Equiv.Perm (Fin n))) (Y : List (TmRiO n))
+    (hY : TmRiListNorm (gens as) Y)
+    (z : Fin (as.length * (tmRiPcsO (gens as) Y).length) → ℤ)
+    (H : Subgroup (Equiv.Perm (Fin n))) (hA : Normalizes H (gens as))
+    (g : Equiv.Perm (Fin n)) (hg : g ∈ H) :
+    TmRiListNorm (gens as) (linObjectMovedPieces as Y z g).flatten := by
+  intro o ho
+  obtain ⟨S, hS, ho⟩ := List.mem_flatten.mp ho
+  obtain ⟨T, hT, rfl⟩ := List.mem_map.mp hS
+  exact TmRiListNorm.map_sh hA hg
+    (fun o₀ ho₀ => linObjectWordPieces_norm as Y hY z o₀ (List.mem_flatten.mpr ⟨T, hT, ho₀⟩)) o ho
 
 end GI.Impl

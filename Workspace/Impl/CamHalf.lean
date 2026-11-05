@@ -1,4 +1,8 @@
-import Workspace.Impl.CamTransport
+module
+
+public import Workspace.Impl.CamTransport
+
+@[expose] public section
 
 /-!
 # Primitivity excludes `m = 2k`

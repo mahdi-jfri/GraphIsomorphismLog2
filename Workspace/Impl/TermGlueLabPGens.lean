@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPGenM
+module
+
+public import Workspace.Impl.TermGlueLabPGenM
+
+@[expose] public section
 
 /-!
 # The items of all generators (step 5, the `map`)

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepLib
+module
+
+public import Workspace.Impl.AggRectRepLib
+
+@[expose] public section
 
 /-!
 # The small steps of the representation program

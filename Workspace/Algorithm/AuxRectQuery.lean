@@ -1,4 +1,8 @@
-import Workspace.Algorithm.AuxRectangle
+module
+
+public import Workspace.Algorithm.AuxRectangle
+
+@[expose] public section
 
 /-!
 # The rectangle query states (Algorithm `alg:auxiliary`)

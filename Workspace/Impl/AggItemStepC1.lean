@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemStepWt
-import Workspace.Impl.AggItemC1Prog
+module
+
+public import Workspace.Impl.AggItemStepWt
+public import Workspace.Impl.AggItemC1Prog
+
+@[expose] public section
 
 /-!
 # The Case 1 item meets its contract
@@ -236,7 +240,8 @@ def itSC1X (W₀ : ℕ) : ℕ := 3 * itSC1C (itSC1B W₀ + 2 * W₀ + 3) + itSC1
 set_option maxHeartbeats 1000000 in
 /-- **The Case 1 item meets its contract** `ItSCaseOK` for the case `.one`, with init `itSC1IF`
 at `f0`, branch step `itSC1F` at `fb`, and the bound `itSC1X`. -/
-theorem itS_c1_caseOK (I : Iface) {Pg : Program} {F : Funs} {f0 fb grp orb rb mp sf app : ℕ}
+theorem itS_c1_caseOK
+    (I : Iface) {Pg : Program} {F : Funs} {f0 fb grp orb rb mp sf app : ℕ}
     {IC : ItC1Idx} (hf0 : Pg.funs[f0]? = some itSC1IF)
     (hfb : Pg.funs[fb]? = some (itSC1F grp orb IC.f))
     (hgrp : Pg.funs[grp]? = some (itGrpF rb mp app)) (hrb : Pg.HasAt rb (rangeFuns rb))

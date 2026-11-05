@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertMvKey
+module
+
+public import Workspace.Impl.AggCertMvKey
+
+@[expose] public section
 
 /-!
 # The move program: the first window call of a round

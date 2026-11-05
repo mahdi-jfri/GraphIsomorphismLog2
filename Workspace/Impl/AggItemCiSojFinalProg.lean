@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojFinalSpec
+module
+
+public import Workspace.Impl.AggItemCiSojFinalSpec
+
+@[expose] public section
 
 /-! # Installed program bodies discharge the complete answer-finalizer contract -/
 

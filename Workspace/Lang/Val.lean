@@ -9,8 +9,12 @@ Basic facts about the value format `GI.Cited.Val` of `Workspace.Cited.Encoding`.
 * The cells determine the value (`ValAt.unique`).
 * `encPerm` and `encPerms` are injective.
 -/
-import Workspace.Machine.Layout
-import Workspace.Cited.Encoding
+module
+
+public import Workspace.Machine.Layout
+public import Workspace.Cited.Encoding
+
+@[expose] public section
 
 namespace GI.Lang
 

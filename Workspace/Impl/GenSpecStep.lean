@@ -1,5 +1,9 @@
-import Workspace.Impl.GenSpecCost
-import Workspace.Impl.Cases
+module
+
+public import Workspace.Impl.GenSpecCost
+public import Workspace.Impl.Cases
+
+@[expose] public section
 
 /-!
 # The general dispatcher: the outer step

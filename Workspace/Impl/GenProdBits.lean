@@ -1,5 +1,9 @@
-import Workspace.Impl.GenProdMath
-import Workspace.Impl.GenCls
+module
+
+public import Workspace.Impl.GenProdMath
+public import Workspace.Impl.GenCls
+
+@[expose] public section
 
 /-!
 # The product refinement: the bit loop

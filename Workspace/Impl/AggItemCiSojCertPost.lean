@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojFrameScript
-import Workspace.Impl.AggItemCiSojRel
-import Workspace.Impl.AggItemCiSojDone
+module
+
+public import Workspace.Impl.AggItemCiSojFrameScript
+public import Workspace.Impl.AggItemCiSojRel
+public import Workspace.Impl.AggItemCiSojDone
+
+@[expose] public section
 
 /-! # Both certified rectangle outcomes satisfy the aggregation postcondition -/
 

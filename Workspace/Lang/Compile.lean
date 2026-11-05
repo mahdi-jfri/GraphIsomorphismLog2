@@ -20,8 +20,12 @@ function is called with registers 0 and 2 holding the heap pointer and the addre
 argument, and returns its final heap pointer; its result lies at the heap pointer it started
 with.
 -/
-import Workspace.Lang.Syntax
-import Workspace.Machine.Procs.Copy
+module
+
+public import Workspace.Lang.Syntax
+public import Workspace.Machine.Procs.Copy
+
+@[expose] public section
 
 namespace GI.Lang
 

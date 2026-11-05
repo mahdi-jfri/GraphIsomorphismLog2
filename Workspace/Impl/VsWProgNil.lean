@@ -1,4 +1,8 @@
-import Workspace.Impl.VsWProgMC
+module
+
+public import Workspace.Impl.VsWProgMC
+
+@[expose] public section
 
 /-!
 # The kernel and the fixed points of the Frobenius map as programs

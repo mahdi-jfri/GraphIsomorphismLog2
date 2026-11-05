@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJLabMath
+module
+
+public import Workspace.Impl.TermJLabMath
+
+@[expose] public section
 
 /-!
 # The label and the top as homomorphisms on `N ≀ Sym(q)`

@@ -1,5 +1,9 @@
-import Workspace.MulticosetRadical
-import Workspace.MulticosetTerminal
+module
+
+public import Workspace.MulticosetRadical
+public import Workspace.MulticosetTerminal
+
+@[expose] public section
 
 /-!
 # Paper statements: Section A, "Exact quotient algorithms and a transitive-kernel terminal"
@@ -8,8 +12,8 @@ Faithful statements for `sec:quotient-algorithms`:
 
 * the implicit object model: coset objects `GI.Multicoset.cobj L c h = (c, L_c h)` with the
   right action, transporters `GI.Multicoset.Iso H X Y = {h ∈ H : X^h = Y}`;
-* Lemma A.19 (`lem:solvable-supplement`) and the two paragraphs after it (restriction to
-  the supplement, rebasing into the orbits of a normal subgroup `R`);
+* Lemma A.19 (`lem:solvable-supplement`) and the restriction to a supplement
+  (`par_restriction_to_supplement`);
 * Theorem A.20 (`thm:solvable-multicoset`): the procedure `GI.Multicoset.solvableTransport`,
   its correctness, its recursion count, and the bound `exp(O(log(b+M+2) log(b+2)))`;
 * Corollary A.22 (`cor:transitive-kernel-multicoset`): the procedure
@@ -38,18 +42,17 @@ mathematical results:
 
 * point stabilizers and point transporters of solvable groups ([LM, Proposition 3.9]);
 * normalized-product factorization and normalized intersections ([LM, Theorem 3.1(viii)]);
-* Sylow construction and conjugacy in Lemma A.19 ([LM, Theorem 3.1(viii),(xi)]);
 * the integer Hermite and Smith normal forms ([Kannan-Bachem]) and the vector stabilizer
   and vector transporter of [LM, Theorem 1.4 and Section 5.2] in the affine step: the
   procedure chooses an element `g` of the target profile stabilizer that solves the affine
   condition, when one exists (`GI.Multicoset.glue`);
-* constructing the radical preimage (chief series, quotient centralizers [LM, Lemma 3.2]) and
-  enumerating its cosets in Corollary A.22.
+* constructing the radical preimage and the subgroup `R'` of Lemma A.21, enumerating the
+  cosets of `R'`, and rebasing the objects into `R'` in Corollary A.22 (the mathematics of
+  these paragraphs is in `Workspace/Paper/RadicalFreeOrder.lean`).
 
-Deferred to stage 2 (machine): "can be found deterministically in polynomial time in `b`"
-(A.19); "computable deterministically in `exp(O(log(b+M+2) log(b+2)))` time" (A.20: the
-per-call polynomial work `P(b, M)` and the bit bounds of the abelian coordinates); "has
-deterministic running time ..." (A.22: the per-coset overhead).
+Deferred to stage 2 (machine): "computable deterministically in `exp(O(log(b+M+2) log(b+2)))`
+time" (A.20: the per-call polynomial work `P(b, M)` and the bit bounds of the abelian
+coordinates); "has deterministic running time ..." (A.22: the per-coset overhead).
 -/
 
 namespace GI.Paper
@@ -61,17 +64,18 @@ universe u
 /-! ### The implicit object model -/
 
 /-- **The implicit object model** ("Since `N` fixes every object, this action factors
-through `H/N`"; "the stabilizer of `Lh` is `R ∩ L^h` ... It still contains `N`"; "two objects
-`Lh, Lk` of the same original color lie in one `R`-orbit exactly when `hk⁻¹ ∈ LR`"). Here
-`L^h = h⁻¹ L h` (`conjR`), as for right actions. -/
+through `H/N`"; "Point stabilizers and point transporters are ordinary degree-`b` subgroup
+and coset intersections"): `N` fixes `Lh`, the stabilizer of `Lh` in `H` is `H ∩ L^h`, and
+`g ∈ H` carries `Lh` to `Lk` exactly when `h g k⁻¹ ∈ L`. Here `L^h = h⁻¹ L h` (`conjR`), as
+for right actions. -/
 theorem sec_quotient_object_model {G : Type*} [Group G] {κ : Type*} (L : κ → Subgroup G)
-    {H N R : Subgroup G} (hn : Normalizes H N) (hR : Normalizes H R) (hNR : N ≤ R) (c : κ)
-    (hNL : N ≤ L c) {h k : G} (hh : h ∈ H) (hk : k ∈ H) :
+    {H N : Subgroup G} (hn : Normalizes H N) (c : κ) (hNL : N ≤ L c) {h k : G} (hh : h ∈ H) :
     (∀ n ∈ N, cobj L c h ↼ n = cobj L c h) ∧
-    Aut R (cobj L c h) = R ⊓ conjR (L c) h ∧ N ≤ Aut R (cobj L c h) ∧
-    ((∃ r ∈ R, cobj L c h ↼ r = cobj L c k) ↔ ∃ l ∈ L c, ∃ r ∈ R, h * k⁻¹ = l * r) :=
-  ⟨fun _ hN => cobj_act_kernel hNL hn hh hN, aut_cobj R L c h,
-    kernel_le_aut_cobj hNR hNL hn hh, cobj_same_orbit_iff hR hk⟩
+    Aut H (cobj L c h) = H ⊓ conjR (L c) h ∧
+    Iso H (cobj L c h) (cobj L c k) = {g | g ∈ H ∧ h * g * k⁻¹ ∈ L c} := by
+  refine ⟨fun _ hN => cobj_act_kernel hNL hn hh hN, aut_cobj H L c h, ?_⟩
+  ext g
+  simp only [mem_iso, cobj_act, cobj_eq_iff, true_and, Set.mem_ofPred_eq]
 
 /-- In the coset model, `N` fixes every listed object. -/
 theorem fixes_of_cobj {G : Type*} [Group G] {κ : Type*} {L : κ → Subgroup G}
@@ -83,13 +87,12 @@ theorem fixes_of_cobj {G : Type*} [Group G] {κ : Type*} {L : κ → Subgroup G}
 
 /-! ### Lemma A.19 -/
 
-/-- **Lemma A.19** (`lem:solvable-supplement`), mathematical content: if `H/N` is solvable,
-there is a solvable `S ≤ H` with `SN = H`. The proof is the paper's Frattini descent
+/-- **Lemma A.19** (`lem:solvable-supplement`): if `H/N` is solvable, there is a solvable
+`S ≤ H` with `SN = H`. The proof is the paper's Frattini descent
 (`GI.Multicoset.frattini_descent`). Stated for any finite ambient group; the paper's
-`H ≤ Sym(B)` is a special case. Deferred: "can be found deterministically in polynomial
-time in `b`". -/
+`H ≤ Sym(B)` is a special case. -/
 theorem lem_solvable_supplement {G : Type*} [Group G] [Finite G] {H N : Subgroup G}
-    (hNH : N ≤ H) [(N.subgroupOf H).Normal] [IsSolvable (H ⧸ N.subgroupOf H)] :
+    (hNH : N ≤ H) [(N.subgroupOf H).Normal] [Group.IsSolvable (H ⧸ N.subgroupOf H)] :
     ∃ S : Subgroup G, S ≤ H ∧ IsSolvable S ∧ S ⊔ N = H :=
   exists_solvable_supplement_descent hNH (normalizes_of_normal hNH)
 
@@ -137,7 +140,7 @@ with a polynomial `(b+M+2)^k` of work per call the total is
 Dixon's bound is a cited input (`GI.Cited.DixonDerivedLength`). -/
 theorem thm_solvable_multicoset (dixon : GI.Cited.DixonDerivedLength) {B : Type u}
     [Fintype B] [DecidableEq B] {H N : Subgroup (Equiv.Perm B)} (hNH : N ≤ H)
-    [(N.subgroupOf H).Normal] [IsSolvable (H ⧸ N.subgroupOf H)] {κ : Type u}
+    [(N.subgroupOf H).Normal] [Group.IsSolvable (H ⧸ N.subgroupOf H)] {κ : Type u}
     (L : κ → Subgroup (Equiv.Perm B)) (hL : ∀ c, N ≤ L c ∧ L c ≤ H)
     (X Y : Multiset (CObj κ (Equiv.Perm B)))
     (hXo : ∀ o ∈ X, ∃ c, ∃ h ∈ H, o = cobj L c h) (hYo : ∀ o ∈ Y, ∃ c, ∃ h ∈ H, o = cobj L c h)
@@ -154,8 +157,7 @@ theorem thm_solvable_multicoset (dixon : GI.Cited.DixonDerivedLength) {B : Type 
   have hcount : ((solvableTransport H N X Y).calls : ℝ) ≤
       Real.exp (42 * Real.log ((Fintype.card B : ℝ) + M + 2) *
         Real.log ((Fintype.card B : ℝ) + 2)) := by
-    have h1 := proc_calls_le (quotLength (supplement H N) (supplement H N ⊓ N))
-      (supplement H N) (supplement H N ⊓ N) X Y M hX hY
+    have h1 := proc_calls_le (quotLength H N) H N X Y M hX hY
     have h2 := count_le_exp (Fintype.card B) M _ (solvableTransport_depth dixon hNH hn hsolv)
     exact (Nat.cast_le.mpr h1).trans h2
   refine ⟨solvableTransport_set hNH hn hsolv (fixes_of_cobj hn (fun c => (hL c).1) hXo)
@@ -171,17 +173,17 @@ theorem thm_solvable_multicoset (dixon : GI.Cited.DixonDerivedLength) {B : Type 
 
 /-- **Corollary A.22** (`cor:transitive-kernel-multicoset`), stage 1. With `N ◁ H ≤ Sym(B)`
 in the coset-object model, the procedure `radicalTransport` (enumerate the cosets of the
-radical preimage `R`, apply Theorem A.20 in each, take the union) returns the full
-transporter. Its number of procedure calls is at most
+solvable-quotient subgroup `R' = radicalSubgroup H N`, apply Theorem A.20 in each, take the
+union) returns the full transporter. Its number of procedure calls is at most
 `exp(45 (log²(b+2) + log(M+2) log(b+2)))`.
 
-The radical index bound `[H : R] ≤ b(H/N)² ≤ b^{2 log₂ b}` is the hypothesis `hidx`. In the
-paper it follows from [GMP, Theorem 1.4] (here `N` transitive is used) and Lemma A.21,
-which are not formalized here. The transitivity of `N` is used only through `hidx`. -/
+The index bound `[H : R'] ≤ b(H/N)² ≤ b^{2 log₂ b}` is the hypothesis `hidx`. In the
+paper it follows from [GMP, Theorem 1.4] (here `N` transitive is used) and Lemma A.21.
+The transitivity of `N` is used only through `hidx`. -/
 theorem cor_transitive_kernel_multicoset (dixon : GI.Cited.DixonDerivedLength) {B : Type u}
     [Fintype B] [DecidableEq B] {H N : Subgroup (Equiv.Perm B)} (hNH : N ≤ H)
     [(N.subgroupOf H).Normal]
-    (hidx : (((radicalPreimage H N).subgroupOf H).index : ℝ) ≤
+    (hidx : (((radicalSubgroup H N).subgroupOf H).index : ℝ) ≤
       (Fintype.card B : ℝ) ^ (2 * Real.logb 2 (Fintype.card B)))
     {κ : Type u} (L : κ → Subgroup (Equiv.Perm B)) (hL : ∀ c, N ≤ L c ∧ L c ≤ H)
     (X Y : Multiset (CObj κ (Equiv.Perm B)))
@@ -215,9 +217,9 @@ Claims:
 4. the residual step makes at most `exp(45 (log²(b+2) + log(m+2) log(b+2)))` procedure calls,
    and the degree-`b` string calls number `2m² + m ≤ 3(m+1)²`.
 
-The radical index bound `hidx` stands for [GMP, Theorem 1.4] and Lemma A.21; it is where the
+The index bound `hidx` stands for [GMP, Theorem 1.4] and Lemma A.21; it is where the
 transitivity of `N` is used. Deferred to stage 2: the polynomial-time affine label transport
-inside each radical coset (Theorem A.20's affine step over `D/N` with the offsets
+inside each coset of `R'` (Theorem A.20's affine step over `D/N` with the offsets
 `∑_a m_a [t_a(h)] + ∑_i [d_i(h)]`), the lifts and corrections from stored tables, and the
 final running-time total `poly(n) F(b) + exp(O(log²(n+2)))`. Here the label step is
 represented by its result, the test of claim 2. -/
@@ -226,7 +228,7 @@ theorem thm_transitive_gat_terminal (dixon : GI.Cited.DixonDerivedLength) {B : T
     {H N : Subgroup (Equiv.Perm B)} (hNH : N ≤ H) [(N.subgroupOf H).Normal]
     {A : Type*} [CommGroup A] (φ : N →* A) {m : ℕ} (k : Equiv.Perm B → Fin m → Equiv.Perm B)
     (hk : ∀ h ∈ H, ∀ i, h⁻¹ * k h i ∈ N)
-    (hidx : (((radicalPreimage H N).subgroupOf H).index : ℝ) ≤
+    (hidx : (((radicalSubgroup H N).subgroupOf H).index : ℝ) ≤
       (Fintype.card B : ℝ) ^ (2 * Real.logb 2 (Fintype.card B)))
     (x y : Fin m → Ω) :
     terminalTransport H N φ k x y = isoG H N φ k x y ∧

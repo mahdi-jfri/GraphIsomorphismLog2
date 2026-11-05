@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPSetP
+module
+
+public import Workspace.Impl.TermGlueLabPSetP
+
+@[expose] public section
 
 /-!
 # The setup of step 5 when no generators of `N` are stored (`t = 0`)

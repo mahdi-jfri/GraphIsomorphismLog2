@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojSD
+module
+
+public import Workspace.Impl.AggItemCiSojSD
+
+@[expose] public section
 
 /-!
 # The finite side-size guard of the first rectangle

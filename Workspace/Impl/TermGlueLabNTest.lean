@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPRep
+module
+
+public import Workspace.Impl.TermGlueLabPRep
+
+@[expose] public section
 
 /-!
 # The label driver: which case of step 5

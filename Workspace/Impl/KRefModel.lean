@@ -1,5 +1,9 @@
-import Workspace.Cited.AlgoRefinement
-import Mathlib.Data.Nat.Digits.Defs
+module
+
+public import Workspace.Cited.AlgoRefinement
+public import Mathlib.Data.Nat.Digits.Defs
+
+@[expose] public section
 
 /-!
 # The joint `k`-ary Weisfeiler–Leman refinement as Lean functions

@@ -1,6 +1,10 @@
-import Workspace.Impl.TermAsm
-import Workspace.Impl.FreshColor
-import Workspace.Lang.Lib.Tabulate
+module
+
+public import Workspace.Impl.TermAsm
+public import Workspace.Impl.FreshColor
+public import Workspace.Lang.Lib.Tabulate
+
+@[expose] public section
 
 /-!
 # The value of one call of the row terminal, as a program (T1)
@@ -218,7 +222,7 @@ theorem coordsVal_get? (i : Fin q) :
   simp
 
 theorem length_lt_wt_natList (l : List ℕ) : l.length < (natList l).wt := by
-  have := length_lt_wt_list (l.map Val.nat); simpa using this
+  have := length_lt_wt_list (l.map Val.nat); simpa [natList] using this
 
 /-- **The codes of row `a`.** `W` is the weight of the context. -/
 theorem tmRow_spec {P : Program} {f ga : ℕ} (hf : P.funs[f]? = some (tmRowBody ga))

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojIW
-import Workspace.Impl.AggItemCiSojProjB
+module
+
+public import Workspace.Impl.AggItemCiSojIW
+public import Workspace.Impl.AggItemCiSojProjB
+
+@[expose] public section
 
 /-! # Weight bounds supplied by the actual answer-processing input -/
 

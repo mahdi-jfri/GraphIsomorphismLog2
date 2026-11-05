@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimePrepareCost
+module
+
+public import Workspace.Impl.LinPrimePrepareCost
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryMatrixAlgebra
+module
+
+public import Workspace.Impl.LinPrimaryMatrixAlgebra
+
+@[expose] public section
 
 /-! Extend a representation on retained coordinates by the trivial action on
 the other coordinates. This avoids changing matrix dimensions between layers. -/

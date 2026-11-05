@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimeRecord
-import Workspace.Impl.LinActionItem
+module
+
+public import Workspace.Impl.LinPrimeRecord
+public import Workspace.Impl.LinActionItem
+
+@[expose] public section
 
 /-! Reduce the retained generator dictionary and its identity record together.
 The permutation cover and generator order stay in the same slots. -/

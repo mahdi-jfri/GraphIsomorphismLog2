@@ -1,5 +1,9 @@
-import Workspace.QuotientChains
-import Workspace.OrbitBudget
+module
+
+public import Workspace.QuotientChains
+public import Workspace.OrbitBudget
+
+@[expose] public section
 
 namespace GI
 

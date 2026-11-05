@@ -1,5 +1,9 @@
-import Workspace.Impl.LinIntPresentation
-import Mathlib.Algebra.Group.TypeTags.Hom
+module
+
+public import Workspace.Impl.LinIntPresentation
+public import Mathlib.Algebra.Group.TypeTags.Hom
+
+@[expose] public section
 
 /-! The actual coordinate map for the complete abelian presentation.
 It sends the i-th integer basis vector to the i-th quotient generator. -/

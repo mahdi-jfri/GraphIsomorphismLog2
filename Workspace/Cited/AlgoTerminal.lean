@@ -1,5 +1,9 @@
 -- Proved in `Workspace/Proved/` (see each task's docstring)
-import Workspace.Cited.AlgoLinear
+module
+
+public import Workspace.Cited.AlgoLinear
+
+@[expose] public section
 
 /-!
 # Stage 2 tasks for the row terminal (Theorem A.20, "Constructing the abelian coordinates")

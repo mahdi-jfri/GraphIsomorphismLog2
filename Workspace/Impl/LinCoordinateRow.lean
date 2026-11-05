@@ -1,5 +1,9 @@
-import Workspace.Impl.LinCoordinateLayout
-import Workspace.Impl.LinWitnessLayout
+module
+
+public import Workspace.Impl.LinCoordinateLayout
+public import Workspace.Impl.LinWitnessLayout
+
+@[expose] public section
 
 /-! One complete cyclic relation row from permutation-group inputs. -/
 namespace GI.Impl

@@ -1,6 +1,10 @@
-import Workspace.Impl.AggCertMvWin
-import Workspace.Impl.AggCertStart
-import Workspace.Impl.AggCosets
+module
+
+public import Workspace.Impl.AggCertMvWin
+public import Workspace.Impl.AggCertStart
+public import Workspace.Impl.AggCosets
+
+@[expose] public section
 
 /-!
 # The move program: the representatives of a round

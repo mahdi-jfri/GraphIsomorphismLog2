@@ -1,6 +1,10 @@
-import Workspace.Impl.LinAffineHomogenize
-import Workspace.Lang.Prims.Other
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Impl.LinAffineHomogenize
+public import Workspace.Lang.Prims.Other
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-! The vector-stabilizer call used by each homogeneous affine layer.
 The solvable cover and its explicit representation remain part of the input task. -/

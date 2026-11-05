@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiTest
+module
+
+public import Workspace.Impl.AggItemCiTest
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3, the configuration query: mathematics

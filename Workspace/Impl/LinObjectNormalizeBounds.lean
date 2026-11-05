@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectNormalize
+module
+
+public import Workspace.Impl.LinObjectNormalize
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

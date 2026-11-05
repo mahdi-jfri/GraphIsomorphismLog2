@@ -1,5 +1,9 @@
-import Workspace.Impl.VsBFldPrep
-import Workspace.Impl.VsQAnaAb
+module
+
+public import Workspace.Impl.VsBFldPrep
+public import Workspace.Impl.VsQAnaAb
+
+@[expose] public section
 
 /-!
 # The field line when `T = M'`

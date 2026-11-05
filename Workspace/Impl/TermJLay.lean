@@ -1,6 +1,10 @@
-import Workspace.Impl.TermJGlue
-import Workspace.Impl.LayoutAsm
-import Workspace.Impl.DomRestrict
+module
+
+public import Workspace.Impl.TermJGlue
+public import Workspace.Impl.LayoutAsm
+public import Workspace.Impl.DomRestrict
+
+@[expose] public section
 
 /-!
 # The layout of the `J`-answer

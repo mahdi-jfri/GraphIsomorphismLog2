@@ -1,5 +1,9 @@
-import Workspace.Impl.KRefCodes
-import Workspace.Impl.KRefStable
+module
+
+public import Workspace.Impl.KRefCodes
+public import Workspace.Impl.KRefStable
+
+@[expose] public section
 
 /-!
 # The size parameter and weight bounds

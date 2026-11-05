@@ -1,4 +1,8 @@
-import Workspace.Algorithm.State
+module
+
+public import Workspace.Algorithm.State
+
+@[expose] public section
 
 /-!
 # The query children of an aggregation round

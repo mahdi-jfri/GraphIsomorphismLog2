@@ -1,4 +1,8 @@
-import Workspace.RadicalSocleStructure
+module
+
+public import Workspace.RadicalSocleStructure
+
+@[expose] public section
 
 open scoped commutatorElement
 
@@ -11,7 +15,7 @@ variable {G : Type*} [Group G]
 /-- A solvable minimal normal subgroup is abelian. Its characteristic
 commutator subgroup cannot be the whole nontrivial solvable group. -/
 theorem minimalNormal_solvable_comm {N : Subgroup G}
-    (hN : MinimalNormal N) [IsSolvable N] : ∀ x y : N, x * y = y * x := by
+    (hN : MinimalNormal N) [Group.IsSolvable N] : ∀ x y : N, x * y = y * x := by
   letI : Nontrivial N := (Subgroup.nontrivial_iff_ne_bot N).mpr hN.2.1
   have hc : commutator N = ⊥ := by
     rcases minimalNormal_characteristic_subgroup hN (commutator N) with hb | ht
@@ -29,10 +33,10 @@ theorem minimalNormal_solvable_comm {N : Subgroup G}
 /-- A nontrivial solvable normal subgroup contains a nontrivial abelian
 normal subgroup; all normality and solvability transfers are proved. -/
 theorem exists_abelian_normal_of_solvable_normal [Finite G]
-    (R : Subgroup G) [R.Normal] [IsSolvable R] (hne : R ≠ ⊥) :
+    (R : Subgroup G) [R.Normal] [Group.IsSolvable R] (hne : R ≠ ⊥) :
     ∃ N : Subgroup G, MinimalNormal N ∧ N ≤ R ∧ ∀ x y : N, x * y = y * x := by
   obtain ⟨N, hN, hNR⟩ := exists_minimal_normal_le R hne
-  letI : IsSolvable N := solvable_of_solvable_injective (Subgroup.inclusion_injective hNR)
+  letI : Group.IsSolvable N := solvable_of_solvable_injective (Subgroup.inclusion_injective hNR)
   exact ⟨N, hN, hNR, minimalNormal_solvable_comm hN⟩
 
 theorem exists_abelian_normal_of_radical_ne_bot [Finite G]
@@ -42,7 +46,3 @@ theorem exists_abelian_normal_of_radical_ne_bot [Finite G]
   exact ⟨N, hN, hc⟩
 
 end GI.PrimitiveStructure
-
-#print axioms GI.PrimitiveStructure.minimalNormal_solvable_comm
-#print axioms GI.PrimitiveStructure.exists_abelian_normal_of_solvable_normal
-#print axioms GI.PrimitiveStructure.exists_abelian_normal_of_radical_ne_bot

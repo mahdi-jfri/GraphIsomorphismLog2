@@ -1,4 +1,8 @@
-import Workspace.JohnsonOrbits
+module
+
+public import Workspace.JohnsonOrbits
+
+@[expose] public section
 
 namespace GI.AlternatingActions
 

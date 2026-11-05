@@ -23,8 +23,12 @@ at most `c`. The `Det.*` lemmas build these facts construct by construct.
 **Cost facts.** Every evaluation pays at least the weight of its result (`EvalAll.wt_lt`), and
 `wt_list_le`, `wt_le_wt_list` relate the weight of a list to the weights of its entries.
 -/
-import Workspace.Lang.Syntax
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+module
+
+public import Workspace.Lang.Syntax
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+
+@[expose] public section
 
 namespace GI.Lang
 

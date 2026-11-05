@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojBalBranch
+module
+
+public import Workspace.Impl.AggItemCiSojBalBranch
+
+@[expose] public section
 
 /-! # Finished source branches before the start controller adds its result wrapper -/
 

@@ -1,6 +1,10 @@
-import Workspace.Impl.LinMapSource
-import Workspace.Impl.LinPrimaryRecord
-import Workspace.Lang.Lib.Search
+module
+
+public import Workspace.Impl.LinMapSource
+public import Workspace.Impl.LinPrimaryRecord
+public import Workspace.Lang.Lib.Search
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -43,7 +47,7 @@ theorem linZeroIntCell_spec {P : Program} {f : ℕ} (hf : P.funs[f]? = some linZ
   have wb : (linBitsVal z.natAbs.bits).wt < (encInt z).wt := wt_le_wt_list (by simp [encInt, linBitsVal, linBit])
   have hl : z.natAbs.bits.length < (linBitsVal z.natAbs.bits).wt := by
     have hh := length_lt_wt_list (z.natAbs.bits.map fun b => Val.nat (linBit b))
-    simpa only [List.length_map] using hh
+    simpa only [linBitsVal, List.length_map] using hh
   have w0 : (Val.nat 0).wt = 2 := rfl
   have w1 : (Val.nat 1).wt = 3 := rfl
   apply FunDet.intro hf
@@ -81,7 +85,7 @@ theorem linZeroIntVector_spec {P : Program} {b d : ℕ} (h : linZeroIntVectorAt 
   let W := a.wt
   have hd : d ≤ W := by
     have hh := length_lt_wt_list xs
-    simpa only [xs, List.length_map, List.length_finRange] using hh.le
+    simpa only [xs, W, a, linVecVal, List.length_map, List.length_finRange] using hh.le
   have wa : (Val.list [.list [], a]).wt ≤ 100 * (W + 1) := by
     have hh := wt_list2_le (.list []) a
     have he : (Val.list []).wt = 4 := rfl

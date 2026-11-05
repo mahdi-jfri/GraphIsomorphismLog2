@@ -8,7 +8,11 @@ Facts used by the correctness proof of the compiler (`Workspace.Lang.Correct`).
   the heap pointer.
 * Cost arithmetic: `len_add_le'`, `bnd_combine`, `overhead_le`.
 -/
-import Workspace.Lang.Compile
+module
+
+public import Workspace.Lang.Compile
+
+@[expose] public section
 
 namespace GI.Lang
 

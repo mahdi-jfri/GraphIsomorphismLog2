@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemStepRep
-import Workspace.Impl.Combine
+module
+
+public import Workspace.Impl.AggItemStepRep
+public import Workspace.Impl.Combine
+
+@[expose] public section
 
 /-!
 # The step function of the items as a program

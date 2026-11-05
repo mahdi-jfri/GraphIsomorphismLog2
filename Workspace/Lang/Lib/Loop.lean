@@ -14,7 +14,11 @@ for any bound `M` on the weights of the accumulators of the trace.
 
 All other loops of the library are built on this one.
 -/
-import Workspace.Lang.Lib.Basic
+module
+
+public import Workspace.Lang.Lib.Basic
+
+@[expose] public section
 
 namespace GI.Lang
 

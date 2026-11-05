@@ -1,5 +1,9 @@
-import Workspace.Impl.VsQA3
-import Workspace.Impl.VsPStep4
+module
+
+public import Workspace.Impl.VsQA3
+public import Workspace.Impl.VsPStep4
+
+@[expose] public section
 
 /-!
 # Step 4 of the analysis and the hand-off
@@ -42,6 +46,7 @@ def VsQHardOut [Fact I.p.Prime] {s : VsQSt I} (hs : VsQStOK s) (Lb : List (List 
       (vsHK s Lb r ys).length = 0) ∨
   VsQSplOK (s := s) Tm w
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The hand-off facts: the input of the hard case. -/
 structure VsQHand [Fact I.p.Prime] {s : VsQSt I} (hs : VsQStOK s) (as : List (Perm (Fin I.n)))
     (Lb : List (List (List ℕ))) (ccs tcs ys : List (Perm (Fin I.n))) (r : ℕ) : Prop where

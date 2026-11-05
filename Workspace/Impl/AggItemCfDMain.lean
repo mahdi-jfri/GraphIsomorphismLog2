@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCfDCore
+module
+
+public import Workspace.Impl.AggItemCfDCore
+
+@[expose] public section
 
 namespace GI.Impl
 
@@ -90,7 +94,7 @@ theorem itCf_des_spec {P : Program} {I : ItCfDIdx} {f : ℕ} (h : ItCfDOk P I)
   have wk : (Val.nat κ).wt < M := wt_le_wt_list (by simp [M, itCfDesIn])
   have hA : (stDA (stDL col) (stL fun i => (t i : ℕ)) q κ).wt ≤ 8 * M + 8 := by
     have hw := wt_list4_le (encKColoring col) (stTv t) (.nat q) (.nat κ)
-    simpa only [stDA, natList_stDL] using (show
+    simpa only [stDA, natList_stDL, stTv] using (show
       (Val.list [encKColoring col, stTv t, .nat q, .nat κ]).wt ≤ 8 * M + 8 by omega)
   have hprog := itCfD_des_calls hf (stDL col) (stL fun i => (t i : ℕ)) q κ
     (B := 10 ^ 80 * (8 * M + 8 + 1) ^ 17) (by

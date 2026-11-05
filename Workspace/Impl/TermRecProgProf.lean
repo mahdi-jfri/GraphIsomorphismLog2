@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecProgTab
+module
+
+public import Workspace.Impl.TermRecProgShift
+
+@[expose] public section
 
 /-!
 # T5, one profile

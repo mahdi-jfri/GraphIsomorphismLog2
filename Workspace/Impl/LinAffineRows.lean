@@ -1,6 +1,10 @@
-import Workspace.Impl.LinAffineVector
-import Workspace.Lang.Lib.List
-import Workspace.Lang.Lib.LinIntVector
+module
+
+public import Workspace.Impl.LinAffineVector
+public import Workspace.Lang.Lib.List
+public import Workspace.Lang.Lib.LinIntVector
+
+@[expose] public section
 
 /-! Construct the dense rows [R_i, u_i] of a homogenized affine matrix.
 This is list manipulation on the field-value encoding, with no new primitive. -/
@@ -84,7 +88,7 @@ theorem linAffineRows_spec {P : Program} {b p r c : ℕ}
     have ht : rows.take (k + 1) = rows.take k ++
         [.list (((List.finRange c).map fun j => .nat (A i j).val) ++ [.nat (v i).val])] := by
       rw [List.take_add_one, List.getElem?_eq_getElem (by simp [rows]; exact hk)]; simp [rows, i]
-    refine step.post fun cost hcost => ⟨by dsimp only; rw [ht], ?_⟩
+    refine step.post fun cost hcost => ⟨by rw [ht], ?_⟩
     have wo := wacc k
     have wn := wacc (k + 1)
     rw [ht] at wn

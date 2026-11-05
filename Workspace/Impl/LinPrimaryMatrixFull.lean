@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimaryMatrixProg
-import Workspace.Impl.LinFiniteActionCost
+module
+
+public import Workspace.Impl.LinPrimaryMatrixProg
+public import Workspace.Impl.LinFiniteActionCost
+
+@[expose] public section
 
 /-! Build a primary field-layer matrix directly from the retained signed
 integer full-action record. -/
@@ -86,7 +90,8 @@ theorem linPrimaryMatrixFull_spec {P : Program} {b p d : ℕ} (h : linPrimaryMat
   have he : A.submatrix Fin.castSucc Fin.castSucc =
       (fun i k => (linFiniteMatrix m f i k : ZMod p)) := by
     funext i k
-    simp only [A, Matrix.submatrix_apply, linFiniteHomogeneous, linAffineMatrix,
+    change A i.castSucc k.castSucc = _
+    simp only [A, linFiniteHomogeneous, linAffineMatrix,
       linExtend_castSucc, linFiniteIntMatrix, Int.cast_natCast]
   rw [he] at hb
   change FunDet P (b + 26) (.list [encModMatrix A, encFun ν, .nat level])

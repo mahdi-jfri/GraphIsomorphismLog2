@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormPrepData
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Impl.GenNormPrepData
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-! # The computed preparation for a normalization step -/
 namespace GI.Impl
@@ -81,9 +85,10 @@ theorem normPrep_spec (hp : Preimage) (hst : PointwiseStab) (hm : Membership)
   -- Recover the identities on blocks and on Cameron points.
   have ha2 : Det Pg [a, .list [encFun num, natList reps, rep']]
       (.length (normField 1 1)) (.nat Q.d) (normArgBudget (T 1)) := by
-    have h := normPiece_length (Pg := Pg) (normAtom_read (Pg := Pg) hen1 (slot := 1) rfl [1] rfl
-      (by norm_num) (by norm_num) (hTge 1))
-    simpa only [natList, List.length_map, hd.2.2.1] using normArg_piece h
+    have h := normArg_piece (normPiece_length (Pg := Pg) (normAtom_read (Pg := Pg) hen1 (slot := 1) rfl [1] rfl
+      (by norm_num) (by norm_num) (hTge 1)))
+    rw [natList, List.length_map, hd.2.2.1] at h
+    exact h
   have hc2 := normStage_call hp hst hm ha2
     (FunAll.mono (GI.Lang.range_det o.hrange Q.d) (fun w c hw =>
       ⟨hw.1, hw.2.trans (normBudget_range hp hst hm ((Q.d_le_card en).trans (hn 1)))⟩))

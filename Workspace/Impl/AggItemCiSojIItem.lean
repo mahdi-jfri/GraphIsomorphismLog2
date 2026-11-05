@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojIP
+module
+
+public import Workspace.Impl.AggItemCiSojIP
+
+@[expose] public section
 
 /-! # The computed component item agrees with the exact model script -/
 

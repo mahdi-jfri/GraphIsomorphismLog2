@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabSVPt
+module
+
+public import Workspace.Impl.TermGlueLabSVPt
+
+@[expose] public section
 
 /-!
 # Polynomial bounds of the two label vector programs

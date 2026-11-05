@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojSourceRun
-import Workspace.Impl.AggItemCiSojFinalProg
-import Workspace.Impl.AggItemCiSojStep
+module
+
+public import Workspace.Impl.AggItemCiSojSourceRun
+public import Workspace.Impl.AggItemCiSojFinalProg
+public import Workspace.Impl.AggItemCiSojStep
+
+@[expose] public section
 
 /-! # The complete first-rectangle item program contract -/
 

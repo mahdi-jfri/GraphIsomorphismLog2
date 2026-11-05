@@ -1,4 +1,8 @@
-import Workspace.BudgetInductionBlocks
+module
+
+public import Workspace.BudgetInductionBlocks
+
+@[expose] public section
 
 namespace GI.BudgetInduction
 

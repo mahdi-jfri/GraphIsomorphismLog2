@@ -1,6 +1,10 @@
-import Workspace.Algorithm.RowExpose
-import Workspace.Algorithm.Counter
-import Workspace.Paper.RowNormalForm
+module
+
+public import Workspace.Algorithm.RowExpose
+public import Workspace.Algorithm.Counter
+public import Workspace.Paper.RowNormalForm
+
+@[expose] public section
 
 /-!
 # The row normal form of a giant step, and the two row branches
@@ -14,13 +18,11 @@ then the data of each branch:
   group on its domain, satisfy the hypotheses of Theorem A.18. The fibers of the labels have
   one size `f` (the group moves rows onto each other), the kernel of the top action is
   transitive on each row (the fibers are the kernel orbits), and the logarithmic threshold
-  holds when `2 max{8, 2 + log₂ s} + 3 ≤ q`. The kernel of the top action is the block
+  holds when `2 max{63, 12 log₂ s} + 3 ≤ q`. The kernel of the top action is the block
   kernel of the coordinates (`ker_eq_blockKernel`).
 * `RowForm.rowTerminal`: when `N` is transitive on `B`, the terminal data, with
   `A = N/N*` (abelian by the row normal form) and the row size bound of Section 6.2.
 * `RowForm.columnStep` (`Workspace/Algorithm/RowExpose.lean`): otherwise, the column step.
-
-The only cited result is the one used by Theorem A.18 (`GI.Cited.TransitiveAffected`).
 -/
 
 namespace GI.Algorithm
@@ -105,14 +107,14 @@ end Top
 /-- **The row normal form exists** (Theorem A.18 applied to the faithful image). The
 hypothesis `hthr` is the logarithmic threshold (LG1) for the row size `f ≤ s`, in the form of
 `thm_logarithmic_clean_complement_threshold`. -/
-theorem exists_rowForm (hcite : GI.Cited.TransitiveAffected) [Finite Ω] (S : State Ω C)
+theorem exists_rowForm [Finite Ω] (S : State Ω C)
     (L : GiantLabels S) {label : Ω → Fin L.q} (hnat : NaturalRows S L label)
-    (hthr : 2 * max 8 (2 + Real.logb 2 S.size) + 3 ≤ (L.q : ℝ)) :
+    (hthr : 2 * max 63 (12 * Real.logb 2 S.size) + 3 ≤ (L.q : ℝ)) :
     ∃ F : RowForm S L, F.label = label ∧ Fintype.card F.B * L.q = S.size := by
   classical
   haveI : Fintype S.dom := Fintype.ofFinite _
   have hq19 : 19 ≤ L.q := by
-    have h8 : (8 : ℝ) ≤ max 8 (2 + Real.logb 2 S.size) := le_max_left _ _
+    have h63 : (63 : ℝ) ≤ max 63 (12 * Real.logb 2 S.size) := le_max_left _ _
     have : (19 : ℝ) ≤ L.q := by linarith
     exact_mod_cast this
   let lab : S.dom → Fin L.q := fun v => label v
@@ -158,19 +160,20 @@ theorem exists_rowForm (hcite : GI.Cited.TransitiveAffected) [Finite Ω] (S : St
     intro x y hxy
     obtain ⟨k, hk1, hkx⟩ := (hnat.fibers x x.2 y y.2).1 hxy
     refine ⟨S.domHom.rangeRestrict k, ?_, Subtype.ext hkx⟩
-    rw [MonoidHom.mem_ker, MonoidHom.comp_apply, topHom_apply, hk1]
+    show (alternatingGroup (Fin L.q)).subtype (topHom hnat (S.domHom.rangeRestrict k)) = 1
+    rw [topHom_apply, hk1]
     rfl
   -- The logarithmic threshold (LG1) for the row size `f ≤ s`.
-  have hLG : 2 * max 8 (2 + Real.logb 2 f) + 3 ≤ (L.q : ℝ) := by
+  have hLG : 2 * max 63 (12 * Real.logb 2 f) + 3 ≤ (L.q : ℝ) := by
     have hfs : f ≤ S.size := by rw [← hcard]; exact Nat.le_mul_of_pos_right f hq0
     have hlog : Real.logb 2 f ≤ Real.logb 2 S.size :=
       Real.logb_le_logb_of_le (by norm_num) (by exact_mod_cast hf) (by exact_mod_cast hfs)
-    have : max 8 (2 + Real.logb 2 f) ≤ max 8 (2 + Real.logb 2 S.size) :=
+    have : max 63 (12 * Real.logb 2 f) ≤ max 63 (12 * Real.logb 2 S.size) :=
       max_le_max le_rfl (by linarith)
     linarith
   obtain ⟨k, hodd, hLG1, hm⟩ := thm_logarithmic_clean_complement_threshold f L.q hLG
   obtain ⟨B, fB, e, s, hB, hlab, -, hpure, hcompl, hrnf⟩ :=
-    thm_logarithmic_gat_normal_form hcite S.domGroup lab f
+    thm_logarithmic_gat_normal_form S.domGroup lab f
       (fun i => by rw [hfib i]) hf φ hφ hAlt htrans k hodd hLG1 (by rw [Fintype.card_fin]; exact hm)
   obtain ⟨Nl, Nstar, hN, hNs, hr⟩ := hrnf i₀
   have hker : φ.ker = blockKernel e := ker_eq_blockKernel hnat e hlab

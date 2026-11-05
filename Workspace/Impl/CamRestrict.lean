@@ -1,4 +1,8 @@
-import Workspace.Cited.AlgoPermGroups
+module
+
+public import Workspace.Cited.AlgoPermGroups
+
+@[expose] public section
 
 /-!
 # Restricting a group to a numbered invariant set

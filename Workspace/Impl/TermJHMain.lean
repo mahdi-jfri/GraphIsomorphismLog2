@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJHTail
-import Workspace.Impl.RowPure
+module
+
+public import Workspace.Impl.TermJHTail
+public import Workspace.Impl.RowPure
+
+@[expose] public section
 
 /-!
 # The transporter of one label: the main theorem

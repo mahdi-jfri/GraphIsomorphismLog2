@@ -1,4 +1,8 @@
-import Workspace.Impl.KRefMain
+module
+
+public import Workspace.Impl.KRefMain
+
+@[expose] public section
 
 /-!
 # What the whole program computes

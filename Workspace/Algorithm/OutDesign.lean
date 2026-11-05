@@ -1,4 +1,8 @@
-import Workspace.Algorithm.OutSkeleton
+module
+
+public import Workspace.Algorithm.OutSkeleton
+
+@[expose] public section
 
 /-!
 # Case 3 of the aggregation: the object from the Design Lemma

@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojCertQuery
-import Workspace.Impl.AggItemCiSojCertGuard
-import Workspace.Impl.AggItemCiSojCertPost
+module
+
+public import Workspace.Impl.AggItemCiSojCertQuery
+public import Workspace.Impl.AggItemCiSojCertGuard
+public import Workspace.Impl.AggItemCiSojCertPost
+
+@[expose] public section
 
 /-! # The actual certified rectangle controller satisfies the full item postcondition -/
 
@@ -111,7 +115,7 @@ theorem itcs_rect_run (I : Iface) {Pg : Program} {Funs₀ : Funs} {A : itcsRectI
     have hask' : FunDet Pg A.query.ask (.list [K.sv,.nat L.q,rcCertIn X x₀,rcCertIn Y y₀,
         .nat (certVals X (X.idx hx) cert).2.2,av,fv,rcRepVal e (rf W R hc) hs,
         natList (List.range L.q),side]) (itcsAskV (QF.query 1) QF.payload (.list QF.pending)) ((itcsGrow pf Bc Br hBc hBr)^[65] (W₀+100)) := by
-      simpa only [av,dif_pos hg',it_range_one] using hask
+      simpa only [av,fv,QF,W₀,side,itcsFrameOf,dif_pos hg',it_range_one] using hask
     exact FunAll.mono hask' fun w cost ⟨he,hcost⟩ => by rw [he]; exact ⟨post,hcost⟩
   have skip (hg : g=0) : P (itcsResV (.list [])) :=
     itcs_cert_skip_post I pf hBc hBr e c K b X Y x₀ y₀ E rf hKeep hE hx hp hb hcert cert hcf (badg hg)

@@ -1,6 +1,10 @@
-import Workspace.Proved.SolvAFac
-import Workspace.Proved.SolvOrder
-import Workspace.Cited.GMP
+module
+
+public import Workspace.Proved.SolvAFac
+public import Workspace.Proved.SolvOrder
+public import Workspace.Cited.GMP
+
+@[expose] public section
 
 /-!
 # [GMP, Proposition 6.1], abelian part
@@ -35,6 +39,7 @@ theorem gmpAbelianFactors : GI.Cited.GMPAbelianFactors := by
   intro n hn P a b h
   rw [← aFac_eq h]
   obtain ⟨S, hS, hle⟩ := solvAFac_le_solvable P
+  haveI : Group.IsSolvable S := hS
   let S' : Subgroup (Equiv.Perm (Fin n)) := S.map P.subtype
   have hS' : IsSolvable S' :=
     solvable_of_surjective (f := (S.equivMapOfInjective P.subtype

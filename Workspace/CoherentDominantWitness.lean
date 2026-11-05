@@ -1,4 +1,8 @@
-import Workspace.CoherentRectangleOutput
+module
+
+public import Workspace.CoherentRectangleOutput
+
+@[expose] public section
 
 namespace GI.CoherentEntrance
 
@@ -56,7 +60,3 @@ theorem dominant_offDiagonal_witness (c : Coloring n) (hc : Coherent c)
   exact hdiag he.symm
 
 end GI.CoherentEntrance
-
-#print axioms GI.CoherentEntrance.colorClass_diagonal
-#print axioms GI.CoherentEntrance.nontrivial_degree_ge_two
-#print axioms GI.CoherentEntrance.dominant_offDiagonal_witness

@@ -1,11 +1,21 @@
-import Workspace.Assembly.Main
+module
+
+public import Workspace.Assembly.Main
 
 /-!
-# The solution
+# Graph isomorphism in quasipolynomial time
 
-The statement of `Challenge.lean`, proved by `GI.graphIsomorphismInQuasipolynomialTime`
-(`Workspace/Assembly/Main.lean`).
+This file proves the statement of `Challenge.lean`: Theorem 1.1 of the paper, in the
+model of `Workspace/Statement/Main.lean`. The proof is
+`GI.Assembly.graphIsomorphismInQuasipolynomialTime` (`Workspace/Assembly/Main.lean`).
 -/
 
-theorem main_theorem : GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
-  GI.graphIsomorphismInQuasipolynomialTime
+public section
+
+/-- **Theorem 1.1.** Graph isomorphism is decidable in quasipolynomial time, in the model of
+`Workspace/Statement/Main.lean`. -/
+theorem GI.graphIsomorphismInQuasipolynomialTime :
+    GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
+  GI.Assembly.graphIsomorphismInQuasipolynomialTime
+
+#print axioms GI.graphIsomorphismInQuasipolynomialTime

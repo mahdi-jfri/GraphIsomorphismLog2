@@ -1,5 +1,9 @@
-import Workspace.Impl.HNFPoly
-import Workspace.Impl.CamCells
+module
+
+public import Workspace.Impl.HNFPoly
+public import Workspace.Impl.CamCells
+
+@[expose] public section
 
 /-!
 # The Hermite normal form with transform is computable in polynomial time

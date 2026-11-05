@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojWt
-import Workspace.Impl.AggItemCiSojPW
-import Workspace.Impl.AggItemCiSojState
+module
+
+public import Workspace.Impl.AggItemCiSojWt
+public import Workspace.Impl.AggItemCiSojPW
+public import Workspace.Impl.AggItemCiSojState
+
+@[expose] public section
 
 /-! # Building the two matrix color tables and the exact query state -/
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJHMath
-import Workspace.Impl.TermJProgYg2
+module
+
+public import Workspace.Impl.TermJHMath
+public import Workspace.Impl.TermJProgYg2
+
+@[expose] public section
 
 /-!
 # The transporter of one label: the small programs

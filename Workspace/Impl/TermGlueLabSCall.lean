@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabS6
-import Workspace.Impl.TermGlueLabPCall
+module
+
+public import Workspace.Impl.TermGlueLabS6
+public import Workspace.Impl.TermGlueLabPCall
+
+@[expose] public section
 
 /-!
 # The affine call of step 6 at the row terminal, and the label answer
@@ -28,6 +32,7 @@ open scoped Pointwise
 variable {Ω C : Type}
 
 attribute [local instance] stringRAct
+set_option backward.isDefEq.respectTransparency false
 
 variable {P : Params} {S : State Ω C} {L : GiantLabels S} {label : Ω → Fin L.q}
   (hnat : NaturalRows S L label) (hq : 5 ≤ L.q) {m : ℕ} (h0 : 0 < m)
@@ -49,7 +54,9 @@ local notation "ℍb" => @id (Subgroup (Perm (Fin m))) (𝕀).Hb
 theorem tmGLS_call {Pg : Program} {Ka Da ja : ℕ} (hA : Iface.TmGLAffineSpec Pg Ka Da ja)
     {gs : List (Perm (Fin m))}
     (hgs : gens gs ≤ Aut ℍb (types ℕb 𝕩))
-    (hsol : IsSolvable (gens gs)) (hgl : gs.length ≤ m ^ 2)
+    (hsol : ∃ _ : ((ℕb).subgroupOf (gens gs)).Normal,
+      Group.IsSolvable ((gens gs) ⧸ (ℕb).subgroupOf (gens gs)))
+    (hgl : gs.length ≤ m ^ 2)
     {d : ℕ} {md : Fin d → ℕ} (hm : ∀ i, 0 < md i)
     (Ev : Additive (tmGLV ℕb (𝕀).φ 𝕩 × ℤˣ) ≃+ tmGLVec md)
     {rep : Set (Fin m → C) → (Fin m → C)}
@@ -63,15 +70,19 @@ theorem tmGLS_call {Pg : Program} {Ka Da ja : ℕ} (hA : Iface.TmGLAffineSpec Pg
           (tmGLcE Ev (tmGLoO rep (rowLift (𝕀).e (𝕀).i0)))
           (Ev (Additive.ofMul (tmGLPt ℕb (𝕀).φ 𝕩 rep ((@id (Fin L.q → Fin m → C) (tmGLAlign 𝕀 τ))))))
           (Ev (Additive.ofMul (tmGLPt ℕb (𝕀).φ 𝕩 rep
-            𝕩)))).wt + 1) ^ Da) :=
-  tmGLP_aff_call hA ((𝕀).normalizes : GI.Multicoset.Normalizes ℍb ℕb) (tmGL_kerI 𝕀) (𝕀).Nb_le hgs hsol hgl hm Ev (tmGL_liftI 𝕀)
+            𝕩)))).wt + 1) ^ Da) := by
+  obtain ⟨hnorm, hsol'⟩ := hsol
+  haveI : ((𝕀).Nb.subgroupOf (gens gs)).Normal := hnorm
+  exact tmGLP_aff_call hA ((𝕀).normalizes : GI.Multicoset.Normalizes ℍb ℕb) (tmGL_kerI 𝕀) (𝕀).Nb_le hgs hsol' hgl hm Ev (tmGL_liftI 𝕀)
     hrep _ _
 
 /-- **The affine call, some type repeats** (no orientation coordinate: the orientation is `1`). -/
 theorem tmGLS_call' {Pg : Program} {Ka Da ja : ℕ} (hA : Iface.TmGLAffineSpec Pg Ka Da ja)
     {gs : List (Perm (Fin m))}
     (hgs : gens gs ≤ Aut ℍb (types ℕb 𝕩))
-    (hsol : IsSolvable (gens gs)) (hgl : gs.length ≤ m ^ 2)
+    (hsol : ∃ _ : ((ℕb).subgroupOf (gens gs)).Normal,
+      Group.IsSolvable ((gens gs) ⧸ (ℕb).subgroupOf (gens gs)))
+    (hgl : gs.length ≤ m ^ 2)
     (hT : ¬ (types ℕb 𝕩).Nodup)
     {d : ℕ} {md : Fin d → ℕ} (hm : ∀ i, 0 < md i)
     (Ev : Additive (tmGLV ℕb (𝕀).φ 𝕩) ≃+ tmGLVec md)
@@ -87,7 +98,9 @@ theorem tmGLS_call' {Pg : Program} {Ka Da ja : ℕ} (hA : Iface.TmGLAffineSpec P
           (Ev (Additive.ofMul (tmGLLab ℕb (𝕀).φ 𝕩 rep ((@id (Fin L.q → Fin m → C) (tmGLAlign 𝕀 τ))))))
           (Ev (Additive.ofMul (tmGLLab ℕb (𝕀).φ 𝕩 rep
             𝕩)))).wt + 1) ^ Da) := by
-  have h := tmGLP_aff_call' hA ((𝕀).normalizes : GI.Multicoset.Normalizes ℍb ℕb) (tmGL_kerI 𝕀) (𝕀).Nb_le hgs hsol hgl hT hm Ev
+  obtain ⟨hnorm, hsol'⟩ := hsol
+  haveI : ((𝕀).Nb.subgroupOf (gens gs)).Normal := hnorm
+  have h := tmGLP_aff_call' hA ((𝕀).normalizes : GI.Multicoset.Normalizes ℍb ℕb) (tmGL_kerI 𝕀) (𝕀).Nb_le hgs hsol' hgl hT hm Ev
     (tmGL_liftI 𝕀) hrep (tmGLLab ℕb (𝕀).φ 𝕩 rep 𝕩)
     (tmGLLab ℕb (𝕀).φ 𝕩 rep ((@id (Fin L.q → Fin m → C) (tmGLAlign 𝕀 τ))))
   -- both label points have orientation `1`
@@ -102,11 +115,17 @@ theorem tmGLS_call' {Pg : Program} {Ka Da ja : ℕ} (hA : Iface.TmGLAffineSpec P
 
 /-- **The supplement lies in `D`.** A subgroup of `τ ⟨U⟩ τ⁻¹ = D ∩ R` lies in `D` (this is the
 hypothesis `hgs` of the call lemmas). -/
-theorem tmGLS_supp_D {σN U gs : List (Perm (Fin m))} (hσN : gens σN = (𝕀).Nb) {r τ : Perm (Fin m)}
-    (hw : AnsC (Equiv.refl (Fin m)) (.list [encPerm τ, encGroup U]) (tmGlRes 𝕀 r))
+theorem tmGLS_supp_D {R' : Subgroup (Perm (Fin m))}
+    (hRH : R' ≤ (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Hb)
+    (hNR : (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ≤ R')
+    (hsolv : ∃ ℓ, GI.Multicoset.relDerived R' (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ℓ ≤
+      (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb)
+    {σN U gs : List (Perm (Fin m))} (hσN : gens σN = (𝕀).Nb) {r τ : Perm (Fin m)}
+    (hw : AnsC (Equiv.refl (Fin m)) (.list [encPerm τ, encGroup U])
+      (tmGlRes (tmGLSIWith P hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv) r))
     (hSR : gens gs ≤ gens (U.map fun x => τ * x * τ⁻¹)) :
     gens gs ≤ Aut (𝕀).Hb (types (𝕀).Nb (rowTuple (𝕀).e S.x)) := by
-  have h := (tmGLS_t4_gens hnat hq h0 E hP htr hcard hsN hN hqα hσN hw).1
+  have h := (tmGLS_t4_gens hnat hq h0 E hP htr hcard hsN hN hqα hRH hNR hsolv hσN hw).1
   rw [h] at hSR
   exact hSR.trans inf_le_left
 
@@ -123,8 +142,14 @@ theorem tmGLS6_lab (hps : PointwiseStab) {Pg : Program}
     (hj : Pg.prims[jp]? = some (pointwiseStabPrim hps))
     (hinv : Pg.HasAt inv (invFuns inv)) (hcp : Pg.HasAt cp (composeFuns cp))
     (hcj : Pg.funs[cj]? = some (supConjF cp)) (hmc : Pg.HasAt mc (mapFuns mc cj))
+    {R' : Subgroup (Perm (Fin m))}
+    (hRH : R' ≤ (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Hb)
+    (hNR : (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ≤ R')
+    (hsolv : ∃ ℓ, GI.Multicoset.relDerived R' (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb ℓ ≤
+      (RowForm.ofPure hnat hq E hP ⟨0, h0⟩).Nb)
     {σN U gs : List (Perm (Fin m))} (hσN : gens σN = (𝕀).Nb) {r τ : Perm (Fin m)}
-    (hw : AnsC (Equiv.refl (Fin m)) (.list [encPerm τ, encGroup U]) (tmGlRes 𝕀 r))
+    (hw : AnsC (Equiv.refl (Fin m)) (.list [encPerm τ, encGroup U])
+      (tmGlRes (tmGLSIWith P hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv) r))
     (hSN : gens gs ⊔ gens σN = gens (U.map fun x => τ * x * τ⁻¹)) (hgl : gs.length ≤ m ^ 2)
     {rep : Set (Fin m → C) → (Fin m → C)}
     (hrep : TmGLRep (𝕀).Nb (rowTuple (𝕀).e S.x) rep)
@@ -134,18 +159,22 @@ theorem tmGLS6_lab (hps : PointwiseStab) {Pg : Program}
       TmGLAffOut m u (tmGLSTrans 𝕀 rep τ (gens gs)) ∧
         c ≤ Ka * ((Val.list [encGroup gs, modV, .list items, vv, ww]).wt + 1) ^ Da)) :
     FunAll Pg f (.list [encGroup σN, encPerm τ, .list (gs.map encPerm), in5, vv, ww]) (fun w c =>
-      AnsC (Equiv.refl (Fin m)) w (tmGlLab 𝕀 r) ∧
+      AnsC (Equiv.refl (Fin m)) w
+        (tmGlLab (tmGLSIWith P hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv) r) ∧
         c ≤ tmGLS6C Ka Da (pointwiseStabPrim hps).c (pointwiseStabPrim hps).k C5
           (Val.list [encGroup σN, encPerm τ, .list (gs.map encPerm), in5, vv, ww]).wt) := by
-  have hres : tmGlRes 𝕀 r = τ • ((gens U : Subgroup (Perm (Fin m))) : Set (Perm (Fin m))) :=
+  have hres : tmGlRes (tmGLSIWith P hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv) r =
+      τ • ((gens U : Subgroup (Perm (Fin m))) : Set (Perm (Fin m))) :=
     tmCs_ansC_cons hw rfl
-  have hτ : τ ∈ tmGlRes 𝕀 r := by
+  have hτ : τ ∈ tmGlRes (tmGLSIWith P hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv) r := by
     rw [hres]; exact ⟨1, (gens U).one_mem, mul_one τ⟩
-  have hR := (tmGLS_t4_gens hnat hq h0 E hP htr hcard hsN hN hqα hσN hw).1
-  have hSN' : gens gs ⊔ (𝕀).Nb = Aut (𝕀).Hb (types (𝕀).Nb (rowTuple (𝕀).e S.x)) ⊓ tmRad 𝕀 := by
+  have hR := (tmGLS_t4_gens hnat hq h0 E hP htr hcard hsN hN hqα hRH hNR hsolv hσN hw).1
+  have hSN' : gens gs ⊔ (𝕀).Nb = Aut (𝕀).Hb (types (𝕀).Nb (rowTuple (𝕀).e S.x)) ⊓
+      tmRad (tmGLSIWith P hnat hq h0 E hP htr hcard hsN hN hqα R' hRH hNR hsolv) := by
     rw [show gens gs ⊔ (𝕀).Nb = gens gs ⊔ gens σN by rw [hσN], hSN, hR]
+    rfl
   refine (tmGLS6_spec hps hf hmg hout hred happ hj hinv hcp hcj hmc σN gs hgl τ in5 vv ww modV
     items C5 h5 hcall).mono fun w c ⟨u, hu, hwr, hc⟩ => ⟨?_, hc⟩
-  exact tmGLS_lab_ans hnat hq h0 E hP htr hcard hsN hN hqα hσN hτ hSN' hrep hu hwr
+  exact tmGLS_lab_ans hnat hq h0 E hP htr hcard hsN hN hqα hRH hNR hsolv hσN hτ hSN' hrep hu hwr
 
 end GI.Impl

@@ -1,4 +1,8 @@
-import Workspace.Proved.VsTBasic
+module
+
+public import Workspace.Proved.VsTBasic
+
+@[expose] public section
 
 /-!
 # LM Lemma 5.2 without irreducibility
@@ -63,7 +67,7 @@ theorem vsT_card_roots [FiniteDimensional (ZMod p) V] [Nontrivial V] {s : Set (E
     Set.ncard {x : End (ZMod p) V | x ∈ Algebra.adjoin (ZMod p) s ∧ aeval x q = 0} ≤
       q.natDegree := by
   classical
-  haveI : IsMulCommutative (Algebra.adjoin (ZMod p) s) := Algebra.isMulCommutative_adjoin (ZMod p) hs
+  haveI : IsMulCommutative (Algebra.adjoin (ZMod p) s) := Algebra.isMulCommutative_adjoin (ZMod p) (fun x hx y hy _ => hs x hx y hy)
   set R := Algebra.adjoin (ZMod p) s
   haveI : Nontrivial R := by
     refine ⟨⟨0, 1, fun h => ?_⟩⟩
@@ -108,7 +112,7 @@ theorem vsT_cyclic [FiniteDimensional (ZMod p) V] [Nontrivial V]
   classical
   haveI : Finite V := Module.finite_of_finite (ZMod p)
   haveI : IsMulCommutative (vsTAlg A) :=
-    Algebra.isMulCommutative_adjoin (ZMod p) (vsTSet_comm hA)
+    Algebra.isMulCommutative_adjoin (ZMod p) (fun x hx y hy _ => vsTSet_comm hA x hx y hy)
   set R := vsTAlg A
   haveI : Nontrivial R := by
     refine ⟨⟨0, 1, fun h => ?_⟩⟩

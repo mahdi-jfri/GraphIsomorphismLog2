@@ -1,4 +1,8 @@
-import Workspace.RectangleQueries
+module
+
+public import Workspace.RectangleQueries
+
+@[expose] public section
 
 namespace GI.ProductAction
 

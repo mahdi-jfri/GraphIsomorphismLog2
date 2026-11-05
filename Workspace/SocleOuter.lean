@@ -1,4 +1,8 @@
-import Workspace.SocleFactorKernel
+module
+
+public import Workspace.SocleFactorKernel
+
+@[expose] public section
 namespace GI.SocleOuter
 
 open RadicalSocle

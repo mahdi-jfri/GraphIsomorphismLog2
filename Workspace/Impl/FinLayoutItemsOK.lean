@@ -1,6 +1,10 @@
-import Workspace.Impl.FinLayoutItems
-import Workspace.Impl.FinLayoutCmp
-import Workspace.Impl.FinLayoutCertPrims
+module
+
+public import Workspace.Impl.FinLayoutItems
+public import Workspace.Impl.FinLayoutCmp
+public import Workspace.Impl.FinLayoutCertPrims
+
+@[expose] public section
 
 /-!
 # The items in the final program
@@ -41,8 +45,8 @@ namespace GI.Impl
 
 open GI.Algorithm GI.Assembly GI.Lang Equiv Equiv.Perm
 open GI.Cited (Val PointwiseStab Preimage NormalizedFactor Membership MinimalBlocks GroupOrder
-  CameronRecognition ChiefSeriesAlgo DerivedSubgroup QuotientCentralizer NormalizedIntersection
-  SylowAlgo SylowConjugate NormalClosure SolvableCosetIntersection HermiteFullRank
+  CameronRecognition DerivedSubgroup NormalizedIntersection
+  NormalClosure SolvableCosetIntersection HermiteFullRank
   SmithNonsingular ConstructiveMembership VectorStabilizer KaryRefinement)
 
 set_option maxRecDepth 100000
@@ -172,7 +176,6 @@ theorem fit_hvX_pbu {Xh : ℕ → ℕ} (hXh : PBU fun _ W _ => Xh W) :
     norm_poly
   have h2 := itS_pbu_subst (P := fun _ B => itHvB3C B (itHvPcC B) + itHvBC B + B + 10) hP hR
   exact (PBU.add hXh h2).mono fun _ W _ => by
-    dsimp only
     unfold itHvX; omega
 
 /-- **The common bound of the three case contracts**: Case 1, Case 2a (for the bound `Xh` of
@@ -253,9 +256,9 @@ theorem fit_hasAt_parts {P : Program} {hvIF c23F rpF : List Expr} (hF : FitFits 
 section Asm
 
 variable {hst : PointwiseStab} {hm : Membership} {hpre : Preimage} {hfac : NormalizedFactor}
-  {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition} {hcs : ChiefSeriesAlgo}
-  {hder : DerivedSubgroup} {hqc : QuotientCentralizer} {hni : NormalizedIntersection}
-  {hsy : SylowAlgo} {hsc : SylowConjugate} {hnc : NormalClosure}
+  {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition}
+  {hder : DerivedSubgroup} {hni : NormalizedIntersection}
+  {hnc : NormalClosure}
   {hs : SolvableCosetIntersection} {hh : HermiteFullRank} {hn : SmithNonsingular}
   {hcmb : ConstructiveMembership} {hv : VectorStabilizer} {ext'' : List Prim}
   {recF labF jF : List Expr}
@@ -264,12 +267,12 @@ variable {hst : PointwiseStab} {hm : Membership} {hpre : Preimage} {hfac : Norma
 theorem fit_rcCertSpec_final (hk : KaryRefinement P₀.κ) (hF : FlcFits recF labF jF)
     {crE cmE : Expr} {crF cmF : List Expr} (hA : FagFits crF cmF) {hvIF c23F rpF : List Expr}
     (hfit : FitFits hvIF c23F rpF) :
-    RcCertSpec (fagProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc
+    RcCertSpec (fagProg hst hm hpre hfac hmb hO hC hder hni hnc
       (linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ ext'')) recF labF jF crE cmE fitE crF cmF
       (fitF hvIF c23F rpF)) fitRcIdx rcCertB := by
   obtain ⟨-, -, -, -, -, -, -, hit⟩ := fag_hasAt (hst := hst) (hm := hm) (hpre := hpre)
-    (hfac := hfac) (hmb := hmb) (hO := hO) (hC := hC) (hcs := hcs) (hder := hder) (hqc := hqc)
-    (hni := hni) (hsy := hsy) (hsc := hsc) (hnc := hnc)
+    (hfac := hfac) (hmb := hmb) (hO := hO) (hC := hC) (hder := hder)
+    (hni := hni) (hnc := hnc)
     (ext := linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ ext'')) hF (crE := crE) (cmE := cmE)
     (itE := fitE) (itF := fitF hvIF c23F rpF) hA
   exact fit_rcCertSpec (fit_hasAt_parts hfit hit).1
@@ -283,18 +286,18 @@ program of Case 2a at `fitHvIdx` (bound `Xh`) and `ItSCaseOK` of Cases 2b and 3 
 theorem fit_asItemsOK (hk : KaryRefinement P₀.κ) (hF : FlcFits recF labF jF)
     {crE cmE : Expr} {crF cmF : List Expr} (hA : FagFits crF cmF) {hvIF c23F rpF : List Expr}
     (hfit : FitFits hvIF c23F rpF) (I : Iface) {Xh X3 : ℕ → ℕ}
-    (hinit : ItHvInitOK I (fagProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc
+    (hinit : ItHvInitOK I (fagProg hst hm hpre hfac hmb hO hC hder hni hnc
       (linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ ext'')) recF labF jF crE cmE fitE crF cmF
       (fitF hvIF c23F rpF)) asmF fitHvIdx Xh)
-    (h3 : ItSCaseOK I (fagProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc
+    (h3 : ItSCaseOK I (fagProg hst hm hpre hfac hmb hO hC hder hni hnc
       (linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ ext'')) recF labF jF crE cmE fitE crF cmF
       (fitF hvIF c23F rpF)) asmF (fun a => a = .twoB ∨ a = .three) fitC23Idx (fitC23Idx + 1) X3) :
-    AsItemsOK I (fagProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc
+    AsItemsOK I (fagProg hst hm hpre hfac hmb hO hC hder hni hnc
       (linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ ext'')) recF labF jF crE cmE fitE crF cmF
       (fitF hvIF c23F rpF)) asmF asHandImpl (fitXi hk hst hO Xh X3) (asb 4) := by
   obtain ⟨-, -, -, h4, -, -, -, hit⟩ := fag_hasAt (hst := hst) (hm := hm) (hpre := hpre)
-    (hfac := hfac) (hmb := hmb) (hO := hO) (hC := hC) (hcs := hcs) (hder := hder) (hqc := hqc)
-    (hni := hni) (hsy := hsy) (hsc := hsc) (hnc := hnc)
+    (hfac := hfac) (hmb := hmb) (hO := hO) (hC := hC) (hder := hder)
+    (hni := hni) (hnc := hnc)
     (ext := linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ ext'')) hF (crE := crE) (cmE := cmE)
     (itE := fitE) (itF := fitF hvIF c23F rpF) hA
   obtain ⟨hC', -, -, -⟩ := fit_hasAt_parts hfit hit

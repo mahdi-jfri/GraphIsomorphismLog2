@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectConfigAction
+module
+
+public import Workspace.Impl.LinObjectConfigAction
+
+@[expose] public section
 
 /-! In a configuration, a row of local transporters has a nonempty
 entry, and every such entry points to the same part of the configuration. -/

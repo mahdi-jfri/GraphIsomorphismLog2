@@ -1,5 +1,9 @@
-import Workspace.Impl.TermRecInd
-import Workspace.Impl.LayoutAsm
+module
+
+public import Workspace.Impl.TermRecInd
+public import Workspace.Impl.LayoutAsm
+
+@[expose] public section
 
 /-!
 # T5, the layout of the A.20 recursion with its glue program
@@ -23,26 +27,31 @@ open GI.Cited (SolvableCosetIntersection DerivedSubgroup Membership)
 /-- The offset of the glue program inside the list of the recursion. -/
 def tmRiGlueOff : ℕ := 1000
 
-/-- **The list of the recursion**: `tmRiFuns` at `b`, padded to `tmRiGlueOff` functions, then the
-glue program `gObjF`, which the recursion calls at `b + tmRiGlueOff`. -/
+/-- **The list of the recursion**: `tmRiFuns ++ tmRiRebFuns` at `b`, padded to `tmRiGlueOff`
+functions, then the glue program `gObjF`, which the recursion calls at `b + tmRiGlueOff`. -/
 def tmRiRecF (b jsci jder jmem : ℕ) (gObjF : List Expr) : List Expr :=
-  asmPad tmRiGlueOff (tmRiFuns b jsci jder jmem (b + tmRiGlueOff)) ++ gObjF
+  asmPad tmRiGlueOff (tmRiFuns b jsci jder jmem (b + tmRiGlueOff) ++
+    tmRiRebFuns b (b + tmRiGlueOff)) ++ gObjF
 
 theorem tmRi_funs_le (b jsci jder jmem gObj : ℕ) :
-    (tmRiFuns b jsci jder jmem gObj).length ≤ tmRiGlueOff := by
-  rw [length_tmRiFuns]; unfold tmRiGlueOff; omega
+    (tmRiFuns b jsci jder jmem gObj ++ tmRiRebFuns b gObj).length ≤ tmRiGlueOff := by
+  rw [List.length_append, length_tmRiFuns, length_tmRiRebFuns]; unfold tmRiGlueOff; omega
 
 theorem length_tmRiRecF (b jsci jder jmem : ℕ) (gObjF : List Expr) :
     (tmRiRecF b jsci jder jmem gObjF).length = tmRiGlueOff + gObjF.length := by
   simp only [tmRiRecF, List.length_append, length_asmPad (tmRi_funs_le _ _ _ _ _)]
 
-/-- The two parts of the list of the recursion. -/
+/-- The parts of the list of the recursion. -/
 theorem tmRi_recF_hasAt {P : Program} {b jsci jder jmem : ℕ} {gObjF : List Expr}
     (h : P.HasAt b (tmRiRecF b jsci jder jmem gObjF)) :
-    P.HasAt b (tmRiFuns b jsci jder jmem (b + tmRiGlueOff)) ∧
+    (P.HasAt b (tmRiFuns b jsci jder jmem (b + tmRiGlueOff)) ∧
+      P.HasAt (b + 96) (tmRiRebFuns b (b + tmRiGlueOff))) ∧
       P.HasAt (b + tmRiGlueOff) gObjF := by
-  refine ⟨(show P.HasAt b (tmRiFuns b jsci jder jmem (b + tmRiGlueOff) ++ _) from h.left).left,
-    ?_⟩
+  have h1 : P.HasAt b (tmRiFuns b jsci jder jmem (b + tmRiGlueOff) ++
+      tmRiRebFuns b (b + tmRiGlueOff)) :=
+    (show P.HasAt b ((tmRiFuns b jsci jder jmem (b + tmRiGlueOff) ++
+      tmRiRebFuns b (b + tmRiGlueOff)) ++ _) from h.left).left
+  refine ⟨⟨h1.left, by simpa [length_tmRiFuns] using h1.right⟩, ?_⟩
   simpa [length_asmPad (tmRi_funs_le _ _ _ _ _)] using h.right
 
 /-- **`TermRecSpec` at `b` from the list `tmRiRecF` at `b`**, the primitives, and the glue spec at
@@ -57,6 +66,7 @@ theorem tmRi_recSpecAt (hsci : SolvableCosetIntersection) (hder : DerivedSubgrou
       Iface.TermGlueObjSpec P Kg Dg (b + tmRiGlueOff) →
       Iface.TermRecSpec P K D b := by
   obtain ⟨K, D, h⟩ := tmRi_termRecSpec hsci hder hmem Kg Dg
-  exact ⟨K, D, fun hf hs hd hm hg => h ⟨(tmRi_recF_hasAt hf).1, hs, hd, hm⟩ hg⟩
+  exact ⟨K, D, fun hf hs hd hm hg =>
+    h ⟨(tmRi_recF_hasAt hf).1.1, hs, hd, hm⟩ (tmRi_recF_hasAt hf).1.2 hg⟩
 
 end GI.Impl

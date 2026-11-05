@@ -1,5 +1,9 @@
-import Workspace.Lang.Lib.Search
-import Workspace.Lang.Lib.NatList
+module
+
+public import Workspace.Lang.Lib.Search
+public import Workspace.Lang.Lib.NatList
+
+@[expose] public section
 
 /-!
 # Costs counted in units of a weight bound

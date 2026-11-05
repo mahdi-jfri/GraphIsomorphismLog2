@@ -1,9 +1,13 @@
-import Workspace.Algorithm.Exact
-import Workspace.Paper.RunningTime
-import Workspace.TowerRank
-import Workspace.FiniteBudget
-import Workspace.OrbitBudget
-import Workspace.AlternatingSections
+module
+
+public import Workspace.Algorithm.Exact
+public import Workspace.Paper.RunningTime
+public import Workspace.TowerRank
+public import Workspace.FiniteBudget
+public import Workspace.OrbitBudget
+public import Workspace.AlternatingSections
+
+@[expose] public section
 
 /-!
 # The recursive state (Section 6.1)

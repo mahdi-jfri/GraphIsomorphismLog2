@@ -6,8 +6,12 @@ Each specification gives the result in terms of Lean lists, and a cost bound of 
 where `n` is the number of steps, `a` the argument and `w` the result. A user function is
 described by `FunAll` on each element; its cost bound `B x` may depend on the element.
 -/
-import Workspace.Lang.Lib.Loop
-import Mathlib.Data.List.Forall2
+module
+
+public import Workspace.Lang.Lib.Loop
+public import Mathlib.Data.List.Forall2
+
+@[expose] public section
 
 namespace GI.Lang
 

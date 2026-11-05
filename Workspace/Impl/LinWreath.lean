@@ -1,8 +1,12 @@
-import Mathlib.GroupTheory.RegularWreathProduct
-import Mathlib.GroupTheory.Solvable
-import Mathlib.LinearAlgebra.Pi
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.GroupTheory.RegularWreathProduct
+public import Mathlib.GroupTheory.Solvable
+public import Mathlib.LinearAlgebra.Pi
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-! The two-copy wreath reduction used by A.20. The representation acts on
 functions on two copies, and the covering group is still solvable. -/
@@ -34,7 +38,7 @@ def linWreathBase : (linTwo → H) →* (H ≀ᵣ linTwo) where
   map_one' := rfl
   map_mul' f g := by ext q <;> simp
 
-private def linWreathEval : (linTwo → H) →* H × H where
+def linWreathEval : (linTwo → H) →* H × H where
   toFun f := (f 1, f linTwoSwap)
   map_one' := rfl
   map_mul' _ _ := rfl
@@ -47,9 +51,10 @@ private theorem linWreathEval_injective : Function.Injective (linWreathEval (H :
   · exact congrArg Prod.snd h
 
 /-- Solvability follows from the solvable base H × H and the order-two quotient. -/
-theorem linWreath_solvable [IsSolvable H] : IsSolvable (H ≀ᵣ linTwo) := by
-  letI : IsSolvable (linTwo → H) := solvable_of_solvable_injective linWreathEval_injective
-  apply solvable_of_ker_le_range (linWreathBase (H := H)) RegularWreathProduct.rightHom
+theorem linWreath_solvable [Group.IsSolvable H] : Group.IsSolvable (H ≀ᵣ linTwo) := by
+  letI : Group.IsSolvable (linTwo → H) :=
+    Group.isSolvable_of_isSolvable_injective linWreathEval_injective
+  apply Group.isSolvable_of_ker_le_range (linWreathBase (H := H)) RegularWreathProduct.rightHom
   intro x hx
   have hh : x.right = 1 := hx
   exact ⟨x.left, by cases x; simp_all [linWreathBase]⟩
@@ -180,10 +185,10 @@ theorem linWreathCover_injective {Ω : Type*} [Nonempty Ω]
 
 /-- Its actual permutation image is solvable, so the cited vector task applies
 without needing a faithful action of the matrix-image group. -/
-theorem linWreathCover_solvable {Ω : Type*} [MulAction H Ω] [IsSolvable H] :
-    IsSolvable (linWreathCover (H := H) (Ω := Ω)).range := by
+theorem linWreathCover_solvable {Ω : Type*} [MulAction H Ω] [Group.IsSolvable H] :
+    Group.IsSolvable (linWreathCover (H := H) (Ω := Ω)).range := by
   letI := linWreath_solvable (H := H)
-  exact solvable_of_surjective (linWreathCover (H := H) (Ω := Ω)).rangeRestrict_surjective
+  exact Group.isSolvable_of_surjective (linWreathCover (H := H) (Ω := Ω)).rangeRestrict_surjective
 
 theorem linWreathCover_card (n : ℕ) : Nat.card (Fin n × linTwo) = 2 * n := by
   rw [Nat.card_prod]

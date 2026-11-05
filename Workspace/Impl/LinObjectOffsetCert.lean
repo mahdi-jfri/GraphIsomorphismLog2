@@ -1,6 +1,10 @@
-import Workspace.Impl.LinObjectPairTable
-import Workspace.Impl.LinObjectOffsetMath
-import Workspace.Impl.LinForallList
+module
+
+public import Workspace.Impl.LinObjectPairTable
+public import Workspace.Impl.LinObjectOffsetMath
+public import Workspace.Impl.LinForallList
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -27,7 +31,7 @@ theorem linObjectTableRow_window {n : ℕ} {A : Subgroup (Equiv.Perm (Fin n))}
   have hh := linForall₂_drop hr refs.length
   rw [List.drop_left] at hh
   have hh' := linForall₂_take hh targets.length
-  simpa only [List.take_length] using hh'
+  simpa only [linObjectTableRow, List.take_length] using hh'
 
 theorem linObjectCoset_rep_mem {n : ℕ} {a : Equiv.Perm (Fin n)}
     {gs : List (Equiv.Perm (Fin n))} {C : Set (Equiv.Perm (Fin n))}

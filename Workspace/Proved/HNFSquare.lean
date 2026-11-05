@@ -1,6 +1,10 @@
-import Workspace.Proved.HNFBareiss
-import Workspace.Proved.HNFMod
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
+module
+
+public import Workspace.Proved.HNFBareiss
+public import Workspace.Proved.HNFMod
+public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
+
+@[expose] public section
 
 /-!
 # Squaring up a matrix of full column rank

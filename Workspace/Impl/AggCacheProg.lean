@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCache
+module
+
+public import Workspace.Impl.AggCache
+
+@[expose] public section
 
 /-!
 # The cache lookup, in `GI.Lang`
@@ -227,8 +231,8 @@ theorem ckFind_spec (h : Membership) {P : Program} {b jm : ℕ} (hb : P.HasAt b 
       (ckFindCost h M) := by
   have hfind : P.HasAt b (findFuns b (b + 3)) := hb.left.left
   have htest : P.funs[b + 3]? = some (ckTestF (b + 4)) := by
-    simpa using hb.left.right.single
-  have hle : P.HasAt (b + 4) (leFuns (b + 4) jm) := by simpa using hb.right
+    simpa [findFuns, loopFuns] using hb.left.right.single
+  have hle : P.HasAt (b + 4) (leFuns (b + 4) jm) := by simpa [findFuns, loopFuns] using hb.right
   have hkM : (ckKeyV ps ns).wt < M := lt_of_lt_of_le (wt_le_wt_list (by simp)) hM
   have hcM : (Val.list (c.map ckEntV)).wt < M := lt_of_lt_of_le (wt_le_wt_list (by simp)) hM
   have hT : ∀ x ∈ c.map ckEntV, FunDet P (b + 3) (.list [ckKeyV ps ns, x])

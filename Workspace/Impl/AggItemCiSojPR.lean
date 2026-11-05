@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojGW
+module
+
+public import Workspace.Impl.AggItemCiSojGW
+
+@[expose] public section
 
 /-!
 # Processing a physical query answer

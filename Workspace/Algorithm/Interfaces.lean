@@ -1,5 +1,9 @@
-import Workspace.Algorithm.State
-import Mathlib.GroupTheory.SpecificGroups.Alternating
+module
+
+public import Workspace.Algorithm.State
+public import Mathlib.GroupTheory.SpecificGroups.Alternating
+
+@[expose] public section
 
 /-!
 # Query scripts and the interfaces of the subroutines

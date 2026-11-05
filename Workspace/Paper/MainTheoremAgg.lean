@@ -1,5 +1,9 @@
-import Workspace.Paper.MainTheoremGiant
-import Workspace.Algorithm.RowSupply
+module
+
+public import Workspace.Paper.MainTheoremGiant
+public import Workspace.Algorithm.RowSupply
+
+@[expose] public section
 
 /-!
 # The main theorems from the aggregation data alone
@@ -9,8 +13,7 @@ are now built (`GI.Algorithm.GiantSupply.ofAggregate`, `Workspace/Algorithm/RowS
 the row terminal and the column step. The versions below take only the data of the
 aggregation round, for the states outside the row case, with:
 
-* `GI.Cited.TransitiveAffected`, the cited result used by Theorem A.18;
-* `Params.RowThreshold`: `N^α ≥ 2 max{8, 2 + log₂ N} + 3` above `N₀`, so that the row case
+* `Params.RowThreshold`: `N^α ≥ 2 max{63, 12 log₂ N} + 3` above `N₀`, so that the row case
   meets the logarithmic threshold of Theorem A.18.
 -/
 
@@ -31,22 +34,22 @@ abbrev AggSupply (P : Params) : Type 1 :=
       {I : Aggregation P S L // I.script.CallsExact fun {Ω' _} _ _ => Finite Ω'}
 
 /-- **The recursion terminates on every input, given the aggregation data.** -/
-theorem run_exists_agg (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
-    (hcite : GI.Cited.TransitiveAffected) (hT : P.RowThreshold)
+theorem run_exists_agg
+    (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive) (hT : P.RowThreshold)
     (ha : 128 ≤ P.a) (hγ : 0 ≤ P.γ) (hE : P.EnumeratesBounded) (agg : AggSupply P)
     {Ω C : Type} [Finite Ω] (S : State Ω C) :
     Nonempty (Run P .solve S none S.answer) ∧
       ∀ {A : Set (Equiv.Perm Ω)}, Run P .solve S none A →
         A = {g | g ∈ S.G ∧ ∀ v ∈ S.dom, S.y (g v) = S.x v} :=
-  run_exists_giant hP hM ha hγ hE (GiantSupply.ofAggregate hcite hT agg) S
+  run_exists_giant hP hM ha hγ hE (GiantSupply.ofAggregate hT agg) S
 
 /-- **Theorem 1.2 at stage 1, for every run, given the aggregation data** (`thm:main-string`).
-The hypotheses are those of `thm_main_string_stage1_giant`, with the aggregation data,
-`GI.Cited.TransitiveAffected` and `Params.RowThreshold` in place of `GiantSupply P`. -/
-theorem thm_main_string_stage1_agg (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
-    (hcite : GI.Cited.TransitiveAffected) (hT : P.RowThreshold)
-    (ha128 : 128 ≤ P.a) (hE : P.EnumeratesBounded) (agg : AggSupply P)
-    (hAut : GI.Cited.AutCardLeSq) (hLie : GI.Cited.SimpleValuationDegree) (hκ : 64 ≤ P.κ)
+The hypotheses are those of `thm_main_string_stage1_giant`, with the aggregation data and
+`Params.RowThreshold` in place of `GiantSupply P`. -/
+theorem thm_main_string_stage1_agg
+    (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
+    (hT : P.RowThreshold)
+    (ha128 : 128 ≤ P.a) (hE : P.EnumeratesBounded) (agg : AggSupply P) (hκ : 64 ≤ P.κ)
     {cc : ChargingConstants} (hc : Compat P cc) (hαγ : 2 * P.α ≤ P.γ) (hbase : AboveBase P cc)
     {w : Node P → ℝ} {cw : ℝ} (hw : NodeBound' w cw) (hcw : 0 ≤ cw) (ha : P.a + 1 ≤ cc.a) :
     ∃ C' : ℝ, ∀ {Ω C : Type} [Finite Ω] (S : State Ω C),
@@ -55,16 +58,16 @@ theorem thm_main_string_stage1_agg (hP : P.Terminating) (hM : GI.Cited.MarotiPri
         (A = {g | g ∈ S.G ∧ ∀ v ∈ S.dom, S.y (g v) = S.x v} ∧
           (A = ∅ ∨ ∃ t ∈ S.G, A = t • (autGroup S.G S.dom S.dom_inv S.x : Set (Perm Ω)))) ∧
         r.total w ≤ Real.exp (C' * Real.log ((S.size : ℝ) + 2) ^ 2) :=
-  thm_main_string_stage1_giant hP hM ha128 hE (GiantSupply.ofAggregate hcite hT agg) hAut hLie
+  thm_main_string_stage1_giant hP hM ha128 hE (GiantSupply.ofAggregate hT agg)
     hκ hc hαγ hbase hw hcw ha
 
 /-- **Theorem 1.1 at stage 1, for every run, given the aggregation data** (`thm:main-graph`).
-The hypotheses are those of `thm_main_graph_stage1_giant`, with the aggregation data,
-`GI.Cited.TransitiveAffected` and `Params.RowThreshold` in place of `GiantSupply P`. -/
-theorem thm_main_graph_stage1_agg (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
-    (hcite : GI.Cited.TransitiveAffected) (hT : P.RowThreshold)
-    (ha128 : 128 ≤ P.a) (hE : P.EnumeratesBounded) (agg : AggSupply P)
-    (hAut : GI.Cited.AutCardLeSq) (hLie : GI.Cited.SimpleValuationDegree) (hκ : 64 ≤ P.κ)
+The hypotheses are those of `thm_main_graph_stage1_giant`, with the aggregation data and
+`Params.RowThreshold` in place of `GiantSupply P`. -/
+theorem thm_main_graph_stage1_agg
+    (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
+    (hT : P.RowThreshold)
+    (ha128 : 128 ≤ P.a) (hE : P.EnumeratesBounded) (agg : AggSupply P) (hκ : 64 ≤ P.κ)
     {cc : ChargingConstants} (hc : Compat P cc) (hαγ : 2 * P.α ≤ P.γ) (hbase : AboveBase P cc)
     {w : Node P → ℝ} {cw : ℝ} (hw : NodeBound' w cw) (hcw : 0 ≤ cw) (ha : P.a + 1 ≤ cc.a) :
     ∃ C' : ℝ, ∀ (n : ℕ) (X Y : SimpleGraph (Fin n)) [DecidableRel X.Adj] [DecidableRel Y.Adj],
@@ -75,7 +78,7 @@ theorem thm_main_graph_stage1_agg (hP : P.Terminating) (hM : GI.Cited.MarotiPrim
         (∀ σ : X ≃g Y, diagonalHom (Fin n) ⁻¹' A =
           (σ.toEquiv : Perm (Fin n)) • (GI.Statement.autGroup X : Set (Perm (Fin n)))) ∧
         r.total w ≤ Real.exp (C' * Real.log ((n : ℝ) + 2) ^ 2) :=
-  thm_main_graph_stage1_giant hP hM ha128 hE (GiantSupply.ofAggregate hcite hT agg) hAut hLie
+  thm_main_graph_stage1_giant hP hM ha128 hE (GiantSupply.ofAggregate hT agg)
     hκ hc hαγ hbase hw hcw ha
 
 end GI.Paper

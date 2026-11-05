@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCfMath
-import Workspace.Impl.AggItemCiPartT
-import Workspace.Impl.AggItemStepWt
+module
+
+public import Workspace.Impl.AggItemCfMath
+public import Workspace.Impl.AggItemCiPartT
+public import Workspace.Impl.AggItemStepWt
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3: the colored partitions of a branch
@@ -99,7 +103,7 @@ theorem itci_blk_wt (z : ColPart (Fin q)) {Q : ℕ} (hq : q ≤ Q) :
       if b ∈ z.blk a then 1 else 0) (c := 7 * Q + 4) (fun v hv => by
     obtain ⟨a, -, rfl⟩ := List.mem_map.1 hv
     have := wt_encFun_le (fun b => if b ∈ z.blk a then 1 else 0) (B := 1)
-      (fun b => by dsimp only; split_ifs <;> omega)
+      (fun b => by split_ifs <;> omega)
     have : q * (2 * 1 + 5) ≤ 7 * Q := by omega
     omega)
   simp only [List.length_map, List.length_finRange] at h

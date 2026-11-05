@@ -1,5 +1,9 @@
-import Workspace.AffineRecognitionPrimitive
-import Workspace.PrimitiveSolvableNormal
+module
+
+public import Workspace.AffineRecognitionPrimitive
+public import Workspace.PrimitiveSolvableNormal
+
+@[expose] public section
 namespace GI.BudgetInduction
 
 open RadicalSocle PrimitiveStructure
@@ -20,7 +24,7 @@ theorem primitive_alternative_of_nontrivial_solvable_radical
 nontrivial solvable normal subgroup, without assuming an affine model. -/
 theorem sigma_primitive_of_nontrivial_solvable_normal
     {V : Type*} [Fintype V] (H : Subgroup (Equiv.Perm V))
-    [MulAction.IsPreprimitive H V] (R : Subgroup H) [R.Normal] [IsSolvable R]
+    [MulAction.IsPreprimitive H V] (R : Subgroup H) [R.Normal] [Group.IsSolvable R]
     (hne : R ≠ ⊥) (a : V) {cutoff : ℕ} {C : ℝ}
     (hcutoff : 64 ≤ cutoff) (hC : 512 ≤ C) :
     (sigma cutoff a H : ℝ) ≤ degreeAllowance C (Fintype.card V) := by
@@ -50,7 +54,3 @@ theorem unsupported_radical_free_primitive_witness {cutoff : ℕ} {C A₀ : ℝ}
   exact not_lt_of_ge hb hfail
 
 end GI.BudgetInduction
-
-#print axioms GI.BudgetInduction.primitive_alternative_of_nontrivial_solvable_radical
-#print axioms GI.BudgetInduction.sigma_primitive_of_nontrivial_solvable_normal
-#print axioms GI.BudgetInduction.unsupported_radical_free_primitive_witness

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojAnswers
-import Workspace.Impl.AggItemCiSojSeq
+module
+
+public import Workspace.Impl.AggItemCiSojAnswers
+public import Workspace.Impl.AggItemCiSojSeq
+
+@[expose] public section
 
 /-! # Retaining exact query order in the saved-answer map -/
 

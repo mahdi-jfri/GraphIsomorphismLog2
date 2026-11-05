@@ -1,4 +1,8 @@
-import Workspace.Proved.VsWFrameMath
+module
+
+public import Workspace.Proved.VsWFrameMath
+
+@[expose] public section
 
 /-!
 # Local matrices and lifts

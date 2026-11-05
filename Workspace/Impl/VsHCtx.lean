@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHIsoOut
+module
+
+public import Workspace.Impl.VsHIsoOut
+
+@[expose] public section
 
 /-!
 # The context of the hard case

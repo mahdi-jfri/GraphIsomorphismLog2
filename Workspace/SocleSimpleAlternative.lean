@@ -1,5 +1,9 @@
-import Workspace.RadicalSocleIdempotent
-import Workspace.SocleOuter
+module
+
+public import Workspace.RadicalSocleIdempotent
+public import Workspace.SocleOuter
+
+@[expose] public section
 
 namespace GI.RadicalSocle
 

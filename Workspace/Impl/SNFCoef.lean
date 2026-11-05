@@ -1,4 +1,8 @@
-import Workspace.Impl.SNFAltP
+module
+
+public import Workspace.Impl.SNFAltP
+
+@[expose] public section
 
 /-!
 # The coefficients of a pair step as a program (Smith form)

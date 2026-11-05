@@ -1,5 +1,9 @@
-import Workspace.Algorithm.AuxBlocks
-import Workspace.Paper.CapsExplicit
+module
+
+public import Workspace.Algorithm.AuxBlocks
+public import Workspace.Paper.CapsExplicit
+
+@[expose] public section
 
 /-!
 # The parameters of an aggregation round, and its labels on the domain
@@ -41,6 +45,7 @@ structure Params.Aggregates (P : Params) : Prop where
   θ_half : 1 / 2 ≤ P.θ
   θκ : 1 ≤ P.θ * P.κ
   κ_five : 5 ≤ P.κ
+  κ_seven : 7 ≤ P.κ
   q₀_cert : 4 * P.κ + 2 ≤ P.q₀
   q₀_cfg : GI.Paper.a12Threshold ≤ P.q₀
   a_cert : 3 * (P.κ : ℝ) + 5 ≤ P.a

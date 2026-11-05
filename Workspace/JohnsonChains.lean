@@ -1,4 +1,8 @@
-import Workspace.JohnsonAnchors
+module
+
+public import Workspace.JohnsonAnchors
+
+@[expose] public section
 
 namespace GI.Johnson
 

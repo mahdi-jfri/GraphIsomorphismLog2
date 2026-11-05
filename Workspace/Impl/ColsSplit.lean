@@ -1,5 +1,9 @@
-import Workspace.Impl.LargestOrbit
-import Workspace.Algorithm.OrbitKeep
+module
+
+public import Workspace.Impl.LargestOrbit
+public import Workspace.Algorithm.OrbitKeep
+
+@[expose] public section
 
 /-!
 # The row test of the first orbit-chain child, in `GI.Lang`
@@ -360,7 +364,7 @@ theorem split_spec {P : Program} {b : ℕ} (h : P.HasAt b (splitFuns b)) (e : Ω
   have wR : rv.wt < W := wt_le_wt_list (by simp)
   have hkI : k < (indVal e D).wt := by
     have := length_lt_wt_list ((List.finRange k).map fun i => Val.nat (indF e D i))
-    simpa using this
+    simpa [indVal, encFun] using this
   have W1 : W + 1 ≤ (W + 1) ^ 3 := Nat.le_self_pow (by norm_num) _
   have harg0 := Det.arg' (P := P) (vs := [rv, indVal e D]) (rest := []) (j := 0) (v := rv) rfl
   have harg1 := Det.arg' (P := P) (vs := [rv, indVal e D]) (rest := []) (j := 1)

@@ -1,5 +1,9 @@
-import Workspace.BlockOrbit
-import Workspace.VisibleImage
+module
+
+public import Workspace.BlockOrbit
+public import Workspace.VisibleImage
+
+@[expose] public section
 
 namespace GI
 

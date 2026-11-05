@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJProgYg5
+module
+
+public import Workspace.Impl.TermJProgYg5
+
+@[expose] public section
 
 /-!
 # The local generators read off the `N`-test table (program)

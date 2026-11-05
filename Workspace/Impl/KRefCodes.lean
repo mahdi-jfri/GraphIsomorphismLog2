@@ -1,4 +1,8 @@
-import Workspace.Impl.KRefPows
+module
+
+public import Workspace.Impl.KRefPows
+
+@[expose] public section
 
 /-!
 # Indices of modified tuples, and equality patterns

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertBud
+module
+
+public import Workspace.Impl.AggCertBud
+
+@[expose] public section
 
 /-!
 # The move program of the certificate phase

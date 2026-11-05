@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCmpPick
-import Workspace.Impl.AggCmpInit
+module
+
+public import Workspace.Impl.AggCmpPick
+public import Workspace.Impl.AggCmpInit
+
+@[expose] public section
 
 /-!
 # Lifted groups stand for restricted cosets

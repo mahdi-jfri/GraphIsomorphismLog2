@@ -1,4 +1,8 @@
-import Workspace.Proved.PalfyBasic
+module
+
+public import Workspace.Proved.PalfyBasic
+
+@[expose] public section
 
 /-!
 # Commutative algebras of operators normalized by an irreducible group

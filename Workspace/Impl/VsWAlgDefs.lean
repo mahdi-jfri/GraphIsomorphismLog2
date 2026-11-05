@@ -1,5 +1,9 @@
-import Workspace.Impl.VsWDefs
-import Workspace.Impl.VsFMatPow
+module
+
+public import Workspace.Impl.VsWDefs
+public import Workspace.Impl.VsFMatPow
+
+@[expose] public section
 
 /-!
 # The list functions of the algebra pieces

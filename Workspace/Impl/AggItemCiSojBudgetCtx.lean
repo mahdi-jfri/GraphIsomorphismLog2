@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojBudgetL
-import Workspace.Impl.AggItemCiSojInit
+module
+
+public import Workspace.Impl.AggItemCiSojBudgetL
+public import Workspace.Impl.AggItemCiSojInit
+
+@[expose] public section
 
 /-! # The global item budget discharges initialization and bounded object inputs -/
 

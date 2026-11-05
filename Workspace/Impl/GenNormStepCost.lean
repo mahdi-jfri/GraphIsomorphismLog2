@@ -1,4 +1,8 @@
-import Workspace.Impl.GenNormStep
+module
+
+public import Workspace.Impl.GenNormStep
+
+@[expose] public section
 
 /-! # The complete normalization cost is polynomial and fits the general-node budget -/
 namespace GI.Impl

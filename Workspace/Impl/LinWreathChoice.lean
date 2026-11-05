@@ -1,7 +1,11 @@
-import Workspace.Impl.LinWreathSwapTest
-import Workspace.Impl.LinWreathScanMath
-import Workspace.Impl.LinWreathExtract
-import Workspace.Lang.Prims.Repr
+module
+
+public import Workspace.Impl.LinWreathSwapTest
+public import Workspace.Impl.LinWreathScanMath
+public import Workspace.Impl.LinWreathExtract
+public import Workspace.Lang.Prims.Repr
+
+@[expose] public section
 
 /-! Select a swapping stabilizer generator and extract its transporter. -/
 namespace GI.Impl
@@ -90,7 +94,7 @@ theorem linWreathChoice_spec {P : Program} {b : ℕ} (h : linWreathChoiceAt P b)
     nlinarith
   have he : gens els = (vecStab (linWreathVecInst I w)).map
       (gens (linWreathCoverGenerators I.gs)).subtype := by
-    simpa only [els, gens_one_cons, vecStabSub] using hhs
+    rw [show gens els = gens hs by simp [els, gens_one_cons], hhs]; rfl
   have dn := Det.arg' (P := P) (vs := [.nat I.n, encGroup hs]) (rest := []) (j := 0) rfl
   have dg := Det.arg' (P := P) (vs := [.nat I.n, encGroup hs]) (rest := []) (j := 1) rfl
   have dr := Det.get' dg (Det.nat 1) rfl

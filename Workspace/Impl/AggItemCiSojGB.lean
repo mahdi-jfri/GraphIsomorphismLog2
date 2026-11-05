@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojWt
-import Workspace.Impl.AggItemC1G
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Impl.AggItemCiSojWt
+public import Workspace.Impl.AggItemC1G
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-!
 # Constructing the full item generator list

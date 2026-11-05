@@ -1,8 +1,12 @@
-import Workspace.ValuationBudget
-import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
-import Mathlib.NumberTheory.Multiplicity
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+module
+
+public import Workspace.ValuationBudget
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
+public import Mathlib.NumberTheory.Multiplicity
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+@[expose] public section
 
 namespace GI.MatrixValuation
 
@@ -94,7 +98,7 @@ theorem valuation_order_factor (hq : 1 < q) (hpq : ¬p ∣ q) {i d : ℕ} (hi : 
     have hpow : 1 < q ^ (d - i) := one_lt_pow₀ hq (by omega)
     omega
   rw [hfactor, padicValNat.mul hsub (pow_ne_zero _ (by omega)),
-    padicValNat.pow _ (by omega), padicValNat.eq_zero_of_not_dvd hpq]
+    padicValNat.pow, padicValNat.eq_zero_of_not_dvd hpq]
   simp
 
 theorem valuation_order_product (hq : 1 < q) (hpq : ¬p ∣ q) (d : ℕ) :

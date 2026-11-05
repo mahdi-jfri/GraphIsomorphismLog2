@@ -1,5 +1,9 @@
-import Mathlib.GroupTheory.Frattini
-import Mathlib.Data.Set.Finite.Basic
+module
+
+public import Mathlib.GroupTheory.Frattini
+public import Mathlib.Data.Set.Finite.Basic
+
+@[expose] public section
 
 namespace GI
 
@@ -40,9 +44,9 @@ theorem minimal_surjection_kernel_le_frattini
 
 /-- The existence assertion behind the solvable-supplement reduction. The
 polynomial-time construction is a separate obligation. -/
-theorem exists_solvable_surjective_subgroup [Finite G] [IsSolvable Q]
+theorem exists_solvable_surjective_subgroup [Finite G] [Group.IsSolvable Q]
     (φ : G →* Q) (onto : Function.Surjective φ) :
-    ∃ S : Subgroup G, IsSolvable S ∧ S.map φ = ⊤ := by
+    ∃ S : Subgroup G, Group.IsSolvable S ∧ S.map φ = ⊤ := by
   classical
   let candidates : Set (Subgroup G) := {S | S.map φ = ⊤}
   have hnonempty : candidates.Nonempty :=
@@ -53,13 +57,13 @@ theorem exists_solvable_surjective_subgroup [Finite G] [IsSolvable Q]
     fun T hT hTS => le_antisymm (hmin' hT hTS) hTS
   have hk := minimal_surjection_kernel_le_frattini φ S hS hmin
   haveI : Group.IsNilpotent (frattini S) := frattini_nilpotent
-  have hs : IsSolvable S := solvable_of_ker_le_range (frattini S).subtype
+  have hs : Group.IsSolvable S := solvable_of_ker_le_range (frattini S).subtype
     (φ.comp S.subtype) (by simpa only [Subgroup.range_subtype] using hk)
   exact ⟨S, hs, hS⟩
 
 /-- Every normal subgroup with solvable quotient has a solvable supplement. -/
 theorem exists_solvable_supplement [Finite G] (N : Subgroup G) [N.Normal]
-    [IsSolvable (G ⧸ N)] : ∃ S : Subgroup G, IsSolvable S ∧ S ⊔ N = ⊤ := by
+    [Group.IsSolvable (G ⧸ N)] : ∃ S : Subgroup G, Group.IsSolvable S ∧ S ⊔ N = ⊤ := by
   obtain ⟨S, hs, hS⟩ := exists_solvable_surjective_subgroup
     (QuotientGroup.mk' N) (QuotientGroup.mk'_surjective N)
   refine ⟨S, hs, ?_⟩

@@ -1,8 +1,12 @@
-import Mathlib.GroupTheory.Perm.Basic
-import Mathlib.Algebra.Group.Subgroup.Pointwise
-import Mathlib.Data.Fintype.Card
-import Workspace.Cited.AlgoPermGroups
-import Workspace.Compat
+module
+
+public import Mathlib.GroupTheory.Perm.Basic
+public import Mathlib.Algebra.Group.Subgroup.Pointwise
+public import Mathlib.Data.Fintype.Card
+public import Workspace.Cited.AlgoPermGroups
+public import Workspace.Compat
+
+@[expose] public section
 
 /-!
 # The subcoset problem of Luks–Miyazaki, Proposition 3.9

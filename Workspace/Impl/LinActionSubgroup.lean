@@ -1,6 +1,10 @@
-import Workspace.Impl.LinFiniteActionCost
-import Workspace.Impl.LinMembership
-import Workspace.Impl.LinPermCertificate
+module
+
+public import Workspace.Impl.LinFiniteActionCost
+public import Workspace.Impl.LinMembership
+public import Workspace.Impl.LinPermCertificate
+
+@[expose] public section
 
 /-! Lift the cited permutation SLP to the original cover subgroup before
 evaluating its full affine action. -/

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepS5
+module
+
+public import Workspace.Impl.AggRectRepS5
+
+@[expose] public section
 
 /-!
 # The cell step of the representation program

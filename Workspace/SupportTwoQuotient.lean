@@ -1,5 +1,9 @@
-import Workspace.PairComplement
-import Workspace.StabilizerImage
+module
+
+public import Workspace.PairComplement
+public import Workspace.StabilizerImage
+
+@[expose] public section
 
 namespace GI.Pairs
 

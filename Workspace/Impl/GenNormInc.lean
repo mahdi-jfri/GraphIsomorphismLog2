@@ -1,4 +1,8 @@
-import Workspace.Impl.GenNormChild
+module
+
+public import Workspace.Impl.GenNormChild
+
+@[expose] public section
 
 /-!
 # Reading the point action from a single Cameron factor

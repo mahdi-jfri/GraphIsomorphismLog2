@@ -1,5 +1,9 @@
-import Workspace.Impl.VsFMatPow
-import Workspace.Impl.AggStructDC
+module
+
+public import Workspace.Impl.VsFMatPow
+public import Workspace.Impl.AggStructDC
+
+@[expose] public section
 
 /-!
 # Transposing a matrix

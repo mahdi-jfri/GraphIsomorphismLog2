@@ -1,5 +1,9 @@
-import Workspace.DominantColor
-import Workspace.CoherentCliqueBound
+module
+
+public import Workspace.DominantColor
+public import Workspace.CoherentCliqueBound
+
+@[expose] public section
 
 namespace GI.CoherentEntrance
 
@@ -83,6 +87,3 @@ theorem dominant_mixed_rectangle (c : Coloring n) (hc : Coherent c)
   exact ⟨j, hji, hjdiag, b, k, u', w, htrue, hfalse⟩
 
 end GI.CoherentEntrance
-
-#print axioms GI.CoherentEntrance.mixed_column_of_crossing
-#print axioms GI.CoherentEntrance.dominant_mixed_rectangle

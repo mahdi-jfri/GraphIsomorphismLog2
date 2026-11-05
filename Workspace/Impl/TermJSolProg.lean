@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJSolStack
+module
+
+public import Workspace.Impl.TermJSolStack
+
+@[expose] public section
 
 /-!
 # Zero-sum solve and coefficient kernel (program layout)

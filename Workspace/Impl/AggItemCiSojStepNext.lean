@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojStepFinish
+module
+
+public import Workspace.Impl.AggItemCiSojStepFinish
+
+@[expose] public section
 
 /-! # The actual queue's optional second query and its exact continuation -/
 

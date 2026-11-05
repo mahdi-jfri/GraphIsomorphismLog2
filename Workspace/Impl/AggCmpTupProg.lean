@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCmpTup
-import Workspace.Impl.AggSubProg
+module
+
+public import Workspace.Impl.AggCmpTup
+public import Workspace.Impl.AggSubProg
+
+@[expose] public section
 
 /-!
 # The list of the test tuples, as a program

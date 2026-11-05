@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCfDes
-import Workspace.Impl.AggItemHvA
+module
+
+public import Workspace.Impl.AggItemCfDes
+public import Workspace.Impl.AggItemHvA
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3: the case dispatcher of the object step, and the wrap of the item output

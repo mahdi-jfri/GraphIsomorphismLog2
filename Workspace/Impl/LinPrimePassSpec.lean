@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimePassCost
-import Workspace.Impl.LinPrimePassArg
+module
+
+public import Workspace.Impl.LinPrimePassCost
+public import Workspace.Impl.LinPrimePassArg
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -13,9 +17,11 @@ private theorem linPrimePassWholeCost {W P L T ca cl cb wo : ℕ}
 set_option maxHeartbeats 200000 in
 theorem linPrimePass_spec (hm : ConstructiveMembership) (hv : VectorStabilizer)
     {P : Program} {b jm jv n d p : ℕ} (hat : linPrimePassAt P b jm jv hm hv)
-    (gs : List (Equiv.Perm (Fin n))) (hlen : gs.length ≤ n ^ 2) (hs : IsSolvable (gens gs))
+    (gs : List (Equiv.Perm (Fin n))) (hlen : gs.length ≤ n ^ 2)
     (m : Fin d → ℕ) (hp : p.Prime) (hpn : p ≤ n) [NeZero n] (hmpos : ∀ i, 0 < m i)
-    (ρ : gens gs →* (linFiniteVec m ≃+ linFiniteVec m)) (c : gens gs → linFiniteVec m)
+    (ρ : gens gs →* (linFiniteVec m ≃+ linFiniteVec m))
+    (hs : IsSolvable ρ.range)
+    (c : gens gs → linFiniteVec m)
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g)
     (x : linFiniteVec m) (acc : Equiv.Perm (Fin n)) :
     let D := linTrialPrimaryData m p hp hmpos
@@ -40,8 +46,17 @@ theorem linPrimePass_spec (hm : ConstructiveMembership) (hv : VectorStabilizer)
   have wprep : prep.wt ≤ B := hprepare.wt_lt.le
   have dprep := Det.call da hprepare
   have hcp : ∀ g k, cp (g * k) = ρp g (cp k) + cp g := linPrimeAction_cocycle D hmpos ρ c hc
+  have hsp : IsSolvable ρp.range := by
+    refine solvable_range_of_ker_le ρ ρp ?_ hs
+    intro g hg
+    rw [MonoidHom.mem_ker] at hg ⊢
+    refine AddEquiv.ext fun y => ?_
+    obtain ⟨z, rfl⟩ := linPrimeProjection_surjective D y
+    change ρp g (linPrimeProjection D z) = linPrimeProjection D z
+    rw [linPrimeAction_image, hg]
+    rfl
   have hloop : FunAll P (b + 88) prep (fun out cost =>
-      linPrimaryLoopInv gs D.exponent ρp cp xp 1 (linPrimaryHeight D.exponent) out ∧ cost ≤ L) := FunAll.mono (linPrimaryLoop_spec hm hv hat.loop gs hlen hs hp hpn D.exponent ρp cp hcp xp 1)
+      linPrimaryLoopInv gs D.exponent ρp cp xp 1 (linPrimaryHeight D.exponent) out ∧ cost ≤ L) := FunAll.mono (linPrimaryLoop_spec hm hv hat.loop gs hlen hp hpn D.exponent ρp hsp cp hcp xp 1)
     (fun out cost ho => ⟨ho.1, ho.2.trans (linPrimePass_loop_bound hm hv wprep)⟩)
   have dv := Det.var' (P := P) (env := [a, prep]) (i := 1) rfl
   have call := normBound_call dv hloop

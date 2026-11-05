@@ -1,5 +1,9 @@
-import Workspace.Impl.AggRectRepT12
-import Workspace.Impl.TermRecPoly
+module
+
+public import Workspace.Impl.AggRectRepT12
+public import Workspace.Impl.TermRecPoly
+
+@[expose] public section
 
 /-!
 # The rectangle representation program meets its contract

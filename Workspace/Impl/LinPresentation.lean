@@ -1,7 +1,11 @@
-import Workspace.Impl.LinSolve
-import Mathlib.LinearAlgebra.FreeModule.Finite.CardQuotient
-import Mathlib.LinearAlgebra.Matrix.Nondegenerate
-import Mathlib.LinearAlgebra.Matrix.Block
+module
+
+public import Workspace.Impl.LinSolve
+public import Mathlib.LinearAlgebra.FreeModule.Finite.CardQuotient
+public import Mathlib.LinearAlgebra.Matrix.Nondegenerate
+public import Mathlib.LinearAlgebra.Matrix.Block
+
+@[expose] public section
 
 /-! The counting argument for the complete triangular presentation in A.20.
 The quotient is by the integer row lattice, so it is an abelian presentation.

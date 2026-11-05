@@ -1,6 +1,10 @@
-import Workspace.Impl.AggStab
-import Workspace.Impl.AggMT
-import Workspace.LocalPermFamilies
+module
+
+public import Workspace.Impl.AggStab
+public import Workspace.Impl.AggMT
+public import Workspace.LocalPermFamilies
+
+@[expose] public section
 
 /-!
 # The group `P_T` as a preimage of labels

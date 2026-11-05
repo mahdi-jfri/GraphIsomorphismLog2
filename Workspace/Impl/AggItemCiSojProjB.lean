@@ -1,7 +1,11 @@
-import Workspace.Impl.AggItemCiSojGM
-import Workspace.Impl.AggItemCiSojGW
-import Workspace.Impl.AggItemCiSojPR
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Impl.AggItemCiSojGM
+public import Workspace.Impl.AggItemCiSojGW
+public import Workspace.Impl.AggItemCiSojPR
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-! # Uniform polynomial bounds for processing one canonical rectangle answer -/
 

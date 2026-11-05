@@ -1,4 +1,8 @@
-import Workspace.RadicalSocleDecomposition
+module
+
+public import Workspace.RadicalSocleDecomposition
+
+@[expose] public section
 
 namespace GI.RadicalSocle
 

@@ -1,5 +1,9 @@
-import Workspace.SubdirectPhysicalDegree
-import Workspace.BudgetInductionProperCartesian
+module
+
+public import Workspace.SubdirectPhysicalDegree
+public import Workspace.BudgetInductionProperCartesian
+
+@[expose] public section
 
 namespace GI.PrimitiveCartesian
 
@@ -91,6 +95,3 @@ theorem unsupported_minimalNormal_order_le_degree_sq {n : ℕ} {A₀ : ℝ}
   simpa only [Nat.card_eq_fintype_card, Fintype.card_fin] using h
 
 end GI.BudgetInduction
-
-#print axioms GI.PrimitiveCartesian.minimalNormal_card_le_degree_sq_of_subdirect
-#print axioms GI.BudgetInduction.unsupported_minimalNormal_order_le_degree_sq

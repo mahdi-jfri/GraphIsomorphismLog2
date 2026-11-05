@@ -1,5 +1,9 @@
-import Workspace.Impl.AggStructDesSrc
-import Workspace.Impl.AggStructCol
+module
+
+public import Workspace.Impl.AggStructDesSrc
+public import Workspace.Impl.AggStructCol
+
+@[expose] public section
 
 /-!
 # The source tuple of Case 3, from the output of the refinement call

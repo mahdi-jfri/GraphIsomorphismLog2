@@ -1,5 +1,9 @@
-import Workspace.Impl.TermRepsCost
-import Workspace.MulticosetBounds
+module
+
+public import Workspace.Impl.TermRepsCost
+public import Workspace.MulticosetBounds
+
+@[expose] public section
 
 /-!
 # The recursion bound of Theorem A.20, in the cost form of the programs (T5)

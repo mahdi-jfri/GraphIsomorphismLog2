@@ -4,8 +4,7 @@
 A cited algorithm is a hypothesis `h : ∃ prog, PolyTimeAt (Task.ofVal enc Correct) prog` (the
 form of every `GI.Cited.X` of `Workspace/Cited/Algo*.lean`). `Prim.ofHyp enc Correct h` is the
 primitive of `GI.Lang` that runs the program of `h` (`Prim.ofCited` with the program and
-constants chosen from `h`). No hypothesis becomes an axiom here: every primitive takes its
-hypothesis as an argument.
+constants chosen from `h`). Every primitive takes its hypothesis as an argument.
 
 * `PrimSpec p v Out`: on the value `v`, primitive `p` may be called (`p.Pre v`) and every result
   `w` satisfies `Out w`. The specification lemmas of the wrappers have this form, with `Out`
@@ -18,7 +17,11 @@ hypothesis as an argument.
 * `Program.PrimsAt P b ps`: the primitives `ps` sit in `P` at indices `b, b + 1, …`, the
   counterpart of `Program.HasAt` for functions.
 -/
-import Workspace.Lang.Prims.Repr
+module
+
+public import Workspace.Lang.Prims.Repr
+
+@[expose] public section
 
 namespace GI.Lang
 

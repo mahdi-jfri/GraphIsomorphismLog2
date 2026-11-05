@@ -1,13 +1,8 @@
-import Workspace.Impl.VsHConj
+module
 
-/-!
-# Conjugation of a tuple of local matrices
+public import Workspace.Impl.VsHConj
 
-The `Q₈` branch needs the centralizer of `Ȳ` in `C`, the stabilizer of the tuple
-`(T(b))_{b ∈ B}` under conjugation. Points are lists of matrices with keys
-`m :: [0, key M₁] ++ … ++ [0, key M_m]`; `vsHConjTE` cuts the key into pieces, conjugates each
-piece with `vsHConjE` and joins them (`vsHConjT_spec`).
--/
+@[expose] public section
 
 open Matrix
 
@@ -93,7 +88,103 @@ structure VsHTLay (P : Program) (x : VsHTX) : Prop where
 /-- The cost of the tuple program. -/
 def vsHConjTCost (Cφ N : ℕ) : ℕ := (N + 1) * vsHConjCost Cφ N + 10 ^ 12 * (N + 1) ^ 8
 
-set_option maxHeartbeats 8000000 in
+private theorem spd_vsHConjT_q2 (N : ℕ) : N * N + 1 ≤ (N + 1) ^ 2 := by nlinarith
+
+private theorem spd_vsHConjT_q2' {N : ℕ} (h1 : 1 ≤ N) : N * N + 2 ≤ (N + 1) ^ 2 := by nlinarith
+
+private theorem spd_vsHConjT_e4 (N : ℕ) : 5 * ((N + 1) ^ 2 + 1) ^ 2 ≤ 20 * (N + 1) ^ 4 := by
+  have : 1 ≤ (N + 1) ^ 2 := Nat.one_le_pow _ _ (by omega)
+  nlinarith
+
+private theorem spd_vsHConjT_wpc {N : ℕ} (hpN : I.p ≤ N) (hDD1 : vsQD s * vsQD s + 1 ≤ N)
+    (M' : Matrix (Fin (vsQD s)) (Fin (vsQD s)) (ZMod I.p)) :
+    (natList (vsHPc M')).wt ≤ 5 * (N + 1) ^ 2 :=
+  wt_natList_le_sq (B := N) (fun y hy => by
+    rcases List.mem_cons.1 hy with rfl | hy
+    · omega
+    · exact (vsHKey_lt M' y hy).le.trans hpN) (by rw [vsHPc_length]; omega)
+
+private theorem spd_vsHConjT_flatW {N : ℕ} (hpN : I.p ≤ N) (hDD1 : vsQD s * vsQD s + 1 ≤ N)
+    (zs : List (Matrix (Fin (vsQD s)) (Fin (vsQD s)) (ZMod I.p))) (hzs : zs.length ≤ N) :
+    (Val.list ((zs.map vsHPc).flatten.map Val.nat)).wt ≤ 20 * (N + 1) ^ 4 := by
+  have hl : (zs.map vsHPc).flatten.length = zs.length * (vsQD s * vsQD s + 1) := by
+    simp only [List.length_flatten, List.map_map, Function.comp_def, vsHPc_length]
+    simp
+  have hmDD : zs.length * (vsQD s * vsQD s + 1) ≤ N * N := Nat.mul_le_mul hzs (by omega)
+  have q2 := spd_vsHConjT_q2 N
+  have q12 : N + 1 ≤ (N + 1) ^ 2 := Nat.le_self_pow (by omega) _
+  have hz : ∀ y ∈ (zs.map vsHPc).flatten, y ≤ (N + 1) ^ 2 := by
+    intro y hy
+    obtain ⟨l, hl, hyl⟩ := List.mem_flatten.1 hy
+    obtain ⟨M, -, rfl⟩ := List.mem_map.1 hl
+    rcases List.mem_cons.1 hyl with rfl | hy'
+    · omega
+    · have := (vsHKey_lt M y hy').le.trans hpN; omega
+  have h1 := wt_natList_le_sq (xs := (zs.map vsHPc).flatten) (B := (N + 1) ^ 2) hz (by rw [hl]; omega)
+  exact h1.trans (spd_vsHConjT_e4 N)
+
+private theorem spd_vsHConjT_keyW {N : ℕ} (hpN : I.p ≤ N) (hDD1 : vsQD s * vsQD s + 1 ≤ N)
+    (zs : List (Matrix (Fin (vsQD s)) (Fin (vsQD s)) (ZMod I.p))) (hzs : zs.length ≤ N) :
+    (natList (0 :: vsHKeyT zs)).wt ≤ 20 * (N + 1) ^ 4 := by
+  have hl : (zs.map vsHPc).flatten.length = zs.length * (vsQD s * vsQD s + 1) := by
+    simp only [List.length_flatten, List.map_map, Function.comp_def, vsHPc_length]
+    simp
+  have hmDD : zs.length * (vsQD s * vsQD s + 1) ≤ N * N := Nat.mul_le_mul hzs (by omega)
+  have q2' := spd_vsHConjT_q2' (N := N) (by omega)
+  have q12 : N + 1 ≤ (N + 1) ^ 2 := Nat.le_self_pow (by omega) _
+  have hz : ∀ y ∈ 0 :: vsHKeyT zs, y ≤ (N + 1) ^ 2 := by
+    intro y hy
+    simp only [vsHKeyT, List.mem_cons] at hy
+    rcases hy with rfl | rfl | hy
+    · omega
+    · omega
+    · obtain ⟨l, hl, hyl⟩ := List.mem_flatten.1 hy
+      obtain ⟨M, -, rfl⟩ := List.mem_map.1 hl
+      rcases List.mem_cons.1 hyl with rfl | hy'
+      · omega
+      · have := (vsHKey_lt M y hy').le.trans hpN; omega
+  have h1 := wt_natList_le_sq (xs := 0 :: vsHKeyT zs) (B := (N + 1) ^ 2) hz (by
+    simp only [vsHKeyT, List.length_cons, hl]; omega)
+  exact h1.trans (spd_vsHConjT_e4 N)
+
+private theorem spd_vsHConjT_it {P : Program} {x : VsHTX} (L : VsHTLay P x) {Cφ N : ℕ}
+    (hphi : ∀ g ∈ gens I.gs, FunDet P x.c.phi (.list [vsQGam I, encPerm g])
+      (vsQE I.p I.d (vsQExp I) (vsQPhi I g)) Cφ)
+    (hsz : VsQSz I.p I.d (vsQExp I) N) (hΓ : (vsQGam I).wt ≤ N) (hn : I.n ≤ N)
+    (hfr : VsWFrOK I.p N I.d s.ws' (vsQCs s)) (hDD1 : vsQD s * vsQD s + 1 ≤ N)
+    (hac : (vsHAcV s).wt ≤ 1000 * (N + 1) ^ 3)
+    {g : Perm (Fin I.n)} (hg : g ∈ gens I.gs)
+    (M : Matrix (Fin (vsQD s)) (Fin (vsQD s)) (ZMod I.p)) :
+    FunDet P x.it (.list [.list [vsHAcV s, encPerm g], natList (vsHPc M)])
+      (natList (vsHPc (vsHAl s g M))) (vsHConjCost Cφ N + 10 ^ 5 * (N + 1) ^ 3) := by
+  have hpN := hsz.pN
+  set A := Val.list [.list [vsHAcV s, encPerm g], natList (vsHPc M)]
+  have c0 := Det.arg' (P := P) (vs := [.list [vsHAcV s, encPerm g], natList (vsHPc M)]) (rest := [])
+    (j := 0) rfl
+  have c1 := Det.arg' (P := P) (vs := [.list [vsHAcV s, encPerm g], natList (vsHPc M)]) (rest := [])
+    (j := 1) rfl
+  have cac := Det.get' c0 (Det.nat 0) (show [vsHAcV s, encPerm g][0]? = some (vsHAcV s) from rfl)
+  have cg := Det.get' c0 (Det.nat 1) (show [vsHAcV s, encPerm g][1]? = some (encPerm g) from rfl)
+  have dc := Det.call (Det.mk3 cac cg c1) (vsHConj_spec L.c hphi hsz hΓ hn hfr hDD1 hac hg M)
+  refine FunDet.intro L.hit (dc.mono ?_)
+  have p1 : 1 ≤ (N + 1) ^ 2 := Nat.one_le_pow _ _ (by omega)
+  have w1 := spd_vsHConjT_wpc hpN hDD1 M
+  have w2 := spd_vsHConjT_wpc hpN hDD1 (vsHAl s g M)
+  have wg := wt_encPerm_le g
+  have hn2 : (I.n + 1) ^ 2 ≤ (N + 1) ^ 2 := Nat.pow_le_pow_left (by omega) 2
+  have q23 : (N + 1) ^ 2 ≤ (N + 1) ^ 3 := Nat.pow_le_pow_right (by omega) (by omega)
+  have l1 := wt_list2_le (vsHAcV s) (encPerm g)
+  have l2 := wt_list2_le (Val.list [vsHAcV s, encPerm g]) (natList (vsHPc M))
+  have l3 := wt_list3_le (vsHAcV s) (encPerm g) (natList (vsHPc M))
+  have eA : A.wt = (Val.list [.list [vsHAcV s, encPerm g], natList (vsHPc M)]).wt := rfl
+  have e1 : natList (0 :: vsHKey (vsHT s g⁻¹ * M * vsHT s g)) = natList (vsHPc (vsHAl s g M)) := rfl
+  have e2 : natList (0 :: vsHKey M) = natList (vsHPc M) := rfl
+  rw [e1] at *
+  have := wt_nat_le 0; have := wt_nat_le 1
+  clear c0 c1 cac cg dc L hphi hsz hfr
+  clear_value A
+  omega
+
 /-- **The tuple program.** -/
 theorem vsHConjT_spec {P : Program} {x : VsHTX} (L : VsHTLay P x) {Cφ N : ℕ}
     (hphi : ∀ g ∈ gens I.gs, FunDet P x.c.phi (.list [vsQGam I, encPerm g])
@@ -135,26 +226,8 @@ theorem vsHConjT_spec {P : Program} {x : VsHTX} (L : VsHTLay P x) {Cφ N : ℕ}
   have dm := Det.get' a2' (Det.nat 1)
     (show (Val.nat 0 :: Val.nat m :: flat.map Val.nat)[1]? = some (.nat m) from rfl)
   have hmDD : m * (DD + 1) ≤ N * N := Nat.mul_le_mul hm (by omega)
-  have q2 : N * N + 1 ≤ (N + 1) ^ 2 := by nlinarith
-  have hflatW : ∀ zs : List (Matrix (Fin (vsQD s)) (Fin (vsQD s)) (ZMod I.p)), zs.length = m →
-      (Val.list ((zs.map vsHPc).flatten.map Val.nat)).wt ≤ 20 * (N + 1) ^ 4 := by
-    intro zs hzs
-    have hl : (zs.map vsHPc).flatten.length = m * (DD + 1) := by
-      simp only [List.length_flatten, List.map_map, Function.comp_def, vsHPc_length]
-      simp [hzs]
-      exact Or.inl rfl
-    have hz : ∀ y ∈ (zs.map vsHPc).flatten, y ≤ N := by
-      intro y hy
-      obtain ⟨l, hl, hyl⟩ := List.mem_flatten.1 hy
-      obtain ⟨M, -, rfl⟩ := List.mem_map.1 hl
-      rcases List.mem_cons.1 hyl with rfl | hy'
-      · omega
-      · exact (vsHKey_lt M y hy').le.trans hpN
-    have := wt_natList_le_sq (xs := (zs.map vsHPc).flatten) (B := (N + 1) ^ 2)
-      (fun y hy => (hz y hy).trans (by nlinarith)) (by rw [hl]; omega)
-    have e : 5 * ((N + 1) ^ 2 + 1) ^ 2 ≤ 20 * (N + 1) ^ 4 := by nlinarith
-    exact this.trans e
-  have hfw : (Val.list (flat.map Val.nat)).wt ≤ 20 * (N + 1) ^ 4 := hflatW ys rfl
+  have q2 := spd_vsHConjT_q2 N
+  have hfw : (Val.list (flat.map Val.nat)).wt ≤ 20 * (N + 1) ^ 4 := spd_vsHConjT_flatW hpN hDD1 ys hm
   have d2 := Det.call (Det.mk3 dDD dm (Det.var' (P := P) (env := E1) (i := 1) rfl))
     (vsQChunk_spec L.c.hch (k := DD + 1) (m := m) (N := N) (W := 20 * (N + 1) ^ 4)
       (by rw [List.length_map, hfl, Nat.mul_comm]) (by omega) hm hfw)
@@ -170,37 +243,8 @@ theorem vsHConjT_spec {P : Program} {x : VsHTX} (L : VsHTLay P x) {Cφ N : ℕ}
   have b1 := Det.arg' (P := P) (vs := vs) (rest := [Val.list (flat.map Val.nat),
     Val.list (ys.map fun M => natList (vsHPc M))]) (j := 1) rfl
   have hit : ∀ M ∈ ys, FunDet P x.it (.list [.list [vsHAcV s, encPerm g], natList (vsHPc M)])
-      (natList (vsHPc (vsHAl s g M))) (vsHConjCost Cφ N + 10 ^ 5 * (N + 1) ^ 3) := by
-    intro M _
-    set A := Val.list [.list [vsHAcV s, encPerm g], natList (vsHPc M)]
-    have c0 := Det.arg' (P := P) (vs := [.list [vsHAcV s, encPerm g], natList (vsHPc M)]) (rest := [])
-      (j := 0) rfl
-    have c1 := Det.arg' (P := P) (vs := [.list [vsHAcV s, encPerm g], natList (vsHPc M)]) (rest := [])
-      (j := 1) rfl
-    have cac := Det.get' c0 (Det.nat 0) (show [vsHAcV s, encPerm g][0]? = some (vsHAcV s) from rfl)
-    have cg := Det.get' c0 (Det.nat 1) (show [vsHAcV s, encPerm g][1]? = some (encPerm g) from rfl)
-    have dc := Det.call (Det.mk3 cac cg c1) (vsHConj_spec L.c hphi hsz hΓ hn hfr hDD1 hac hg M)
-    refine FunDet.intro L.hit (dc.mono ?_)
-    have wpc : ∀ M' : Matrix (Fin (vsQD s)) (Fin (vsQD s)) (ZMod I.p),
-        (natList (vsHPc M')).wt ≤ 5 * (N + 1) ^ 2 := fun M' =>
-      wt_natList_le_sq (B := N) (fun y hy => by
-        rcases List.mem_cons.1 hy with rfl | hy
-        · omega
-        · exact (vsHKey_lt M' y hy).le.trans hpN) (by rw [vsHPc_length]; omega)
-    have w1 := wpc M
-    have w2 := wpc (vsHAl s g M)
-    have wg := wt_encPerm_le g
-    have hn2 : (I.n + 1) ^ 2 ≤ (N + 1) ^ 2 := Nat.pow_le_pow_left (by omega) 2
-    have q23 : (N + 1) ^ 2 ≤ (N + 1) ^ 3 := Nat.pow_le_pow_right (by omega) (by omega)
-    have l1 := wt_list2_le (vsHAcV s) (encPerm g)
-    have l2 := wt_list2_le (Val.list [vsHAcV s, encPerm g]) (natList (vsHPc M))
-    have l3 := wt_list3_le (vsHAcV s) (encPerm g) (natList (vsHPc M))
-    have eA : A.wt = (Val.list [.list [vsHAcV s, encPerm g], natList (vsHPc M)]).wt := rfl
-    have e1 : natList (0 :: vsHKey (vsHT s g⁻¹ * M * vsHT s g)) = natList (vsHPc (vsHAl s g M)) := rfl
-    have e2 : natList (0 :: vsHKey M) = natList (vsHPc M) := rfl
-    rw [e1] at *
-    have := wt_nat_le 0; have := wt_nat_le 1
-    omega
+      (natList (vsHPc (vsHAl s g M))) (vsHConjCost Cφ N + 10 ^ 5 * (N + 1) ^ 3) :=
+    fun M _ => spd_vsHConjT_it L hphi hsz hΓ hn hfr hDD1 hac hg M
   have dmap := Det.call (Det.mk2 (Det.mk2 b0 b1) (Det.var' (P := P) (env := E2) (i := 2) rfl))
     (vsQ_map L.hmp ys (fun M => natList (vsHPc M)) (fun M => natList (vsHPc (vsHAl s g M)))
       (fun M M' h => by
@@ -214,12 +258,7 @@ theorem vsHConjT_spec {P : Program} {x : VsHTX} (L : VsHTLay P x) {Cφ N : ℕ}
   have ef : xss.flatten = (ys'.map vsHPc).flatten.map Val.nat := by
     simp [xss, ys', vsHAlT, List.map_flatten, List.map_map, Function.comp_def]
   have hys' : ys'.length = m := by simp [ys', vsHAlT, m]
-  have wpc : ∀ M' : Matrix (Fin (vsQD s)) (Fin (vsQD s)) (ZMod I.p),
-      (natList (vsHPc M')).wt ≤ 5 * (N + 1) ^ 2 := fun M' =>
-    wt_natList_le_sq (B := N) (fun y hy => by
-      rcases List.mem_cons.1 hy with rfl | hy
-      · omega
-      · exact (vsHKey_lt M' y hy).le.trans hpN) (by rw [vsHPc_length]; omega)
+  have wpc := spd_vsHConjT_wpc (s := s) hpN hDD1
   have hWi : (Val.list (xss.map Val.list)).wt ≤ 1000 * (N + 1) ^ 4 := by
     have := vs_wt_list_le_of (xss.map Val.list) (c := 5 * (N + 1) ^ 2) (by
       intro v hv
@@ -236,13 +275,15 @@ theorem vsHConjT_spec {P : Program} {x : VsHTX} (L : VsHTLay P x) {Cφ N : ℕ}
     omega
   set E3 := [Val.list vs, Val.list (flat.map Val.nat), Val.list (ys.map fun M => natList (vsHPc M)),
     Val.list (xss.map Val.list)]
+  have wout : (Val.list ((ys'.map vsHPc).flatten.map Val.nat)).wt ≤ 20 * (N + 1) ^ 4 :=
+    spd_vsHConjT_flatW hpN hDD1 ys' (by omega)
   have dcat := Det.call (Det.var' (P := P) (env := E3) (i := 3) rfl)
     (vsWConcat_spec L.hcat xss (N := N) (by simp [xss]; omega)
       (fun xs hxs => by
         simp only [xss, List.mem_map] at hxs
         obtain ⟨M, -, rfl⟩ := hxs
         rw [List.length_map, vsHPc_length]; omega)
-      (by rw [ef]; exact (hflatW ys' hys').trans (by nlinarith)) hWi)
+      (by rw [ef]; exact wout.trans (Nat.mul_le_mul_right _ (by norm_num))) hWi)
   rw [ef] at dcat
   -- prepend `[0, m]`
   have a2'' := Det.arg' (P := P) (vs := vs) (rest := [Val.list (flat.map Val.nat),
@@ -258,7 +299,6 @@ theorem vsHConjT_spec {P : Program} {x : VsHTX} (L : VsHTLay P x) {Cφ N : ℕ}
     simp only [fl', List.length_flatten, List.map_map, Function.comp_def, vsHPc_length]
     simp [hys']
     exact Or.inl rfl
-  have wout := hflatW ys' hys'
   set KP := loopModK * (m * (DD + 1) + 1) *
     ((Val.list [.list [Val.nat 0, Val.nat m], .list (fl'.map Val.nat)]).wt + m * (DD + 1) +
       (natList (0 :: vsHKeyT ys')).wt + 1)
@@ -275,7 +315,8 @@ theorem vsHConjT_spec {P : Program} {x : VsHTX} (L : VsHTLay P x) {Cφ N : ℕ}
         simp only [KP]
         rw [List.length_map, hfl'] at h2
         exact h2
-      clear_value KP
+      clear a2 t1 t2 rac r3 dDD a2' dm d2 b0 b1 hit dmap dcat a2'' dm' dA
+      clear_value m DD flat vs E1 ys' E2 xss E3 fl' KP
       omega
   refine FunDet.intro L.hconjT ((Det.letE t2 (Det.letE d2 (Det.letE dmap dap))).mono ?_)
   -- weights
@@ -285,30 +326,8 @@ theorem vsHConjT_spec {P : Program} {x : VsHTX} (L : VsHTLay P x) {Cφ N : ℕ}
   have q46 : (N + 1) ^ 4 ≤ (N + 1) ^ 6 := Nat.pow_le_pow_right (by omega) (by omega)
   have q68 : (N + 1) ^ 6 ≤ (N + 1) ^ 8 := Nat.pow_le_pow_right (by omega) (by omega)
   have p1 : 1 ≤ (N + 1) ^ 2 := Nat.one_le_pow _ _ (by omega)
-  have hkey : ∀ zs : List (Matrix (Fin (vsQD s)) (Fin (vsQD s)) (ZMod I.p)), zs.length = m →
-      (natList (0 :: vsHKeyT zs)).wt ≤ 20 * (N + 1) ^ 4 := by
-    intro zs hzs
-    have hl : (zs.map vsHPc).flatten.length = m * (DD + 1) := by
-      simp only [List.length_flatten, List.map_map, Function.comp_def, vsHPc_length]
-      simp [hzs]
-      exact Or.inl rfl
-    have hz : ∀ y ∈ 0 :: vsHKeyT zs, y ≤ (N + 1) ^ 2 := by
-      intro y hy
-      simp only [vsHKeyT, List.mem_cons] at hy
-      rcases hy with rfl | rfl | hy
-      · omega
-      · omega
-      · obtain ⟨l, hl, hyl⟩ := List.mem_flatten.1 hy
-        obtain ⟨M, -, rfl⟩ := List.mem_map.1 hl
-        rcases List.mem_cons.1 hyl with rfl | hy'
-        · omega
-        · have := (vsHKey_lt M y hy').le.trans hpN; omega
-    have := wt_natList_le_sq (xs := 0 :: vsHKeyT zs) (B := (N + 1) ^ 2) hz (by
-      simp only [vsHKeyT, List.length_cons, hl]; nlinarith)
-    have e : 5 * ((N + 1) ^ 2 + 1) ^ 2 ≤ 20 * (N + 1) ^ 4 := by nlinarith
-    exact this.trans e
-  have wk := hkey ys rfl
-  have wk' := hkey ys' hys'
+  have wk := spd_vsHConjT_keyW hpN hDD1 ys hm
+  have wk' := spd_vsHConjT_keyW hpN hDD1 ys' (by omega)
   have ek : natList (0 :: vsHKeyT ys) = Val.list (Val.nat 0 :: Val.nat m :: flat.map Val.nat) := ekey
   have wm1 : (Val.list (Val.nat m :: flat.map Val.nat)).wt ≤ 20 * (N + 1) ^ 4 :=
     (wt_list_sublist (List.sublist_cons_self _ _)).trans (ek ▸ wk)
@@ -338,17 +357,18 @@ theorem vsHConjT_spec {P : Program} {x : VsHTX} (L : VsHTLay P x) {Cφ N : ℕ}
   have wmm := wt_nat_le m
   have hDN : vsQD s ≤ N := (Nat.le_mul_self _).trans (by omega)
   have lfl : flat.length ≤ N * N := by omega
+  have q2' := spd_vsHConjT_q2' (N := N) (by omega)
   -- the loop costs
   have hT1 : loopModK * ((Val.nat m :: flat.map Val.nat).length + 1) *
       (3 * (Val.list (Val.nat 0 :: Val.nat m :: flat.map Val.nat)).wt + 1) ≤
       1000 * (N + 1) ^ 2 * (61 * (N + 1) ^ 4) := by
     rw [← ek]
     refine Nat.mul_le_mul (Nat.mul_le_mul (le_refl _) ?_) (by omega)
-    simp only [List.length_cons, List.length_map]; nlinarith
+    simp only [List.length_cons, List.length_map]; omega
   have hT2 : loopModK * ((flat.map Val.nat).length + 1) *
       (3 * (Val.list (Val.nat m :: flat.map Val.nat)).wt + 1) ≤ 1000 * (N + 1) ^ 2 * (61 * (N + 1) ^ 4) := by
     refine Nat.mul_le_mul (Nat.mul_le_mul (le_refl _) ?_) (by omega)
-    simp only [List.length_map]; nlinarith
+    simp only [List.length_map]; omega
   have e6 : 1000 * (N + 1) ^ 2 * (61 * (N + 1) ^ 4) = 61000 * (N + 1) ^ 6 := by ring
   have hCh : 10 ^ 8 * (N + 1) ^ 4 * (20 * (N + 1) ^ 4 + (N + 1) ^ 2) ≤ 21 * 10 ^ 8 * (N + 1) ^ 8 := by
     have : 10 ^ 8 * (N + 1) ^ 4 * (20 * (N + 1) ^ 4 + (N + 1) ^ 2) ≤ 10 ^ 8 * (N + 1) ^ 4 * (21 * (N + 1) ^ 4) :=
@@ -367,7 +387,7 @@ theorem vsHConjT_spec {P : Program} {x : VsHTX} (L : VsHTLay P x) {Cφ N : ℕ}
     refine Nat.mul_le_mul (Nat.mul_le_mul (le_refl _) (by omega)) (by omega)
   have e5 : 1000 * (N + 1) * (10 ^ 4 * (N + 1) ^ 4) = 10 ^ 7 * (N + 1) ^ 5 := by ring
   have q58 : (N + 1) ^ 5 ≤ (N + 1) ^ 8 := Nat.pow_le_pow_right (by omega) (by omega)
-  have wfl' := hflatW ys' hys'
+  have wfl' : (Val.list (fl'.map Val.nat)).wt ≤ 20 * (N + 1) ^ 4 := wout
   have kp1 := wt_list2_le (Val.list [Val.nat 0, Val.nat m]) (Val.list (fl'.map Val.nat))
   have kp2 := wt_list2_le (Val.nat 0) (Val.nat m)
   have w0 := wt_nat_le 0
@@ -378,13 +398,15 @@ theorem vsHConjT_spec {P : Program} {x : VsHTX} (L : VsHTLay P x) {Cφ N : ℕ}
     have hr : (Val.list (fl'.map Val.nat)).wt ≤ 20 * (N + 1) ^ 4 := wfl'
     have hz : (natList (0 :: vsHKeyT ys')).wt ≤ 20 * (N + 1) ^ 4 := wk'
     have hmD : m * (DD + 1) ≤ (N + 1) ^ 2 := hmDD'
-    clear_value fl'
+    clear a2 t1 t2 rac r3 dDD a2' dm d2 b0 b1 hit dmap dcat a2'' dm' dA dap
+    clear_value m DD flat vs E1 ys' E2 xss E3 fl' KP
     omega
   have hKP : KP ≤ 1000 * (N + 1) ^ 2 * (200 * (N + 1) ^ 4) := by
     simp only [KP]
     exact Nat.mul_le_mul (Nat.mul_le_mul (le_refl _) (by omega)) hKPa
   have e6' : 1000 * (N + 1) ^ 2 * (200 * (N + 1) ^ 4) = 2 * 10 ^ 5 * (N + 1) ^ 6 := by ring
-  clear_value KP
+  clear a2 t1 t2 rac r3 dDD a2' dm d2 b0 b1 hit dmap dcat a2'' dm' dA dap L hphi hsz hfr wpc
+  clear_value m DD flat vs E1 ys' E2 xss E3 fl' KP
   unfold vsHConjTCost
   have lk : loopModK = 1000 := rfl
   have mk : mapK = 1000 := rfl

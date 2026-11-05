@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryLoopStepSpec
+module
+
+public import Workspace.Impl.LinPrimaryLoopStepSpec
+
+@[expose] public section
 
 /-! The complete primary filtration program has a uniform polynomial bit cost
 and returns its terminal transporter-coset invariant. -/
@@ -10,8 +14,9 @@ set_option maxHeartbeats 3000000 in
 theorem linPrimaryLoop_spec (hm : ConstructiveMembership) (hv : VectorStabilizer)
     {P : Program} {b jm jv n p d : ℕ} (hat : linPrimaryLoopAt P b jm jv hm hv)
     (gs : List (Equiv.Perm (Fin n))) (hlen : gs.length ≤ n ^ 2)
-    (hs : IsSolvable (gens gs)) (hp : p.Prime) (hpn : p ≤ n) [NeZero n] (ν : Fin d → ℕ)
+    (hp : p.Prime) (hpn : p ≤ n) [NeZero n] (ν : Fin d → ℕ)
     (ρ : gens gs →* (linFiniteVec (linPrimaryOrders p ν) ≃+ linFiniteVec (linPrimaryOrders p ν)))
+    (hs : IsSolvable ρ.range)
     (c : gens gs → linFiniteVec (linPrimaryOrders p ν))
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g)
     (x : linFiniteVec (linPrimaryOrders p ν)) (acc0 : Equiv.Perm (Fin n)) :
@@ -30,7 +35,7 @@ theorem linPrimaryLoop_spec (hm : ConstructiveMembership) (hv : VectorStabilizer
   have run := linLoopBddInit_spec hat.loop hk hacc (M := (linPrimaryAccumulatorWeight W))
     (Inv := linPrimaryLoopInv gs ν ρ c x acc0) h0 hM (D := fun _ => (linPrimaryLoopStepBudget hm hv W)) (by
       intro i v hi hInv
-      have he := linPrimaryLoop_step_spec hm hv hat gs hs hp hpn ν ρ c hc x acc0 i hi v hInv
+      have he := linPrimaryLoop_step_spec hm hv hat gs hp hpn ν ρ hs c hc x acc0 i hi v hInv
       refine he.mono fun out cost ho => ⟨ho.1, ho.2.trans (Nat.le_add_right (linPrimaryLoopStepBudget hm hv W) _)⟩)
   refine run.mono fun out cost ho => ⟨ho.1, ?_⟩
   have hcost := ho.2
@@ -41,9 +46,10 @@ set_option maxHeartbeats 1500000 in
 theorem linPrimaryLoop_spec_poly (hm : ConstructiveMembership) (hv : VectorStabilizer) :
     ∃ K D : ℕ, ∀ {P : Program} {b jm jv n p d : ℕ}, linPrimaryLoopAt P b jm jv hm hv →
       ∀ (gs : List (Equiv.Perm (Fin n))), gs.length ≤ n ^ 2 →
-      ∀ (_hs : IsSolvable (gens gs)) (_hp : p.Prime), p ≤ n → ∀ [NeZero n] (ν : Fin d → ℕ)
-        (ρ : gens gs →* (linFiniteVec (linPrimaryOrders p ν) ≃+ linFiniteVec (linPrimaryOrders p ν)))
-        (c : gens gs → linFiniteVec (linPrimaryOrders p ν)),
+      ∀ (_hp : p.Prime), p ≤ n → ∀ [NeZero n] (ν : Fin d → ℕ)
+        (ρ : gens gs →* (linFiniteVec (linPrimaryOrders p ν) ≃+ linFiniteVec (linPrimaryOrders p ν))),
+      IsSolvable ρ.range →
+      ∀ (c : gens gs → linFiniteVec (linPrimaryOrders p ν)),
       (∀ g k, c (g * k) = ρ g (c k) + c g) →
       ∀ (x : linFiniteVec (linPrimaryOrders p ν)) (acc0 : Equiv.Perm (Fin n)),
       let a := linPrimaryLoopInputVal gs ν ρ c x acc0
@@ -51,8 +57,8 @@ theorem linPrimaryLoop_spec_poly (hm : ConstructiveMembership) (hv : VectorStabi
         cost ≤ K * (a.wt + 1) ^ D) := by
   obtain ⟨K, D, hKD⟩ := linPoly_source_bound (linPrimaryLoopCost_poly hm hv)
   refine ⟨K, D, ?_⟩
-  intro P b jm jv n p d hat gs hlen hs hp hpn hn ν ρ c hc x acc0
-  exact FunAll.mono (linPrimaryLoop_spec hm hv hat gs hlen hs hp hpn ν ρ c hc x acc0)
+  intro P b jm jv n p d hat gs hlen hp hpn hn ν ρ hs c hc x acc0
+  exact FunAll.mono (linPrimaryLoop_spec hm hv hat gs hlen hp hpn ν ρ hs c hc x acc0)
     (fun out cost ho => ⟨ho.1, ho.2.trans (hKD 0 _ _ (Nat.zero_le _) le_rfl)⟩)
 
 end GI.Impl

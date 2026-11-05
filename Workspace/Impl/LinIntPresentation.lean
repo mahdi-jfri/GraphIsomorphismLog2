@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPresentation
-import Workspace.Impl.LinChain
+module
+
+public import Workspace.Impl.LinPresentation
+public import Workspace.Impl.LinChain
+
+@[expose] public section
 
 /-! Assemble the complete presentation from the successive cyclic relations.
 The relation rows are e_i times the i-th basis vector minus the SLP coefficients. -/

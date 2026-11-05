@@ -1,19 +1,20 @@
-import Workspace.Impl.TermGlueLabPOr
-import Workspace.Impl.TermSupFix
-import Workspace.Impl.TermHyp
+module
+
+public import Workspace.Impl.TermGlueLabPOr
+public import Workspace.Impl.TermConj
+public import Workspace.Lang.Prims.BlockHom
+
+@[expose] public section
 
 /-!
-# The solvable supplement (step 4)
+# Conjugating the residual generators (step 4)
 
-Step 4 of the label program (Theorem A.23: "Compute a solvable supplement `S`
-with `S N = D ∩ R` by Lemma A.19"). The residual answer is `w = [τ, U]` with
+Step 4 of the label program (Theorem A.23). The residual answer is `w = [τ, U]` with
 `Res = τ ⟨U⟩` and `D ⊓ R = τ ⟨U⟩ τ⁻¹` (`tmGL_res_iff`). The program conjugates the
-generators of `U` by `τ` (Lemma A.19's own conjugation map `supConjF`, two `compose` calls per
-generator) and calls T4 (`Iface.TermSupSpec`, at index `sup`) on `[τ⟨U⟩τ⁻¹, N]`.
-The result generates a solvable `S ≤ τ⟨U⟩τ⁻¹` with `S ⊔ N = τ⟨U⟩τ⁻¹` (`tmGLPSup_spec`), where
-`τ⟨U⟩τ⁻¹` is written `gens (U.map fun x => τ * x * τ⁻¹)` (`sup_gens_conj` turns it into the image
-of `⟨U⟩` under conjugation).
-The solvability of `S` is the precondition of the affine call of step 6.
+generators of `U` by `τ` (`supConjF`, two `compose` calls per generator) and drops the
+leading identity (`tailFuns`) to return the generator list of `S = τ ⟨U⟩ τ⁻¹ = D ⊓ R`
+(`tmGLPSup_spec`). Since `N ≤ D ⊓ R` is normal with `(D ⊓ R)/N` solvable, and `N` lies in
+the kernel of the linear action on `A / B(x) ⊕ C₂`, the linear image in step 6 is solvable.
 -/
 
 namespace GI.Impl
@@ -23,15 +24,14 @@ open GI.Cited (Val encPerm encGroup gens GensOf)
 
 variable {n : ℕ}
 
-/-- On `[gens N, [τ, U]]`: T4 on `[τ ⟨U⟩ τ⁻¹, N]`. Inverse at `inv`, the conjugation map at
-`mc` (a `map` of `supConjF`), T4 at `sup`. -/
-def tmGLPSupF (inv mc sup : ℕ) : Expr :=
+/-- On `[gens N, [τ, U]]`: conjugate the generators of `U` by `τ` and drop the leading identity.
+Inverse at `inv`, the conjugation map at `mc` (a `map` of `supConjF`), `tail` at `tl`. -/
+def tmGLPSupF (inv mc tl : ℕ) : Expr :=
   .letE (.call inv (.get (arg 1) (.nat 0)))
-    (.call sup (mk2 (mk2 (.get (.get (arg 1) (.nat 1)) (.nat 0))
-        (.call mc (mk2 (mk2 (.get (arg 1) (.nat 0)) (.var 1)) (.get (.get (arg 1) (.nat 1)) (.nat 1)))))
-      (arg 0)))
+    (.call tl (.call mc (mk2 (mk2 (.get (arg 1) (.nat 0)) (.var 1))
+      (.get (.get (arg 1) (.nat 1)) (.nat 1)))))
 
-/-- The cost bound, for an input of weight `W`, with T4's constants `K`, `D`. -/
+/-- The cost bound, for an input of weight `W`. -/
 def tmGLPSupC (K D W : ℕ) : ℕ := 3 * (K * (10 ^ 4 * (W + 1) ^ 6) ^ D) + 10 ^ 9 * (W + 1) ^ 8
 
 theorem tmGLP_encGroup_wt_le {gs : List (Perm (Fin n))} (hl : gs.length ≤ n ^ 2) {W : ℕ}
@@ -52,12 +52,13 @@ theorem tmGLP_encGroup_wt_le {gs : List (Perm (Fin n))} (hl : gs.length ≤ n ^ 
   omega
 
 set_option maxHeartbeats 2000000 in
-/-- **The supplement call.** For a residual answer `[τ, U]` and `N ≤ R' = τ ⟨U⟩ τ⁻¹` normal with
-`R'/N` solvable, the program returns generators of a solvable `S ≤ R'` with `S ⊔ N = R'`. -/
-theorem tmGLPSup_spec {P : Program} {f inv cp cj mc sup Ks Ds : ℕ}
-    (hf : P.funs[f]? = some (tmGLPSupF inv mc sup)) (hinv : P.HasAt inv (invFuns inv))
+/-- **The conjugated residual group.** For a residual answer `[τ, U]` and `N ≤ R' = τ ⟨U⟩ τ⁻¹`
+normal with `R'/N` solvable, the program returns generators of `S = R'` with `S ⊔ N = R'` and
+`S/N` solvable. -/
+theorem tmGLPSup_spec {P : Program} {f inv cp cj mc tl : ℕ} (Ks Ds : ℕ)
+    (hf : P.funs[f]? = some (tmGLPSupF inv mc tl)) (hinv : P.HasAt inv (invFuns inv))
     (hcp : P.HasAt cp (composeFuns cp)) (hcj : P.funs[cj]? = some (supConjF cp))
-    (hmc : P.HasAt mc (mapFuns mc cj)) (hsup : Iface.TermSupSpec P Ks Ds sup)
+    (hmc : P.HasAt mc (mapFuns mc cj)) (htl : P.HasAt tl (tailFuns tl))
     {σN U : List (Perm (Fin n))} (hU : U.length ≤ n ^ 2) (τ : Perm (Fin n))
     (hNR : gens σN ≤ gens (U.map fun x => τ * x * τ⁻¹))
     [hnorm : ((gens σN).subgroupOf (gens (U.map fun x => τ * x * τ⁻¹))).Normal]
@@ -65,7 +66,8 @@ theorem tmGLPSup_spec {P : Program} {f inv cp cj mc sup Ks Ds : ℕ}
       (gens σN).subgroupOf (gens (U.map fun x => τ * x * τ⁻¹)))) :
     FunAll P f (.list [encGroup σN, .list [encPerm τ, encGroup U]]) (fun u c =>
       ∃ S : Subgroup (Perm (Fin n)), GensOf S u ∧
-        S ≤ gens (U.map fun x => τ * x * τ⁻¹) ∧ IsSolvable S ∧
+        S ≤ gens (U.map fun x => τ * x * τ⁻¹) ∧
+        (∃ _ : ((gens σN).subgroupOf S).Normal, IsSolvable (S ⧸ (gens σN).subgroupOf S)) ∧
         S ⊔ gens σN = gens (U.map fun x => τ * x * τ⁻¹) ∧
         c ≤ tmGLPSupC Ks Ds (Val.list [encGroup σN, .list [encPerm τ, encGroup U]]).wt) := by
   set a : Val := .list [encGroup σN, .list [encPerm τ, encGroup U]] with ha
@@ -78,44 +80,25 @@ theorem tmGLPSup_spec {P : Program} {f inv cp cj mc sup Ks Ds : ℕ}
   have dτi := Det.call dτ (inv_spec hinv τ)
   refine EvalAll.letE dτi fun v cv hv => ?_
   obtain ⟨rfl, hcv⟩ := hv
-  have e0 := Det.arg' (P := P) (vs := [encGroup σN, .list [encPerm τ, encGroup U]])
-    (rest := [encPerm τ⁻¹]) (j := 0) rfl
   have e1 := Det.arg' (P := P) (vs := [encGroup σN, .list [encPerm τ, encGroup U]])
     (rest := [encPerm τ⁻¹]) (j := 1) rfl
   have eτ := Det.get' e1 (Det.nat 0) (vs := [encPerm τ, encGroup U]) (v := encPerm τ) rfl
   have eU := Det.get' e1 (Det.nat 1) (vs := [encPerm τ, encGroup U]) (v := encGroup U) rfl
-  have en := Det.get' eU (Det.nat 0) (vs := [.nat n, .list ((1 :: U).map encPerm)])
-    (v := .nat n) rfl
   have exs := Det.get' eU (Det.nat 1) (vs := [.nat n, .list ((1 :: U).map encPerm)])
     (v := .list ((1 :: U).map encPerm)) rfl
   have eτi := Det.var' (P := P) (env := [a, encPerm τ⁻¹]) (i := 1) (v := encPerm τ⁻¹) rfl
   have dmap := Det.call (Det.mk2 (Det.mk2 eτ eτi) exs) (supConjMap_det hcp hcj hmc τ hU)
-  have dR : Det P [a, encPerm τ⁻¹] (mk2 (.get (.get (arg 1) (.nat 1)) (.nat 0))
-      (.call mc (mk2 (mk2 (.get (arg 1) (.nat 0)) (.var 1)) (.get (.get (arg 1) (.nat 1)) (.nat 1)))))
-      (encGroup V) _ := Det.mk2 en dmap
-  have hspec := hsup V σN hNR hsol
-  refine EvalAll.call_funAll (Det.mk2 dR e0) fun v ca hv => ?_
-  obtain ⟨rfl, hca⟩ := hv
-  refine FunAll.mono (FunAll.wt_lt hspec) fun u cb ⟨⟨S, hS, hSR, hSs, hSN, hcb⟩, hub⟩ =>
-    ⟨S, hS, hSR, hSs, hSN, ?_⟩
+  have dtl := Det.call dmap (GI.Lang.tail_spec htl (encPerm (1 : Perm (Fin n))) (V.map encPerm))
+  refine dtl.post fun cb hcb => ?_
+  have hVl : V.length ≤ n ^ 2 := by simpa [hV] using hU
+  refine ⟨gens V, ⟨V, rfl, hVl, rfl⟩, le_rfl, ⟨hnorm, hsol⟩, sup_eq_left.mpr hNR, ?_⟩
   -- the cost
   have wN : (encGroup σN).wt < W := wt_le_wt_list (by simp)
   have w2 : (Val.list [encPerm τ, encGroup U]).wt < W := wt_le_wt_list (by simp)
   have wτ : (encPerm τ).wt < (Val.list [encPerm τ, encGroup U]).wt := wt_le_wt_list (by simp)
   have wU : (encGroup U).wt < (Val.list [encPerm τ, encGroup U]).wt := wt_le_wt_list (by simp)
   have hnW : n < W := by have := tmGLP_n_lt_wt τ; omega
-  have hVl : V.length ≤ n ^ 2 := by simpa [hV] using hU
   have wV := tmGLP_encGroup_wt_le hVl hnW
-  have win := wt_list2_le (encGroup V) (encGroup σN)
-  have hin : (Val.list [encGroup V, encGroup σN]).wt + 1 ≤ 10 ^ 4 * (W + 1) ^ 6 := by
-    have : 1 ≤ (W + 1) ^ 6 := Nat.one_le_pow _ _ (by omega)
-    have : W ≤ (W + 1) ^ 6 := by
-      have := Nat.le_self_pow (show 6 ≠ 0 by norm_num) (W + 1)
-      omega
-    omega
-  have hK : Ks * ((Val.list [encGroup V, encGroup σN]).wt + 1) ^ Ds ≤
-      Ks * (10 ^ 4 * (W + 1) ^ 6) ^ Ds := Nat.mul_le_mul_left _ (Nat.pow_le_pow_left hin Ds)
-  -- the cost of the argument
   have wτi := wt_encPerm_le τ⁻¹
   have wτ' := wt_encPerm_le τ
   have hn8 : (n + 1) ^ 8 ≤ (W + 1) ^ 8 := Nat.pow_le_pow_left (by omega) 8
@@ -137,19 +120,40 @@ theorem tmGLPSup_spec {P : Program} {f inv cp cj mc sup Ks Ds : ℕ}
     exact this.le
   have wVl' : (Val.list ((1 :: U.map fun x => τ * x * τ⁻¹).map encPerm)).wt ≤ (encGroup V).wt :=
     wVl
-  have eVr : (Val.list [.nat n, .list ((1 :: V).map encPerm)]).wt = (encGroup V).wt := rfl
+  have wVsub : (Val.list (V.map encPerm)).wt ≤ (Val.list ((1 :: V).map encPerm)).wt :=
+    wt_list_sublist (List.sublist_cons_self _ _)
+  have htlC : loopModK * ((V.map encPerm).length + 1) *
+      (3 * (Val.list (encPerm (1 : Perm (Fin n)) :: V.map encPerm)).wt + 1) ≤
+      2 * 10 ^ 6 * (W + 1) ^ 8 := by
+    have hlV : (V.map encPerm).length + 1 ≤ (W + 1) ^ 2 := by
+      simp only [List.length_map]
+      have : (W + 1) ^ 2 = W ^ 2 + 2 * W + 1 := by ring
+      have : n ^ 2 ≤ W ^ 2 := Nat.pow_le_pow_left (by omega) 2
+      omega
+    have hwV1 : 3 * (Val.list (encPerm (1 : Perm (Fin n)) :: V.map encPerm)).wt + 1 ≤
+        2000 * (W + 1) ^ 6 := by
+      have : 1 ≤ (W + 1) ^ 6 := Nat.one_le_pow _ _ (by omega)
+      have ec : Val.list (encPerm (1 : Perm (Fin n)) :: V.map encPerm) =
+          Val.list ((1 :: V).map encPerm) := rfl
+      rw [ec]
+      omega
+    calc loopModK * ((V.map encPerm).length + 1) *
+          (3 * (Val.list (encPerm (1 : Perm (Fin n)) :: V.map encPerm)).wt + 1)
+        ≤ loopModK * (W + 1) ^ 2 * (2000 * (W + 1) ^ 6) :=
+          Nat.mul_le_mul (Nat.mul_le_mul_left _ hlV) hwV1
+      _ = 2 * 10 ^ 6 * (W + 1) ^ 8 := by simp only [loopModK]; ring
   have hinvK : invK * (n + 1) ^ 4 ≤ 10 ^ 5 * (W + 1) ^ 8 := by unfold invK; omega
   have wp1 := wt_list2_le (encPerm τ) (encPerm τ⁻¹)
   have wp2 := wt_list2_le (.list [encPerm τ, encPerm τ⁻¹]) (.list ((1 :: U).map encPerm))
   have wn := wt_nat_le n
   have wa1 := wt_list2_le a (encPerm τ⁻¹)
   have eW : W = (Val.list [encGroup σN, .list [encPerm τ, encGroup U]]).wt := rfl
+  have econs : Val.list (encPerm (1 : Perm (Fin n)) :: V.map encPerm) =
+      Val.list ((1 :: U.map fun x => τ * x * τ⁻¹).map encPerm) := rfl
+  rw [econs] at hcb htlC
   unfold tmGLPSupC
-  have ek : ((Val.list [encGroup V, encGroup σN]).wt + 1) ^ Ds =
-      ((Val.list [encGroup V, encGroup σN]).wt + 1) ^ Ds := rfl
-  clear hspec dmap dR dτi
-  generalize Ks * ((Val.list [encGroup V, encGroup σN]).wt + 1) ^ Ds = KT at hcb hK
-  generalize Ks * (10 ^ 4 * (W + 1) ^ 6) ^ Ds = KB at hK ⊢
+  clear dtl dmap dτi
+  generalize 3 * (Ks * (10 ^ 4 * (W + 1) ^ 6) ^ Ds) = KB at ⊢
   generalize (W + 1) ^ 8 = S8 at *
   generalize (W + 1) ^ 6 = S6 at *
   omega

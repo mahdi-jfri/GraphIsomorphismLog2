@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCfDAtSpec
+module
+
+public import Workspace.Impl.AggItemCfDAtSpec
+
+@[expose] public section
 
 namespace GI.Impl
 

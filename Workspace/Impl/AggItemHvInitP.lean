@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemHvInitT
+module
+
+public import Workspace.Impl.AggItemHvInitT
+
+@[expose] public section
 
 /-!
 # Case 2a: the init program meets `ItHvInitOK`, and the case meets `ItSCaseOK`
@@ -408,7 +412,8 @@ theorem it_hvInitOK (I : Iface) (hfac : NormalizedFactor) (hst : PointwiseStab) 
 
 /-- **Case 2a meets its contract** `ItSCaseOK`, with the init program at `J.f0` (`it_hvInitOK`),
 the branch step `itHvBF` at `fb` and the piece program `itHvPcF` at `pc`. -/
-theorem itS_c2a_caseOK_full (I : Iface) (hfac : NormalizedFactor) (hst : PointwiseStab)
+theorem itS_c2a_caseOK_full
+    (I : Iface) (hfac : NormalizedFactor) (hst : PointwiseStab)
     {Pg : Program} {F : Funs} {krC : ℕ → ℕ} {J : ItHvIIdx} {IC : ItC1Idx} (hc1 : ItC1Ok Pg IC)
     (hJ : ItHvIOk Pg J IC hfac hst krC) {fb pc : ℕ} (hfb : Pg.funs[fb]? = some (itHvBF pc))
     (hpc : Pg.funs[pc]? = some (itHvPcF IC.cmp IC.app)) :

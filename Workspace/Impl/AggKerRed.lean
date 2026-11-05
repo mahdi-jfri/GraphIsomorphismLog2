@@ -1,5 +1,9 @@
-import Workspace.Impl.AggPre
-import Workspace.Impl.Reduce
+module
+
+public import Workspace.Impl.AggPre
+public import Workspace.Impl.Reduce
+
+@[expose] public section
 
 /-!
 # The group of a window call, with at most `k²` generators

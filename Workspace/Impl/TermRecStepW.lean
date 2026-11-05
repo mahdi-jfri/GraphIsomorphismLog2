@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecBase
+module
+
+public import Workspace.Impl.TermRecBase
+
+@[expose] public section
 
 /-!
 # T5, the weights and small facts of one level of the recursion
@@ -33,11 +37,6 @@ theorem tmRi_toFin_refl (A : Set (Perm (Fin n))) : toFin (Equiv.refl (Fin n)) ''
 theorem tmRi_ansC_iff {u : Val} {A : Set (Perm (Fin n))} :
     AnsC (Equiv.refl (Fin n)) u A ↔ CosetC n u A := by
   rw [ansC_iff_cosetC, tmRi_toFin_refl]
-
-theorem tmRiTabC_mono (hm : Membership) (n M : ℕ) {m m' : ℕ} (h : m ≤ m') (W : ℕ) :
-    tmRiTabC hm n M m W ≤ tmRiTabC hm n M m' W := by
-  unfold tmRiTabC
-  gcongr
 
 /-! ### The weight bound -/
 

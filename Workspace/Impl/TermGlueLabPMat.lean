@@ -1,6 +1,10 @@
-import Workspace.Impl.TermGlueLabPCSum
-import Workspace.Impl.TermGlueLabPE
-import Workspace.Impl.TermGlueLabPCall
+module
+
+public import Workspace.Impl.TermGlueLabPCSum
+public import Workspace.Impl.TermGlueLabPE
+public import Workspace.Impl.TermGlueLabPCall
+
+@[expose] public section
 
 /-!
 # The matrices of the linear part in the coordinates `E`

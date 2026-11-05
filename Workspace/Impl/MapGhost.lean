@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.List
+module
+
+public import Workspace.Lang.Lib.List
+
+@[expose] public section
 
 /-!
 # Map with costs known only through a property

@@ -1,5 +1,9 @@
-import Workspace.Impl.HNFFold
-import Workspace.Impl.LinMapEncoded
+module
+
+public import Workspace.Impl.HNFFold
+public import Workspace.Impl.LinMapEncoded
+
+@[expose] public section
 
 /-!
 # One column of the modular Hermite form, as a program

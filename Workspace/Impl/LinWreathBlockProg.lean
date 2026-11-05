@@ -1,5 +1,9 @@
-import Workspace.Impl.LinWreathBlock
-import Workspace.Impl.LinTabulate
+module
+
+public import Workspace.Impl.LinWreathBlock
+public import Workspace.Impl.LinTabulate
+
+@[expose] public section
 
 /-! Tabulate the two-copy generator matrices using the cell routine. -/
 namespace GI.Impl

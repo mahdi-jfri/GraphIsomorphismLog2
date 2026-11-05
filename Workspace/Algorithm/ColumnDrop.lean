@@ -1,4 +1,8 @@
-import Workspace.Algorithm.HierInv
+module
+
+public import Workspace.Algorithm.HierInv
+
+@[expose] public section
 
 /-!
 # Dropping trivial intervals

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojProcess
-import Workspace.Impl.AggItemCiSojProcessW
+module
+
+public import Workspace.Impl.AggItemCiSojProcess
+public import Workspace.Impl.AggItemCiSojProcessW
+
+@[expose] public section
 
 /-! # Processing a rectangle answer with a bound on actual input weight -/
 

@@ -1,4 +1,8 @@
-import Workspace.Impl.JohnCnt
+module
+
+public import Workspace.Impl.JohnCnt
+
+@[expose] public section
 
 /-!
 # The main function

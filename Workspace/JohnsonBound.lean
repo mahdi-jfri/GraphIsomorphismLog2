@@ -1,8 +1,12 @@
-import Workspace.JohnsonExtraction
-import Workspace.JohnsonNatural
-import Workspace.JohnsonDirect
-import Workspace.JohnsonNumerics
-import Workspace.JohnsonAction
+module
+
+public import Workspace.JohnsonExtraction
+public import Workspace.JohnsonNatural
+public import Workspace.JohnsonDirect
+public import Workspace.JohnsonNumerics
+public import Workspace.JohnsonAction
+
+@[expose] public section
 
 namespace GI.Johnson
 

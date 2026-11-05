@@ -1,5 +1,9 @@
-import Workspace.Impl.CamProg
-import Workspace.Impl.CamXSocle
+module
+
+public import Workspace.Impl.CamProg
+public import Workspace.Impl.CamXSocle
+
+@[expose] public section
 
 /-!
 # Correctness and cost of steps 2–7 of `camProg`
@@ -11,7 +15,7 @@ cited call is made with its precondition, as recorded at the call.
 
 namespace GI.Impl
 
-open GI.Lang GI.Cited Equiv
+open GI.Lang GI.Cited GI.Proved Equiv
 open GI.Machine (BinOp len len_le_self)
 
 variable {n m k r : ℕ}
@@ -20,10 +24,12 @@ variable {n m k r : ℕ}
 def camPB (X : ℕ) : ℕ := 10 ^ 12 * X ^ 12
 
 /-- The four cited bounds. -/
-noncomputable def camS4 (ho : GroupOrder) (hc : ChiefSeriesAlgo) (hqc : QuotientCentralizer)
+noncomputable def camS4 (ho : GroupOrder) (hp : PointwiseStab) (hncl : NormalClosure)
+    (hd : DerivedSubgroup) (hqc : GMPNormalCentralizer)
     (hj : JohnsonIdentification) (X : ℕ) : ℕ :=
-  (groupOrderPrim ho).boundSize (camPB X) + (chiefSeriesPrim hc).boundSize (camPB X) +
-    (quotientCentralizerPrim hqc).boundSize (camPB X) + (johnsonPrim hj).boundSize (camPB X)
+  (groupOrderPrim ho).boundSize (camPB X) +
+    (camDirectPrim ho hp hncl hd).boundSize (camPB X) +
+    (gmpNormalCentralizerPrim hqc).boundSize (camPB X) + (johnsonPrim hj).boundSize (camPB X)
 
 theorem cam_ge_one_six (n : ℕ) : 1 ≤ (n + 1) ^ 6 := Nat.one_le_pow _ _ (by omega)
 
@@ -57,13 +63,13 @@ theorem cam_ctx_wt_le (ns : List (Perm (Fin n))) (hnsl : ns.length ≤ n ^ 2) (h
   have : n + 1 ≤ (n + 1) ^ 6 := Nat.le_self_pow (by norm_num) _
   omega
 
-theorem cam_fac_bound {hj : JohnsonIdentification} {hqc : QuotientCentralizer} {ctx y : Val}
+theorem cam_fac_bound {hj : JohnsonIdentification} {hqc : GMPNormalCentralizer} {ctx y : Val}
     {X : ℕ} (hctx : ctx.wt ≤ 1300 * (n + 1) ^ 6) (hy : y.wt ≤ 320 * (n + 1) ^ 6)
     (hnX : n + 1 ≤ X) {c : ℕ}
     (hc : c ≤ (johnsonPrim hj).boundSize (camFacB ((Val.list [ctx, y]).wt + 1)) +
-      (quotientCentralizerPrim hqc).boundSize (camFacB ((Val.list [ctx, y]).wt + 1)) +
+      (gmpNormalCentralizerPrim hqc).boundSize (camFacB ((Val.list [ctx, y]).wt + 1)) +
       camFacK * ((Val.list [ctx, y]).wt + 1) ^ 30) :
-    c ≤ (johnsonPrim hj).boundSize (camPB X) + (quotientCentralizerPrim hqc).boundSize (camPB X) +
+    c ≤ (johnsonPrim hj).boundSize (camPB X) + (gmpNormalCentralizerPrim hqc).boundSize (camPB X) +
       camFacK * 4000 ^ 30 * X ^ 180 := by
   have w2 := wt_list2_le ctx y
   have h6 := Nat.pow_le_pow_left hnX 6
@@ -75,7 +81,7 @@ theorem cam_fac_bound {hj : JohnsonIdentification} {hqc : QuotientCentralizer} {
     have e : (4000 * X ^ 6) ^ 2 = 16000000 * X ^ 12 := by ring
     omega
   have h1 := cam_boundSize_mono (johnsonPrim hj) hB
-  have h2 := cam_boundSize_mono (quotientCentralizerPrim hqc) hB
+  have h2 := cam_boundSize_mono (gmpNormalCentralizerPrim hqc) hB
   have h3 : ((Val.list [ctx, y]).wt + 1) ^ 30 ≤ 4000 ^ 30 * X ^ 180 := by
     calc _ ≤ (4000 * X ^ 6) ^ 30 := Nat.pow_le_pow_left hZ 30
       _ = 4000 ^ 30 * X ^ 180 := by ring
@@ -129,20 +135,22 @@ theorem cam_tail_sum {X S GO CS QC J K0 P T : ℕ} (hX : 1 ≤ X) (hS : S = GO +
 theorem cam_K0 : 10 ^ 40 ≤ camFacK * 4000 ^ 30 := by unfold camFacK; norm_num
 
 /-- The cost bound of the tail. -/
-noncomputable def camTailCost (ho : GroupOrder) (hc : ChiefSeriesAlgo) (hqc : QuotientCentralizer)
+noncomputable def camTailCost (ho : GroupOrder) (hp : PointwiseStab) (hncl : NormalClosure)
+    (hd : DerivedSubgroup) (hqc : GMPNormalCentralizer)
     (hj : JohnsonIdentification) (X : ℕ) : ℕ :=
-  2 * X * camS4 ho hc hqc hj X + 2 * camFacK * 4000 ^ 30 * X ^ 182
+  2 * X * camS4 ho hp hncl hd hqc hj X + 2 * camFacK * 4000 ^ 30 * X ^ 182
 
 set_option maxHeartbeats 2000000 in
 /-- **The tail.** -/
-theorem camTail_spec {ho : GroupOrder} {hc : ChiefSeriesAlgo} {hqc : QuotientCentralizer}
-    {hj : JohnsonIdentification} {P : Program} {b jo jc jq jj : ℕ}
-    (hP : CamAt P b jo jc jq jj ho hc hqc hj) (gs : List (Perm (Fin n)))
+theorem camTail_spec {ho : GroupOrder} {hp : PointwiseStab} {hncl : NormalClosure}
+    {hd : DerivedSubgroup} {hqc : GMPNormalCentralizer}
+    {hj : JohnsonIdentification} {P : Program} {b jo jp jn jd jq jj : ℕ}
+    (hP : CamAt P b jo jp jn jd jq jj ho hp hncl hd hqc hj) (gs : List (Perm (Fin n)))
     (e : Fin n ≃ (Fin r → {A : Finset (Fin m) // A.card = k})) (hM : MarotiStructure (gens gs) e)
     (hprim : MulAction.IsPreprimitive (gens gs) (Fin n)) (hn : 25 ≤ n) (h5 : 5 ≤ m)
     (hk1 : 1 ≤ k) (hk : 2 * k < m) :
     FunAll P (b + 1) (encGroup gs) (fun v c => CameronOut (gens gs) v ∧
-      c ≤ camTailCost ho hc hqc hj ((encGroup gs).wt + 1)) := by
+      c ≤ camTailCost ho hp hncl hd hqc hj ((encGroup gs).wt + 1)) := by
   obtain ⟨hr1, hrn, hmn⟩ := cam_sizes e hn hk1 hk
   have hn0 : 0 < n := by omega
   set x₀ : Fin n := ⟨0, hn0⟩ with hx₀
@@ -159,58 +167,43 @@ theorem camTail_spec {ho : GroupOrder} {hc : ChiefSeriesAlgo} {hqc : QuotientCen
   have dx : Det P [x] (.var 0) x (x.wt + 1) := Det.var' rfl
   have dn := fun (rest : List Val) => Det.encPerms_size (gs := 1 :: gs)
     (Det.var' (P := P) (env := x :: rest) (i := 0) rfl)
-  -- the chief series and the socle
-  refine FunAll.intro hP.tail (EvalAll.letE (chiefSeries_call hc hP.pc dx ⟨gs, rfl, rfl⟩)
-    fun vs cs hcs => ?_)
-  obtain ⟨⟨Hs, ⟨L, rfl, hLl, hLs, hLg⟩, hHs⟩, hcs⟩ := hcs
+  -- the direct socle search
   have hxe : (encPerms (1 :: gs)).wt = x.wt := rfl
+  have h6 := hnXp 6
   have h8 := hnXp 8
   have hX8 := hXp 1 8 (by norm_num)
   have hX12 := hXp 1 12 (by norm_num)
-  have hcs1 : cs ≤ (chiefSeriesPrim hc).boundSize (camPB X) + 200 * X ^ 8 := by
-    have hb := (chiefSeriesPrim hc).bound_le (v := x) (B := camPB X)
-      ((Val.size_le_wt x).trans (by unfold camPB; simp only [pow_one] at hX12; omega))
-    clear * - hcs hb h8 hX8 hX
+  have h68 := hXp 6 8 (by norm_num)
+  have h612 := hXp 6 12 (by norm_num)
+  refine FunAll.intro hP.tail (EvalAll.letE
+    (Ra := fun vs cs => GensVal n vs (camProd e Finset.univ) ∧
+      cs ≤ (camDirectPrim ho hp hncl hd).boundSize (camPB X) + 200 * X ^ 8)
+    (EvalAll.call_funAll dx fun v ca hv => ?_) fun vs cs hcs => ?_)
+  · obtain ⟨rfl, hca⟩ := hv
+    refine (camSocle_spec hP.soc gs hM hprim hn h5 hk1 hk).mono fun w cb ⟨hw, hcb⟩ => ⟨hw, ?_⟩
+    have hww := GensVal.wt_le hw
+    have hb := camSocleCost_le_boundSize ho hp hncl hd (encGroup gs) n (B := camPB X)
+      (by unfold camPB; omega)
+      (by unfold camSocleB camPB; rw [← hx]; simp only [pow_one] at hX12; omega)
+    clear * - hca hcb hww hb h6 h8 hX8 h68 hX
     simp only [pow_one] at hX8
     omega
-  have hLw := SeriesVal.wt_le (n := n) (v := Val.list (L.map fun hs => .list (hs.map encPerm)))
-    ⟨L, rfl, hLl, hLs, rfl⟩
-  have hLlen := length_lt_wt_list (L.map fun hs => Val.list (hs.map encPerm))
-  have hsoc := camX_chief_last hM hprim hn h5 hk1 hk hHs
-  rw [← hLg] at hsoc
-  rw [List.length_map] at hsoc
-  obtain ⟨hidx, hLi⟩ := List.getElem?_eq_some_iff.mp hsoc
-  simp only [List.length_map] at hidx
-  set hsN := L[L.length - 2] with hhsN
-  have hgN : gens hsN = camProd e Finset.univ := by simpa [hhsN] using hLi
-  have hsNl : hsN.length ≤ n ^ 2 := hLs _ (List.getElem_mem _)
-  set E1 := [x, Val.list (L.map fun hs => .list (hs.map encPerm))] with hE1
-  have dLen := Det.length (Det.var' (P := P) (env := E1) (i := 1) rfl)
-  have dIdx := Det.arith (op := .sub) dLen (Det.nat (P := P) (env := E1) 2)
-  rw [show BinOp.eval .sub (L.map fun hs => Val.list (hs.map encPerm)).length 2 =
-    L.length - 2 by simp [BinOp.eval]] at dIdx
-  have dLi := Det.get' (Det.var' (P := P) (env := E1) (i := 1) rfl) dIdx
-    (show (L.map fun hs => Val.list (hs.map encPerm))[L.length - 2]? =
-      some (.list (hsN.map encPerm)) by simp [hhsN, hidx])
+  obtain ⟨hvs, hcs1⟩ := hcs
+  set E1 := [x, vs] with hE1
+  have dLi := Det.var' (P := P) (env := E1) (i := 1) rfl
   obtain ⟨ns, -, hnsl, fN, ⟨ns', hNe, hns⟩, hNw⟩ :=
-    mkGroup_gensVal hP.mg (G := camProd e Finset.univ) ⟨hsN, rfl, hsNl, hgN⟩
+    mkGroup_gensVal hP.mg (G := camProd e Finset.univ) hvs
   obtain rfl := encGroup_injective hNe
   refine EvalAll.letE (Det.call (Det.mk2 (dn E1.tail) dLi) fN) fun vN cN hN => ?_
   obtain ⟨rfl, hcN⟩ := hN
   have hcN1 : cN ≤ 10 ^ 7 * X ^ 9 := by
-    have hsNw : (Val.list (hsN.map encPerm)).wt ≤ (Val.list (L.map fun hs => .list (hs.map encPerm))).wt :=
-      (wt_le_wt_list (List.mem_map_of_mem (f := fun hs => Val.list (hs.map encPerm))
-        (List.getElem_mem hidx))).le
-    have w1 := wt_list2_le (.nat n) (.list (hsN.map encPerm))
+    have hsNw := GensVal.wt_le hvs
+    have w1 := wt_list2_le (.nat n) vs
     have w2 := wt_nat_le n
-    have w3 := wt_nat_le (L.length - 2)
     have h9 := hnXp 9
-    have h89 := hXp 8 9 (by norm_num)
     have h69 : (n + 1) ^ 6 ≤ (n + 1) ^ 9 := Nat.pow_le_pow_right (by omega) (by omega)
-    have h89' : (n + 1) ^ 8 ≤ (n + 1) ^ 9 := Nat.pow_le_pow_right (by omega) (by omega)
     have hX9 := hXp 1 9 (by norm_num)
-    have hml : (L.map fun hs => Val.list (hs.map encPerm)).length = L.length := List.length_map ..
-    clear * - hcN hsNw w1 w2 w3 h9 h89 h69 h89' hX9 hLw hLlen hNw hxe hX hnX hml
+    clear * - hcN hsNw w1 w2 h9 h69 hX9 hNw hxe hX hnX
     simp only [pow_one, mkGroupK] at *
     omega
   -- the trivial group
@@ -240,28 +233,28 @@ theorem camTail_spec {ho : GroupOrder} {hc : ChiefSeriesAlgo} {hqc : QuotientCen
   set E3 := E2 ++ [encGroup ([] : List (Perm (Fin n)))] with hE3
   have dLa := Det.mk3 (Det.var' (P := P) (env := E3) (i := 3) rfl) (dn E3.tail)
     (Det.mk2 (Det.var' (P := P) (env := E3) (i := 2) rfl) (Det.nil (P := P) (env := E3)))
-  have fL := camLoop_spec hP.loop hP.iter e h5 hk1 (by omega) hrn ns hnsl hns
+  have fL := camLoop_spec hd hP.loop hP.iter e hn0 h5 hk1 hk hrn ns hnsl hns
   refine EvalAll.letE (Ra := fun w c => CamInv e n w ∧
-      c ≤ X * camS4 ho hc hqc hj X + 10 ^ 14 * X ^ 13)
+      c ≤ X * camS4 ho hp hncl hd hqc hj X + 10 ^ 14 * X ^ 13)
     (EvalAll.call_funAll dLa fun v ca hv => ?_) fun vL cL hL => ?_
   · obtain ⟨rfl, hca⟩ := hv
     refine fL.mono fun w cb hw => ⟨hw.1, ?_⟩
     obtain ⟨hw1, hcb⟩ := hw
     have hww := cam_wt_inv_le e hrn hw1
-    have hLc : camLoopCost ho hc hqc n ≤ camS4 ho hc hqc hj X + 10 ^ 9 * X ^ 12 := by
+    have hLc : camLoopCost ho hp hncl hd hqc n ≤ camS4 ho hp hncl hd hqc hj X + 10 ^ 9 * X ^ 12 := by
       have hB : camLoopB n ≤ 10 ^ 12 * X ^ 12 := by
         unfold camLoopB
         have := hnXp 6; have := hXp 6 12 (by norm_num); omega
       have h1 := hPB _ hB (groupOrderPrim ho)
-      have h2 := hPB _ hB (chiefSeriesPrim hc)
-      have h3 := hPB _ hB (quotientCentralizerPrim hqc)
+      have h2 := hPB _ hB (camDirectPrim ho hp hncl hd)
+      have h3 := hPB _ hB (gmpNormalCentralizerPrim hqc)
       have h4 := Nat.mul_le_mul_left camLoopK (hnXp 12)
       unfold camLoopCost camS4
       simp only [camLoopK] at h4 ⊢
       omega
     have k1 := Nat.mul_le_mul (show n ≤ X by omega) hLc
-    have e1 : X * (camS4 ho hc hqc hj X + 10 ^ 9 * X ^ 12) =
-        X * camS4 ho hc hqc hj X + 10 ^ 9 * X ^ 13 := by ring
+    have e1 : X * (camS4 ho hp hncl hd hqc hj X + 10 ^ 9 * X ^ 12) =
+        X * camS4 ho hp hncl hd hqc hj X + 10 ^ 9 * X ^ 13 := by ring
     have k2 : loopModK * (n + 1) * (15000 * (n + 1) ^ 7) ≤ loopModK * X * (15000 * X ^ 7) :=
       Nat.mul_le_mul (Nat.mul_le_mul_left _ hnX) (Nat.mul_le_mul_left _ (hnXp 7))
     have e2 : loopModK * X * (15000 * X ^ 7) = 15000 * loopModK * X ^ 8 := by ring
@@ -467,7 +460,7 @@ theorem camTail_spec {ho : GroupOrder} {hc : ChiefSeriesAlgo} {hqc : QuotientCen
       (BinOp.eval .mul (BinOp.eval .add k 1) (BinOp.eval .add k 1)))
     have hlt1 : BinOp.eval .lt (BinOp.eval .add m 1)
         (BinOp.eval .mul (BinOp.eval .add k 1) (BinOp.eval .add k 1)) ≤ 1 := by
-      simp only [BinOp.eval]; split_ifs <;> norm_num
+      by_cases h : m + 1 < (k + 1) * (k + 1) <;> simp [BinOp.eval, h]
     have ea : BinOp.eval .add m 1 = m + 1 := rfl
     have eb : BinOp.eval .add k 1 = k + 1 := rfl
     have ec : BinOp.eval .mul (BinOp.eval .add k 1) (BinOp.eval .add k 1) = (k + 1) * (k + 1) := rfl
@@ -514,7 +507,7 @@ theorem camTail_spec {ho : GroupOrder} {hc : ChiefSeriesAlgo} {hqc : QuotientCen
     set R : Val → Val → Prop := fun y w => ∀ (i : Fin r) (ts : List (Perm (Fin n))),
       y = encGroup ts → gens ts = camProd e {i} → CamFacOut e i x₀ w with hR
     have hctxw : ctx.wt ≤ 1300 * (n + 1) ^ 6 := cam_ctx_wt_le ns hnsl (by omega) (by omega)
-    set BF := (johnsonPrim hj).boundSize (camPB X) + (quotientCentralizerPrim hqc).boundSize (camPB X) +
+    set BF := (johnsonPrim hj).boundSize (camPB X) + (gmpNormalCentralizerPrim hqc).boundSize (camPB X) +
       camFacK * 4000 ^ 30 * X ^ 180 with hBF
     have hf : ∀ y ∈ xs, FunAll P (b + 103) (.list [ctx, y]) (fun w c => R y w ∧ c ≤ BF) := by
       intro y hy
@@ -698,7 +691,7 @@ theorem camTail_spec {ho : GroupOrder} {hc : ChiefSeriesAlgo} {hqc : QuotientCen
       simp only [pow_one] at *
       omega
     have eBF : X * BF = X * ((johnsonPrim hj).boundSize (camPB X) +
-        (quotientCentralizerPrim hqc).boundSize (camPB X)) + camFacK * 4000 ^ 30 * X ^ 181 := by
+        (gmpNormalCentralizerPrim hqc).boundSize (camPB X)) + camFacK * 4000 ^ 30 * X ^ 181 := by
       rw [hBF]; ring
     rw [eBF] at hcC
     have q2 := hXp 2 182 (by norm_num); have q4 := hXp 4 182 (by norm_num)

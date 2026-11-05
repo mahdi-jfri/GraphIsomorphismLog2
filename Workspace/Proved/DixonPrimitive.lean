@@ -1,4 +1,8 @@
-import Workspace.Proved.DixonCore
+module
+
+public import Workspace.Proved.DixonCore
+
+@[expose] public section
 
 /-!
 # Dixon's derived length bound
@@ -29,9 +33,9 @@ open MulAction GI.RadicalSocle GI.PrimitiveStructure
 
 /-- **The primitive case**, for an abstract faithful primitive action. -/
 theorem dixon_primitive_aux {G α : Type} [Group G] [Finite G] [MulAction G α] [FaithfulSMul G α]
-    [Finite α] [IsSolvable G] [Nontrivial G] [IsPreprimitive G α]
+    [Finite α] [Group.IsSolvable G] [Nontrivial G] [IsPreprimitive G α]
     (ih : SolvDLIH.{0} (Nat.card α)) : derivedSeries G (solvL (Nat.card α)) = ⊥ := by
-  haveI : IsSolvable (⊤ : Subgroup G) :=
+  haveI : Group.IsSolvable (⊤ : Subgroup G) :=
     solvable_of_solvable_injective (Subgroup.subtype_injective ⊤)
   obtain ⟨N, hN, -, hc⟩ := exists_abelian_normal_of_solvable_normal (⊤ : Subgroup G) top_ne_bot
   haveI := hN.1
@@ -46,7 +50,7 @@ theorem dixon_primitive_aux {G α : Type} [Group G] [Finite G] [MulAction G α] 
   haveI : Nontrivial N := (Subgroup.nontrivial_iff_ne_bot N).mpr hN.2.1
   letI : CommGroup N := { (inferInstance : Group N) with mul_comm := hc }
   let ρ : G →* MulAut N := MulAut.conjNormal
-  haveI : IsSolvable ρ.range := solvable_of_surjective ρ.rangeRestrict_surjective
+  haveI : Group.IsSolvable ρ.range := solvable_of_surjective ρ.rangeRestrict_surjective
   have hirr : ∀ W : Subgroup N, (∀ h : ρ.range, ∀ w ∈ W, h • w ∈ W) → W = ⊥ ∨ W = ⊤ := by
     intro W hW
     have hnorm : (W.map N.subtype).Normal := by
@@ -104,6 +108,7 @@ theorem dixon_primitive_aux {G α : Type} [Group G] [Finite G] [MulAction G α] 
 /-- **The primitive case** of Dixon's bound. -/
 theorem dixon_solvDLPrimitive : SolvDLPrimitive := by
   intro α _ _ ih G hG hprim hnt
+  haveI : Group.IsSolvable G := hG
   haveI := hprim
   exact dixon_primitive_aux (G := G) (α := α) ih
 

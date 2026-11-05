@@ -1,5 +1,9 @@
-import Workspace.EmbeddedQuotient
-import Workspace.ImageTransport
+module
+
+public import Workspace.EmbeddedQuotient
+public import Workspace.ImageTransport
+
+@[expose] public section
 
 namespace GI.EmbeddedQuotient
 

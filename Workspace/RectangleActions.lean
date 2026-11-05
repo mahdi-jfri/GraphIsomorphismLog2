@@ -1,4 +1,8 @@
-import Workspace.PairActions
+module
+
+public import Workspace.PairActions
+
+@[expose] public section
 
 namespace GI.Rectangle
 

@@ -1,6 +1,10 @@
-import Workspace.Compat
-import Workspace.BochertCommutator
-import Mathlib.GroupTheory.SpecificGroups.Alternating
+module
+
+public import Workspace.Compat
+public import Workspace.BochertCommutator
+public import Mathlib.GroupTheory.SpecificGroups.Alternating
+
+@[expose] public section
 
 namespace GI.Bochert
 open Equiv Equiv.Perm

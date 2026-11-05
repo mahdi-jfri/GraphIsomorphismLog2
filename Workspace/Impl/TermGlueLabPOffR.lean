@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPYLab
+module
+
+public import Workspace.Impl.TermGlueLabPYLab
+
+@[expose] public section
 
 /-!
 # The transporters `t_a(h)` for one element `h`: one row

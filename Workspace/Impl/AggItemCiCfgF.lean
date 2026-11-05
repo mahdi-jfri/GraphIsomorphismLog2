@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiCfgSk
-import Workspace.Impl.AggItemCiCfgD
+module
+
+public import Workspace.Impl.AggItemCiCfgSk
+public import Workspace.Impl.AggItemCiCfgD
+
+@[expose] public section
 
 /-!
 # The configuration branch: its contract

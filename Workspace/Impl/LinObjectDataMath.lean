@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectData
-import Workspace.Impl.LinObjectGroupImage
+module
+
+public import Workspace.Impl.LinObjectData
+public import Workspace.Impl.LinObjectGroupImage
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset

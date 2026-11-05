@@ -1,5 +1,9 @@
-import Workspace.Algorithm.AuxCases
-import Workspace.Cited.DesignLemma
+module
+
+public import Workspace.Algorithm.AuxCases
+public import Workspace.Cited.DesignLemma
+
+@[expose] public section
 
 /-!
 # Skeletons of a coherent configuration on the labels
@@ -196,7 +200,8 @@ theorem classPart_cap (f : Fin q → ℕ) {s : ℕ} (hs : 1 ≤ s) (h : ∀ a, (
   · refine le_trans (Finset.card_le_one.2 fun B hB B' hB' => ?_) hs
     obtain ⟨a, ha, rfl⟩ := Finset.mem_image.1 hB
     obtain ⟨a', ha', rfl⟩ := Finset.mem_image.1 hB'
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, classPart] at ha ha'
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha ha'
+    simp only [classPart] at ha ha'
     simp only [classPart, classOf, ha, ha']
 
 end ClassPart

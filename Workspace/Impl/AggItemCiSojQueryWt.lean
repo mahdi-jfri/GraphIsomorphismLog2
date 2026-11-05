@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojFrameBuild
+module
+
+public import Workspace.Impl.AggItemCiSojFrameBuild
+
+@[expose] public section
 
 /-! # Weights of the actual rectangle query arguments -/
 

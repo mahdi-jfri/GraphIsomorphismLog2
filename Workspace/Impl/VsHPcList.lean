@@ -1,5 +1,9 @@
-import Workspace.Impl.VsHPcOrb
-import Workspace.Proved.VsHInjMath
+module
+
+public import Workspace.Impl.VsHPcOrb
+public import Workspace.Proved.VsHInjMath
+
+@[expose] public section
 
 /-!
 # The list of pieces
@@ -16,6 +20,8 @@ namespace GI.Impl
 open GI.Lang GI.Cited GI.Proved Equiv
 
 variable {p : ℕ} [hp : Fact p.Prime]
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 /-- **The pieces, each listed once.** -/
 theorem vsH_pieces {D : ℕ} {Fx : List (List (List ℕ))} (hFx : ∀ x ∈ Fx, VsWSq p D x)

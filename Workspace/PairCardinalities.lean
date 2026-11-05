@@ -1,5 +1,9 @@
-import Workspace.PairActions
-import Mathlib.Data.Fintype.Sigma
+module
+
+public import Workspace.PairActions
+public import Mathlib.Data.Fintype.Sigma
+
+@[expose] public section
 
 namespace GI.Pairs
 

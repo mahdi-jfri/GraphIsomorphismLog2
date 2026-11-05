@@ -1,4 +1,8 @@
-import Workspace.Impl.VsHPcData
+module
+
+public import Workspace.Impl.VsHPcData
+
+@[expose] public section
 
 /-!
 # The hard case with `k ≥ 1`
@@ -16,6 +20,8 @@ open GI.Lang GI.Cited GI.Proved Equiv
 
 variable {I : VecStabInst} {s : VsQSt I} [Fact I.p.Prime] {hs : VsQStOK s}
   {as : List (Perm (Fin I.n))} {Lb : List (List (List ℕ))} {ys : List (Perm (Fin I.n))} {r : ℕ}
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 /-- The orbit bound of the hard case. -/
 noncomputable def vsHBound (hs : VsQStOK s) (as ys : List (Perm (Fin I.n))) (r k : ℕ) : ℕ :=

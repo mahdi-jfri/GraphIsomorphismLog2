@@ -1,5 +1,9 @@
-import Workspace.Proved.VsQDrvMath
-import Workspace.Impl.VsQSot
+module
+
+public import Workspace.Proved.VsQDrvMath
+public import Workspace.Impl.VsQSot
+
+@[expose] public section
 
 /-!
 # The pasting program
@@ -152,8 +156,8 @@ theorem vsQ_findSome {α : Type} : ∀ rs : List (Option α),
   | [] => ⟨fun h => absurd h (by simp), fun _ => rfl⟩
   | none :: rs => by
     obtain ⟨h1, h2⟩ := vsQ_findSome rs
-    simp only [List.findIdx_cons, Option.isSome_none, cond_false, List.length_cons,
-      List.findSome?_cons, id, List.getElem_cons_succ]
+    simp only [List.findIdx_cons, Option.isSome_none, Bool.false_eq_true, ↓reduceIte,
+      List.length_cons, List.findSome?_cons, id, List.getElem_cons_succ]
     exact ⟨fun hi => h1 (by omega), fun hi => h2 (by omega)⟩
   | some a :: rs => by
     simp [List.findIdx_cons]
@@ -466,7 +470,7 @@ theorem vsQPaste_spec (hm : Membership) {P : Program} {f fd inv mp app mkg red j
     rw [this]
     refine (Det.mk1 (Det.nat 0)).mono ?_
     have := wt_list1_le (.nat 0); have := wt_nat_le 0
-    simp only at *; omega
+    omega
   have dbody := Det.ite dsub dfound dnone
   refine (Det.letE dfind dbody).mono ?_
   have := hval _ rfl

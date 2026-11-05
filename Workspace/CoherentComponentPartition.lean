@@ -1,5 +1,9 @@
-import Workspace.CoherentUniformComponents
-import Workspace.BlockPartition
+module
+
+public import Workspace.CoherentUniformComponents
+public import Workspace.BlockPartition
+
+@[expose] public section
 
 namespace GI.CoherentEntrance
 
@@ -68,8 +72,3 @@ theorem nonprimitive_balanced_components (c : Coloring n) (hc : Coherent c)
     colorComponent_half c hc side hh _ u v huv x⟩
 
 end GI.CoherentEntrance
-
-#print axioms GI.CoherentEntrance.colorReach_transport
-#print axioms GI.CoherentEntrance.colorPartition
-#print axioms GI.CoherentEntrance.colorPartition_same_block
-#print axioms GI.CoherentEntrance.nonprimitive_balanced_components

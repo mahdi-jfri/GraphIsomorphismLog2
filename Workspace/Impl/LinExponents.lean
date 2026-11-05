@@ -1,4 +1,8 @@
-import Workspace.Impl.LinSlp
+module
+
+public import Workspace.Impl.LinSlp
+
+@[expose] public section
 
 /-! Integer exponent vectors of the SLPs in A.20. Multiplication becomes vector
 addition, and inversion becomes negation. Each instruction increases the bit bound
@@ -61,7 +65,7 @@ theorem linExponentEntries_bound {t : ℕ} (prog : List SlpInstr)
       | none => simp [linSlpEntries, hx] at h
       | some x => exact ⟨x, rfl⟩
     have he : linSlpEntries gs prog (acc ++ [x]) = some es := by
-      simpa only [linSlpEntries, hx, Option.bind_some] using h
+      simpa [linSlpEntries, hx] using h
     have hb := linExponentStep_bound hg ha hx
     have hnext : ∀ v ∈ acc ++ [x], linExponentBound (2 * B) v := by
       intro v hv

@@ -1,5 +1,9 @@
-import Workspace.Proved.SSInsert
-import Workspace.Proved.SSOrder
+module
+
+public import Workspace.Proved.SSInsert
+public import Workspace.Proved.SSOrder
+
+@[expose] public section
 
 /-!
 # Building a closed table

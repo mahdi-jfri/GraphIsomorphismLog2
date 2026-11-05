@@ -1,8 +1,12 @@
-import Workspace.Impl.VsFAlgSpan
-import Workspace.Proved.VsFMatPowMath
-import Workspace.Proved.VStabLinKer
-import Mathlib.RingTheory.Adjoin.Basic
-import Mathlib.Algebra.Field.ZMod
+module
+
+public import Workspace.Impl.VsFAlgSpan
+public import Workspace.Proved.VsFMatPowMath
+public import Workspace.Proved.VStabLinKer
+public import Mathlib.RingTheory.Adjoin.Basic
+public import Mathlib.Algebra.Field.ZMod
+
+@[expose] public section
 
 /-!
 # The program's matrices span the algebra

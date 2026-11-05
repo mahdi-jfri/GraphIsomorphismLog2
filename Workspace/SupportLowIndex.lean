@@ -1,6 +1,10 @@
-import Workspace.SupportIndexGap
-import Workspace.PairComplement
-import Workspace.AlternatingSubsetTransitive
+module
+
+public import Workspace.SupportIndexGap
+public import Workspace.PairComplement
+public import Workspace.AlternatingSubsetTransitive
+
+@[expose] public section
 
 /-!
 # Orbit and index lemmas for Lemma A.24

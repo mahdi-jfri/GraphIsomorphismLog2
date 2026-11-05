@@ -1,5 +1,9 @@
-import Workspace.RadicalSocleSimpleFactors
-import Mathlib.Algebra.Group.Equiv.Basic
+module
+
+public import Workspace.RadicalSocleSimpleFactors
+public import Mathlib.Algebra.Group.Equiv.Basic
+
+@[expose] public section
 
 namespace GI.RadicalSocle
 
@@ -61,7 +65,7 @@ theorem two_pow_factor_count_le_socle_card [Finite G] [Fintype (SimpleFactors G)
   calc
     2 ^ Fintype.card (SimpleFactors G) = ∏ _i : SimpleFactors G, 2 := by simp
     _ ≤ ∏ i : SimpleFactors G, Nat.card (SimpleFactor i) :=
-      Finset.prod_le_prod (fun _ _ => Nat.zero_le _) (fun i _ => simpleFactor_card_two_le i)
+      Finset.prod_le_prod (fun i _ => simpleFactor_card_two_le i)
 
 /-- An unconditional decomposition for the actual solvable-radical quotient. -/
 noncomputable def radical_quotient_socleSimpleProductEquiv [Finite G] :

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectSourceCoordinateCost
+module
+
+public import Workspace.Impl.LinObjectSourceCoordinateCost
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -11,7 +15,7 @@ theorem linObjectSourceCoordinate_spec {P : Program} {b jsci jder jmem jm n : �
     {Q R : Type*} [CommGroup Q] [AddCommGroup R]
     (as ns : List (Equiv.Perm (Fin n))) (π : gens as →* Q) (hπ : Function.Surjective π)
     (Y X : List (TmRiO n)) (hok : TmRecObjOK (Y.length+X.length) (Y++X))
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : TmRiListNorm (gens as) (Y++X)) (hNA : gens ns ≤ gens as)
     (H : Subgroup (Equiv.Perm (Fin n))) (hAH : gens as ≤ H)
     (hA : GI.Multicoset.Normalizes H (gens as)) (hN : GI.Multicoset.Normalizes H (gens ns))
     (hcomm : ∀ a ∈ gens as, ∀ b ∈ gens as, a*b*a⁻¹*b⁻¹ ∈ gens ns)
@@ -88,7 +92,8 @@ theorem linObjectSourceCoordinate_spec {P : Program} {b jsci jder jmem jm n : �
     have harg : (Val.list [.nat d,linVecVal w,encIntMatrix V]).wt ≤ linObjectSourceCoordinateRowArg hs hm hc W :=
       linObjectEvalArg3Middle _ _ _ W OB wd ww (by omega)
     have hh := linRowMul_spec h.dense.ints h.dense.row h.dense.column h.dense.dot w V
-    simpa only [linObjectEvalRowImage_vec] using hh.mono (linPolyEnvelope_bound linObjectEvalRowPoly
+    rw [linObjectEvalRowImage_vec]
+    exact hh.mono (linPolyEnvelope_bound linObjectEvalRowPoly
       hdRow
       harg (Nat.zero_le _))
   have hdiag : (fun i => ((tmGLQMod D i : ℕ) : ℤ)) = (fun i => D i i) := by

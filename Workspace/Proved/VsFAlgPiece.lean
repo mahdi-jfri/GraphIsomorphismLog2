@@ -1,7 +1,11 @@
-import Workspace.Proved.VsFAlgEig
-import Mathlib.LinearAlgebra.Charpoly.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.RingTheory.Artinian.Module
+module
+
+public import Workspace.Proved.VsFAlgEig
+public import Mathlib.LinearAlgebra.Charpoly.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import Mathlib.RingTheory.Artinian.Module
+
+@[expose] public section
 
 /-!
 # Splitting a commutative algebra of endomorphisms

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectAffineItem
+module
+
+public import Workspace.Impl.LinObjectAffineItem
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

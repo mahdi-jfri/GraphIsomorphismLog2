@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectAdjoin
+module
+
+public import Workspace.Impl.LinObjectAdjoin
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -70,7 +74,8 @@ theorem linObjectAdjoin_spec (hm : Membership) {P : Program} {b jmem n : ℕ}
   have hb : FunDet P (b+4) (.list [.nat n,.list (zs.map encPerm)]) (encGroup zs) BB :=
     (mkGroup_spec h.build zs).mono (by
       change mkGroupK*((zs.length+2)*(n+1))^3 ≤ mkGroupK*((2*W+3)*(W+1))^3
-      gcongr <;> omega)
+      exact Nat.mul_le_mul_left _ (Nat.pow_le_pow_left
+        (Nat.mul_le_mul (by omega) (by omega)) 3))
   have hr : FunDet P (b+11) (encGroup zs) (encGroup (keepList zs)) RB :=
     (reduce_spec hm h.reduce hj zs).mono (linReduceCost_mono hm hn hz)
   have hp : W+AB+BB+RB+1 ≤ (W+AB+BB+RB+1)^2 := Nat.le_self_pow (by decide) _

@@ -1,5 +1,9 @@
-import Workspace.Cited.CoherentConfig
-import Mathlib.Data.Real.Basic
+module
+
+public import Workspace.Cited.CoherentConfig
+public import Mathlib.Data.Real.Basic
+
+@[expose] public section
 
 /-!
 # Cited input: Babai's Design Lemma ([H, Proposition 5.1])

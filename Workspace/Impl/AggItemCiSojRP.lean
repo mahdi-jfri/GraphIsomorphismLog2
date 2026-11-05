@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojPi
-import Workspace.Impl.AggItemCiSojAns
+module
+
+public import Workspace.Impl.AggItemCiSojPi
+public import Workspace.Impl.AggItemCiSojAns
+
+@[expose] public section
 
 /-!
 # Label projection using the rectangle's own stored graph

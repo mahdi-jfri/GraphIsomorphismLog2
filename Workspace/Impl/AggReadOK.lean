@@ -1,6 +1,10 @@
-import Workspace.Impl.AggReadSpec
-import Workspace.Impl.AggReadRounds
-import Workspace.Impl.PolyBd
+module
+
+public import Workspace.Impl.AggReadSpec
+public import Workspace.Impl.AggReadRounds
+public import Workspace.Impl.PolyBd
+
+@[expose] public section
 
 /-!
 # `AsReadOK`: the reading meets its contract
@@ -117,8 +121,8 @@ theorem rd_beta_cap {Ω C : Type} {S : State Ω C} (L : GiantLabels S) :
 set_option maxHeartbeats 2000000 in
 /-- **The reading meets `AsReadOK`**, for any hand-over whose relation `cert` contains `CpHand`.
 The cited results enter through `rd_asRounds_nonempty`. -/
-theorem rd_asReadOK (hpre : Preimage) (hcite : GI.Cited.TransitiveAffected)
-    (hK : GI.Cited.KaryCoherentRefinement) (h6 : GI.Cited.SixTransitiveContainsAlt)
+theorem rd_asReadOK (hpre : Preimage)
+    (hK : GI.Cited.KaryCoherentRefinement)
     (hDl : GI.Cited.DesignLemma) (I : Iface) (Pg : Program) (F : Funs) {b jpre fr : ℕ}
     (hf : Pg.funs[fr]? = some (rdF b)) (hb : Pg.HasAt b (rdFuns b jpre))
     (hj : Pg.prims[jpre]? = some (preimagePrim hpre))
@@ -185,7 +189,7 @@ theorem rd_asReadOK (hpre : Preimage) (hcite : GI.Cited.TransitiveAffected)
       cpInitV sv k L.q (Fintype.card S.dom) ps (rdOsA e S L.q) T Ts p0 := by
     rw [rd_card_dom e S L.q]
   refine ⟨cpInitV sv k L.q (domNat e S.dom).length ps (rdOsA e S L.q) T Ts p0, ps,
-    by rw [rd_beta_cap], hpg, hH e c S L _ _ ⟨rfl, rd_asRounds_nonempty hcite hK h6 hDl hcall,
+    by rw [rd_beta_cap], hpg, hH e c S L _ _ ⟨rfl, rd_asRounds_nonempty hK hDl hcall,
     sv, ps, rdOsA e S L.q, T, Ts, p0, hO, hctx, hp0, hp0l, hst⟩, by omega, by omega⟩
 
 

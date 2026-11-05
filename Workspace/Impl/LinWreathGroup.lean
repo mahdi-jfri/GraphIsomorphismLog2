@@ -1,5 +1,9 @@
-import Workspace.Impl.LinWreathNumber
-import Workspace.Impl.LinPermCertificate
+module
+
+public import Workspace.Impl.LinWreathNumber
+public import Workspace.Impl.LinPermCertificate
+
+@[expose] public section
 
 /-! The generating list and representation of the numbered solvable cover. -/
 namespace GI.Impl
@@ -54,9 +58,9 @@ is solvable. -/
 theorem linWreathCoverGenerators_solvable {n : ℕ} (gs : List (Perm (Fin n)))
     (hsol : IsSolvable (gens gs)) : IsSolvable (gens (linWreathCoverGenerators gs)) := by
   rw [linWreathCoverGenerators_gens]
-  letI := hsol
-  letI := linWreath_solvable (H := gens gs)
-  exact solvable_of_surjective (linWreathFinCover (gens gs)).rangeRestrict_surjective
+  letI : Group.IsSolvable (gens gs) := hsol
+  letI : Group.IsSolvable (gens gs ≀ᵣ linTwo) := linWreath_solvable (H := gens gs)
+  exact Group.isSolvable_of_surjective (linWreathFinCover (gens gs)).rangeRestrict_surjective
 
 /-- The numbered cover retains the original wreath element. This is used to
 transport its linear representation to the group supplied to VectorStabilizer. -/

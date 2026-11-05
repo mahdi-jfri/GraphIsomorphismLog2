@@ -1,4 +1,8 @@
-import Workspace.Impl.GenProdNum
+module
+
+public import Workspace.Impl.GenProdNum
+
+@[expose] public section
 
 /-!
 # The product refinement: splicing the hierarchy

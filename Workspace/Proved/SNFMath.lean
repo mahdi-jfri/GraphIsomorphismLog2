@@ -1,4 +1,8 @@
-import Workspace.Proved.SNFFix
+module
+
+public import Workspace.Proved.SNFFix
+
+@[expose] public section
 
 /-!
 # The Smith form computed by alternation and pair steps (Smith form)

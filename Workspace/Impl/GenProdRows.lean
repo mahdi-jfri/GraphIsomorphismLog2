@@ -1,5 +1,9 @@
-import Workspace.Impl.GenProdBits
-import Workspace.Cited.AlgoCameron
+module
+
+public import Workspace.Impl.GenProdBits
+public import Workspace.Cited.AlgoCameron
+
+@[expose] public section
 
 /-!
 # The product refinement: the rows of the points
@@ -226,7 +230,6 @@ theorem prows_spec {P : Program} {f bm fadd brep bga : ℕ}
       have h5 := wt_nat_le 0
       have h6 := wt_nat_le 1
       have h7 : (Val.list [Val.nat 1]).wt ≤ 11 := by omega
-      simp only [snocOne] at *
       omega)
   set ext : List Val := xs.map snocOne with hext
   have wext : (Val.list ext).wt ≤ 60 * W := by

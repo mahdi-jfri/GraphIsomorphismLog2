@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectCertT
+module
+
+public import Workspace.Impl.AggRectCertT
+
+@[expose] public section
 
 /-!
 # The certificate search as a program: the conditions
@@ -73,11 +77,11 @@ variable {P : Program}
 
 theorem rc_len_lt_natList (xs : List ℕ) : xs.length < (natList xs).wt := by
   have := length_lt_wt_list (xs.map Val.nat)
-  simpa using this
+  simpa [natList] using this
 
 theorem rc_len_lt_tv (ts : List (List ℕ)) : ts.length < (rcTV ts).wt := by
   have := length_lt_wt_list (ts.map natList)
-  simpa using this
+  simpa [rcTV] using this
 
 set_option maxHeartbeats 1000000 in
 /-- The row degrees. -/

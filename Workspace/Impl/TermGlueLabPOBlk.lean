@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPOM
+module
+
+public import Workspace.Impl.TermGlueLabPOM
+
+@[expose] public section
 
 /-!
 # The block matrix and the extra coordinate (step 5, programs)

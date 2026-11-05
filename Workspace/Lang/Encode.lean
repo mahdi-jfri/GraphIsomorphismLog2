@@ -11,8 +11,12 @@ written one after another from any address `r`, form a correct output at `r` in 
 `[0]` when the graphs are not isomorphic, and
 `[1, σ 0, …, σ (n - 1), k, g₀ 0, …, g₀ (n - 1), …, g_{k-1} (n - 1)]` otherwise.
 -/
-import Workspace.Lang.Val
-import Workspace.Machine.StatementFacts
+module
+
+public import Workspace.Lang.Val
+public import Workspace.Machine.StatementFacts
+
+@[expose] public section
 
 namespace GI.Lang
 

@@ -1,53 +1,66 @@
-import Workspace.Impl.TermRadLoop
-import Workspace.Impl.TermHyp
+module
+
+public import Workspace.Impl.TermRadLoop
+public import Workspace.Impl.TermChain
+public import Workspace.Impl.TermHyp
+public import Workspace.Cited.Facts
+
+@[expose] public section
 
 /-!
 # T2: the radical preimage as a program
 
-The paragraph after Lemma A.21: "Compute a chief series of `H` and multiply each term by `N`
-… For each nonabelian image factor `U/V`, compute the preimage of `C_{H/V}(U/V)` … all these
-preimages are normal, so their intersection is a normalized-subgroup intersection. Their
-intersection is precisely the radical preimage."
+The paragraph after Lemma A.21: "Construct a normal chain from `H` to `N` whose nonabelian steps
+are chief factors of `H` … For each nonabelian image factor `U/V`, compute the preimage of
+`C_{H/V}(U/V)` … all these preimages are normal, so their intersection is a normalized-subgroup
+intersection. Their intersection is precisely the radical preimage."
 
 The function `radEntry`, on `[gens H, gens N]`:
-1. a chief series `C₀ = H > ⋯ > C_L = 1` of `H` (the cited **ChiefSeriesAlgo**, [LM, Theorem
-   3.1(x)]);
+1. a nonabelian-chief normal chain `C₀ = H ≥ ⋯ ≥ C_L ≤ N` from `H` to `N` (`tcChainEntry`,
+   `tcChain_spec` in `TermChain.lean`);
 2. the loop over the factors `j < L` (`iterFuns`, step `radStepBody`, `radStep_spec`), starting
    from `H`: it keeps `A ∩ C_j` for every nonabelian factor `N C_j / N C_{j+1}`;
 3. the generators of the result, cut to at most `m²` by one call of
    **NormalizedIntersection** on `A ∩ A` (the output form of the cited tasks, `GensOf`).
-The result is `radicalPreimage H N` by `rad_mem_iff` (`TermRadMath.lean`).
+The result is `radicalPreimage H N` by `nonabelianChief_rad_mem_iff` (`NonabelianChief.lean`).
 
-Cost (`rad_spec`): the chief series, `L ≤ m²` steps of `radStepCost`, and the final
-intersection; all polynomial in the weight of the input (`radCost_le`, `rad_termRadSpec`).
+Cost (`rad_spec`): the nonabelian-chief chain, `L ≤ m²` steps of `radStepCost`, and the final
+intersection; all polynomial in the weight of the input plus `radQ n` (`radCost_le`,
+`rad_termRadSpec`).
 -/
 
 namespace GI.Impl
 
-open GI.Lang GI.Cited Equiv
+open GI.Algorithm GI.Lang GI.Cited Equiv
 open GI.Machine (BinOp)
 
 variable {n : ℕ}
 
-/-- **The radical program** on `[gens H, gens N]`. Environment `[a, chief series, A]`. -/
-def radEntry (it jcs jni : ℕ) : Expr :=
-  .letE (.prim jcs (arg 0))
+/-- **The radical program** on `[gens H, gens N]`. Environment `[a, chain, A]`. -/
+def radEntry (it tc jni : ℕ) : Expr :=
+  .letE (.call tc (.var 0))
   (.letE (.call it (mk3 (mk3 (arg 0) (arg 1) (.var 1))
       (.arith .sub (.length (.var 1)) (.nat 1)) (arg 0)))
     (.prim jni (mk2 (.var 2) (.var 2))))
 
-/-- Where the radical program and its modules sit. -/
-structure RadAt (P : Program) (f it g ap mg le jcs jder jni jqc jmem : ℕ) (hcs : ChiefSeriesAlgo)
-    (hder : DerivedSubgroup) (hqc : QuotientCentralizer) (hni : NormalizedIntersection)
-    (hmem : Membership) : Prop where
-  entry : P.funs[f]? = some (radEntry it jcs jni)
-  iter : P.HasAt it (iterFuns it g)
-  step : RadStepAt P g ap mg le jder jni jqc jmem hder hqc hni hmem
-  jc : P.prims[jcs]? = some (chiefSeriesPrim hcs)
+/-- `TcChainAt` at the standard offsets of `tcChainFuns b`. -/
+abbrev TcChainBundleAt (P : Program) (b jmb jpre jmem jnc jni jder : ℕ)
+    (hmb : MinimalBlocks) (hpre : Preimage) (hmem : Membership)
+    (hnc : NormalClosure) (hni : NormalizedIntersection) (hder : DerivedSubgroup) : Prop :=
+  TcChainAt P b (b + 12) (b + 1) (b + 2) (b + 15) (b + 18) (b + 25) (b + 30)
+    (b + 3) (b + 35) (b + 4) (b + 5) (b + 38) (b + 172) (b + 96) (b + 121) (b + 145)
+    (b + 6) (b + 69) (b + 41) (b + 7)
+    (b + 8) (b + 44) (b + 9) (b + 47) (b + 10) (b + 50) (b + 62) (b + 11) (b + 65)
+    jmb jpre jmem jnc jni jder hmb hpre hmem hnc hni hder
 
-/-- `Prim.boundSize` is monotone. -/
-theorem rad_boundSize_mono (p : Prim) {B B' : ℕ} (h : B ≤ B') : p.boundSize B ≤ p.boundSize B' :=
-  Nat.mul_le_mul_left _ (Nat.pow_le_pow_left (by omega) _)
+/-- Where the radical program and its modules sit. -/
+structure RadAt (P : Program) (f it g ap mg le tc fk jmb jpre jmem jnc jni jder : ℕ)
+    (hmb : MinimalBlocks) (hpre : Preimage) (hmem : Membership)
+    (hnc : NormalClosure) (hni : NormalizedIntersection) (hder : DerivedSubgroup) : Prop where
+  entry : P.funs[f]? = some (radEntry it tc jni)
+  iter : P.HasAt it (iterFuns it g)
+  step : RadStepAt P g ap mg le jder jni fk jmem jpre hder hni hmem hpre
+  tc : TcChainBundleAt P tc jmb jpre jmem jnc jni jder hmb hpre hmem hnc hni hder
 
 theorem rad_stepCost_mono (pd pq pi pm : Prim) {W W' : ℕ} (h : W ≤ W') :
     radStepCost pd pq pi pm W ≤ radStepCost pd pq pi pm W' := by
@@ -67,37 +80,55 @@ def radCost (pc pd pq pi pm : Prim) (T : ℕ) : ℕ :=
     200 * (T + 1) ^ 8 * radStepCost pd pq pi pm (2000 * (T + 1) ^ 8) + 10 ^ 10 * (T + 1) ^ 16
 
 /-- **T2: the radical preimage** (paragraph after Lemma A.21). On `[gens H, gens N]`, with
-`N ≤ H` normalized by `H`, the program returns generators of `radicalPreimage H N`, at cost at
-most `radCost` of the weight of the input. -/
-theorem rad_spec {hcs : ChiefSeriesAlgo} {hder : DerivedSubgroup} {hqc : QuotientCentralizer}
-    {hni : NormalizedIntersection} {hmem : Membership}
-    {P : Program} {f it g ap mg le jcs jder jni jqc jmem : ℕ}
-    (hP : RadAt P f it g ap mg le jcs jder jni jqc jmem hcs hder hqc hni hmem)
+`N ≤ H` normalized by `H` and `N` transitive on `Fin n`, the program returns generators of
+`radicalPreimage H N`, at cost at most `radCost` of the weight of the input plus `radQ n`. -/
+theorem rad_spec (hMa : MarotiPrimitive) {hmb : MinimalBlocks} {hpre : Preimage}
+    {hmem : Membership} {hnc : NormalClosure} {hni : NormalizedIntersection}
+    {hder : DerivedSubgroup}
+    {P : Program} {f it g ap mg le tc fk jmb jpre jmem jnc jni jder : ℕ}
+    (hP : RadAt P f it g ap mg le tc fk jmb jpre jmem jnc jni jder
+      hmb hpre hmem hnc hni hder)
     (gs ns : List (Perm (Fin n))) (hNH : gens ns ≤ gens gs)
-    (hn : GI.Multicoset.Normalizes (gens gs) (gens ns)) :
+    (hn : GI.Multicoset.Normalizes (gens gs) (gens ns))
+    [MulAction.IsPretransitive (gens ns) (Fin n)] :
     FunAll P f (.list [encGroup gs, encGroup ns]) (fun u cost =>
       GensOf (GI.Multicoset.radicalPreimage (gens gs) (gens ns)) u ∧
-      cost ≤ radCost (chiefSeriesPrim hcs) (derivedSubgroupPrim hder)
-        (quotientCentralizerPrim hqc) (normalizedIntersectionPrim hni) (membershipPrim hmem)
-        (Val.list [encGroup gs, encGroup ns]).wt) := by
-  set T := (Val.list [encGroup gs, encGroup ns]).wt with hT
-  have hgT : (encGroup gs).wt < T := wt_le_wt_list (by simp)
-  have hnT : (encGroup ns).wt < T := wt_le_wt_list (by simp)
+      cost ≤ radCost (tcChainPrim hmb hpre hmem hnc hni hder) (derivedSubgroupPrim hder)
+        (gmpFactorKernelPrim hmem hpre) (normalizedIntersectionPrim hni) (membershipPrim hmem)
+        ((Val.list [encGroup gs, encGroup ns]).wt + radQ n)) := by
+  set T := (Val.list [encGroup gs, encGroup ns]).wt + radQ n with hT
+  have hgT : (encGroup gs).wt < T := (wt_le_wt_list (by simp)).trans_le (Nat.le_add_right _ _)
+  have hnT : (encGroup ns).wt < T := (wt_le_wt_list (by simp)).trans_le (Nat.le_add_right _ _)
   have hnW : n + 1 ≤ T := by
     have := S_le_wt_encGroup gs
     have : n + 1 ≤ (gs.length + 2) * (n + 1) := Nat.le_mul_of_pos_left _ (by omega)
+    omega
+  have hn_wt : n ≤ (Val.list [encGroup gs, encGroup ns]).wt := by
+    have := S_le_wt_encGroup gs
+    have : n + 1 ≤ (gs.length + 2) * (n + 1) := Nat.le_mul_of_pos_left _ (by omega)
+    have : (encGroup gs).wt < (Val.list [encGroup gs, encGroup ns]).wt := wt_le_wt_list (by simp)
     omega
   have hT8 : T + 1 ≤ (T + 1) ^ 8 := Nat.le_self_pow (by norm_num) _
   have hn8 : (n + 1) ^ 8 ≤ (T + 1) ^ 8 := Nat.pow_le_pow_left (by omega) _
   have hn6 : (n + 1) ^ 6 ≤ (T + 1) ^ 8 :=
     (Nat.pow_le_pow_left (show n + 1 ≤ T + 1 by omega) 6).trans
       (Nat.pow_le_pow_right (by omega) (by omega))
-  have d0 := Det.arg' (P := P) (vs := [encGroup gs, encGroup ns]) (rest := []) (j := 0) rfl
-  have hTs : (encGroup gs).size ≤ T := (Val.size_le_wt _).trans hgT.le
-  refine FunAll.intro hP.entry (EvalAll.letE (chiefSeries_call hcs hP.jc d0 ⟨gs, rfl, rfl⟩)
-    fun v1 c1 h1 => ?_)
+  have dinp := Det.var' (P := P) (env := [.list [encGroup gs, encGroup ns]]) (i := 0) rfl
+  have htc_spec := tcChain_spec hMa hP.tc gs ns hNH hn (fun _ => inferInstance)
+  refine FunAll.intro hP.entry (EvalAll.letE
+    (Ra := fun v1 c1 => (∃ Hs, SeriesVal n v1 Hs ∧ IsNonabelianChiefChain (gens gs) (gens ns) Hs) ∧
+      c1 ≤ (tcChainPrim hmb hpre hmem hnc hni hder).boundSize T +
+        2 * T + 100 * (n + 1) ^ 8 + 10)
+    (EvalAll.call_funAll dinp fun v ca hv => ?_) fun v1 c1 h1 => ?_)
+  · obtain ⟨rfl, hca⟩ := hv
+    refine htc_spec.mono fun v1 cb ⟨⟨Hs, hSv, hs⟩, hcb⟩ => ⟨⟨Hs, hSv, hs⟩, ?_⟩
+    have hb1 : cb ≤ (tcChainPrim hmb hpre hmem hnc hni hder).boundSize T :=
+      hcb.trans (tcChainCost_le_boundSize hmb hpre hmem hnc hni hder hn_wt)
+    have hw1 := SeriesVal.wt_le hSv
+    have hWT : (Val.list [encGroup gs, encGroup ns]).wt ≤ T := Nat.le_add_right _ _
+    clear * - hca hb1 hw1 hWT
+    omega
   obtain ⟨⟨Hs, ⟨L, rfl, hLl, hl, rfl⟩, hs⟩, hc1⟩ := h1
-  have hb1 := (chiefSeriesPrim hcs).bound_le hTs
   -- the loop
   set cs := radCsVal L with hcsdef
   have hcsw : cs.wt ≤ 100 * (n + 1) ^ 8 := SeriesVal.wt_le ⟨L, rfl, hLl, hl, rfl⟩
@@ -113,7 +144,7 @@ theorem rad_spec {hcs : ChiefSeriesAlgo} {hder : DerivedSubgroup} {hqc : Quotien
   have hstep : ∀ i acc, i < k → RadInv (gens gs) (gens ns) (L.map gens) (encGroup gs) i acc →
       FunAll P g (.list [c, .nat i, acc]) (fun w cost =>
         RadInv (gens gs) (gens ns) (L.map gens) (encGroup gs) (i + 1) w ∧
-        cost ≤ radStepCost (derivedSubgroupPrim hder) (quotientCentralizerPrim hqc)
+        cost ≤ radStepCost (derivedSubgroupPrim hder) (gmpFactorKernelPrim hmem hpre)
           (normalizedIntersectionPrim hni) (membershipPrim hmem) (2000 * (T + 1) ^ 8)) := by
     intro i acc hi hinv
     refine (radStep_spec hP.step hNH hn hs hl (by omega) hinv).mono fun w cost h => ⟨h.1, ?_⟩
@@ -121,7 +152,10 @@ theorem rad_spec {hcs : ChiefSeriesAlgo} {hder : DerivedSubgroup} {hqc : Quotien
     obtain ⟨A, -, -, hAw⟩ := hinv
     have h3 := wt_list3_le c (.nat i) acc
     have h4 := wt_nat_le i
-    show (Val.list [c, .nat i, acc]).wt ≤ _
+    have h5 : (encGroup gs).wt + (encGroup ns).wt < (Val.list [encGroup gs, encGroup ns]).wt := by
+      simp [Val.wt]
+      omega
+    show (Val.list [c, .nat i, acc]).wt + radQ n ≤ _
     omega
   have h0 : RadInv (gens gs) (gens ns) (L.map gens) (encGroup gs) 0 (encGroup gs) :=
     ⟨gens gs, ⟨gs, rfl, rfl⟩, fun h => ⟨fun hh => ⟨hh, fun j hj => absurd hj (by omega)⟩,
@@ -150,7 +184,7 @@ theorem rad_spec {hcs : ChiefSeriesAlgo} {hder : DerivedSubgroup} {hqc : Quotien
       (Val.list [c, .nat k, encGroup gs]).wt := rfl
     have e3 : (List.map (fun hs => Val.list (List.map encPerm hs)) L).length = L.length := by simp
     omega)
-  set B := radStepCost (derivedSubgroupPrim hder) (quotientCentralizerPrim hqc)
+  set B := radStepCost (derivedSubgroupPrim hder) (gmpFactorKernelPrim hmem hpre)
     (normalizedIntersectionPrim hni) (membershipPrim hmem) (2000 * (T + 1) ^ 8) with hB
   set I := k * B + loopModK * (k + 1) * ((Val.list [c, .nat k, encGroup gs]).wt + k + M + 1)
     with hI
@@ -180,7 +214,7 @@ theorem rad_spec {hcs : ChiefSeriesAlgo} {hder : DerivedSubgroup} {hqc : Quotien
     rw [inf_idem] at hu
     have hR : A = GI.Multicoset.radicalPreimage (gens gs) (gens ns) := by
       ext h
-      rw [hAm, rad_mem_iff hNH hn hs, List.length_map]
+      rw [hAm, nonabelianChief_rad_mem_iff hNH hn hs, List.length_map]
     rw [← hR]
     exact hu
   · obtain ⟨hu0, hcu⟩ := h
@@ -188,7 +222,7 @@ theorem rad_spec {hcs : ChiefSeriesAlgo} {hder : DerivedSubgroup} {hqc : Quotien
     have hb2 := (normalizedIntersectionPrim hni).bound_le hAs
     have hu := hcu
     unfold radCost
-    have eB : 200 * (T + 1) ^ 8 * radStepCost (derivedSubgroupPrim hder) (quotientCentralizerPrim hqc)
+    have eB : 200 * (T + 1) ^ 8 * radStepCost (derivedSubgroupPrim hder) (gmpFactorKernelPrim hmem hpre)
       (normalizedIntersectionPrim hni) (membershipPrim hmem) (2000 * (T + 1) ^ 8) =
       200 * (T + 1) ^ 8 * B := rfl
     rw [eB]
@@ -310,20 +344,13 @@ theorem radCost_le (pc pd pq pi pm : Prim) (T : ℕ) :
   clear * - hc' hi' fc fi f16 hs8
   omega
 
-/-- **T2 as the hypothesis of the terminal case** (`Iface.TermRadSpec`, `TermHyp.lean`): the
-radical program meets it with the constants `radK`, `radD` of the cited primitives. Cited:
-**ChiefSeriesAlgo**, **DerivedSubgroup**, **QuotientCentralizer**, **NormalizedIntersection**,
-**Membership**. -/
-theorem rad_termRadSpec {hcs : ChiefSeriesAlgo} {hder : DerivedSubgroup}
-    {hqc : QuotientCentralizer} {hni : NormalizedIntersection} {hmem : Membership}
-    {P : Program} {f it g ap mg le jcs jder jni jqc jmem : ℕ}
-    (hP : RadAt P f it g ap mg le jcs jder jni jqc jmem hcs hder hqc hni hmem) :
-    Iface.TermRadSpec P
-      (radK (chiefSeriesPrim hcs) (derivedSubgroupPrim hder) (quotientCentralizerPrim hqc)
-        (normalizedIntersectionPrim hni) (membershipPrim hmem))
-      (radD (chiefSeriesPrim hcs) (derivedSubgroupPrim hder) (quotientCentralizerPrim hqc)
-        (normalizedIntersectionPrim hni) (membershipPrim hmem)) f := by
-  intro m σH σN hle hn
-  exact (rad_spec hP σH σN hle hn).mono fun u c h => ⟨h.1, h.2.trans (radCost_le _ _ _ _ _ _)⟩
+theorem radQ_le_ceil_expLogSq (m : ℕ) : radQ m ≤ ⌈expLogSq 3 m⌉₊ := by
+  apply Nat.ceil_mono
+  rcases Nat.eq_zero_or_pos m with rfl | hm0
+  · have := tm_one_le_expLogSq (a := 3) (by norm_num) 0
+    simpa [Real.logb_zero] using this
+  · have hm1 : (1 : ℝ) ≤ m := by exact_mod_cast hm0
+    have hlog : 0 ≤ Real.logb 2 m := Real.logb_nonneg (by norm_num) hm1
+    exact (Real.rpow_le_rpow_of_exponent_le hm1 (by linarith)).trans (tm_rpow_le_expLogSq le_rfl)
 
 end GI.Impl

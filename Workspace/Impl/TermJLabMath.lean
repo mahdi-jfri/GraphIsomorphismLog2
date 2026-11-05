@@ -1,6 +1,10 @@
-import Workspace.Impl.TermJYoung
-import Workspace.Impl.LinCoordinateCertificate
-import Workspace.MulticosetTerminal
+module
+
+public import Workspace.Impl.TermJYoung
+public import Workspace.Impl.LinCoordinateCertificate
+public import Workspace.MulticosetTerminal
+
+@[expose] public section
 
 /-!
 # Labels of pairs in `A = N/N*` (math for the paper's zero-sum route)

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinMapEncoded
+module
+
+public import Workspace.Impl.LinMapEncoded
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

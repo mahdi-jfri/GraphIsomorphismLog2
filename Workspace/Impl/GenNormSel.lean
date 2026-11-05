@@ -1,4 +1,8 @@
-import Workspace.Impl.GenExposeProg
+module
+
+public import Workspace.Impl.GenExposeProg
+
+@[expose] public section
 
 /-!
 # Computing the selected normalization interval
@@ -50,7 +54,7 @@ theorem normSplitIdx_eq {Ω C : Type} {S : State Ω C} (Q : PrimitiveQuotient S)
   have htop : univBit S.dom Q.top = 1 := univBit_eq_one.mpr Q.top_univ
   simp only [splitIdx, List.map_append, List.map_cons, List.findIdx_append, hpre,
     List.length_map, lt_self_iff_false, if_false, List.findIdx_cons, htop,
-    decide_true, cond_true, Nat.zero_add]
+    decide_true, if_true, Nat.zero_add]
 
 /-- The split-index program computes the exact selector stored in `N.childLabels`. -/
 theorem normSelection_spec {Pg : Program} {b bcls : ℕ} (h : Pg.HasAt b (hsplitFuns b bcls))

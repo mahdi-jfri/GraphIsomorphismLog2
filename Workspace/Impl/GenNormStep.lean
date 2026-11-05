@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormPrep
-import Workspace.Impl.GenNormTail
+module
+
+public import Workspace.Impl.GenNormPrep
+public import Workspace.Impl.GenNormTail
+
+@[expose] public section
 
 /-! # The normalization branch of the general dispatcher -/
 namespace GI.Impl

@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabPMatP
-import Workspace.Lang.Lib.LinIntTail
+module
+
+public import Workspace.Impl.TermGlueLabPMatP
+public import Workspace.Lang.Lib.LinIntTail
+
+@[expose] public section
 
 /-!
 # The coordinate matrix `C(s)` of a conjugation

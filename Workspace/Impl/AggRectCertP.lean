@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectCertC
+module
+
+public import Workspace.Impl.AggRectCertC
+
+@[expose] public section
 
 /-!
 # The certificate search as a program: one candidate

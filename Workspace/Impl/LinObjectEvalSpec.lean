@@ -1,6 +1,10 @@
-import Workspace.Impl.LinObjectEvalWeights
-import Workspace.Impl.LinObjectOffsetsEval
-import Workspace.Impl.LinObjectFrameMath
+module
+
+public import Workspace.Impl.LinObjectEvalWeights
+public import Workspace.Impl.LinObjectOffsetsEval
+public import Workspace.Impl.LinObjectFrameMath
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -15,7 +19,7 @@ theorem linObjectAffineEval_spec (hh : HermiteFullRank)
     {Q R : Type*} [CommGroup Q] [AddCommGroup R]
     (as ns : List (Equiv.Perm (Fin n))) (π : gens as →* Q) (hπ : Function.Surjective π)
     (Y : List (TmRiO n)) (hok : TmRecObjOK Y.length Y)
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : TmRiListNorm (gens as) Y) (hNA : gens ns ≤ gens as)
     (H : Subgroup (Equiv.Perm (Fin n))) (hAH : gens as ≤ H)
     (hA : GI.Multicoset.Normalizes H (gens as)) (hN : GI.Multicoset.Normalizes H (gens ns))
     (hcomm : ∀ a ∈ gens as, ∀ b ∈ gens as, a * b * a⁻¹ * b⁻¹ ∈ gens ns)
@@ -146,7 +150,8 @@ theorem linObjectAffineEval_spec (hh : HermiteFullRank)
     have harg : (Val.list [.nat d,linVecVal w,encIntMatrix V]).wt ≤ linObjectEvalRowArg hs hm hc hh W :=
       linObjectEvalArg3Middle _ _ _ W OB wd ww (by omega)
     have hraw := linRowMul_spec h.dense.ints h.dense.row h.dense.column h.dense.dot w V
-    simpa only [linObjectEvalRowImage_vec] using hraw.mono
+    rw [linObjectEvalRowImage_vec]
+    exact hraw.mono
       (linPolyEnvelope_bound linObjectEvalRowPoly (hdW.trans (by omega)) (harg.trans (by omega)) (Nat.zero_le _))
   have hdiag : (fun i => ((tmGLQMod D i : ℕ) : ℤ)) = (fun i => D i i) := by
     funext i

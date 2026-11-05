@@ -1,6 +1,10 @@
-import Workspace.Impl.GenSpecStep
-import Workspace.Impl.GenNormStepIH
-import Workspace.Impl.GenNormStepCost
+module
+
+public import Workspace.Impl.GenSpecStep
+public import Workspace.Impl.GenNormStepIH
+public import Workspace.Impl.GenNormStepCost
+
+@[expose] public section
 
 /-!
 # The normalization branch of the general dispatcher

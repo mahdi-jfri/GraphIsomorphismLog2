@@ -1,4 +1,8 @@
-import Workspace.Impl.AggStructDesCol
+module
+
+public import Workspace.Impl.AggStructDesCol
+
+@[expose] public section
 
 /-!
 # The Case 3 test as a program: vertex colors and class sizes

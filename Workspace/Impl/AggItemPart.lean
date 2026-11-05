@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCaseMath
+module
+
+public import Workspace.Impl.AggCaseMath
+
+@[expose] public section
 
 /-!
 # Case 1: the colored orbit partition, its alignment and its stabilizer
@@ -322,7 +326,6 @@ theorem itpPos_eq_iff {labY : Fin q → ℕ} (hc : ∀ s, itpCnt lab s = itpCnt 
   have hpos : 0 < itpSz lab a := by omega
   have hm : itpM labY b = itpM lab a := by
     have := congrArg (· / itpSz lab a) e
-    simp only at this
     rwa [Nat.mul_add_div hpos, Nat.mul_add_div hpos, Nat.div_eq_of_lt hra,
       Nat.div_eq_of_lt hrb, add_zero, add_zero] at this
   refine ⟨hs, hm, ?_⟩

@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectGlueSize
+module
+
+public import Workspace.Impl.LinObjectGlueSize
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -62,7 +66,7 @@ theorem linObjectGluePrefixStep_spec (ho : GroupOrder) (hh : HermiteFullRank) (h
     have hcst := hb hr (show I.Y.length ≤ T by omega)
     refine ⟨input,hr,?_⟩
     refine (linObjectData_spec ho hh hn h.data hjo hjm hjh hjs I.as I.ns (linObjectCanonicalProjection I.as I.ns)
-      I.X I.Y I.solvable_A I.NA (I.normalN.mono I.AH) I.abelian I.compact le_rfl I.fixY I.targetOK hms).mono
+      I.X I.Y I.norm_Y I.NA (I.normalN.mono I.AH) I.abelian I.compact le_rfl I.fixY I.targetOK hms).mono
       fun out cost hout => ⟨?_,?_⟩
     · obtain ⟨F,hF⟩ := linObjectGlueFrame_exists I.Y hout.1
       exact ⟨F,by rw [← hF]; rfl⟩
@@ -79,7 +83,7 @@ theorem linObjectGluePrefixStep_spec (ho : GroupOrder) (hh : HermiteFullRank) (h
       ⟨(I.jointOK o (List.mem_append_right _ ho)).1,(I.jointOK o (List.mem_append_right _ ho)).2.1,
         fun o' ho' he => (I.jointOK o (List.mem_append_right _ ho)).2.2 o' (List.mem_append_right _ ho') he⟩
     refine ⟨input,hr,?_⟩
-    refine (linObjectPieces_spec h.pieces I.as I.ns I.X I.solvable_A I.NA (I.normalN.mono I.AH)
+    refine (linObjectPieces_spec h.pieces I.as I.ns I.X I.norm_X I.NA (I.normalN.mono I.AH)
       I.abelian I.compact (show I.X.length ≤ I.Y.length+I.X.length by omega) I.fixX hokX).mono
       fun out cost hout => ⟨?_,?_⟩
     · obtain ⟨ws,rfl,_⟩ := hout.1
@@ -110,7 +114,7 @@ theorem linObjectGluePrefixStep_spec (ho : GroupOrder) (hh : HermiteFullRank) (h
     have hcst := hb hr (show 0 ≤ T from Nat.zero_le _)
     refine ⟨input,hr,?_⟩
     refine FunAll.mono (linObjectGlueFrame_coordinate_spec h.coordinate I.as I.ns I.Y I.X F I.jointOK
-      I.solvable_A I.NA (gens I.hs) I.AH I.normalA I.normalN I.abelian I.compact I.fixY I.fixX
+      I.norm_YX I.NA (gens I.hs) I.AH I.normalA I.normalN I.abelian I.compact I.fixY I.fixX
       I.τ I.τH I.source_conf) fun out cost hout => ⟨?_,?_⟩
     · rw [hout.1]
       exact ⟨F,xv,rfl⟩
@@ -144,9 +148,9 @@ theorem linObjectGluePrefixStep_spec (ho : GroupOrder) (hh : HermiteFullRank) (h
     have hr : linObjectGlueAffinePlan.value ((I.prefixValues F xv).take 6) = some input := rfl
     have hcst := hb hr (show 0 ≤ T from Nat.zero_le _)
     refine ⟨input,hr,?_⟩
-    have hh' := linObjectGlueFrame_affine_spec hh h.affine hjh I.as I.ns I.Y F I.targetOK I.solvable_A I.NA
+    have hh' := linObjectGlueFrame_affine_spec hh h.affine hjh I.as I.ns I.Y F I.targetOK I.norm_Y I.NA
       I.coverGenerators I.A_cover (I.normalA.mono I.cover_H) (I.normalN.mono I.cover_H) I.abelian I.compact
-      I.fixY I.cover_conf I.solvable_cover 0 (F.point (tmGlMs I.X ↼ I.τ))
+      I.fixY I.cover_conf (I.solvable_rep F) 0 (F.point (tmGlMs I.X ↼ I.τ))
     rw [linFiniteIntVecVal_zero] at hh'
     refine hh'.mono fun out cost hout => ⟨?_,?_⟩
     · exact ⟨F,xv,out,rfl,hout.1⟩

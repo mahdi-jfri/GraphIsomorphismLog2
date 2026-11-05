@@ -1,8 +1,12 @@
-import Workspace.Impl.LinObjectBasisConfig
-import Workspace.Impl.LinObjectOffsetsSpec
-import Workspace.Impl.LinUnimodularSolve
-import Workspace.Impl.LinDenseMul
-import Workspace.Impl.LinFiniteReduce
+module
+
+public import Workspace.Impl.LinObjectBasisConfig
+public import Workspace.Impl.LinObjectOffsetsSpec
+public import Workspace.Impl.LinUnimodularSolve
+public import Workspace.Impl.LinDenseMul
+public import Workspace.Impl.LinFiniteReduce
+
+@[expose] public section
 
 /-! Evaluate the object action in a supplied Smith coordinate frame.
 The same code is used for W and W/D. The frame is retained as actual

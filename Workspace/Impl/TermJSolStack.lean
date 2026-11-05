@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJSolDrop
+module
+
+public import Workspace.Impl.TermJSolDrop
+
+@[expose] public section
 
 /-!
 # Stacking the relation matrix above the stabilizer rows (program)
@@ -27,6 +31,7 @@ theorem tmJSolRows_enc {r c : ℕ} (A : Matrix (Fin r) (Fin c) ℤ) :
 @[simp] theorem tmJSolRows_length {r c : ℕ} (A : Matrix (Fin r) (Fin c) ℤ) :
     (tmJSolRows A).length = r := by simp [tmJSolRows]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The rows of the stacked matrix are the rows of `M` followed by the rows of `B`. -/
 theorem tmJSolRows_stack {t G : ℕ} (M : Matrix (Fin t) (Fin t) ℤ)
     (B : Matrix (Fin G) (Fin t) ℤ) :

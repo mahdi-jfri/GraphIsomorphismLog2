@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectLiftCost
-import Workspace.Impl.GenNormGlue
+module
+
+public import Workspace.Impl.LinObjectLiftCost
+public import Workspace.Impl.GenNormGlue
+
+@[expose] public section
 
 /-! Lift a finite normal-form coordinate back through the unimodular
 Smith multiplier. The full-rank solver is used only in positive dimension. -/
@@ -52,7 +56,6 @@ theorem linUnimodular_row_answer {d : ℕ} (V : Matrix (Fin d) (Fin d) ℤ)
   · exact False.elim (hno ⟨Matrix.vecMul w V⁻¹, by
       rw [Matrix.vecMul_vecMul, V.nonsing_inv_mul hV, Matrix.vecMul_one]⟩)
   · have hh := congrArg (fun x => Matrix.vecMul x V⁻¹) hz
-    dsimp only at hh
     rw [Matrix.vecMul_vecMul, V.mul_nonsing_inv hV, Matrix.vecMul_one] at hh
     rw [hh]
 

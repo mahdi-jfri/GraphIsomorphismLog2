@@ -1,4 +1,8 @@
-import Workspace.Impl.KRefModel
+module
+
+public import Workspace.Impl.KRefModel
+
+@[expose] public section
 
 /-!
 # When one round gives two tuples the same color
@@ -46,8 +50,6 @@ theorem krefPat_eq (x : Fin k → Fin n) :
   funext i
   simp only [Function.comp_apply, List.ofFn_eq_map, List.findIdx_map]
   congr 1
-  funext j
-  simp [Fin.val_inj]
 
 theorem kref_findIdx_spec (x : Fin k → Fin n) (i : Fin k) :
     ∃ h : (List.finRange k).findIdx (fun j => decide (x j = x i)) < k,

@@ -1,5 +1,9 @@
-import Workspace.Impl.VsBFldAP
-import Workspace.Proved.VsBFldB
+module
+
+public import Workspace.Impl.VsBFldAP
+public import Workspace.Proved.VsBFldB
+
+@[expose] public section
 
 /-!
 # The programs of the translation chain

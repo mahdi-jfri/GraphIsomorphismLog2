@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectRelationImages
-import Workspace.Impl.LinPermCertificate
+module
+
+public import Workspace.Impl.LinObjectRelationImages
+public import Workspace.Impl.LinPermCertificate
+
+@[expose] public section
 
 /-! The local image module depends on the subgroup, rather than on the
 particular generating list returned by a cited algorithm. -/
@@ -23,7 +27,7 @@ theorem linObjectSubgroupGenerators {n : ℕ} (A : Subgroup (Equiv.Perm (Fin n))
     ext g
     constructor
     · rintro ⟨_, ⟨i, rfl⟩, rfl⟩
-      simpa only [linIntoSubgroup_val A _ (hm i)] using List.get_mem bs i
+      simpa only [Set.mem_setOf_eq, linIntoSubgroup_val A _ (hm i)] using List.get_mem bs i
     · intro hg
       obtain ⟨i, rfl⟩ := List.mem_iff_get.mp hg
       exact ⟨linIntoSubgroup A (bs.get i), ⟨i, rfl⟩, linIntoSubgroup_val A _ (hm i)⟩

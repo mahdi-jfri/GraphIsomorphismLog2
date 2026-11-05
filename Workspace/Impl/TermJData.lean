@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJAlg
+module
+
+public import Workspace.Impl.TermJAlg
+
+@[expose] public section
 
 /-!
 # The data of the `J`-step from the tables (mathematics)

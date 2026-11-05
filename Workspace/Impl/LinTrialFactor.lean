@@ -1,4 +1,8 @@
-import Workspace.Impl.LinTrialExponent
+module
+
+public import Workspace.Impl.LinTrialExponent
+
+@[expose] public section
 
 /-! Return a primary exponent and the corresponding signed cyclic order.
 Both the original order and its bit length bound the computation. -/

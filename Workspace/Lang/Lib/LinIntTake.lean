@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.LinIntTail
+module
+
+public import Workspace.Lang.Lib.LinIntTail
+
+@[expose] public section
 
 namespace GI.Lang
 open GI.Cited (Val)

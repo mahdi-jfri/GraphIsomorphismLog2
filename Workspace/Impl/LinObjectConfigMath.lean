@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectImageMath
-import Workspace.Impl.LinObjectQuotient
+module
+
+public import Workspace.Impl.LinObjectImageMath
+public import Workspace.Impl.LinObjectQuotient
+
+@[expose] public section
 
 /-! The configuration space is exactly the product of local abelian
 quotients. This makes coordinates independent of transporter choices. -/

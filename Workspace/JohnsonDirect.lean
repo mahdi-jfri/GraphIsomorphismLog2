@@ -1,5 +1,9 @@
-import Workspace.JohnsonChains
-import Workspace.SmallDegreeBudget
+module
+
+public import Workspace.JohnsonChains
+public import Workspace.SmallDegreeBudget
+
+@[expose] public section
 
 namespace GI.Johnson.JohnsonCover
 

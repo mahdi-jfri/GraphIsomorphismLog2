@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiCfgT
-import Workspace.Impl.AggItemCiCfgK
+module
+
+public import Workspace.Impl.AggItemCiCfgT
+public import Workspace.Impl.AggItemCiCfgK
+
+@[expose] public section
 
 /-!
 # The configuration query: the group of the pair structure as a program

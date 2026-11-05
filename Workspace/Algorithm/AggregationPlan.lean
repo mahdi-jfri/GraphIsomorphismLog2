@@ -1,5 +1,9 @@
-import Workspace.Algorithm.AggregationItems
-import Workspace.Algorithm.LabelOrbits
+module
+
+public import Workspace.Algorithm.AggregationItems
+public import Workspace.Algorithm.LabelOrbits
+
+@[expose] public section
 
 /-!
 # The plan of an aggregation round: the paper's case analysis

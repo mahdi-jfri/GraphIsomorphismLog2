@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryResidual
+module
+
+public import Workspace.Impl.LinPrimaryResidual
+
+@[expose] public section
 
 /-! The accumulator retains a cover subgroup and a representative of the
 remaining transporter coset. Full transporters stay in that coset at every

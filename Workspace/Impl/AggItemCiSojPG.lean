@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojAC
+module
+
+public import Workspace.Impl.AggItemCiSojAC
+
+@[expose] public section
 
 /-!
 # Projecting the complete source generators

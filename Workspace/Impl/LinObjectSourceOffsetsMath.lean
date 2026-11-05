@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectOffsetsEval
+module
+
+public import Workspace.Impl.LinObjectOffsetsEval
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -11,7 +15,7 @@ theorem linObjectOffsets_source_spec {P : Program} {b jsci jder jmem jm n : ℕ}
     (h : linObjectOffsetsAt P b jsci jder jmem jm hs hd hm hc)
     {Q : Type*} [CommGroup Q] (as ns : List (Equiv.Perm (Fin n))) (π : gens as →* Q)
     (Y X : List (TmRiO n)) (hok : TmRecObjOK (Y.length+X.length) (Y++X))
-    (hsol : IsSolvable (gens as)) (hNA : gens ns ≤ gens as)
+    (hsol : TmRiListNorm (gens as) (Y++X)) (hNA : gens ns ≤ gens as)
     (H : Subgroup (Equiv.Perm (Fin n))) (hAH : gens as ≤ H)
     (hA : GI.Multicoset.Normalizes H (gens as)) (hN : GI.Multicoset.Normalizes H (gens ns))
     (hcomm : ∀ a ∈ gens as, ∀ b ∈ gens as, a*b*a⁻¹*b⁻¹ ∈ gens ns)
@@ -67,8 +71,17 @@ theorem linObjectOffsets_source_spec {P : Program} {b jsci jder jmem jm n : ℕ}
     have hs' := sum_wt_lt_wt_list [encGroup as,encGroup ns,.list (refs.map tmGlObjsVal),.list (targets.map tmGlObjsVal)]
     simp only [List.map_cons,List.map_nil,List.sum_cons,List.sum_nil] at hs'
     omega
+  have hnorm : TmRiListNorm (gens as) (refs++targets).flatten := by
+    have hsolY : TmRiListNorm (gens as) Y := fun o ho => hsol o (List.mem_append_left _ ho)
+    have hsolX : TmRiListNorm (gens as) X := fun o ho => hsol o (List.mem_append_right _ ho)
+    intro o ho
+    rw [List.flatten_append] at ho
+    rcases List.mem_append.mp ho with ho | ho
+    · obtain ⟨S,hS,ho⟩ := List.mem_flatten.mp ho
+      exact linObjectReference_norm as Y hsolY S hS o ho
+    · exact linObjectMovedPieces_norm as X hsolX _ H hA g hg o ho
   have hr := linObjectOffsets_spec h as ns π (tmGlMs Y) (tmGlMs X ↼ g) hZ refs targets
-    hsol hNA (hN.mono hAH) hcomm hal hpc hlen hOK hRef hTar hCover hMsize
+    hnorm hNA (hN.mono hAH) hcomm hal hpc hlen hOK hRef hTar hCover hMsize
   simpa only [targets,linObjectMovedPieces,linObjectWordPieces_zero] using hr
 
 end GI.Impl

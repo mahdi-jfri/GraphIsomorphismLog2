@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojAut
+module
+
+public import Workspace.Impl.AggItemCiSojAut
+
+@[expose] public section
 
 /-!
 # Extending the projected matrix group over the omitted labels

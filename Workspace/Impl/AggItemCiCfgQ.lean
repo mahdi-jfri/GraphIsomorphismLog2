@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgI
+module
+
+public import Workspace.Impl.AggItemCiCfgI
+
+@[expose] public section
 
 /-!
 # The configuration query: the transpositions outside the fiber, and two list helpers

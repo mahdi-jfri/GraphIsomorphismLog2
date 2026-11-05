@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecProgTest
+module
+
+public import Workspace.Impl.TermRecProgTest
+
+@[expose] public section
 
 /-! Normalizing the paper's orbit colors. The glue contract allows two subgroup
 lists under one color. Refining that color by the subgroup preserves transport. -/
@@ -69,5 +73,10 @@ theorem linObjectNorm_transport {n : ℕ} (χ : TmRiO n → ℕ) (o o' : TmRiO n
   simp only [linObjectNorm, GI.Lang.gens_keepList]
   rw [hχ]
   tauto
+
+@[simp] theorem tmRiStab_linObjectNorm {n : ℕ} (χ : TmRiO n → ℕ) (o : TmRiO n) :
+    tmRiStab (linObjectNorm χ o) = tmRiStab o := by
+  ext g
+  rw [mem_tmRiStab_iff, mem_tmRiStab_iff, linObjectNorm_transport χ o o (by tauto)]
 
 end GI.Impl

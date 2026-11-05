@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojProcessA
-import Workspace.Impl.AggItemCiSojFO
-import Workspace.Impl.AggItemCiSojCCRows
+module
+
+public import Workspace.Impl.AggItemCiSojProcessA
+public import Workspace.Impl.AggItemCiSojFO
+public import Workspace.Impl.AggItemCiSojCCRows
+
+@[expose] public section
 
 /-! # The exact model output represented by the processed occurrence rows -/
 

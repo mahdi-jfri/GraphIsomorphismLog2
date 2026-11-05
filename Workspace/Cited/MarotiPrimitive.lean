@@ -1,6 +1,10 @@
-import Mathlib.GroupTheory.SpecificGroups.Alternating
-import Mathlib.GroupTheory.GroupAction.Primitive
-import Mathlib.Data.Finset.Card
+module
+
+public import Mathlib.GroupTheory.SpecificGroups.Alternating
+public import Mathlib.GroupTheory.GroupAction.Primitive
+public import Mathlib.Data.Finset.Card
+
+@[expose] public section
 
 /-!
 # Cited input: the Cameron–Maróti theorem on large primitive groups

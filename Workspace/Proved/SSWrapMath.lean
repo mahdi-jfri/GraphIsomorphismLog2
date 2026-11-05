@@ -1,4 +1,8 @@
-import Workspace.Proved.SSConstr
+module
+
+public import Workspace.Proved.SSConstr
+
+@[expose] public section
 
 /-!
 # The answers read off a closed table
@@ -77,6 +81,7 @@ theorem ssCnt_eq (T : List (SsSlot n)) (k : ℕ) :
   rw [← List.toFinset_card_of_nodup ((List.nodup_finRange n).filter _)]
   congr 1
   ext j
+  rw [Finset.mem_filter, List.mem_toFinset]
   simp [ssGet, Function.comp_def]
 
 end GI.Proved

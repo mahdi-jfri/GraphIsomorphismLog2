@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCosets
+module
+
+public import Workspace.Impl.AggCosets
+
+@[expose] public section
 
 /-!
 # The order of `φ_T` on a pointwise stabilizer

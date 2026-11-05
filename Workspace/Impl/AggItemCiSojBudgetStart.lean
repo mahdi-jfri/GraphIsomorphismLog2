@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojFrameWt
+module
+
+public import Workspace.Impl.AggItemCiSojFrameWt
+
+@[expose] public section
 
 /-! # Fixed-stage bounds for constructing the first rectangle -/
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojEdge
-import Workspace.Impl.AggItemCiCfgS
+module
+
+public import Workspace.Impl.AggItemCiSojEdge
+public import Workspace.Impl.AggItemCiCfgS
+
+@[expose] public section
 
 /-!
 # Testing one undirected color edge from its table

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCmpCall
+module
+
+public import Workspace.Impl.AggCmpCall
+
+@[expose] public section
 
 /-!
 # The pick cache of the comparison phase

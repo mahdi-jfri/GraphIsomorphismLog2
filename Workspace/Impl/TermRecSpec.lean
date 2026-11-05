@@ -1,6 +1,10 @@
-import Workspace.Impl.TermRecMath
-import Workspace.Impl.TermRecCost
-import Workspace.Impl.Weights
+module
+
+public import Workspace.Impl.TermRecMath
+public import Workspace.Impl.TermRecCost
+public import Workspace.Impl.Weights
+
+@[expose] public section
 
 /-!
 # The recursion of Theorem A.20 as a program statement (T5)
@@ -49,7 +53,9 @@ a program. -/
 def TermRecSpec (K D g : ℕ) : Prop :=
   ∀ {n : ℕ} (M ℓ : ℕ) (σH σN : List (Perm (Fin n)))
     (X Y : List (ℕ × List (Perm (Fin n)) × Perm (Fin n))),
-    IsSolvable (gens σH) → gens σN ≤ gens σH → GI.Multicoset.Normalizes (gens σH) (gens σN) →
+    (∀ o ∈ X ++ Y,
+      GI.Multicoset.Normalizes (gens (o.2.1.map fun x => o.2.2⁻¹ * x * o.2.2⁻¹⁻¹)) (gens σH)) →
+    gens σN ≤ gens σH → GI.Multicoset.Normalizes (gens σH) (gens σN) →
     relDerived (gens σH) (gens σN) ℓ ≤ gens σN → ℓ ≤ n ^ 2 + 5 →
     Fixes (gens σN) (tmGlMs X) → Fixes (gens σN) (tmGlMs Y) →
     σH.length ≤ n ^ 2 → σN.length ≤ n ^ 2 → X.length ≤ M → Y.length ≤ M →

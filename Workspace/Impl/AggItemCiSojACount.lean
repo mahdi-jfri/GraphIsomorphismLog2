@@ -1,4 +1,8 @@
-import Workspace.Impl.AggStructDC
+module
+
+public import Workspace.Impl.AggStructDC
+
+@[expose] public section
 
 /-! # Counted composition for stages with nondeterministic certified encodings -/
 

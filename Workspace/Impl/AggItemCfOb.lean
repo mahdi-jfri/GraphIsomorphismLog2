@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCfKc
-import Workspace.Impl.AggItemCfObW
+module
+
+public import Workspace.Impl.AggItemCfKc
+public import Workspace.Impl.AggItemCfObW
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3: the objects of a branch at the start

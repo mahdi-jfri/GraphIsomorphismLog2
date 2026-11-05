@@ -1,7 +1,6 @@
 /-
-How a cited algorithm is stated. This file is part of the trusted statement: every axiom about an
-algorithm from the literature has the form `∃ p, PolyTimeAt t p` for a task `t`, so a reader must
-check this definition and the task.
+How a cited algorithm is stated. Every algorithm from the literature that the proof uses is
+stated as `∃ p, PolyTimeAt t p` for a task `t`, and this statement is proved in the library.
 
 A task says how an instance is laid out in memory and which outputs are correct. A program solves
 it in polynomial time if, wherever the caller places the instance, one call to the program's
@@ -16,7 +15,11 @@ provided the task is set up as described in `GI.Cited.Task`: a Turing machine or
 algorithm can be simulated on the machine of `Workspace.Statement.Machine` with every address
 shifted by the base address, at a polynomial overhead.
 -/
-import Workspace.Statement.Machine
+module
+
+public import Workspace.Statement.Machine
+
+@[expose] public section
 
 namespace GI.Cited
 
@@ -29,8 +32,8 @@ open GI.Machine
 * `Output x mem r` says that `mem` holds a correct output for `x`, starting at address `r`. Every
   instance must have a correct output, of size polynomial in `size x`.
 
-These requirements are not checked by Lean. A reader checks them for each task that appears in an
-axiom; they are what makes `∃ p, PolyTimeAt t p` true for a polynomial-time algorithm. -/
+Lean does not check these requirements. They are what makes `∃ p, PolyTimeAt t p` true for a
+polynomial-time algorithm. -/
 structure Task (α : Type) where
   size : α → ℕ
   Input : α → ℕ → (ℕ → ℕ) → Prop

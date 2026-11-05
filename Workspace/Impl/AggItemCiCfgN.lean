@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgQ
+module
+
+public import Workspace.Impl.AggItemCiCfgQ
+
+@[expose] public section
 
 /-!
 # The configuration query: the step program on a nonempty answer

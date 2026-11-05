@@ -1,7 +1,11 @@
-import Workspace.Algorithm.Existence
-import Workspace.Algorithm.DispatchInv
-import Workspace.Impl.DispatchSmall
-import Workspace.Impl.Canon
+module
+
+public import Workspace.Algorithm.Existence
+public import Workspace.Algorithm.DispatchInv
+public import Workspace.Impl.DispatchSmall
+public import Workspace.Impl.Canon
+
+@[expose] public section
 
 /-!
 # The children of a dispatcher reduction are smaller calls

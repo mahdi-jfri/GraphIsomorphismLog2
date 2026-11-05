@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojRB
-import Workspace.Impl.GenCls
+module
+
+public import Workspace.Impl.AggItemCiSojRB
+public import Workspace.Impl.GenCls
+
+@[expose] public section
 
 /-! # Projecting the complete list of canonical rectangle answers -/
 

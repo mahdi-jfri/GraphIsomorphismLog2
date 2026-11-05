@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCfWr
+module
+
+public import Workspace.Impl.AggItemCfWr
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3: the init, start, continue and branch-step programs

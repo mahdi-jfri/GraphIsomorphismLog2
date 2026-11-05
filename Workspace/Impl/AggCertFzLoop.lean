@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCertFzStep
+module
+
+public import Workspace.Impl.AggCertFzStep
+
+@[expose] public section
 
 /-!
 # The graph forms of the certificate groups: the step of the loop

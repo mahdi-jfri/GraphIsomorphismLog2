@@ -1,4 +1,8 @@
-import Workspace.Impl.VsPDer
+module
+
+public import Workspace.Impl.VsPDer
+
+@[expose] public section
 
 /-!
 # The output "grow `A`"

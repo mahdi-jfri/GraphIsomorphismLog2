@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojChoice
-import Workspace.Impl.AggItemCiSojPrim
+module
+
+public import Workspace.Impl.AggItemCiSojChoice
+public import Workspace.Impl.AggItemCiSojPrim
+
+@[expose] public section
 
 /-!
 # Testing component sizes at one source vertex

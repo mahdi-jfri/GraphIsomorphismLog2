@@ -1,7 +1,11 @@
-import Workspace.Impl.ColBrDet
-import Workspace.Impl.ColSpec
-import Workspace.Impl.RowSpecTerm
-import Workspace.Impl.RowThr
+module
+
+public import Workspace.Impl.ColBrDet
+public import Workspace.Impl.ColSpec
+public import Workspace.Impl.RowSpecTerm
+public import Workspace.Impl.RowThr
+
+@[expose] public section
 
 /-!
 # The column branch: linking the program values to the state
@@ -170,6 +174,7 @@ section Child
 
 variable {S : State Ω C} {L : GiantLabels S} {label : Ω → Fin L.q}
 
+set_option backward.isDefEq.respectTransparency false in
 /-- **The child hierarchy value, in the form the program computes** (`colHierL`, with the
 stored bounds and origins). -/
 theorem colChild_hierVal' [Finite Ω] (hnat : NaturalRows S L label) (hq : 5 ≤ L.q)
@@ -466,7 +471,7 @@ theorem colBr_spec {b : ℕ} (hA : ColBrAt Pg b F.cont)
   set cf := colCfOf e S E h0 with hcf
   have hcol : ∀ v : S.dom, cf (e v) = (Fm.e.symm v).1 := colCfOf_dom e S E h0
   have hrlv : ∀ v : S.dom, rowLab e L.con.blocks (e v) = (Fm.label v : ℕ) := fun v => by
-    simpa using hrlD (e v) (by simp)
+    simpa [hFm, RowForm.ofPure_label] using hrlD (e v) (by simp)
   have hHV := colChild_hierVal' hnat hq E hP h0 hint htr hhi hne J hlowJ hhighJ e labs hlabs
     (fun j i => by have := hlabk j i; omega) r0 (fun c => rfl) ol hol'
     (fun c => by have := holm c; omega) cf hcol (rowLab e L.con.blocks) hrlv

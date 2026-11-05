@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCfRRead
-import Workspace.Impl.AggItemCfRDegree
-import Workspace.Impl.AggItemS2b
+module
+
+public import Workspace.Impl.AggItemCfRRead
+public import Workspace.Impl.AggItemCfRDegree
+public import Workspace.Impl.AggItemS2b
+
+@[expose] public section
 
 namespace GI.Impl
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinActionRebase
-import Workspace.Impl.GenNormGlue
+module
+
+public import Workspace.Impl.LinActionRebase
+public import Workspace.Impl.GenNormGlue
+
+@[expose] public section
 
 /-! Replace a cover by returned generators and retain their complete affine
 records, including inverse records and the full identity action. -/

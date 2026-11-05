@@ -1,5 +1,9 @@
-import Workspace.Lang.Lib.LinIntMod
-import Workspace.Lang.Lib.LinIntTests
+module
+
+public import Workspace.Lang.Lib.LinIntMod
+public import Workspace.Lang.Lib.LinIntTests
+
+@[expose] public section
 
 /-! The installed signed-integer library. There are no primitive hypotheses.
 Offsets 11--17 expose add, subtract, multiply, Euclidean quotient, remainder,
@@ -85,7 +89,7 @@ theorem linIntDivMod_spec {P : Program} {b f : ℕ} (h : linIntSpec P b)
 /-- The returned numbers obey the Euclidean identity and remainder bounds. -/
 theorem linIntDivMod_law (x y : ℤ) :
     y * (x / y) + x % y = x ∧ (y ≠ 0 → 0 ≤ x % y ∧ x % y < y.natAbs) :=
-  ⟨Int.ediv_add_emod x y, fun hy => ⟨Int.emod_nonneg x hy, Int.emod_lt x hy⟩⟩
+  ⟨Int.mul_ediv_add_emod x y, fun hy => ⟨Int.emod_nonneg x hy, Int.emod_lt x hy⟩⟩
 
 /-- Zero in encInt is exactly the empty magnitude bit list. -/
 theorem linIntBits_zero_iff (z : ℤ) : z.natAbs.bits.length = 0 ↔ z = 0 := by

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggPairs
-import Workspace.Impl.RowPart
+module
+
+public import Workspace.Impl.AggPairs
+public import Workspace.Impl.RowPart
+
+@[expose] public section
 
 /-!
 # Lifting a label permutation to the group, with one factorization

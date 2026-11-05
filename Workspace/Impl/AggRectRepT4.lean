@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepT3
+module
+
+public import Workspace.Impl.AggRectRepT3
+
+@[expose] public section
 
 /-!
 # Stage 3 of the representation program, single labels

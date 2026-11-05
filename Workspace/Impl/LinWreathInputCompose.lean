@@ -1,4 +1,8 @@
-import Workspace.Impl.LinWreathInputCost
+module
+
+public import Workspace.Impl.LinWreathInputCost
+
+@[expose] public section
 
 /-! Compose the already verified table constructors. This lemma records only
 ordinary function specifications; it introduces no task or oracle hypothesis. -/

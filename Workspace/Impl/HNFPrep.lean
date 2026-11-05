@@ -1,4 +1,8 @@
-import Workspace.Impl.HNFCells
+module
+
+public import Workspace.Impl.HNFCells
+
+@[expose] public section
 
 /-!
 # The numbers `K` and `m` of the Hermite program

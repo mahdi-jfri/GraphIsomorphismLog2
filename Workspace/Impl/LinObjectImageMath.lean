@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectGroupImage
-import Workspace.Impl.LinObjectStabilizers
+module
+
+public import Workspace.Impl.LinObjectGroupImage
+public import Workspace.Impl.LinObjectStabilizers
+
+@[expose] public section
 
 /-! Quotient coordinates remember exactly the local stabilizer coset.
 Containing the kernel is the hypothesis that permits recovery of an

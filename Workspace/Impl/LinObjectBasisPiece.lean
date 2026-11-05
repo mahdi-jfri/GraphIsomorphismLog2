@@ -1,6 +1,10 @@
-import Workspace.Impl.LinObjectVectorRow
-import Workspace.Impl.LinObjectLiftCost
-import Workspace.Impl.LinObjectOffsetRow
+module
+
+public import Workspace.Impl.LinObjectVectorRow
+public import Workspace.Impl.LinObjectLiftCost
+public import Workspace.Impl.LinObjectOffsetRow
+
+@[expose] public section
 
 /-! Build one piece of a basis configuration. Integer coordinates are
 lifted to an actual word of A and applied with the existing list shift. -/

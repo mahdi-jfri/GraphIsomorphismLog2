@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojTest
+module
+
+public import Workspace.Impl.AggItemCiSojTest
+
+@[expose] public section
 
 /-!
 # The imprimitive-pair callback with every bound discharged
@@ -22,7 +26,7 @@ theorem itcs_fv_weight (X : PairCfg q) : (itcqFV X).wt ≤ 5 * (q + 1) ^ 2 := by
     (fun a _ => (wt_nat_le _).trans (by have := a.isLt; omega))
   simp only [itciFl_length] at h
   have hh : (itcqFV X).wt ≤ X.fiber.card * (2 * (q + 2) + 1) + 4 := by
-    simpa only [itcqFV, natList, List.map_map] using h
+    simpa only [itcqFV, natList, List.map_map, Function.comp_def] using h
   have hm := Nat.mul_le_mul_right (2 * (q + 2) + 1) hn
   nlinarith
 
@@ -87,8 +91,9 @@ theorem itcs_test_prog {q B : ℕ} {Pg : Program} {Ii : itcsCompIdx} {ft fp fs :
 
 /-- The callback cost remains polynomial at the round's degree and palette bounds. -/
 theorem itcs_test_pbu : PBU fun _ W _ => itcsTestC (2 * W + 3) (2 * (2 * W + 3) ^ 64) := by
-  simp only [itcsTestC, itcsSizeC, itcsCompTotal, itcsCompC, itcsSqMapC, itcsCompW,
-    itCfObjB, itcsGenW, countK, mapK, orbitK]
+  unfold itcsTestC
+  refine PBU.add ?_ itcs_size_pbu
+  simp only [itcsCompW, itCfObjB, itcsGenW]
   norm_poly
 
 end GI.Impl

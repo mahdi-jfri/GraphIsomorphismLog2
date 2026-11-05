@@ -12,8 +12,12 @@ the generators, and each step is a `map` over the points that takes
 `min (lab x) (lab (h x))`. Its cost is at most `orbitK * ((m + 1) * (n + 1)) ^ 5` for `m`
 generators.
 -/
-import Workspace.Lang.Lib.Perm
-import Workspace.Lang.Lib.OrbitMath
+module
+
+public import Workspace.Lang.Lib.Perm
+public import Workspace.Lang.Lib.OrbitMath
+
+@[expose] public section
 
 namespace GI.Lang
 

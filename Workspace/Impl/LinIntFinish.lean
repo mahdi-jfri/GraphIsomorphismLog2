@@ -1,4 +1,8 @@
-import Workspace.Impl.LinIntLift
+module
+
+public import Workspace.Impl.LinIntLift
+
+@[expose] public section
 
 /-! The deterministic part of the rectangular row solver: copy the Hermite
 block, substitute, zero-extend and lift. -/

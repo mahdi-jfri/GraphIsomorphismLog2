@@ -1,4 +1,8 @@
-import Workspace.Impl.VsPOrb
+module
+
+public import Workspace.Impl.VsPOrb
+
+@[expose] public section
 
 /-!
 # The orbit list is closed after enough passes

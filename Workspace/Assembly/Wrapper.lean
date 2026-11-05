@@ -1,6 +1,10 @@
-import Workspace.Assembly.Build
-import Workspace.Assembly.Convert
-import Workspace.Assembly.Final
+module
+
+public import Workspace.Assembly.Build
+public import Workspace.Assembly.Convert
+public import Workspace.Assembly.Final
+
+@[expose] public section
 
 /-!
 # The wrapper of Algorithm 1 (obligation (b))
@@ -45,6 +49,6 @@ graph isomorphism is in quasipolynomial time. -/
 theorem final_of_solve {Pg : Program} {b fs : ℕ} {w : Node P₀ → ℝ}
     (h : Pg.HasAt b (wrapperFuns b fs)) (ha : Implements .solve Pg fs w) (hc : WorkBound w) :
     GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
-  final_of_axioms ha (graphWrapper_of_hasAt h) hc
+  final ha (graphWrapper_of_hasAt h) hc
 
 end GI.Assembly

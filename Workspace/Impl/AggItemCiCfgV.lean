@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgU
+module
+
+public import Workspace.Impl.AggItemCiCfgU
+
+@[expose] public section
 
 /-!
 # The configuration query: the color list and the domain as programs

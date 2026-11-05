@@ -8,9 +8,13 @@ Counting loops and other conveniences on top of `Workspace.Machine.Logic`.
   `WP.forUp_const` is the case of a constant bound `B`.
 * `s ;; t` is notation for `Stmt.seq s t`.
 -/
-import Workspace.Machine.Logic
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+module
+
+public import Workspace.Machine.Logic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+
+@[expose] public section
 
 namespace GI.Machine
 

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepT8
+module
+
+public import Workspace.Impl.AggRectRepT8
+
+@[expose] public section
 
 /-!
 # Stages 1 and 2 on a state

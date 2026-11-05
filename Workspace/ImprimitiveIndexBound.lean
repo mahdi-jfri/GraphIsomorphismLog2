@@ -1,6 +1,10 @@
-import Workspace.BlockKernelCard
-import Workspace.RectangularFactorial
-import Mathlib.GroupTheory.SpecificGroups.Alternating
+module
+
+public import Workspace.BlockKernelCard
+public import Workspace.RectangularFactorial
+public import Mathlib.GroupTheory.SpecificGroups.Alternating
+
+@[expose] public section
 
 namespace GI.ImprimitiveIndex
 

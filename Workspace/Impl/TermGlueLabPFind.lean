@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPRel
+module
+
+public import Workspace.Impl.TermGlueLabPRel
+
+@[expose] public section
 
 /-!
 # The type of a row from the stored coset table

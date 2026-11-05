@@ -1,5 +1,9 @@
-import Workspace.Impl.TermGlueLabNDef
-import Workspace.Impl.TermGlueLabPAlign
+module
+
+public import Workspace.Impl.TermGlueLabNDef
+public import Workspace.Impl.TermGlueLabPAlign
+
+@[expose] public section
 
 /-!
 # The driver of the label program: links between the programs' strings and the terminal's

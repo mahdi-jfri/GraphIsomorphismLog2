@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecProgProfs
+module
+
+public import Workspace.Impl.TermRecProgProfs
+
+@[expose] public section
 
 /-!
 # T5, the class representatives of the profiles (item 3')
@@ -297,6 +301,15 @@ theorem tmRi_profs_mem {H A : Subgroup (Perm (Fin n))} {Ps : List (List (TmRiO n
   intro ob hob
   obtain ⟨i, hi, rfl⟩ := List.getElem_of_mem hob
   exact ⟨_, hP i hi⟩
+
+theorem tmRi_profs_in {H A : Subgroup (Perm (Fin n))} (hAH : A ≤ H)
+    {Ps : List (List (TmRiO n))} {obs : List (TmRiO n)}
+    (hP : ∀ ob ∈ obs, ∃ j, TmRiProfOut H A Ps j ob) : TmRiListIn H obs := by
+  intro o ho
+  obtain ⟨j, hj⟩ := hP o ho
+  refine tmRiStab_le_of ?_ hj.2.2.2.2.2.1
+  rw [hj.2.2.2.1]
+  exact sup_le hAH (aut_le H _)
 
 /-- **A transporter written from the other side**: `Iso_H(Y, X) = v K` gives
 `Iso_H(X, Y) = K v⁻¹`. -/

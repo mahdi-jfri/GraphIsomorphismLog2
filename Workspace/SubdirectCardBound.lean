@@ -1,4 +1,8 @@
-import Workspace.FullFactorStrip
+module
+
+public import Workspace.FullFactorStrip
+
+@[expose] public section
 
 namespace GI.PrimitiveProducts
 
@@ -102,7 +106,3 @@ theorem subdirect_ambient_card_le_index_sq {I : Type*} [Fintype I] [DecidableEq 
     _ = H.index ^ 2 := (pow_two _).symm
 
 end GI.PrimitiveProducts
-
-#print axioms GI.PrimitiveProducts.subdirect_card_square_le_fin
-#print axioms GI.PrimitiveProducts.subdirect_card_square_le
-#print axioms GI.PrimitiveProducts.subdirect_ambient_card_le_index_sq

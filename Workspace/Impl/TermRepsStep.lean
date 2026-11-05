@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRepsLoop
+module
+
+public import Workspace.Impl.TermRepsLoop
+
+@[expose] public section
 
 /-!
 # One round of the coset enumeration as a program (T3)

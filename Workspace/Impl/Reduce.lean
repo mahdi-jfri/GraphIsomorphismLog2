@@ -1,4 +1,8 @@
-import Workspace.Impl.LiftSpec
+module
+
+public import Workspace.Impl.LiftSpec
+
+@[expose] public section
 
 /-!
 # Cutting a generating list to at most `n²` generators

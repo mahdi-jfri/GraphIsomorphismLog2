@@ -1,5 +1,9 @@
-import Workspace.Proved.VsPS4Math
-import Workspace.Proved.VsPHardMath
+module
+
+public import Workspace.Proved.VsPS4Math
+public import Workspace.Proved.VsPHardMath
+
+@[expose] public section
 
 /-!
 # The final stage, in local units
@@ -9,6 +13,8 @@ For `y ∈ vsPYs N̄₂`, the orbit list after `F ≥ D²` passes with `cap > D�
 (`VsPS4.finrank_eq`), and `⟨vsPOb y⟩ ⊔ S = vsPBar ⟨B⟩ ⊔ S` for the kept basis `B`
 (`VsPS4.sup_eq`).
 -/
+
+set_option backward.isDefEq.respectTransparency false
 
 namespace GI.Proved
 

@@ -1,5 +1,9 @@
-import Workspace.Impl.JohnPair
-import Workspace.Proved.JohnLambda
+module
+
+public import Workspace.Impl.JohnPair
+public import Workspace.Proved.JohnLambda
+
+@[expose] public section
 
 /-!
 # The matrix `D` of the pairs with label `Δ`

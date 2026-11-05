@@ -1,4 +1,8 @@
-import Workspace.Proved.VsMHardA
+module
+
+public import Workspace.Proved.VsMHardA
+
+@[expose] public section
 
 /-!
 # The commutator pairing as a bilinear form
@@ -186,6 +190,7 @@ theorem vsP_radical [Fact r.Prime] (hQ : VsPQuotHyp N S r) (hP : VsPPairHyp N r 
     ∀ x ∈ N, (∀ g ∈ gs, x * g = g * x) → x ∈ S := by
   classical
   haveI : NeZero r := ⟨(Fact.out : r.Prime).ne_zero⟩
+  letI : AddCommGroup (ZMod r) := (ZMod.commRing r).toAddCommGroup
   have hgN : ∀ g ∈ gs, g ∈ N := fun g hg => hN ▸ Subgroup.subset_closure hg
   haveI := hQ.normal
   letI : CommGroup (N ⧸ S.subgroupOf N) := hQ.commGroup

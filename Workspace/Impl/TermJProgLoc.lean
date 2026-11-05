@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJProgLocRow
+module
+
+public import Workspace.Impl.TermJProgLocRow
+
+@[expose] public section
 
 /-!
 # The local transporter of a class (program)
@@ -81,7 +85,7 @@ theorem TmJLAt.of_hasAt {P : Program} {b rg ap cp iv en mR mB mP fR fC mD pr prg
     (hfR : P.HasAt fR (filterFuns fR (b + 4))) (hfC : P.HasAt fC (filterFuns fC (b + 5)))
     (hmD : P.HasAt mD (mapFuns mD (b + 6))) (hpair : TmJPairAt P pr prg ptb ptbe) :
     TmJLAt P b rg ap cp iv en mR mB mP fR fC mD pr prg ptb ptbe jm jf where
-  hmain := by simpa using h 0 (by simp [tmJLFuns])
+  hmain := by simpa [tmJLFuns] using h 0 (by simp [tmJLFuns])
   hrow := h 1 (by simp [tmJLFuns])
   hbit := h 2 (by simp [tmJLFuns])
   hpi := h 3 (by simp [tmJLFuns])

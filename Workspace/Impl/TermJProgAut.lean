@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJProgAutP
+module
+
+public import Workspace.Impl.TermJProgAutP
+
+@[expose] public section
 
 /-!
 # The generators of `Aut_J(x)` (program)
@@ -165,6 +169,7 @@ def tmJAutOut (O : Fin q → Fin q → Option (Perm (Fin m) × List (Perm (Fin m
       ∃ y : Fin σN.length → ℤ, Matrix.vecMul c Bm + Matrix.vecMul y M = 0) ∧
     out = tmJPermsVal (tmJNsList hsA ++ Ks.map (tmJLam lg) ++ tmJS3List Tl)
 
+set_option backward.isDefEq.respectTransparency false in
 /-- **The generators of `Aut_J(x)`.** -/
 theorem tmJ_aut_spec (hni : NormalizedIntersection) (hH : HermiteFullRank) :
     ∃ K D : ℕ, ∀ {P : Program} {f ns ker s2 ts sw app jni jh : ℕ},

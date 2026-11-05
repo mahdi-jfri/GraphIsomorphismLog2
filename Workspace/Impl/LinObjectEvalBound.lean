@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormGlue
-import Workspace.Impl.LinObjectAffineEval
+module
+
+public import Workspace.Impl.GenNormGlue
+public import Workspace.Impl.LinObjectAffineEval
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

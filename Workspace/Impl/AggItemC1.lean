@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemPartEven
-import Workspace.Impl.AggItemOv
+module
+
+public import Workspace.Impl.AggItemPartEven
+public import Workspace.Impl.AggItemOv
+
+@[expose] public section
 
 /-!
 # The Case 1 item from orbit labels

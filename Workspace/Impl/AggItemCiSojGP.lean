@@ -1,7 +1,11 @@
-import Workspace.Impl.AggKerRed
-import Workspace.Impl.AggItemC1G
-import Workspace.Impl.AggItemCiSojWt
-import Workspace.Impl.GenNormPoly
+module
+
+public import Workspace.Impl.AggKerRed
+public import Workspace.Impl.AggItemC1G
+public import Workspace.Impl.AggItemCiSojWt
+public import Workspace.Impl.GenNormPoly
+
+@[expose] public section
 
 /-!
 # The physical group of a rectangle query

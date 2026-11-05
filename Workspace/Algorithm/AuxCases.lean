@@ -1,5 +1,9 @@
-import Workspace.Algorithm.AuxRectangle
-import Workspace.Algorithm.AuxBlocks
+module
+
+public import Workspace.Algorithm.AuxRectangle
+public import Workspace.Algorithm.AuxBlocks
+
+@[expose] public section
 
 /-!
 # The item of the configuration branch (Cases 2b and 3)

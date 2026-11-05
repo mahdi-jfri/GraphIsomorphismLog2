@@ -1,6 +1,10 @@
-import Workspace.Paper.TotalCost
-import Workspace.Paper.HereditaryBudget
-import Workspace.Paper.RunningTimeInequalities
+module
+
+public import Workspace.Paper.TotalCost
+public import Workspace.Paper.HereditaryBudget
+public import Workspace.Paper.RunningTimeInequalities
+
+@[expose] public section
 
 /-!
 # The root bounds of a fresh phase
@@ -21,8 +25,8 @@ state of every fresh phase (`GI.Algorithm.State.FreshOf`):
 
 Then every run has root bounds (`GI.Algorithm.Run.rootsOK_all`), with `cσ = C`.
 
-The hypotheses are those of Theorem A.9 (the cited `AutCardLeSq` and `SimpleValuationDegree`)
-and `κ ≥ 64` (Theorem A.9 takes `κ_cert ≥ 64`; Section 7.5 fixes `κ = κ_cert`).
+The only parameter hypothesis is `κ ≥ 64` (Theorem A.9 takes `κ_cert ≥ 64`; Section 7.5 fixes
+`κ = κ_cert`).
 -/
 
 namespace GI.Paper
@@ -79,10 +83,10 @@ end Tower
 `σ(H, v)` is the budget of the faithful image of `H` on the orbit `v^H`, which is transitive;
 Theorem A.9 bounds it by `C log |v^H| ≤ C log |V|` (the term `-B` and the case `|v^H| ≤ 2` only
 help). -/
-theorem sigma_le_log (hAut : GI.Cited.AutCardLeSq) (hLie : GI.Cited.SimpleValuationDegree) :
+theorem sigma_le_log :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ κ : ℕ, 64 ≤ κ → ∀ (V : Type) [Fintype V] (H : Subgroup (Perm V)) (v : V),
       (GI.sigma κ v H : ℝ) ≤ C * Real.log (Fintype.card V) := by
-  obtain ⟨C, B, hC, hB, h⟩ := thm_hereditary_budget hAut hLie
+  obtain ⟨C, B, hC, hB, h⟩ := thm_hereditary_budget
   refine ⟨C, by linarith, fun κ hκ V _ H v => ?_⟩
   classical
   -- Lemma A.3: pass to the faithful image on the orbit of `v`.
@@ -225,13 +229,12 @@ theorem Run.rootsOK_of {cσ : ℝ}
     r
 
 /-- **Every run has root bounds** (`Run.RootsOK`), with the constant `cσ ≥ 0` of Theorem A.9,
-given the cited inputs of Theorem A.9 and `κ ≥ 64`. -/
-theorem Run.rootsOK_all (hAut : GI.Cited.AutCardLeSq) (hLie : GI.Cited.SimpleValuationDegree)
-    (hκ : 64 ≤ P.κ) :
+for `κ ≥ 64`. -/
+theorem Run.rootsOK_all (hκ : 64 ≤ P.κ) :
     ∃ cσ : ℝ, 0 ≤ cσ ∧ ∀ {m : Mode} {Ω C : Type} {S : State Ω C}
         {L : Option (SuppliedLabels S)} {A : Set (Perm Ω)}
       (r : Run P m S L A), r.RootsOK cσ := by
-  obtain ⟨cσ, hcσ, hσ⟩ := GI.Paper.sigma_le_log hAut hLie
+  obtain ⟨cσ, hcσ, hσ⟩ := GI.Paper.sigma_le_log
   exact ⟨cσ, hcσ, fun r => Run.rootsOK_of (fun S S' hs hS' =>
     GI.Paper.freshOf_rootBounds (hσ P.κ hκ) hcσ hs hS') r⟩
 

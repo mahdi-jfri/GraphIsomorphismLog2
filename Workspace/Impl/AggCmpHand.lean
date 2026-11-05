@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCertRep
-import Workspace.Impl.AggItemHand
+module
+
+public import Workspace.Impl.AggCertRep
+public import Workspace.Impl.AggItemHand
+
+@[expose] public section
 
 /-!
 # The hand-over from the certificate phase to the comparison phase

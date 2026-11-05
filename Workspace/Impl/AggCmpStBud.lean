@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCmpStCh
-import Workspace.Impl.AggCertMvKey
+module
+
+public import Workspace.Impl.AggCmpStCh
+public import Workspace.Impl.AggCertMvKey
+
+@[expose] public section
 
 /-!
 # The start of a pair: the modules within the budget

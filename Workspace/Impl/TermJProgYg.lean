@@ -1,6 +1,10 @@
-import Workspace.Impl.TermJYgMath
-import Workspace.Impl.TermJProgWr
-import Workspace.Impl.TermJProgFlat
+module
+
+public import Workspace.Impl.TermJYgMath
+public import Workspace.Impl.TermJProgWr
+public import Workspace.Impl.TermJProgFlat
+
+@[expose] public section
 
 /-!
 # The generators of `Aut_{N ≀ Sym(q)}(X)` from the `N`-test table (program)

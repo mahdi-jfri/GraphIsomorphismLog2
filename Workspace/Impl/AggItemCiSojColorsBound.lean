@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojQueryWt
+module
+
+public import Workspace.Impl.AggItemCiSojQueryWt
+
+@[expose] public section
 
 /-! # The uniform physical-query cost from paid representation and data bytes -/
 

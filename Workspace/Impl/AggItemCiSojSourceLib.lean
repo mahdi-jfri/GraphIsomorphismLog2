@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojRectGlobal
-import Workspace.Impl.AggItemCiSojRawBranches
+module
+
+public import Workspace.Impl.AggItemCiSojRectGlobal
+public import Workspace.Impl.AggItemCiSojRawBranches
+
+@[expose] public section
 
 /-! # Installed programs for the full first-rectangle source dispatch -/
 

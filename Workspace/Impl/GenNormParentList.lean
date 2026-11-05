@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormParent
-import Workspace.Impl.GenNormLabels
+module
+
+public import Workspace.Impl.GenNormParent
+public import Workspace.Impl.GenNormLabels
+
+@[expose] public section
 
 namespace GI.Impl
 

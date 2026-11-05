@@ -1,6 +1,10 @@
-import Workspace.Impl.LinFiniteProduct
-import Workspace.Impl.LinFiniteAction
-import Workspace.Impl.LinIntSolverCost
+module
+
+public import Workspace.Impl.LinFiniteProduct
+public import Workspace.Impl.LinFiniteAction
+public import Workspace.Impl.LinIntSolverCost
+
+@[expose] public section
 
 /-! Multiplication and inversion of retained forward/inverse affine data. -/
 namespace GI.Impl

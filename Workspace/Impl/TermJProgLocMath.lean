@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJProgPair
+module
+
+public import Workspace.Impl.TermJProgPair
+
+@[expose] public section
 
 /-!
 # The local transporter of a class (the mathematics)

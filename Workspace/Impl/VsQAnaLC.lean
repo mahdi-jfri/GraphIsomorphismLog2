@@ -1,8 +1,12 @@
-import Workspace.Impl.VsQDrv
-import Workspace.Proved.VsQLoc
-import Workspace.Impl.VsWProgFrame
-import Workspace.Impl.VsWProgCo
-import Workspace.Impl.VsFAlgSpanStep
+module
+
+public import Workspace.Impl.VsQDrv
+public import Workspace.Proved.VsQLoc
+public import Workspace.Impl.VsWProgFrame
+public import Workspace.Impl.VsWProgCo
+public import Workspace.Impl.VsFAlgSpanStep
+
+@[expose] public section
 
 /-!
 # The local context of the analysis

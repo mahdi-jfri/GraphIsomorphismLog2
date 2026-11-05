@@ -1,6 +1,10 @@
-import Workspace.Impl.TermGlueLabQMath
-import Workspace.Impl.LinCoordinates
-import Mathlib.Algebra.Group.Subgroup.Finsupp
+module
+
+public import Workspace.Impl.TermGlueLabQMath
+public import Workspace.Impl.LinCoordinates
+public import Mathlib.Algebra.Group.Subgroup.Finsupp
+
+@[expose] public section
 
 /-!
 # A quotient of a presented abelian group by given elements

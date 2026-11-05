@@ -1,8 +1,12 @@
-import Workspace.Impl.LinObjectRelationImages
-import Workspace.Impl.LinElementList
-import Workspace.Impl.LinObjectPad
-import Workspace.Impl.LinAppend
-import Workspace.Impl.LinIntSolverCost
+module
+
+public import Workspace.Impl.LinObjectRelationImages
+public import Workspace.Impl.LinElementList
+public import Workspace.Impl.LinObjectPad
+public import Workspace.Impl.LinAppend
+public import Workspace.Impl.LinIntSolverCost
+
+@[expose] public section
 
 /-! One local presentation: compute generator coordinates, pad their
 rows, and append them to the presentation of `A/N`. -/

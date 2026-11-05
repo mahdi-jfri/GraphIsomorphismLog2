@@ -1,6 +1,10 @@
-import Workspace.Impl.LinObjectEvalCompose
-import Workspace.Impl.LinObjectMoveEval
-import Workspace.Impl.LinPolyEnvelope
+module
+
+public import Workspace.Impl.LinObjectEvalCompose
+public import Workspace.Impl.LinObjectMoveEval
+public import Workspace.Impl.LinPolyEnvelope
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

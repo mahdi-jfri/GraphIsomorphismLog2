@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQPolyC
+module
+
+public import Workspace.Impl.VsQPolyC
+
+@[expose] public section
 
 /-!
 # The whole program

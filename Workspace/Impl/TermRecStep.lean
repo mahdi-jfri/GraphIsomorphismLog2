@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecStepW
+module
+
+public import Workspace.Impl.TermRecProgTab
+
+@[expose] public section
 
 /-!
 # T5, the case `ℓ + 1` of the recursion (item 5)
@@ -29,19 +33,12 @@ open GI.Cited (Val encPerm encGroup gens SolvableCosetIntersection DerivedSubgro
 
 variable {n : ℕ}
 
-/-- The generic bound of the small steps of one level. -/
-def tmRiSQ (n M : ℕ) : ℕ := 10 ^ 5 * (tmRiVs n M + 1) ^ 2
-
-/-- The cost of the profiles of one side, besides the small steps. -/
-noncomputable def tmRiPrC (hmem : Membership) (n M : ℕ) : ℕ :=
-  2 * M * tmRiProfC hmem n (3 * tmRiVs n M) + mapK * (2 * M + 1) * (tmRiVs n M + 2000 * tmRiB n M + 5) +
-    8000 * (2 * M + 1) ^ 3
-
 /-- **The own cost of one level** of the recursion: everything but the recursive calls. -/
 noncomputable def tmRiStepO (hsci : SolvableCosetIntersection) (hder : DerivedSubgroup)
     (hmem : Membership) (Kg Dg n M : ℕ) : ℕ :=
   tmRiDerC (derivedSubgroupPrim hder) hmem n +
     2 * tmRiPcsC (tmRiObjPC (solvableCosetIntersectionPrim hsci) n (2 * M)) (tmRiVs n M) +
+    4 * M ^ 3 * tmRiRebC (solvableCosetIntersectionPrim hsci) hmem Kg Dg n M +
     4 * M ^ 3 * tmRiYC (solvableCosetIntersectionPrim hsci) n M (4 * (10 * tmRiVs n M + 20) + 10) +
     tmRiTabC hmem n M (2 * M) (tmRiVs n M) + 2 * tmRiPrC hmem n M +
     Kg * (tmRiVs n M + 1) ^ Dg + 10 * tmRiSQ n M + 10 * (700 * (n + 1) ^ 6 + 1)
@@ -51,10 +48,11 @@ open Classical in
 /-- **The case `ℓ + 1`.** -/
 theorem tmRi_step_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hmem : Membership}
-    (hP : TmRiAt P b jsci jder jmem gObj hsci hder hmem) {Kg Dg : ℕ}
+    (hP : TmRiAt P b jsci jder jmem gObj hsci hder hmem)
+    (hReb : P.HasAt (b + 96) (tmRiRebFuns b gObj)) {Kg Dg : ℕ}
     (hglue : Iface.TermGlueObjSpec P Kg Dg gObj) {M ℓ T : ℕ} (ih : TmRiIH P b n M ℓ T)
     {σH σN : List (Perm (Fin n))} {X Y : List (TmRiO n)}
-    (hsol : IsSolvable (gens σH)) (hNH : gens σN ≤ gens σH)
+    (hsol : TmRiListIn (gens σH) (X ++ Y)) (hNH : gens σN ≤ gens σH)
     (hNn : GI.Multicoset.Normalizes (gens σH) (gens σN))
     (hfuel : relDerived (gens σH) (gens σN) (ℓ + 1) ≤ gens σN) (hℓ : ℓ + 1 ≤ n ^ 2 + 5)
     (hNX : Fixes (gens σN) (tmGlMs X)) (hNY : Fixes (gens σN) (tmGlMs Y))
@@ -104,6 +102,7 @@ theorem tmRi_step_spec {P : Program} {b jsci jder jmem gObj : ℕ}
   rw [← hBud]
   have hBud' : Bud = 4 * M ^ 3 * T + T + tmRiDerC (derivedSubgroupPrim hder) hmem n +
       2 * tmRiPcsC (tmRiObjPC (solvableCosetIntersectionPrim hsci) n (2 * M)) (tmRiVs n M) +
+      4 * M ^ 3 * tmRiRebC (solvableCosetIntersectionPrim hsci) hmem Kg Dg n M +
       4 * M ^ 3 * tmRiYC (solvableCosetIntersectionPrim hsci) n M (4 * (10 * tmRiVs n M + 20) + 10) +
       tmRiTabC hmem n M (2 * M) (tmRiVs n M) + 2 * tmRiPrC hmem n M +
       Kg * (tmRiVs n M + 1) ^ Dg + 10 * tmRiSQ n M + 10 * (Wo + 1) := by
@@ -136,8 +135,10 @@ theorem tmRi_step_spec {P : Program} {b jsci jder jmem gObj : ℕ}
   have hAw : (encGroup gs).wt ≤ 320 * (n + 1) ^ 6 := wt_encGroup_le_sq hgsl
   have hAH : gens gs ≤ gens σH := hgs ▸ relDerived_le hNH ℓ
   have hAn : GI.Multicoset.Normalizes (gens σH) (gens gs) := hgs ▸ relDerived_normalizes hNn ℓ
-  have hsolA : IsSolvable (gens gs) :=
-    solvable_of_solvable_injective (Subgroup.inclusion_injective hAH)
+  have hnormX : TmRiListNorm (gens gs) X :=
+    TmRiListIn.norm_of (fun o ho => hsol o (List.mem_append_left _ ho)) hAn
+  have hnormY : TmRiListNorm (gens gs) Y :=
+    TmRiListIn.norm_of (fun o ho => hsol o (List.mem_append_right _ ho)) hAn
   have hNA : gens σN ≤ gens gs := hgs ▸ le_relDerived hNH ℓ
   -- the pieces
   set PX := tmRiPcsO (gens gs) X with hPX
@@ -173,7 +174,7 @@ theorem tmRi_step_spec {P : Program} {b jsci jder jmem gObj : ℕ}
   -- the pieces of `X`
   have hEX : (Val.list [encGroup gs, .list Xv]).wt ≤ tmRiVs n M := by
     have := wt_list2_le (encGroup gs) (.list Xv); omega
-  have hpX := tmRi_pcs_spec hP hsolA hgsl hokX (E := tmRiVs n M) hEX
+  have hpX := tmRi_pcs_spec hP hnormX hgsl hokX (E := tmRiVs n M) hEX
   rw [← tmRiPcsO_val, ← hPX] at hpX
   have d3 := Det.call (Det.mk2 (Det.var' (P := P) (env := [.list vs, .nat ℓ, encGroup gs]) (i := 2)
     rfl) (Det.arg' (P := P) (vs := vs) (rest := [.nat ℓ, encGroup gs]) (j := 3) (v := .list Xv)
@@ -183,7 +184,7 @@ theorem tmRi_step_spec {P : Program} {b jsci jder jmem gObj : ℕ}
   -- the pieces of `Y`
   have hEY : (Val.list [encGroup gs, .list Yv]).wt ≤ tmRiVs n M := by
     have := wt_list2_le (encGroup gs) (.list Yv); omega
-  have hpY := tmRi_pcs_spec hP hsolA hgsl hokY (E := tmRiVs n M) hEY
+  have hpY := tmRi_pcs_spec hP hnormY hgsl hokY (E := tmRiVs n M) hEY
   rw [← tmRiPcsO_val, ← hPY] at hpY
   have d4 := Det.call (Det.mk2 (Det.var' (P := P) (env := [.list vs, .nat ℓ, encGroup gs,
     .list (PX.map tmGlObjsVal)]) (i := 2) rfl) (Det.arg' (P := P) (vs := vs)
@@ -229,21 +230,24 @@ theorem tmRi_step_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     omega
   have htab := EvalAll.call_funAll (f := b + 66) darg6 (Q := fun w c =>
       (∃ tab, w = .list tab ∧ TmRiTab (gens σH) Ps tab ∧ w.wt ≤ 12000 * ((M + 1) * tmRiB n M)) ∧
-      c ≤ 4 * M ^ 3 * T + 4 * M ^ 3 * tmRiYC (solvableCosetIntersectionPrim hsci) n M
-        (4 * (10 * tmRiVs n M + 20) + 10) + tmRiTabC hmem n M (2 * M) (tmRiVs n M) + tmRiSQ n M)
+      c ≤ 4 * M ^ 3 * T + 4 * M ^ 3 * tmRiRebC (solvableCosetIntersectionPrim hsci) hmem Kg Dg n M +
+        4 * M ^ 3 * tmRiYC (solvableCosetIntersectionPrim hsci) n M
+          (4 * (10 * tmRiVs n M + 20) + 10) + tmRiTabC hmem n M (2 * M) (tmRiVs n M) + tmRiSQ n M)
       fun v ca hv => by
     obtain ⟨rfl, hca⟩ := hv
-    refine (tmRi_table_spec hP ih hsol hHl hgsl hNH hNn hgs hfuel (by omega)
-      (fun S hS => (hPc S hS).1) hok (fun S hS o ho => (hPc S hS).2 o ho) hW6).mono
+    refine (tmRi_table_spec hP ih hsol.norm_self (Or.inr ⟨hsol, hReb, hglue, le_rfl⟩) hHl hgsl hNH hNn
+      hgs (Or.inl hfuel) (by omega) (fun S hS => (hPc S hS).1) hok (fun S hS o ho => (hPc S hS).2 o ho) hW6).mono
       fun w c h => ?_
     obtain ⟨tab, rfl, ht, hw, hc⟩ := h
     have hw' := le_trans hw (tmRi_wt_tab hPsl)
     refine ⟨⟨tab, rfl, ht, hw'⟩, ?_⟩
-    have hmul : Ps.length * Ps.length * (M * (T + tmRiYC (solvableCosetIntersectionPrim hsci) n M
-        (4 * (10 * tmRiVs n M + 20) + 10))) ≤ 4 * M ^ 3 * T + 4 * M ^ 3 *
+    have hmul : Ps.length * Ps.length * (M * (T + tmRiRebC (solvableCosetIntersectionPrim hsci) hmem Kg Dg n M +
+        tmRiYC (solvableCosetIntersectionPrim hsci) n M (4 * (10 * tmRiVs n M + 20) + 10))) ≤
+        4 * M ^ 3 * T + 4 * M ^ 3 * tmRiRebC (solvableCosetIntersectionPrim hsci) hmem Kg Dg n M + 4 * M ^ 3 *
           tmRiYC (solvableCosetIntersectionPrim hsci) n M (4 * (10 * tmRiVs n M + 20) + 10) :=
-      calc _ ≤ (2 * M) * (2 * M) * (M * (T + tmRiYC (solvableCosetIntersectionPrim hsci) n M
-            (4 * (10 * tmRiVs n M + 20) + 10))) :=
+      calc _ ≤ (2 * M) * (2 * M) * (M * (T + tmRiRebC (solvableCosetIntersectionPrim hsci) hmem Kg Dg n M +
+            tmRiYC (solvableCosetIntersectionPrim hsci) n M
+              (4 * (10 * tmRiVs n M + 20) + 10))) :=
             Nat.mul_le_mul (Nat.mul_le_mul hPsl hPsl) le_rfl
         _ = _ := by ring
     have hmono := tmRiTabC_mono hmem n M hPsl (tmRiVs n M)
@@ -292,7 +296,6 @@ theorem tmRi_step_spec {P : Program} {b jsci jder jmem gObj : ℕ}
   have dlen7 := Det.length (Det.var' (P := P) (env := e6) (i := 3) (v := .list (PX.map tmGlObjsVal)) rfl)
   rw [hlPX] at dlen7
   have drng7 := Det.call dlen7 (range_det hP.range PX.length)
-  rw [← range_eq_encPerm_one] at drng7
   have darg7 := Det.mk2 (Det.mk3 (Det.var' (P := P) (env := e6) (i := 2) (v := encGroup gs) rfl)
     (Det.var' (P := P) (env := e6) (i := 6) (v := .list tab) rfl) (Det.nat 0)) drng7
   have hw7 : (Val.list [.list [encGroup gs, .list tab, .nat 0], natList (List.range PX.length)]).wt ≤
@@ -327,7 +330,6 @@ theorem tmRi_step_spec {P : Program} {b jsci jder jmem gObj : ℕ}
   have dlen8 := Det.length (Det.var' (P := P) (env := e7) (i := 4) (v := .list (PY.map tmGlObjsVal)) rfl)
   rw [hlPY] at dlen8
   have drng8 := Det.call dlen8 (range_det hP.range PY.length)
-  rw [← range_eq_encPerm_one] at drng8
   have dlen8' := Det.length (Det.var' (P := P) (env := e7) (i := 3) (v := .list (PX.map tmGlObjsVal)) rfl)
   rw [hlPX] at dlen8'
   have darg8 := Det.mk2 (Det.mk3 (Det.var' (P := P) (env := e7) (i := 2) (v := encGroup gs) rfl)
@@ -376,7 +378,11 @@ theorem tmRi_step_spec {P : Program} {b jsci jder jmem gObj : ℕ}
   have hfixX : Fixes (gens gs) (tmGlMs obsX) := by rw [hhatX]; exact tmRiHat_fix hAn _
   have hfuelA : relDerived (gens σH) (gens gs) ℓ ≤ gens gs := by
     rw [hgs]; exact tmRi_fuel hNH ℓ
-  have hrec := ih σH gs obsY obsX hsol hAH hAn hfuelA (by omega) hfixY hfixX hHl hgsl
+  have hInR : TmRiListIn (gens σH) (obsY ++ obsX) := tmRi_profs_in hAH fun ob hob => by
+    rcases List.mem_append.1 hob with h | h
+    · exact tmRi_profs_mem hpoY ob h
+    · exact tmRi_profs_mem hpoX ob h
+  have hrec := ih σH gs obsY obsX (fun _ => hInR) hAH hAn hfuelA (by omega) hfixY hfixX hHl hgsl
     (by omega) (by omega) hokR
   set e8 : List Val := e7 ++ [.list (obsY.map tmGlObjVal)] with he8
   have hRw : (tmRecIn ℓ σH gs obsY obsX).wt ≤ tmRiVs n M := by
@@ -451,7 +457,8 @@ theorem tmRi_step_spec {P : Program} {b jsci jder jmem gObj : ℕ}
       intro a ha c hc
       rw [hgs] at ha hc
       simpa [commutatorElement_def] using relDerived_commutator_mem hfuel ha hc
-    have hgl := hglue σH σN gs X Y hs v⁻¹ hsol hNA hAH hNn hAn hcomm hNX hNY hAB hBH hτ
+    have hgl := hglue σH σN gs X Y hs v⁻¹ (isSolvable_quot_of_relDerived hfuel) hsol
+      hNA hAH hNn hAn hcomm hNX hNY hAB hBH hτ
       hP1 hP2 hP3 hP4 hP5
     have hu9 : (Val.list [encPerm v, encGroup hs]).wt ≤ 700 * (n + 1) ^ 6 := hansw
     have dc := Det.length (Det.var' (P := P) (env := e9) (i := 9)
@@ -510,5 +517,392 @@ theorem tmRi_step_spec {P : Program} {b jsci jder jmem gObj : ℕ}
     exact hglc.mono fun w c h => ⟨h.1, h.2.1, by
       simp only [List.length_cons, List.length_nil] at *
       omega⟩
+
+/-- **The own cost of one level including top-level rebasing** (`b + 105`). -/
+noncomputable def tmRiNormStepO (hsci : SolvableCosetIntersection) (hder : DerivedSubgroup)
+    (hmem : Membership) (Kg Dg n M : ℕ) : ℕ :=
+  tmRiStepO hsci hder hmem Kg Dg n M +
+    2 * tmRiPcsC (tmRiObjPC (solvableCosetIntersectionPrim hsci) n (2 * M)) (tmRiVs n M) +
+    4 * M ^ 3 * (tmRiBaseC (tmRiObjPC (solvableCosetIntersectionPrim hsci) n (2 * M)) n
+      (tmRiVs n M) + 10 * tmRiVs n M) +
+    4 * M ^ 3 * tmRiYC (solvableCosetIntersectionPrim hsci) n M
+      (4 * (10 * tmRiVs n M + 20) + 10) +
+    tmRiTabC hmem n M (2 * M) (tmRiVs n M) + 2 * tmRiPrC hmem n M +
+    15 * tmRiSQ n M + 10 * (700 * (n + 1) ^ 6 + 1)
+
+set_option maxHeartbeats 4000000 in
+open Classical in
+/-- **The case `ℓ + 1` with `TmRiListNorm` (`b + 105`).** -/
+theorem tmRi_normStep_spec {P : Program} {b jsci jder jmem gObj : ℕ}
+    {hsci : SolvableCosetIntersection} {hder : DerivedSubgroup} {hmem : Membership}
+    (hP : TmRiAt P b jsci jder jmem gObj hsci hder hmem)
+    (hReb : P.HasAt (b + 96) (tmRiRebFuns b gObj)) {Kg Dg : ℕ}
+    (hglue : Iface.TermGlueObjSpec P Kg Dg gObj) {M ℓ T : ℕ}
+    (ih0 : TmRiIH P b n M 0 (tmRiBaseC (tmRiObjPC (solvableCosetIntersectionPrim hsci) n (2 * M)) n
+      (tmRiVs n M) + 10 * tmRiVs n M))
+    (ih : TmRiIH P b n M ℓ T)
+    {σH σN : List (Perm (Fin n))} {X Y : List (TmRiO n)}
+    (hsol : TmRiListNorm (gens σH) (X ++ Y)) (hNH : gens σN ≤ gens σH)
+    (hNn : GI.Multicoset.Normalizes (gens σH) (gens σN))
+    (hfuel : relDerived (gens σH) (gens σN) (ℓ + 1) ≤ gens σN) (hℓ : ℓ + 1 ≤ n ^ 2 + 5)
+    (hNX : Fixes (gens σN) (tmGlMs X)) (hNY : Fixes (gens σN) (tmGlMs Y))
+    (hHl : σH.length ≤ n ^ 2) (hNl : σN.length ≤ n ^ 2) (hX : X.length ≤ M) (hY : Y.length ≤ M)
+    (hok : TmRecObjOK M (X ++ Y)) :
+    FunAll P (b + 105) (tmRecIn (ℓ + 1) σH σN X Y) (fun u cost =>
+      CosetC n u (Iso (gens σH) (tmGlMs X) (tmGlMs Y)) ∧
+      cost ≤ 4 * M ^ 3 * T + T + tmRiNormStepO hsci hder hmem Kg Dg n M) := by
+  obtain ⟨fB1, fB2, fB3, fB4, fB5⟩ := tmRiB_facts n M
+  obtain ⟨fV1, fV2, fV3, fV4⟩ := tmRiVs_facts n M
+  have hF1 : 1 ≤ (n + 1) ^ 6 := Nat.one_le_pow _ _ (by omega)
+  have hn2 : (n + 1) ^ 2 ≤ (n + 1) ^ 6 := Nat.pow_le_pow_right (by omega) (by omega)
+  have hn4 : (n + 1) ^ 4 ≤ (n + 1) ^ 6 := Nat.pow_le_pow_right (by omega) (by omega)
+  have hnn : n ^ 2 ≤ (n + 1) ^ 2 := Nat.pow_le_pow_left (by omega) 2
+  have hSQ : 10 ^ 5 * (tmRiVs n M + 1) ≤ tmRiSQ n M := by
+    unfold tmRiSQ; exact Nat.mul_le_mul_left _ (Nat.le_self_pow (by norm_num) _)
+  have hWoV : 700 * (n + 1) ^ 6 ≤ tmRiVs n M := by omega
+  set Xv := X.map tmGlObjVal with hXv
+  set Yv := Y.map tmGlObjVal with hYv
+  set vs : List Val := [.nat (ℓ + 1), encGroup σH, encGroup σN, .list Xv, .list Yv] with hvs
+  have hain : tmRecIn (ℓ + 1) σH σN X Y = .list vs := rfl
+  rw [hain]
+  have hokX : TmRiOK (2 * M) X := fun o ho =>
+    ⟨(hok o (by simp [ho])).1, by have := (hok o (by simp [ho])).2.1; omega,
+      fun o' ho' he => (hok o (by simp [ho])).2.2 o' (by simp [ho']) he⟩
+  have hokY : TmRiOK (2 * M) Y := fun o ho =>
+    ⟨(hok o (by simp [ho])).1, by have := (hok o (by simp [ho])).2.1; omega,
+      fun o' ho' he => (hok o (by simp [ho])).2.2 o' (by simp [ho']) he⟩
+  have hXw : (Val.list Xv).wt ≤ 2020 * tmRiB n M := tmRi_wt_side hX hokX
+  have hYw : (Val.list Yv).wt ≤ 2020 * tmRiB n M := tmRi_wt_side hY hokY
+  have hHw : (encGroup σH).wt ≤ 320 * (n + 1) ^ 6 := wt_encGroup_le_sq hHl
+  have hNw : (encGroup σN).wt ≤ 320 * (n + 1) ^ 6 := wt_encGroup_le_sq hNl
+  have hlw : (Val.nat (ℓ + 1)).wt ≤ (n + 1) ^ 6 + 8 := by have := wt_nat_le (ℓ + 1); omega
+  have haw : (Val.list vs).wt ≤ 10 ^ 4 * tmRiB n M := by
+    have := wt_list_le [.nat (ℓ + 1), encGroup σH, encGroup σN, .list Xv, .list Yv]
+    simp only [List.map_cons, List.map_nil, List.sum_cons, List.sum_nil, List.length_cons,
+      List.length_nil] at this
+    show (Val.list [.nat (ℓ + 1), encGroup σH, encGroup σN, .list Xv, .list Yv]).wt ≤ _
+    omega
+  set R : Val → Prop := fun w => CosetC n w (Iso (gens σH) (tmGlMs X) (tmGlMs Y)) with hR
+  obtain ⟨Wo, hWo⟩ : ∃ w, w = 700 * (n + 1) ^ 6 := ⟨_, rfl⟩
+  set T₀ := tmRiBaseC (tmRiObjPC (solvableCosetIntersectionPrim hsci) n (2 * M)) n
+    (tmRiVs n M) + 10 * tmRiVs n M with hT₀
+  obtain ⟨Bud, hBud⟩ : ∃ B, B = 4 * M ^ 3 * T + T + tmRiNormStepO hsci hder hmem Kg Dg n M := ⟨_, rfl⟩
+  rw [← hBud]
+  have hBud' : Bud = (4 * M ^ 3 * T + T + tmRiStepO hsci hder hmem Kg Dg n M) +
+      2 * tmRiPcsC (tmRiObjPC (solvableCosetIntersectionPrim hsci) n (2 * M)) (tmRiVs n M) +
+      4 * M ^ 3 * T₀ +
+      4 * M ^ 3 * tmRiYC (solvableCosetIntersectionPrim hsci) n M
+        (4 * (10 * tmRiVs n M + 20) + 10) +
+      tmRiTabC hmem n M (2 * M) (tmRiVs n M) + 2 * tmRiPrC hmem n M +
+      15 * tmRiSQ n M + 10 * (Wo + 1) := by
+    rw [hBud, hWo, hT₀]; unfold tmRiNormStepO; ring
+  refine FunAll.intro (tmRiReb_normStep hReb)
+    (EvalAll.mono (Q := fun w c => R w ∧ w.wt ≤ Wo ∧ c ≤ Bud) ?_ fun w c h => ⟨h.1, h.2.2⟩)
+  -- let 1: `encGroup []`
+  set σA₀ : List (Perm (Fin n)) := [] with hσA₀
+  have h0l : σA₀.length ≤ n ^ 2 := by simp [hσA₀]
+  have h0w : (encGroup σA₀).wt ≤ 320 * (n + 1) ^ 6 := wt_encGroup_le_sq h0l
+  have hnorm0 : ∀ Z : List (TmRiO n), TmRiListNorm (gens σA₀) Z := by
+    intro Z o _ h _ g hg
+    have hg1 : g = 1 := Subgroup.mem_bot.1 (by simpa [hσA₀, gens] using hg)
+    subst hg1
+    simp
+  have d1 := (tmRi_triv_det hHl (Det.arg' (P := P) (vs := vs) (rest := []) (j := 1)
+    (v := encGroup σH) rfl)).mono (c' := tmRiSQ n M) (by omega)
+  refine tmRi_letB d1 (fun _ _ h => h.2) (by omega) fun v1 c1 h1 => ?_
+  obtain ⟨rfl, -⟩ := h1
+  -- pieces of X and Y under `gens []`
+  set PX := tmRiPcsO (gens σA₀) X with hPX
+  set PY := tmRiPcsO (gens σA₀) Y with hPY
+  set Qs := tmRiPs (gens σA₀) X Y with hQs
+  have hQsl : Qs.length ≤ 2 * M := by
+    have := tmRiPs_length_le (gens σA₀) X Y; rw [← hQs] at this; omega
+  have hPXl : PX.length ≤ M := (tmRiPcsO_length_le _ _).trans hX
+  have hPYl : PY.length ≤ M := (tmRiPcsO_length_le _ _).trans hY
+  have hPc0 : ∀ Q ∈ Qs, TmRiPc σA₀ σN M Q ∧ ∀ o ∈ Q, o ∈ X ++ Y := by
+    intro Q hQ
+    rcases List.mem_append.1 hQ with hQ | hQ
+    · obtain ⟨h1, h2⟩ := tmRiPcsO_pc (σA := σA₀) hX hNX hQ
+      exact ⟨h1, fun o ho => List.mem_append_left _ (h2 o ho)⟩
+    · obtain ⟨h1, h2⟩ := tmRiPcsO_pc (σA := σA₀) hY hNY hQ
+      exact ⟨h1, fun o ho => List.mem_append_right _ (h2 o ho)⟩
+  have hQeq : ∀ Q ∈ Qs, ∀ s ∈ tmGlMs Q, ∀ s' ∈ tmGlMs Q, s = s' := by
+    intro Q hQ s hs s' hs'
+    obtain ⟨g, hg, hact⟩ := (hPc0 Q hQ).1.2.2.1 s hs s' hs'
+    have hg1 : g = 1 := Subgroup.mem_bot.1 (by simpa [hσA₀, gens] using hg)
+    subst hg1
+    simpa using hact
+  have hPcH : ∀ Q ∈ Qs, TmRiPc σH σN M Q := by
+    intro Q hQ
+    obtain ⟨h1, h2, _, h4⟩ := (hPc0 Q hQ).1
+    refine ⟨h1, h2, fun s hs s' hs' => ⟨1, (gens σH).one_mem, ?_⟩, h4⟩
+    rw [hQeq Q hQ s hs s' hs', act_one]
+  have hSw : ∀ Q ∈ Qs, (tmGlObjsVal Q).wt ≤ 2020 * tmRiB n M := by
+    intro Q hQ
+    rcases List.mem_append.1 hQ with hQ | hQ
+    · obtain ⟨o, -, rfl⟩ := tmRiPcsO_mem hQ
+      exact (tmRi_wt_objs_sub List.filter_sublist).trans hXw
+    · obtain ⟨o, -, rfl⟩ := tmRiPcsO_mem hQ
+      exact (tmRi_wt_objs_sub List.filter_sublist).trans hYw
+  have hPXw : (Val.list (PX.map tmGlObjsVal)).wt ≤ 9000 * ((M + 1) * tmRiB n M) :=
+    tmRi_wt_pcsL (by omega) fun Q hQ => hSw Q (List.mem_append_left _ hQ)
+  have hPYw : (Val.list (PY.map tmGlObjsVal)).wt ≤ 9000 * ((M + 1) * tmRiB n M) :=
+    tmRi_wt_pcsL (by omega) fun Q hQ => hSw Q (List.mem_append_right _ hQ)
+  have hPw : (Val.list (Qs.map tmGlObjsVal)).wt ≤ 9000 * ((M + 1) * tmRiB n M) :=
+    tmRi_wt_pcsL hQsl hSw
+  -- let 2: `PX`
+  have hEX : (Val.list [encGroup σA₀, .list Xv]).wt ≤ tmRiVs n M := by
+    have := wt_list2_le (encGroup σA₀) (.list Xv); omega
+  have hpX := tmRi_pcs_spec hP (hnorm0 X) h0l hokX (E := tmRiVs n M) hEX
+  rw [← tmRiPcsO_val, ← hPX] at hpX
+  have d2 := Det.call (Det.mk2 (Det.var' (P := P) (env := [.list vs, encGroup σA₀]) (i := 1) rfl)
+    (Det.arg' (P := P) (vs := vs) (rest := [encGroup σA₀]) (j := 3) (v := .list Xv) rfl)) hpX
+  refine tmRi_letB d2 (fun _ _ h => h.2) (by omega) fun v2 c2 h2 => ?_
+  obtain ⟨rfl, -⟩ := h2
+  -- let 3: `PY`
+  have hEY : (Val.list [encGroup σA₀, .list Yv]).wt ≤ tmRiVs n M := by
+    have := wt_list2_le (encGroup σA₀) (.list Yv); omega
+  have hpY := tmRi_pcs_spec hP (hnorm0 Y) h0l hokY (E := tmRiVs n M) hEY
+  rw [← tmRiPcsO_val, ← hPY] at hpY
+  have d3 := Det.call (Det.mk2 (Det.var' (P := P) (env := [.list vs, encGroup σA₀,
+    .list (PX.map tmGlObjsVal)]) (i := 1) rfl) (Det.arg' (P := P) (vs := vs)
+    (rest := [encGroup σA₀, .list (PX.map tmGlObjsVal)]) (j := 4) (v := .list Yv) rfl)) hpY
+  refine tmRi_letB d3 (fun _ _ h => h.2) (by omega) fun v3 c3 h3 => ?_
+  obtain ⟨rfl, -⟩ := h3
+  -- let 4: `Qs`
+  have happ := tmRi_append_det hP.app (PX.map tmGlObjsVal) (PY.map tmGlObjsVal)
+  have eP : PX.map tmGlObjsVal ++ PY.map tmGlObjsVal = Qs.map tmGlObjsVal := by
+    simp [hQs, hPX, hPY, tmRiPs]
+  rw [eP] at happ
+  have d4 := Det.call (Det.mk2 (Det.var' (P := P) (env := [.list vs, encGroup σA₀,
+    .list (PX.map tmGlObjsVal), .list (PY.map tmGlObjsVal)]) (i := 2) rfl)
+    (Det.var' (P := P) (env := [.list vs, encGroup σA₀,
+    .list (PX.map tmGlObjsVal), .list (PY.map tmGlObjsVal)]) (i := 3) rfl)) happ
+  have hm4 : loopModK * ((PY.map tmGlObjsVal).length + 1) *
+      ((Val.list [.list (PX.map tmGlObjsVal), .list (PY.map tmGlObjsVal)]).wt +
+        (PY.map tmGlObjsVal).length + (Val.list (Qs.map tmGlObjsVal)).wt + 1) ≤
+      5 * 10 ^ 4 * (tmRiVs n M + 1) ^ 2 := by
+    have h1 := wt_list2_le (.list (PX.map tmGlObjsVal)) (.list (PY.map tmGlObjsVal))
+    have h2 := length_lt_wt_list (PY.map tmGlObjsVal)
+    rw [mul_assoc]
+    calc _ ≤ loopModK * ((tmRiVs n M + 1) * (50 * (tmRiVs n M + 1))) :=
+          Nat.mul_le_mul_left _ (Nat.mul_le_mul (by omega) (by omega))
+      _ = 5 * 10 ^ 4 * (tmRiVs n M + 1) ^ 2 := by simp only [loopModK]; ring
+  have hSQ2 : tmRiSQ n M = 2 * (5 * 10 ^ 4 * (tmRiVs n M + 1) ^ 2) := by unfold tmRiSQ; ring
+  have := wt_list2_le (.list (PX.map tmGlObjsVal)) (.list (PY.map tmGlObjsVal))
+  refine tmRi_letB d4 (fun _ _ h => h.2) (by omega) fun v4 c4 h4 => ?_
+  obtain ⟨rfl, -⟩ := h4
+  -- let 5: table at fuel 0
+  set e4 : List Val := [.list vs, encGroup σA₀, .list (PX.map tmGlObjsVal),
+    .list (PY.map tmGlObjsVal), .list (Qs.map tmGlObjsVal)] with he4
+  have darg5 := Det.mk2 (Det.mk4 (Det.nat 0)
+    (Det.arg' (P := P) (vs := vs) (rest := e4.tail) (j := 1) (v := encGroup σH) rfl)
+    (Det.arg' (P := P) (vs := vs) (rest := e4.tail) (j := 1) (v := encGroup σH) rfl)
+    (Det.var' (P := P) (env := e4) (i := 4) rfl))
+    (Det.var' (P := P) (env := e4) (i := 4) rfl)
+  have hW5 : (Val.list [.list [.nat 0, encGroup σH, encGroup σH, .list (Qs.map tmGlObjsVal)],
+      .list (Qs.map tmGlObjsVal)]).wt ≤ tmRiVs n M := by
+    have := wt_list4_le (.nat 0) (encGroup σH) (encGroup σH) (.list (Qs.map tmGlObjsVal))
+    have := wt_list2_le (.list [.nat 0, encGroup σH, encGroup σH, .list (Qs.map tmGlObjsVal)])
+      (.list (Qs.map tmGlObjsVal))
+    have : (Val.nat 0).wt ≤ 2 := wt_nat_le 0
+    omega
+  have htab := EvalAll.call_funAll (f := b + 66) darg5 (Q := fun w c =>
+      (∃ tab, w = .list tab ∧ TmRiTab (gens σH) Qs tab ∧ w.wt ≤ 12000 * ((M + 1) * tmRiB n M)) ∧
+      c ≤ 4 * M ^ 3 * T₀ +
+        4 * M ^ 3 * tmRiYC (solvableCosetIntersectionPrim hsci) n M
+          (4 * (10 * tmRiVs n M + 20) + 10) + tmRiTabC hmem n M (2 * M) (tmRiVs n M) + tmRiSQ n M)
+      fun v ca hv => by
+    obtain ⟨rfl, hca⟩ := hv
+    refine (tmRi_table_spec (Kg := Kg) (Dg := Dg) hP ih0 hsol (Or.inl ⟨rfl, le_rfl⟩) hHl hHl hNH hNn
+      rfl (Or.inr ⟨rfl, hQeq⟩) (by omega) hPcH hok (fun Q hQ o ho => (hPc0 Q hQ).2 o ho) hW5).mono
+      fun w c h => ?_
+    obtain ⟨tab, rfl, ht, hw, hc⟩ := h
+    have hw' := le_trans hw (tmRi_wt_tab hQsl)
+    refine ⟨⟨tab, rfl, ht, hw'⟩, ?_⟩
+    have hmul : Qs.length * Qs.length * (M * (T₀ +
+        tmRiYC (solvableCosetIntersectionPrim hsci) n M (4 * (10 * tmRiVs n M + 20) + 10))) ≤
+        4 * M ^ 3 * T₀ + 4 * M ^ 3 *
+          tmRiYC (solvableCosetIntersectionPrim hsci) n M (4 * (10 * tmRiVs n M + 20) + 10) :=
+      calc _ ≤ (2 * M) * (2 * M) * (M * (T₀ +
+            tmRiYC (solvableCosetIntersectionPrim hsci) n M
+              (4 * (10 * tmRiVs n M + 20) + 10))) :=
+            Nat.mul_le_mul (Nat.mul_le_mul hQsl hQsl) le_rfl
+        _ = _ := by ring
+    have hmono := tmRiTabC_mono hmem n M hQsl (tmRiVs n M)
+    have : (Val.nat 0).wt ≤ 2 := wt_nat_le 0
+    have := wt_list4_le (.nat 0) (encGroup σH) (encGroup σH) (.list (Qs.map tmGlObjsVal))
+    have := wt_list2_le (.list [.nat 0, encGroup σH, encGroup σH, .list (Qs.map tmGlObjsVal)])
+      (.list (Qs.map tmGlObjsVal))
+    omega
+  refine tmRi_letB htab (fun _ _ h => h.2) (by omega) fun v5 c5 h5 => ?_
+  obtain ⟨⟨tab, rfl, ht, htw⟩, -⟩ := h5
+  have hQsXY : Qs.length = PX.length + PY.length := by simp [hQs, hPX, hPY, tmRiPs]
+  have hlPX : (PX.map tmGlObjsVal).length = PX.length := List.length_map _
+  have hlPY : (PY.map tmGlObjsVal).length = PY.length := List.length_map _
+  have htabw : (Val.list tab).wt ≤ 12000 * ((M + 1) * tmRiB n M) := htw
+  have hprofC : ∀ m o : ℕ, m ≤ M → (Val.list [.list [encGroup σN, .list tab, .nat o],
+      natList (List.range m)]).wt ≤ tmRiVs n M →
+      m * tmRiProfC hmem n (3 * tmRiVs n M) + mapK * (m + 1) *
+        ((Val.list [.list [encGroup σN, .list tab, .nat o], natList (List.range m)]).wt +
+          m * (2 * (2 * Qs.length + 700 * (n + 1) ^ 6) + 1) + 5) + 8000 * (m + 1) ^ 3 ≤
+      tmRiPrC hmem n M := by
+    intro m o hm hw
+    have h1 : m * tmRiProfC hmem n (3 * tmRiVs n M) ≤ 2 * M * tmRiProfC hmem n (3 * tmRiVs n M) :=
+      Nat.mul_le_mul_right _ (by omega)
+    have h2 := tmRi_wt_profs (n := n) hm hQsl
+    have h3 : mapK * (m + 1) * ((Val.list [.list [encGroup σN, .list tab, .nat o],
+        natList (List.range m)]).wt + m * (2 * (2 * Qs.length + 700 * (n + 1) ^ 6) + 1) + 5) ≤
+        mapK * (2 * M + 1) * (tmRiVs n M + 2000 * tmRiB n M + 5) :=
+      Nat.mul_le_mul (Nat.mul_le_mul_left _ (by omega)) (by omega)
+    have h4 : 8000 * (m + 1) ^ 3 ≤ 8000 * (2 * M + 1) ^ 3 :=
+      Nat.mul_le_mul_left _ (Nat.pow_le_pow_left (by omega) 3)
+    unfold tmRiPrC; omega
+  have hrng : ∀ m : ℕ, m ≤ M → (natList (List.range m)).wt ≤ 4 * tmRiB n M + 4 := by
+    intro m hm
+    rw [range_eq_encPerm_one]
+    have := wt_encPerm_le (1 : Perm (Fin m))
+    have h : (m + 1) ^ 2 ≤ tmRiB n M + 1 := by
+      have : (m + 1) ^ 2 ≤ (M + 1) ^ 2 := Nat.pow_le_pow_left (by omega) 2
+      have e : (M + 1) ^ 2 = (M + 1) * (M + 1) := by ring
+      have : (M + 1) * (M + 1) ≤ tmRiB n M := Nat.mul_le_mul_left _ (by omega)
+      omega
+    omega
+  -- let 6: profiles of X
+  set e5 : List Val := e4 ++ [.list tab] with he5
+  have dlen6 := Det.length (Det.var' (P := P) (env := e5) (i := 2) (v := .list (PX.map tmGlObjsVal)) rfl)
+  rw [hlPX] at dlen6
+  have drng6 := Det.call dlen6 (range_det hP.range PX.length)
+  have darg6 := Det.mk2 (Det.mk3 (Det.arg' (P := P) (vs := vs) (rest := e5.tail) (j := 2)
+    (v := encGroup σN) rfl)
+    (Det.var' (P := P) (env := e5) (i := 5) (v := .list tab) rfl) (Det.nat 0)) drng6
+  have hw6 : (Val.list [.list [encGroup σN, .list tab, .nat 0], natList (List.range PX.length)]).wt ≤
+      tmRiVs n M := by
+    have := wt_list3_le (encGroup σN) (.list tab) (.nat 0)
+    have := wt_list2_le (.list [encGroup σN, .list tab, .nat 0]) (natList (List.range PX.length))
+    have := hrng PX.length hPXl
+    have : (Val.nat 0).wt ≤ 2 := wt_nat_le 0
+    omega
+  have hprofX := EvalAll.call_funAll (f := b + 78) darg6 (Q := fun w c =>
+      (∃ obs : List (TmRiO n), w = .list (obs.map tmGlObjVal) ∧ obs.length = PX.length ∧
+        (∀ i (hi : i < obs.length), TmRiProfOut (gens σH) (gens σN) Qs (0 + i) obs[i]) ∧
+        w.wt ≤ 2000 * tmRiB n M) ∧ c ≤ tmRiPrC hmem n M + tmRiSQ n M) fun v ca hv => by
+    obtain ⟨rfl, hca⟩ := hv
+    refine (tmRi_profs_spec hP hNl ht (o := 0) (m := PX.length) (by omega) (Wa := tmRiVs n M)
+      (by have := wt_list3_le (encGroup σN) (.list tab) (.nat 0); have : (Val.nat 0).wt ≤ 2 :=
+        wt_nat_le 0; omega)).mono fun w c h => ?_
+    obtain ⟨obs, rfl, hl, hpo, hww, hc⟩ := h
+    have hww' := le_trans hww (tmRi_wt_profs (n := n) hPXl hQsl)
+    refine ⟨⟨obs, rfl, hl, hpo, hww'⟩, ?_⟩
+    have := hprofC PX.length 0 hPXl hw6
+    have := wt_list3_le (encGroup σN) (.list tab) (.nat 0)
+    have : (Val.nat 0).wt ≤ 2 := wt_nat_le 0
+    have := hrng PX.length hPXl
+    have := wt_nat_le PX.length
+    have := wt_encPerm_le (1 : Perm (Fin PX.length))
+    omega
+  refine tmRi_letB hprofX (fun _ _ h => h.2) (by omega) fun v6 c6 h6 => ?_
+  obtain ⟨⟨obsX, rfl, hlX, hpoX, hwX⟩, -⟩ := h6
+  -- let 7: profiles of Y
+  set e6 : List Val := e5 ++ [.list (obsX.map tmGlObjVal)] with he6
+  have dlen7 := Det.length (Det.var' (P := P) (env := e6) (i := 3) (v := .list (PY.map tmGlObjsVal)) rfl)
+  rw [hlPY] at dlen7
+  have drng7 := Det.call dlen7 (range_det hP.range PY.length)
+  have dlen7' := Det.length (Det.var' (P := P) (env := e6) (i := 2) (v := .list (PX.map tmGlObjsVal)) rfl)
+  rw [hlPX] at dlen7'
+  have darg7 := Det.mk2 (Det.mk3 (Det.arg' (P := P) (vs := vs) (rest := e6.tail) (j := 2)
+    (v := encGroup σN) rfl)
+    (Det.var' (P := P) (env := e6) (i := 5) (v := .list tab) rfl) dlen7') drng7
+  have hPXw' : (Val.nat PX.length).wt ≤ M + 2 := by have := wt_nat_le PX.length; omega
+  have hw7 : (Val.list [.list [encGroup σN, .list tab, .nat PX.length],
+      natList (List.range PY.length)]).wt ≤ tmRiVs n M := by
+    have := wt_list3_le (encGroup σN) (.list tab) (.nat PX.length)
+    have := wt_list2_le (.list [encGroup σN, .list tab, .nat PX.length]) (natList (List.range PY.length))
+    have := hrng PY.length hPYl
+    omega
+  have hprofY := EvalAll.call_funAll (f := b + 78) darg7 (Q := fun w c =>
+      (∃ obs : List (TmRiO n), w = .list (obs.map tmGlObjVal) ∧ obs.length = PY.length ∧
+        (∀ i (hi : i < obs.length), TmRiProfOut (gens σH) (gens σN) Qs (PX.length + i) obs[i]) ∧
+        w.wt ≤ 2000 * tmRiB n M) ∧ c ≤ tmRiPrC hmem n M + tmRiSQ n M) fun v ca hv => by
+    obtain ⟨rfl, hca⟩ := hv
+    refine (tmRi_profs_spec hP hNl ht (o := PX.length) (m := PY.length) (by omega)
+      (Wa := tmRiVs n M)
+      (by have := wt_list3_le (encGroup σN) (.list tab) (.nat PX.length); omega)).mono
+      fun w c h => ?_
+    obtain ⟨obs, rfl, hl, hpo, hww, hc⟩ := h
+    have hww' := le_trans hww (tmRi_wt_profs (n := n) hPYl hQsl)
+    refine ⟨⟨obs, rfl, hl, hpo, hww'⟩, ?_⟩
+    have := hprofC PY.length PX.length hPYl hw7
+    have := wt_list3_le (encGroup σN) (.list tab) (.nat PX.length)
+    have := hrng PY.length hPYl
+    have := wt_nat_le PY.length
+    have := wt_encPerm_le (1 : Perm (Fin PY.length))
+    omega
+  refine tmRi_letB hprofY (fun _ _ h => h.2) (by omega) fun v7 c7 h7 => ?_
+  obtain ⟨⟨obsY, rfl, hlY, hpoY, hwY⟩, -⟩ := h7
+  -- tail call `b + 2` (`tmRiStepE`) on `[ℓ + 1, σH, σN, obsX, obsY]`
+  have hhatX : tmGlMs obsX = tmRiHat (gens σH) (gens σN) (tmRiCol (gens σH) Qs)
+      (tmRiRepM (gens σH) Qs) (tmGlMs X) :=
+    tmRi_profs_hat_left_of_fixes hNn hNX hlX hpoX
+  have hhatY : tmGlMs obsY = tmRiHat (gens σH) (gens σN) (tmRiCol (gens σH) Qs)
+      (tmRiRepM (gens σH) Qs) (tmGlMs Y) :=
+    tmRi_profs_hat_right_of_fixes hNn hNY hlY hpoY
+  have hXP : pieces (gens σN) (tmGlMs X) ⊆ tmRiPF Qs := by
+    rw [tmRi_pieces_eq_of_fixes hNX]; exact tmRiPs_sub_left (gens σA₀) X Y
+  have hYP : pieces (gens σN) (tmGlMs Y) ⊆ tmRiPF Qs := by
+    rw [tmRi_pieces_eq_of_fixes hNY]; exact tmRiPs_sub_right (gens σA₀) X Y
+  have hiso_hat : Iso (gens σH) (tmGlMs obsX) (tmGlMs obsY) =
+      Iso (gens σH) (tmGlMs X) (tmGlMs Y) := by
+    rw [hhatX, hhatY]
+    exact tmRiHat_iso_eq_of_fixes (tmRi_rep (H := gens σH) (Ps := Qs)) hNn hXP hYP hNY
+  have hokR : TmRecObjOK M (obsX ++ obsY) := tmRi_profs_ok hQsl fun ob hob => by
+    rcases List.mem_append.1 hob with h | h
+    · exact tmRi_profs_mem hpoX ob h
+    · exact tmRi_profs_mem hpoY ob h
+  have hInR : TmRiListIn (gens σH) (obsX ++ obsY) := tmRi_profs_in hNH fun ob hob => by
+    rcases List.mem_append.1 hob with h | h
+    · exact tmRi_profs_mem hpoX ob h
+    · exact tmRi_profs_mem hpoY ob h
+  have hfixOX : Fixes (gens σN) (tmGlMs obsX) := by rw [hhatX]; exact tmRiHat_fix hNn _
+  have hfixOY : Fixes (gens σN) (tmGlMs obsY) := by rw [hhatY]; exact tmRiHat_fix hNn _
+  have hst := tmRi_step_spec hP hReb hglue ih hInR hNH hNn hfuel hℓ hfixOX hfixOY hHl hNl
+    (by omega) (by omega) hokR
+  set e7 : List Val := e6 ++ [.list (obsY.map tmGlObjVal)] with he7
+  have hrecw : (tmRecIn (ℓ + 1) σH σN obsX obsY).wt ≤ tmRiVs n M := by
+    have := wt_list_le [.nat (ℓ + 1), encGroup σH, encGroup σN, tmGlObjsVal obsX, tmGlObjsVal obsY]
+    simp only [List.map_cons, List.map_nil, List.sum_cons, List.sum_nil, List.length_cons,
+      List.length_nil] at this
+    have e1 : (tmGlObjsVal obsX).wt = (Val.list (obsX.map tmGlObjVal)).wt := rfl
+    have e2 : (tmGlObjsVal obsY).wt = (Val.list (obsY.map tmGlObjVal)).wt := rfl
+    show (Val.list [.nat (ℓ + 1), encGroup σH, encGroup σN, tmGlObjsVal obsX, tmGlObjsVal obsY]).wt ≤ _
+    omega
+  have dml8 := Det.mkList (P := P) (env := e7) (c := 3 * tmRiVs n M + 20)
+    [(arg 0, .nat (ℓ + 1)), (arg 1, encGroup σH), (arg 2, encGroup σN),
+      (.var 6, tmGlObjsVal obsX), (.var 7, tmGlObjsVal obsY)] (by
+    intro p hp
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
+    rcases hp with rfl | rfl | rfl | rfl | rfl
+    · exact (Det.arg' (P := P) (vs := vs) (rest := e7.tail) (j := 0) (v := .nat (ℓ + 1)) rfl).mono
+        (by omega)
+    · exact (Det.arg' (P := P) (vs := vs) (rest := e7.tail) (j := 1) (v := encGroup σH) rfl).mono
+        (by omega)
+    · exact (Det.arg' (P := P) (vs := vs) (rest := e7.tail) (j := 2) (v := encGroup σN) rfl).mono
+        (by omega)
+    · exact (Det.var' (P := P) (env := e7) (i := 6) rfl).mono (by
+        show (Val.list (obsX.map tmGlObjVal)).wt + 1 ≤ _; omega)
+    · exact (Det.var' (P := P) (env := e7) (i := 7) rfl).mono (by
+        show (Val.list (obsY.map tmGlObjVal)).wt + 1 ≤ _; omega))
+  refine EvalAll.call_funAll (f := b + 2) dml8 fun v ca hv => ?_
+  obtain ⟨hv, hca⟩ := hv
+  have hv' : v = tmRecIn (ℓ + 1) σH σN obsX obsY := hv
+  subst hv'
+  refine hst.mono fun u cu h => ?_
+  have hw := tmRi_wt_ansC h.1
+  have e : (Val.list ([(arg 0, Val.nat (ℓ + 1)), (arg 1, encGroup σH), (arg 2, encGroup σN),
+    (Expr.var 6, tmGlObjsVal obsX), (Expr.var 7, tmGlObjsVal obsY)].map Prod.snd)).wt =
+    (tmRecIn (ℓ + 1) σH σN obsX obsY).wt := rfl
+  simp only [List.length_cons, List.length_nil] at hca
+  rw [hiso_hat] at h
+  exact ⟨h.1, by omega, by omega⟩
 
 end GI.Impl

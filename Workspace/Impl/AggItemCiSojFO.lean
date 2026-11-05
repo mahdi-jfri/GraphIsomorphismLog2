@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojCC
-import Workspace.Impl.AggItemCiSojLeft
+module
+
+public import Workspace.Impl.AggItemCiSojCC
+public import Workspace.Impl.AggItemCiSojLeft
+
+@[expose] public section
 
 /-!
 # Full-label overcosets from the complete rectangle answers

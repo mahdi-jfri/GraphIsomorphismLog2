@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemHvInitL
-import Workspace.Impl.FinLayoutItemsOK
+module
+
+public import Workspace.Impl.AggItemHvInitL
+public import Workspace.Impl.FinLayoutItemsOK
+
+@[expose] public section
 
 /-!
 # Case 2a: the init program in the final program
@@ -33,9 +37,9 @@ theorem itHvHvIF_fits : itHvHvIF.length ≤ fitC23Off - fitHvOff := by
 section Asm
 
 variable {hst : PointwiseStab} {hm : Membership} {hpre : Preimage} {hfac : NormalizedFactor}
-  {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition} {hcs : ChiefSeriesAlgo}
-  {hder : DerivedSubgroup} {hqc : QuotientCentralizer} {hni : NormalizedIntersection}
-  {hsy : SylowAlgo} {hsc : SylowConjugate} {hnc : NormalClosure}
+  {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition}
+  {hder : DerivedSubgroup} {hni : NormalizedIntersection}
+  {hnc : NormalClosure}
   {hs : SolvableCosetIntersection} {hh : HermiteFullRank} {hn : SmithNonsingular}
   {hcmb : ConstructiveMembership} {hv : VectorStabilizer} {ext'' : List Prim}
   {recF labF jF : List Expr}
@@ -45,12 +49,12 @@ the bound `itHvXh hfac hst`, for every interface `I`. -/
 theorem fit_hvInitOK_final (hk : KaryRefinement P₀.κ) (hF : FlcFits recF labF jF)
     {crE cmE : Expr} {crF cmF : List Expr} (hA : FagFits crF cmF) {c23F rpF : List Expr}
     (hfit : FitFits itHvHvIF c23F rpF) (I : Iface) :
-    ItHvInitOK I (fagProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc
+    ItHvInitOK I (fagProg hst hm hpre hfac hmb hO hC hder hni hnc
       (linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ ext'')) recF labF jF crE cmE fitE crF cmF
       (fitF itHvHvIF c23F rpF)) asmF fitHvIdx (itHvXh hfac hst) := by
   obtain ⟨-, -, -, -, -, -, -, hit⟩ := fag_hasAt (hst := hst) (hm := hm) (hpre := hpre)
-    (hfac := hfac) (hmb := hmb) (hO := hO) (hC := hC) (hcs := hcs) (hder := hder) (hqc := hqc)
-    (hni := hni) (hsy := hsy) (hsc := hsc) (hnc := hnc)
+    (hfac := hfac) (hmb := hmb) (hO := hO) (hC := hC) (hder := hder)
+    (hni := hni) (hnc := hnc)
     (ext := linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ ext'')) hF (crE := crE) (cmE := cmE)
     (itE := fitE) (itF := fitF itHvHvIF c23F rpF) hA
   obtain ⟨hC', hhv, -, -⟩ := fit_hasAt_parts hfit hit

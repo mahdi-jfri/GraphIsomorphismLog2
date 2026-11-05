@@ -1,5 +1,9 @@
-import Workspace.Assembly.Params
-import Workspace.Lang.Prims.Repr
+module
+
+public import Workspace.Assembly.Params
+public import Workspace.Lang.Prims.Repr
+
+@[expose] public section
 
 /-!
 # How a stage 2 program stores states and answers

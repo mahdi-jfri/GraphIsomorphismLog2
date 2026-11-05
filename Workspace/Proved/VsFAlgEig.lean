@@ -1,8 +1,12 @@
-import Mathlib.LinearAlgebra.Eigenspace.Pi
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.Algebra.CharP.Lemmas
-import Mathlib.Algebra.CharP.Algebra
-import Mathlib.RingTheory.Polynomial.Basic
+module
+
+public import Mathlib.LinearAlgebra.Eigenspace.Pi
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.Algebra.CharP.Lemmas
+public import Mathlib.Algebra.CharP.Algebra
+public import Mathlib.RingTheory.Polynomial.Basic
+
+@[expose] public section
 
 /-!
 # The Frobenius map and eigenspaces over `ZMod p`

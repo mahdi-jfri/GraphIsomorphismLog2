@@ -1,4 +1,8 @@
-import Workspace.Impl.SSStabWrap
+module
+
+public import Workspace.Impl.SSStabWrap
+
+@[expose] public section
 
 /-!
 # Pointwise stabilizers in polynomial time

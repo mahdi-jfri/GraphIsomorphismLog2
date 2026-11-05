@@ -1,4 +1,8 @@
-import Workspace.Proved.VsQProb
+module
+
+public import Workspace.Proved.VsQProb
+
+@[expose] public section
 
 /-!
 # The arithmetic of the cost recursion (M8)

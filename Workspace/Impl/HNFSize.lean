@@ -1,4 +1,8 @@
-import Workspace.Impl.HNFPrep
+module
+
+public import Workspace.Impl.HNFPrep
+
+@[expose] public section
 
 /-!
 # Sizes of the numbers of the Hermite program

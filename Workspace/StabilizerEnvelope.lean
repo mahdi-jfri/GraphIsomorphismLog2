@@ -1,5 +1,9 @@
-import Mathlib.GroupTheory.GroupAction.Primitive
-import Mathlib.Algebra.Group.Subgroup.Pointwise
+module
+
+public import Mathlib.GroupTheory.GroupAction.Primitive
+public import Mathlib.Algebra.Group.Subgroup.Pointwise
+
+@[expose] public section
 
 namespace GI.PrimitiveCartesian
 
@@ -42,6 +46,3 @@ theorem primitive_proper_envelope_eq [MulAction G V] [Nontrivial V]
     hRN hinter hnorm).resolve_right hproper
 
 end GI.PrimitiveCartesian
-
-#print axioms GI.PrimitiveCartesian.coatom_normalized_envelope
-#print axioms GI.PrimitiveCartesian.primitive_proper_envelope_eq

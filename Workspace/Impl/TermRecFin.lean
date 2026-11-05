@@ -1,6 +1,10 @@
-import Workspace.Impl.TermRecLayout
-import Workspace.Impl.FinLayoutCos
-import Workspace.Impl.LinPrims
+module
+
+public import Workspace.Impl.TermRecLayout
+public import Workspace.Impl.FinLayoutCos
+public import Workspace.Impl.LinPrims
+
+@[expose] public section
 
 /-!
 # T5, the A.20 recursion in the final program
@@ -20,16 +24,15 @@ open GI.Lang GI.Cited
 theorem tmRi_flcRecSpec (hs : SolvableCosetIntersection) (hder : DerivedSubgroup)
     (hm : Membership) (Kg Dg : ℕ) :
     ∃ K D : ℕ, ∀ {hst : PointwiseStab} {hpre : Preimage} {hfac : NormalizedFactor}
-      {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition} {hcs : ChiefSeriesAlgo}
-      {hqc : QuotientCentralizer} {hni : NormalizedIntersection} {hsy : SylowAlgo}
-      {hsc : SylowConjugate} {hnc : NormalClosure} {hh : HermiteFullRank}
-      {hn : SmithNonsingular} {hcm : ConstructiveMembership} {hv : VectorStabilizer}
-      {ext' : List Prim} {gen gObjF labF jF agg : List Expr},
+      {hmb : MinimalBlocks} {hO : GroupOrder} {hC : CameronRecognition}
+      {hni : NormalizedIntersection} {hnc : NormalClosure}
+      {hh : HermiteFullRank} {hn : SmithNonsingular} {hcm : ConstructiveMembership}
+      {hv : VectorStabilizer} {ext' : List Prim} {gen gObjF labF jF agg : List Expr},
       gen.length ≤ asmSlot → FlcFits (tmRiRecF flcRecIdx 14 8 1 gObjF) labF jF →
-      Iface.TermGlueObjSpec (flcProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc
+      Iface.TermGlueObjSpec (flcProg hst hm hpre hfac hmb hO hC hder hni hnc
         (linA20Extra hs hh hn hcm hv ++ ext') gen (tmRiRecF flcRecIdx 14 8 1 gObjF) labF jF agg)
         Kg Dg (flcRecIdx + tmRiGlueOff) →
-      Iface.TermRecSpec (flcProg hst hm hpre hfac hmb hO hC hcs hder hqc hni hsy hsc hnc
+      Iface.TermRecSpec (flcProg hst hm hpre hfac hmb hO hC hder hni hnc
         (linA20Extra hs hh hn hcm hv ++ ext') gen (tmRiRecF flcRecIdx 14 8 1 gObjF) labF jF agg)
         K D flcRecIdx := by
   obtain ⟨K, D, h⟩ := tmRi_recSpecAt hs hder hm Kg Dg

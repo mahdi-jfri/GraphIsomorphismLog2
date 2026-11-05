@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojRectLib
-import Workspace.Impl.AggItemCiSojRectNumbers
+module
+
+public import Workspace.Impl.AggItemCiSojRectLib
+public import Workspace.Impl.AggItemCiSojRectNumbers
+
+@[expose] public section
 
 /-! # The literal rectangle guard and fixed alignment at the actual program calls -/
 

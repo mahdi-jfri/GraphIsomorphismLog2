@@ -1,5 +1,9 @@
-import Workspace.Impl.AggCertStart
-import Workspace.Impl.AggClosProg
+module
+
+public import Workspace.Impl.AggCertStart
+public import Workspace.Impl.AggClosProg
+
+@[expose] public section
 
 /-!
 # The end of a round, on program data

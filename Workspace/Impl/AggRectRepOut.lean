@@ -1,5 +1,9 @@
-import Workspace.Impl.AggRectRepCar
-import Workspace.Impl.AggKer
+module
+
+public import Workspace.Impl.AggRectRepCar
+public import Workspace.Impl.AggKer
+
+@[expose] public section
 
 /-!
 # What the program reads at the base point
@@ -95,7 +99,8 @@ theorem rcR_small_nat (gs : List (Perm (Fin q))) :
         ((((List.finRange q).map (orbitLabels gs))).getD c 0)) ≤ 2)) =
       (rcRSmall (gens gs)).map Fin.val := by
   classical
-  rw [← List.map_coe_finRange, List.filter_map, rcRSmall]
+  have hfr : (List.finRange q).map Fin.val = List.range q := List.ext_getElem (by simp) (by simp)
+  rw [← hfr, List.filter_map, rcRSmall]
   congr 1
   apply List.filter_congr
   intro c _

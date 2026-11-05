@@ -1,5 +1,9 @@
-import Workspace.SubdirectCardBound
-import Workspace.FaithfulProductStabilizer
+module
+
+public import Workspace.SubdirectCardBound
+public import Workspace.FaithfulProductStabilizer
+
+@[expose] public section
 
 namespace GI.PrimitiveProducts
 
@@ -19,5 +23,3 @@ theorem subdirect_action_card_le_degree_sq [Finite S] [IsSimpleGroup S] [Fintype
   rwa [MulAction.index_stabilizer_of_transitive] at h
 
 end GI.PrimitiveProducts
-
-#print axioms GI.PrimitiveProducts.subdirect_action_card_le_degree_sq

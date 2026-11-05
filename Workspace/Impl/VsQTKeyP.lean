@@ -1,4 +1,8 @@
-import Workspace.Impl.VsQTLows
+module
+
+public import Workspace.Impl.VsQTLows
+
+@[expose] public section
 
 /-!
 # The key of a tuple given by local bases

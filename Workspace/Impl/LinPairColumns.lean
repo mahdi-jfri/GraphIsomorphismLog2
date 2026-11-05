@@ -1,5 +1,9 @@
-import Workspace.Impl.LinMapSource
-import Workspace.Impl.LinPrimaryRecord
+module
+
+public import Workspace.Impl.LinMapSource
+public import Workspace.Impl.LinPrimaryRecord
+
+@[expose] public section
 
 /-! Separate the two columns of a list of value pairs. -/
 namespace GI.Impl

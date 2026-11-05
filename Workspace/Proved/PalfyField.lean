@@ -1,5 +1,9 @@
-import Workspace.Proved.PalfyImprim
-import Workspace.Proved.SolvOrderPrimitive
+module
+
+public import Workspace.Proved.PalfyImprim
+public import Workspace.Proved.SolvOrderPrimitive
+
+@[expose] public section
 
 /-!
 # The field step
@@ -181,7 +185,7 @@ theorem palfy_card_adj [Finite K] [Finite V] [Nontrivial V] {A : Subgroup (Modul
 /-- **The field step.** -/
 theorem palfy_field_step [Finite K] [Finite V] [Nontrivial V] {E : ℕ}
     (ih : PalfyIH2 E (Nat.card V) (Nat.card K))
-    {H A : Subgroup (Module.End K V)ˣ} [IsSolvable H] (hH : palfyIrr H)
+    {H A : Subgroup (Module.End K V)ˣ} [Group.IsSolvable H] (hH : palfyIrr H)
     (hAH : palfyNormal A H) (hAc : ∀ x ∈ A, ∀ y ∈ A, x * y = y * x)
     (hF : IsField (palfyAdj A)) (hne : palfyAdj A ≠ ⊥) :
     24 * Nat.card K ^ 6 * Nat.card H ^ 3 ≤ Nat.card V ^ E := by
@@ -217,9 +221,9 @@ theorem palfy_field_step [Finite K] [Finite V] [Nontrivial V] {E : ℕ}
     rw [← hψ, ← hψ, hab]
   have hCcard : Nat.card C = Nat.card ψ.range :=
     Nat.card_congr (MonoidHom.ofInjective hψinj).toEquiv
-  haveI : IsSolvable C := solvable_of_solvable_injective (Subgroup.inclusion_injective
+  haveI : Group.IsSolvable C := solvable_of_solvable_injective (Subgroup.inclusion_injective
     (inf_le_left : C ≤ H))
-  haveI : IsSolvable ψ.range := solvable_of_surjective ψ.rangeRestrict_surjective
+  haveI : Group.IsSolvable ψ.range := solvable_of_surjective ψ.rangeRestrict_surjective
   have hAC : ∀ a ∈ A, a ∈ C := by
     intro a ha
     refine Subgroup.mem_inf.mpr ⟨hAH.1 ha, Subgroup.mem_centralizer_iff.mpr ?_⟩
@@ -259,7 +263,7 @@ theorem palfy_field_step [Finite K] [Finite V] [Nontrivial V] {E : ℕ}
       obtain ⟨y, hy, z, hz, rfl⟩ := Submodule.mem_sup.mp this
       exact Submodule.add_mem_sup (S := W) (T := XR) hy hz
   have hKlt : Nat.card K < Nat.card (palfyAdj A) := by nlinarith
-  have hbound := ih (palfyAdj A) V rfl hKlt ψ.range inferInstance hCR
+  have hbound := ih (palfyAdj A) V rfl hKlt ψ.range (inferInstance : Group.IsSolvable ψ.range) hCR
   -- `A` is cyclic
   let f : A →* (palfyAdj A) :=
     { toFun := fun a => ⟨((a : (Module.End K V)ˣ) : Module.End K V), palfyAdj_mem a.2⟩

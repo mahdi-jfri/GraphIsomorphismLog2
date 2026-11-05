@@ -1,4 +1,8 @@
-import Workspace.Impl.FreshHier
+module
+
+public import Workspace.Impl.FreshHier
+
+@[expose] public section
 
 /-!
 # The colors of a fresh phase, in `GI.Lang`
@@ -153,7 +157,7 @@ theorem pos_detW {P : Program} {d : ℕ} (hd : DomAt P d) (L : List ℕ) (z : �
     have := wt_nat_le (posOf L z)
     have := posOf_le L z
     have hl : L.length < (natList L).wt := by
-      have := length_lt_wt_list (L.map Val.nat); simpa using this
+      have := length_lt_wt_list (L.map Val.nat); simpa [natList] using this
     omega
   have e1 : (Val.nat (List.findIdx (fun x => decide (x = z)) L)).wt = (Val.nat (posOf L z)).wt :=
     rfl
@@ -181,14 +185,14 @@ theorem mapPos_spec {P : Program} {d : ℕ} (hd : DomAt P d) (L xs : List ℕ) {
   rw [e1, e2] at hm
   refine hm.mono ?_
   have hl : xs.length < (natList xs).wt := by
-    have := length_lt_wt_list (xs.map Val.nat); simpa using this
+    have := length_lt_wt_list (xs.map Val.nat); simpa [natList] using this
   have w1 := wt_list2_le (natList L) (natList xs)
   have w2 : (natList (xs.map (posOf L))).wt ≤ xs.length * (2 * L.length + 5) + 4 := by
     have := wt_natList_le (xs := xs.map (posOf L)) (B := L.length) (fun y hy => by
       obtain ⟨z, -, rfl⟩ := List.mem_map.1 hy; exact posOf_le L z)
-    simpa using this
+    simpa [natList] using this
   have hL : L.length < (natList L).wt := by
-    have := length_lt_wt_list (L.map Val.nat); simpa using this
+    have := length_lt_wt_list (L.map Val.nat); simpa [natList] using this
   have w3 : xs.length * (2 * L.length + 5) ≤ A * (2 * A + 5) := Nat.mul_le_mul (by omega) (by omega)
   have b1 : xs.length * (findEqWK * (3 * A + 7) ^ 2 + 45 * A + 150) ≤
       (A + 1) * (findEqWK * (49 * (A + 1) ^ 2) + 150 * (A + 1)) := by
@@ -242,7 +246,7 @@ theorem color_spec {P : Program} {f d ap : ℕ} (hf : P.funs[f]? = some (colorBo
   have hP : Pv.wt < A0 := wt_le_wt_list (by simp)
   have hk : k < xv.wt := by
     have := length_lt_wt_list ((List.finRange k).map fun i => Val.nat (c (S.x (e.symm i))))
-    simpa using this
+    simpa [xv, colVal, encFun] using this
   have wxd := wt_domCodes_le e c S S.x
   have wyd := wt_domCodes_le e c S S.y
   have lx : (domCodes e c S S.x).length ≤ k := by
@@ -264,7 +268,7 @@ theorem color_spec {P : Program} {f d ap : ℕ} (hf : P.funs[f]? = some (colorBo
     happ.mono fun w c' ⟨hw, hc⟩ => ⟨by rw [hw]; simp [natList, codeList], by
       have : w = natList (codeList e c S) := by rw [hw]; simp [natList, codeList]
       subst this
-      simpa using hc⟩
+      simpa [xd, yd, natList] using hc⟩
   have d3 := Det.call (Det.mk2 (Det.var' (P := P) (env := [inp, xd, yd]) (i := 1) rfl)
     (Det.var' (P := P) (env := [inp, xd, yd]) (i := 2) rfl)) happ'
   set Lv := natList (codeList e c S)

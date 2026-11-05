@@ -1,6 +1,10 @@
-import Mathlib.LinearAlgebra.Prod
-import Mathlib.LinearAlgebra.GeneralLinearGroup
-import Mathlib.Tactic.Abel
+module
+
+public import Mathlib.LinearAlgebra.Prod
+public import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
+public import Mathlib.Tactic.Abel
+
+@[expose] public section
 
 /-! Homogenization of the recentered affine action in Theorem A.20.
 The translation is retained, so successive vector layers do not discard it. -/

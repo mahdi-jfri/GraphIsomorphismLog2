@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabSRed
+module
+
+public import Workspace.Impl.TermGlueLabSRed
+
+@[expose] public section
 
 /-!
 # The output of the label step (step 6, the answer)

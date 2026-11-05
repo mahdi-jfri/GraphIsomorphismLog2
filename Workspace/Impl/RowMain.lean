@@ -1,4 +1,8 @@
-import Workspace.Impl.RowCoords
+module
+
+public import Workspace.Impl.RowCoords
+
+@[expose] public section
 
 /-!
 # The coordinate program (Theorem A.17)
@@ -449,18 +453,17 @@ theorem coords_spec (hst : GI.Cited.PointwiseStab) (hfac : GI.Cited.NormalizedFa
     omega
 
 /-- **The coordinate program at the threshold** (item 1 of `Iface.RowSpec`). If the row count
-`q` is at least `2 max(8, 2 + log₂ s) + 3`, where `s` bounds the size `f > 0` of row `0`, every
-window has a lift (`winLift_exists`, through the cited `TransitiveAffected`), so the program of
-`coords_spec` returns pure coordinates. `RowForm.ofPure` turns them into a row form whose map is
-the returned `E`. -/
-theorem coords_spec_of_thr (hcite : GI.Cited.TransitiveAffected) [Finite Ω]
+`q` is at least `2 max(63, 12 log₂ s) + 3`, where `s` bounds the size `f > 0` of row `0`, every
+window has a lift (`winLift_exists`), so the program of `coords_spec` returns pure coordinates.
+`RowForm.ofPure` turns them into a row form whose map is the returned `E`. -/
+theorem coords_spec_of_thr [Finite Ω]
     (hst : GI.Cited.PointwiseStab) (hfac : GI.Cited.NormalizedFactor)
     {P : Program} {b jp jf : ℕ} (hb : P.HasAt b (coordFuns b jp jf))
     (hjp : P.prims[jp]? = some (pointwiseStabPrim hst))
     (hjf : P.prims[jf]? = some (normalizedFactorPrim hfac))
     {ps : List (Perm (Fin n) × Perm (Fin L.q))} (hps : PairGens e L S.G ps) {rl : List ℕ}
     (hrl : RowLabs e S label rl) (hnat : NaturalRows S L label) {f s : ℕ} (hfs : f ≤ s)
-    (hfpos : 0 < f) (hthr : 2 * max 8 (2 + Real.logb 2 s) + 3 ≤ (L.q : ℝ))
+    (hfpos : 0 < f) (hthr : 2 * max 63 (12 * Real.logb 2 s) + 3 ≤ (L.q : ℝ))
     (hf : ∀ [Fintype S.dom], Fintype.card {x : S.dom // label x = ⟨0, by
       have := (kkOf_thr hfs hfpos hthr).1.nine_le; omega⟩} = f) :
     FunAll P b (.list [winCtx n L.q rl ps]) (fun w c =>
@@ -469,7 +472,7 @@ theorem coords_spec_of_thr (hcite : GI.Cited.TransitiveAffected) [Finite Ω]
   obtain ⟨hk, hlt⟩ := kkOf_thr hfs hfpos hthr
   refine coords_spec hst hfac hb hjp hjf hps hrl hnat hk fun t hnd hlen => ?_
   have h9 := hk.nine_le
-  exact winLift_exists hcite hnat (by omega) t hnd (hlen ▸ hk.five) (hlen ▸ hk.odd) f hf
+  exact winLift_exists hnat (by omega) t hnd (hlen ▸ hk.five) (hlen ▸ hk.odd) f hf
     (by rw [hlen]; exact hlt)
 
 end Main

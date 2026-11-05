@@ -1,6 +1,10 @@
-import Workspace.Impl.SSCore
-import Workspace.Impl.CamCells
-import Workspace.Proved.SSWrapMath
+module
+
+public import Workspace.Impl.SSCore
+public import Workspace.Impl.CamCells
+public import Workspace.Proved.SSWrapMath
+
+@[expose] public section
 
 /-!
 # Common facts for the four wrappers

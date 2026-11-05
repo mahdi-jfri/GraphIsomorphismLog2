@@ -1,6 +1,10 @@
-import Workspace.Impl.AggStructDesSrc
-import Workspace.Impl.AggStructRel
-import Workspace.Impl.GenProdSq
+module
+
+public import Workspace.Impl.AggStructDesSrc
+public import Workspace.Impl.AggStructRel
+public import Workspace.Impl.GenProdSq
+
+@[expose] public section
 
 /-!
 # The list of all `κ`-tuples of labels, as a program

@@ -1,7 +1,11 @@
-import Workspace.Proved.SSBuild
-import Workspace.Impl.AggStructDC
-import Workspace.Lang.Lib.Perm
-import Workspace.Lang.Bridge
+module
+
+public import Workspace.Proved.SSBuild
+public import Workspace.Impl.AggStructDC
+public import Workspace.Lang.Lib.Perm
+public import Workspace.Lang.Bridge
+
+@[expose] public section
 
 /-!
 # Values of the Schreier–Sims program, and their sizes

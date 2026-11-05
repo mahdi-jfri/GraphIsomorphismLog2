@@ -1,6 +1,10 @@
-import Workspace.Impl.TermJCorrMath
-import Workspace.Impl.TermJLabRT
-import Workspace.Impl.TermJVecList
+module
+
+public import Workspace.Impl.TermJCorrMath
+public import Workspace.Impl.TermJLabRT
+public import Workspace.Impl.TermJVecList
+
+@[expose] public section
 
 /-!
 # The transporter of one label (mathematics)

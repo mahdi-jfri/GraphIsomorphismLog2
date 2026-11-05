@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCfSpec
+module
+
+public import Workspace.Impl.AggItemCfSpec
+
+@[expose] public section
 
 /-!
 # Cases 2b and 3: the weight of the object values

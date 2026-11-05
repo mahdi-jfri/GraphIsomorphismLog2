@@ -1,5 +1,9 @@
-import Workspace.Impl.HNFTab
-import Workspace.Impl.HNFLoop
+module
+
+public import Workspace.Impl.HNFTab
+public import Workspace.Impl.HNFLoop
+
+@[expose] public section
 
 /-!
 # The pivot search of Bareiss elimination, as a program

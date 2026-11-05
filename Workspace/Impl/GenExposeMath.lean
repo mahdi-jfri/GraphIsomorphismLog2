@@ -1,6 +1,10 @@
-import Workspace.Impl.LargestOrbit
-import Workspace.Impl.GenCosetsMath
-import Workspace.Algorithm.Expose
+module
+
+public import Workspace.Impl.LargestOrbit
+public import Workspace.Impl.GenCosetsMath
+public import Workspace.Algorithm.Expose
+
+@[expose] public section
 
 /-!
 # Exposure as a program: the mathematics
@@ -208,6 +212,8 @@ theorem range_eq_gens (e : Ω ≃ Fin k) {G : Subgroup (Perm Ω)} {d : ℕ}
     refine ⟨show (toFin e).symm (toFin e g') ∈ G by rw [MulEquiv.symm_apply_apply]; exact hg', ?_⟩
     unfold homFin
     rw [dif_pos]
+    change (toFin e).symm (toFin e g') ∈ G
+    simpa only [MulEquiv.symm_apply_apply] using hg'
   apply le_antisymm
   · rw [gens, Subgroup.closure_le]
     intro x hx

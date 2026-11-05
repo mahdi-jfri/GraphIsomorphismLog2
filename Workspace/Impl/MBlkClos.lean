@@ -1,4 +1,8 @@
-import Workspace.Impl.MBlkMerge
+module
+
+public import Workspace.Impl.MBlkMerge
+
+@[expose] public section
 
 /-!
 # The closure under the generators, as a program

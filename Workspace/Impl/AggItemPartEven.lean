@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemPartGen
+module
+
+public import Workspace.Impl.AggItemPartGen
+
+@[expose] public section
 
 /-!
 # Case 1: the even part, the sign by inversions, and the orbit partition

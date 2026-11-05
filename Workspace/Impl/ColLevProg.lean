@@ -1,4 +1,8 @@
-import Workspace.Impl.ColTab
+module
+
+public import Workspace.Impl.ColTab
+
+@[expose] public section
 
 /-!
 # The per-level functions of the column program

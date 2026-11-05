@@ -1,5 +1,9 @@
-import Workspace.MulticosetPieces
-import Mathlib.Logic.Function.Basic
+module
+
+public import Workspace.MulticosetPieces
+public import Mathlib.Logic.Function.Basic
+
+@[expose] public section
 
 /-! Relabeling implicit objects by an injective equivariant map preserves the
 configurations used by A.20, as well as the full transporter. -/
@@ -24,7 +28,8 @@ def map : Multiset Ω →+ Multiset Ψ where
 theorem map_injective : Function.Injective e.map := Multiset.map_injective e.injective
 
 theorem map_act (X : Multiset Ω) (g : G) : e.map (X ↼ g) = e.map X ↼ g := by
-  simp only [map, AddMonoidHom.coe_mk, ZeroHom.coe_mk, multiset_act_def, Multiset.map_map]
+  change Multiset.map e.toFun (X ↼ g) = (Multiset.map e.toFun X) ↼ g
+  simp only [multiset_act_def, Multiset.map_map]
   congr 1
   funext x
   exact e.act x g
@@ -39,7 +44,9 @@ theorem sameOrb (A : Subgroup G) (x y : Ω) : SameOrb A (e.toFun x) (e.toFun y) 
 theorem partAt (A : Subgroup G) (X T : Multiset Ω) :
     partAt A (e.map X) (e.map T) = e.map (partAt A X T) := by
   classical
-  simp only [GI.Multicoset.partAt, map, AddMonoidHom.coe_mk, ZeroHom.coe_mk, Multiset.filter_map]
+  change GI.Multicoset.partAt A (Multiset.map e.toFun X) (Multiset.map e.toFun T) =
+    Multiset.map e.toFun (GI.Multicoset.partAt A X T)
+  simp only [GI.Multicoset.partAt, Multiset.filter_map]
   apply congrArg (Multiset.map e.toFun)
   apply Multiset.filter_congr
   intro x hx
@@ -60,12 +67,10 @@ theorem pieces (A : Subgroup G) (X : Multiset Ω) :
   · rintro ⟨y, hy, rfl⟩
     obtain ⟨x, hx, rfl⟩ := Multiset.mem_map.mp hy
     refine ⟨GI.Multicoset.partAt A X {x}, ⟨x, hx, rfl⟩, ?_⟩
-    have hh := e.partAt A X {x}
-    simpa [map] using hh.symm
+    exact (e.partAt A X {x}).symm.trans (congrArg _ (Multiset.map_singleton e.toFun x))
   · rintro ⟨S, ⟨x, hx, rfl⟩, rfl⟩
     refine ⟨e.toFun x, Multiset.mem_map.mpr ⟨x, hx, rfl⟩, ?_⟩
-    have hh := e.partAt A X {x}
-    simpa [map] using hh.symm
+    exact (e.partAt A X {x}).symm.trans (congrArg _ (Multiset.map_singleton e.toFun x))
 
 /-- Configuration compatibility is unchanged by an injective relabeling. -/
 theorem conf (A : Subgroup G) (Y Z : Multiset Ω) :

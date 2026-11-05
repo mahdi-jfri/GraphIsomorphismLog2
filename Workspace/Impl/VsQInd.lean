@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.OrbitT
+module
+
+public import Workspace.Lang.Lib.OrbitT
+
+@[expose] public section
 
 /-!
 # Orbits under an action defined on a subgroup only

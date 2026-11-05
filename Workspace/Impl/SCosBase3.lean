@@ -1,4 +1,8 @@
-import Workspace.Impl.SCosBase2
+module
+
+public import Workspace.Impl.SCosBase2
+
+@[expose] public section
 
 /-!
 # The base case, the transversal and the search

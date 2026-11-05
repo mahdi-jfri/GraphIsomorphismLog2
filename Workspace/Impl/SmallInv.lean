@@ -1,5 +1,9 @@
-import Workspace.Assembly.Final
-import Workspace.Algorithm.Existence
+module
+
+public import Workspace.Assembly.Final
+public import Workspace.Algorithm.Existence
+
+@[expose] public section
 
 /-!
 # An invariant that keeps states `Small`

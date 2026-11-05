@@ -1,7 +1,11 @@
-import Workspace.Proved.JohnScheme
-import Workspace.Impl.CamTransport
-import Workspace.Cited.AlgoJohnson
-import Workspace.Lang.Lib.OrbitMath
+module
+
+public import Workspace.Proved.JohnScheme
+public import Workspace.Impl.CamTransport
+public import Workspace.Cited.AlgoJohnson
+public import Workspace.Lang.Lib.OrbitMath
+
+@[expose] public section
 
 /-!
 # The orbitals of a Johnson group

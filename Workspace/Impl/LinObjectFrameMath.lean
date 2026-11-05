@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectMovedMath
+module
+
+public import Workspace.Impl.LinObjectMovedMath
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset Matrix

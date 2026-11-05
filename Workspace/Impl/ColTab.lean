@@ -1,4 +1,8 @@
-import Workspace.Impl.ColSpec
+module
+
+public import Workspace.Impl.ColSpec
+
+@[expose] public section
 
 /-!
 # Tables of the column program, with costs in one bound

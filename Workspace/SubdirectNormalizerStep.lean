@@ -1,4 +1,8 @@
-import Workspace.SimpleSubdirect
+module
+
+public import Workspace.SimpleSubdirect
+
+@[expose] public section
 
 namespace GI.PrimitiveProducts
 
@@ -28,7 +32,8 @@ theorem normalizer_inl_mem (H : Subgroup (S × T))
       rw [hb, Subgroup.mem_bot] at hk
       exact (commutatorElement_eq_one_iff_mul_comm.mp hk).symm
     rw [simple_center_eq_bot nonabelian, Subgroup.mem_bot] at hcenter
-    simpa only [hcenter] using H.one_mem
+    rw [hcenter]
+    exact H.one_mem
   · exact Subgroup.mem_goursatFst.mp (by rw [ht]; exact Subgroup.mem_top s)
 
 /-- One-coordinate induction step for the Scott normalizer lemma. The
@@ -58,6 +63,3 @@ theorem normalizer_eq_self_of_simple_first (H : Subgroup (S × T))
   simpa only [mul_assoc, inv_mul_cancel, mul_one] using this
 
 end GI.PrimitiveProducts
-
-#print axioms GI.PrimitiveProducts.normalizer_inl_mem
-#print axioms GI.PrimitiveProducts.normalizer_eq_self_of_simple_first

@@ -1,4 +1,8 @@
-import Workspace.Impl.GenProdSq
+module
+
+public import Workspace.Impl.GenProdSq
+
+@[expose] public section
 
 /-!
 # The product refinement: the coordinate intervals

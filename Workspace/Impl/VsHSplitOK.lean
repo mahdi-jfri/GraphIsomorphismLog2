@@ -1,5 +1,9 @@
-import Workspace.Impl.VsHQ8Two
-import Workspace.Impl.VsQTSplitM
+module
+
+public import Workspace.Impl.VsHQ8Two
+public import Workspace.Impl.VsQTSplitM
+
+@[expose] public section
 
 /-!
 # The split of the hard case is correct
@@ -49,6 +53,7 @@ theorem VsHHyp.splitOK (h : VsHHyp hs as Lb ys r) (hk : 1 ≤ (vsHK s Lb r ys).l
   obtain ⟨h1, -, h2, h3, h4, h5, h6⟩ := h.pieces hk
   exact vsH_splitOK_of hs h1 h2 h3 h4 h5 h6 hL hks hksl hTm hnab
 
+set_option backward.isDefEq.respectTransparency false in
 /-- **The second `Q₈`.** -/
 theorem vsH_q8two_splitOK (hs : VsQStOK s) {as : List (Perm (Fin I.n))} (has : gens as ≤ gens s.hs)
     {Y Y' : Subgroup (Module.End (ZMod I.p) (Fin (vsQD s) → ZMod I.p))ˣ}

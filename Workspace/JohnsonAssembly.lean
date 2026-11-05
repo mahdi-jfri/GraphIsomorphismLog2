@@ -1,6 +1,10 @@
-import Workspace.JohnsonForestExtra
-import Workspace.JohnsonForestMerge
-import Mathlib.Data.Finset.Max
+module
+
+public import Workspace.JohnsonForestExtra
+public import Workspace.JohnsonForestMerge
+public import Mathlib.Data.Finset.Max
+
+@[expose] public section
 
 namespace GI.Johnson
 

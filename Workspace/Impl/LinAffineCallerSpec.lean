@@ -1,4 +1,8 @@
-import Workspace.Impl.LinAffineCallerMainSpec
+module
+
+public import Workspace.Impl.LinAffineCallerMainSpec
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang
@@ -24,7 +28,7 @@ theorem linAffineTransportAll_spec (hmem : Membership) (hm : ConstructiveMembers
     {P : Program} {b jmem jm jv n d : ℕ} (hat : linAffineTransportAllAt P b jmem jm jv hmem hm hv)
     (gs : List (Equiv.Perm (Fin n))) (m : Fin d → ℕ)
     (ρ : gens gs →* (linFiniteVec m ≃+ linFiniteVec m)) (c : gens gs → linFiniteVec m)
-    (v w : linFiniteVec m) (hs : IsSolvable (gens gs)) (hmpos : ∀ i, 0 < m i)
+    (v w : linFiniteVec m) (hs : IsSolvable ρ.range) (hmpos : ∀ i, 0 < m i)
     (hprime : ∀ i p, p.Prime → p ∣ m i → p ≤ max n 2)
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g) :
     let a := tmGLAffIn gs m ρ c v w

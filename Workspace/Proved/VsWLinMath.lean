@@ -1,4 +1,8 @@
-import Workspace.Proved.VsWBasic
+module
+
+public import Workspace.Proved.VsWBasic
+
+@[expose] public section
 
 /-!
 # What the linear algebra functions compute
@@ -144,7 +148,7 @@ theorem vsWBas_indep (hp : p.Prime) {d : ℕ} {us : List (List ℕ)} (h : VsWFit
     simp only [map_smul, g', finCongr_apply, Fin.coe_cast, i.2, hlen, dite_true]
     congr 1
     funext j
-    simp [vsWBas, List.getD_eq_getElem _ _ i.2, rows]
+    simp [vsWBas, List.getD_eq_getElem _ _ i.2, rows, Fin.cast]
   intro i
   have := vsWEch_indep he hsum i (hlen ▸ i.2)
   simpa [g', i.2] using this

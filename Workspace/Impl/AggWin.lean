@@ -1,5 +1,9 @@
-import Workspace.Impl.AggClos
-import Workspace.Impl.FreshMath
+module
+
+public import Workspace.Impl.AggClos
+public import Workspace.Impl.FreshMath
+
+@[expose] public section
 
 /-!
 # The value of a window call

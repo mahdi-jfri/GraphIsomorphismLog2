@@ -1,4 +1,8 @@
-import Workspace.Impl.LinIntSolverCost
+module
+
+public import Workspace.Impl.LinIntSolverCost
+
+@[expose] public section
 
 /-! A relocatable function list for the full integer row solver: Hermite,
 triangular substitution, padding, and multiplication by the row multiplier. -/
@@ -21,12 +25,16 @@ def linRowSystemPrefixFuns (b jh : ℕ) : List Expr :=
     replicateFuns (b + 27) ++ linRowMulFuns (b + 30) (b + 33) (b + 37) ++
     linColumnFuns (b + 33) ++ linDotLoopFuns (b + 37) (b + 40)
 
-theorem linRowSystemPrefixFuns_length (b jh : ℕ) : (linRowSystemPrefixFuns b jh).length = 40 := rfl
+theorem linRowSystemPrefixFuns_length (b jh : ℕ) : (linRowSystemPrefixFuns b jh).length = 40 := by
+  simp only [linRowSystemPrefixFuns, List.length_append]
+  rfl
 
 def linRowSystemFuns (b jh : ℕ) : List Expr :=
   linRowSystemPrefixFuns b jh ++ linIntFuns (b + 40)
 
-theorem linRowSystemFuns_length (b jh : ℕ) : (linRowSystemFuns b jh).length = 58 := rfl
+theorem linRowSystemFuns_length (b jh : ℕ) : (linRowSystemFuns b jh).length = 58 := by
+  simp only [linRowSystemFuns, List.length_append, linRowSystemPrefixFuns_length]
+  rfl
 
 structure linRowSystemAt (P : Program) (b jh : ℕ) : Prop where
   entry : P.funs[b]? = some (linRowSolverF (b + 1) (b + 2))
@@ -38,25 +46,50 @@ structure linRowSystemAt (P : Program) (b jh : ℕ) : Prop where
   lift : linLiftInstalled P (linRowSystemLift b)
   liftEntry : P.funs[b + 25]? = some (linHermiteLiftF (linRowSystemLift b))
 
-set_option maxHeartbeats 2000000 in
+private theorem spd_linRow_peel {P : Program} {b N n N' : ℕ} {A B : List Expr}
+    (h : P.HasAt (b + N) (A ++ B)) (hl : A.length = n) (hN : N + n = N') :
+    P.HasAt (b + N) A ∧ P.HasAt (b + N') B := by
+  refine ⟨h.left, ?_⟩
+  have h2 := h.right
+  rw [hl, Nat.add_assoc, hN] at h2
+  exact h2
+
+private theorem spd_linRow_cons {P : Program} {b N N' : ℕ} {e : Expr} {B : List Expr}
+    (h : P.HasAt (b + N) (e :: B)) (hN : N + 1 = N') :
+    P.funs[b + N]? = some e ∧ P.HasAt (b + N') B := by
+  have h' : P.HasAt (b + N) ([e] ++ B) := h
+  obtain ⟨h1, h2⟩ := spd_linRow_peel h' rfl hN
+  exact ⟨h1.single, h2⟩
+
 theorem linRowSystemAt_of {P : Program} {b jh : ℕ}
     (h : P.HasAt b (linRowSystemFuns b jh)) : linRowSystemAt P b jh := by
   have hintBlock : P.HasAt (b + 40) (linIntFuns (b + 40)) := by
     simpa only [linRowSystemPrefixFuns_length] using
       (Program.HasAt.right (A := linRowSystemPrefixFuns b jh) (B := linIntFuns (b + 40)) h)
   have hints := linInt_spec hintBlock
-  refine ⟨(h.block (gs := [linRowSolverF (b + 1) (b + 2)]) 0 rfl).single,
-    (h.block (gs := [linHermiteF jh]) 1 rfl).single,
-    (h.block (gs := [linHermiteFinishF (b + 3) (b + 6) (b + 25)]) 2 rfl).single,
-    h.block 3 rfl, ?_,
-    (h.block (gs := [linTriUpperF (b + 6) (linRowSystemTri b)]) 6 rfl).single, ?_,
-    (h.block (gs := [linHermiteLiftF (linRowSystemLift b)]) 25 rfl).single⟩
-  · refine ⟨hints, ?_, h.block 8 rfl,
-      (h.block (gs := [linTrimF (b + 8) (b + 12)]) 11 rfl).single,
-      h.block 12 rfl, h.block 16 rfl, h.block 19 rfl, h.block 22 rfl⟩
-    exact (h.block (gs := [linIntExactF ((b + 40) + 14) ((b + 40) + 15)]) 7 rfl).single
-  · exact ⟨(h.block (gs := [linPadF (b + 27) (b + 22)]) 26 rfl).single,
-      h.block 27 rfl, h.block 22 rfl, h.block 30 rfl, h.block 33 rfl, h.block 37 rfl, hints⟩
+  have hp : P.HasAt (b + 0) (linRowSystemPrefixFuns b jh) := h.left
+  unfold linRowSystemPrefixFuns at hp
+  simp only [List.append_assoc, List.cons_append, List.nil_append] at hp
+  obtain ⟨h0, hp⟩ := spd_linRow_cons (N' := 1) hp rfl
+  obtain ⟨h1, hp⟩ := spd_linRow_cons (N' := 2) hp rfl
+  obtain ⟨h2, hp⟩ := spd_linRow_cons (N' := 3) hp rfl
+  obtain ⟨h3, hp⟩ := spd_linRow_peel (N' := 6) hp rfl rfl
+  obtain ⟨h6, hp⟩ := spd_linRow_cons (N' := 7) hp rfl
+  obtain ⟨h7, hp⟩ := spd_linRow_cons (N' := 8) hp rfl
+  obtain ⟨h8, hp⟩ := spd_linRow_peel (N' := 11) hp rfl rfl
+  obtain ⟨h11, hp⟩ := spd_linRow_cons (N' := 12) hp rfl
+  obtain ⟨h12, hp⟩ := spd_linRow_peel (N' := 16) hp rfl rfl
+  obtain ⟨h16, hp⟩ := spd_linRow_peel (N' := 19) hp rfl rfl
+  obtain ⟨h19, hp⟩ := spd_linRow_peel (N' := 22) hp rfl rfl
+  obtain ⟨h22, hp⟩ := spd_linRow_peel (N' := 25) hp rfl rfl
+  obtain ⟨h25, hp⟩ := spd_linRow_cons (N' := 26) hp rfl
+  obtain ⟨h26, hp⟩ := spd_linRow_cons (N' := 27) hp rfl
+  obtain ⟨h27, hp⟩ := spd_linRow_peel (N' := 30) hp rfl rfl
+  obtain ⟨h30, hp⟩ := spd_linRow_peel (N' := 33) hp rfl rfl
+  obtain ⟨h33, h37⟩ := spd_linRow_peel (N' := 37) hp rfl rfl
+  rw [Nat.add_zero] at h0
+  exact ⟨h0, h1, h2, h3, ⟨hints, h7, h8, h11, h12, h16, h19, h22⟩, h6,
+    ⟨h26, h27, h22, h30, h33, h37, hints⟩, h25⟩
 
 theorem linRowSystem_spec (hH : HermiteFullRank) {P : Program} {b jh : ℕ}
     (h : linRowSystemAt P b jh) (hj : P.prims[jh]? = some (linHermitePrim hH))

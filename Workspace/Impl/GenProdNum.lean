@@ -1,5 +1,9 @@
-import Workspace.Impl.GenCls
-import Mathlib.Data.Nat.Choose.Bounds
+module
+
+public import Workspace.Impl.GenCls
+public import Mathlib.Data.Nat.Choose.Bounds
+
+@[expose] public section
 
 /-!
 # The product refinement: two numbers

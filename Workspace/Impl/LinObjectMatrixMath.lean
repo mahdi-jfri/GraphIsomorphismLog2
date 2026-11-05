@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectAffineMatrix
-import Workspace.Impl.LinAffineFromAction
+module
+
+public import Workspace.Impl.LinObjectAffineMatrix
+public import Workspace.Impl.LinAffineFromAction
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,4 +1,8 @@
-import Workspace.Impl.Dispatch
+module
+
+public import Workspace.Impl.Dispatch
+
+@[expose] public section
 
 /-!
 # The cases of the three procedures
@@ -165,7 +169,7 @@ requirement (c). -/
 theorem Layout.final {L : Layout} (h : Layout.OK I Pg L) {fm : ℕ}
     (hb : GraphWrapper Pg fm L.F.solve) (hc : I.WorkReq) :
     GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
-  final_of_axioms (Layout.implements I Pg h) hb (I.workBound hc)
+  GI.Assembly.final (Layout.implements I Pg h) hb (I.workBound hc)
 
 end Iface
 

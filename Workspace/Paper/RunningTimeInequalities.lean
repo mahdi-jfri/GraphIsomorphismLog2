@@ -1,8 +1,12 @@
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.Algebra.Ring.GeomSum
-import Mathlib.Data.Nat.Factorial.Basic
-import Workspace.TowerRank
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.Algebra.Ring.GeomSum
+public import Mathlib.Data.Nat.Factorial.Basic
+public import Workspace.TowerRank
+
+@[expose] public section
 
 /-!
 # Section 7: the displayed inequalities

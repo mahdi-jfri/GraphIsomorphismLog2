@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCfColM
-import Workspace.Lang.Lib.Search
-import Workspace.Lang.Lib.OrbitT
+module
+
+public import Workspace.Impl.AggItemCfColM
+public import Workspace.Lang.Lib.Search
+public import Workspace.Lang.Lib.OrbitT
+
+@[expose] public section
 
 /-!
 # One entry of the orbital coloring table
@@ -401,8 +405,8 @@ theorem itCf_cellOld_det {P : Program} {an1 an2 pe pp : ℕ}
   have dj : Det P [.list [c, .nat j]] (arg 1) (.nat j) _ :=
     Det.arg' (P := P) (vs := [c, .nat j]) (rest := []) (j := 1) rfl
   have hqc : (Val.nat q).wt < c.wt := wt_le_wt_list (by simp)
-  have d0 := Det.arith' (op := .mod) dj dq rfl
-  have d1 := Det.arith' (op := .div) dj dq rfl
+  have d0 := Det.arith' (op := .mod) dj dq (z := j % q) rfl
+  have d1 := Det.arith' (op := .div) dj dq (z := j / q) rfl
   have hm : j % q < q := Nat.mod_lt _ hq
   have hd : j / q < q := Nat.div_lt_of_lt_mul hj
   have i0 := itCf_inC_det han1 hpe xs As L j hm d0
@@ -473,19 +477,20 @@ theorem itCf_cell_spec {P : Program} {fc an1 an2 fnd pe pp : ℕ}
   have dj : Det P [.list [c, .nat j]] (arg 1) (.nat j) _ :=
     Det.arg' (P := P) (vs := [c, .nat j]) (rest := []) (j := 1) rfl
   have hqc : (Val.nat q).wt < c.wt := wt_le_wt_list (by simp)
-  have d0 := Det.arith' (op := .mod) dj dq rfl
-  have d1 := Det.arith' (op := .div) dj dq rfl
+  have d0 := Det.arith' (op := .mod) dj dq (z := j % q) rfl
+  have d1 := Det.arith' (op := .div) dj dq (z := j / q) rfl
   have hm : j % q < q := Nat.mod_lt _ hq
   have hd : j / q < q := Nat.div_lt_of_lt_mul hj
   have dA : Det P [.list [c, .nat j]] (.get (arg 0) (.nat 2)) (natList (As.map Fin.val)) _ :=
     Det.get' (Det.arg' (P := P) (vs := [c, .nat j]) (rest := []) (j := 0) rfl) (Det.nat 2) rfl
   have hAc : (natList (As.map Fin.val)).wt < c.wt := wt_le_wt_list (by simp)
-  have dE := Det.arith' (op := .eq) d0 d1 rfl
+  have dE := Det.arith' (op := .eq) d0 d1 (z := if j % q = j / q then 1 else 0) rfl
   have dM := itCf_mem_det han1 hpe (As.map Fin.val) d0 dA
-  have dC := itCf_mul01_det dE dM (by simp only [GI.Machine.BinOp.eval]; split <;> omega)
+  have dC := itCf_mul01_det dE dM (by split <;> omega)
     (itCf_toNat_le _)
   have dI := itCf_idx_det hfnd hpe (As.map Fin.val) d0 dA
-  have dT := Det.arith' (op := .add) (Det.nat (P := P) (env := [.list [c, .nat j]]) 8) dI rfl
+  have dT := Det.arith' (op := .add) (Det.nat (P := P) (env := [.list [c, .nat j]]) 8) dI
+    (z := 8 + (As.map Fin.val).idxOf (j % q)) rfl
   have dO := itCf_cellOld_det han1 hpe han2 hpp xs As L hL j hj
   have dI' := Det.ite' dC dT dO
   -- the value
@@ -500,7 +505,6 @@ theorem itCf_cell_spec {P : Program} {fc an1 an2 fnd pe pp : ℕ}
       fun h => ⟨_, h, rfl⟩⟩
   have e3 : (j % q = j / q) ↔ a = b := by rw [ha, hb, Fin.mk.injEq]
   replace dI' := key dI' (w := .nat (itCfCellN xs As L a b)) (by
-    simp only [GI.Machine.BinOp.eval]
     rw [e1]
     unfold itCfCellN
     by_cases h : a = b ∧ a ∈ As
@@ -547,7 +551,6 @@ theorem itCf_cell_spec {P : Program} {fc an1 an2 fnd pe pp : ℕ}
   have hjq : j % q ≤ j := Nat.mod_le _ _
   have hjq' : j / q ≤ j := Nat.div_le_self _ _
   have wj := wt_nat_le j
-  simp only [GI.Machine.BinOp.eval]
   unfold itCfCellC
   generalize itCfMemC (8 * (V + q) + 40) = M at *
   generalize itCfMemC (Val.list [.nat (j % q), natList (As.map Fin.val)]).wt = M1 at *

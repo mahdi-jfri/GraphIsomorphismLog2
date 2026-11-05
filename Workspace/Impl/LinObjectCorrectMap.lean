@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectCorrectOneSpec
-import Workspace.Impl.LinMapAll
+module
+
+public import Workspace.Impl.LinObjectCorrectOneSpec
+public import Workspace.Impl.LinMapAll
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

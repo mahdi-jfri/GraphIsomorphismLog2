@@ -1,6 +1,10 @@
-import Workspace.Impl.RowReq
-import Workspace.Assembly.GenReq
-import Workspace.Assembly.AggReq
+module
+
+public import Workspace.Impl.RowReq
+public import Workspace.Assembly.GenReq
+public import Workspace.Assembly.AggReq
+
+@[expose] public section
 
 /-!
 # Stage 2 up to the aggregation round and the open pieces of the row terminal
@@ -33,10 +37,10 @@ open GI.Cited (Val PointwiseStab Preimage NormalizedFactor Membership MinimalBlo
   CameronRecognition)
 
 /-- **Stage 2 up to the aggregation round and two pieces of the row terminal.** -/
-theorem final_modulo_row (hcite : GI.Cited.TransitiveAffected) (hst : PointwiseStab)
+theorem final_modulo_row (hst : PointwiseStab)
     (hm : Membership) (hpre : Preimage) (hfac : NormalizedFactor) (hmb : MinimalBlocks)
     (hO : GroupOrder) (hC : CameronRecognition) (hAb : GI.Cited.GMPAbelianFactors)
-    (hOut : GI.Cited.GMPOutBound) (hTr : GI.Cited.GMPTransitiveNonabelian)
+    (hTr : GI.Cited.GMPTransitiveNonabelian)
     (rad cos agg : List Expr) (hr : rad.length ≤ rlCosOff - rlRadOff)
     (hc : cos.length ≤ asmSlot - rlCosOff) {K D : ℕ} {Ac : ℝ} (Wa : Node P₀ → ℝ)
     (hrad : Iface.TermRadSpec
@@ -53,7 +57,7 @@ theorem final_modulo_row (hcite : GI.Cited.TransitiveAffected) (hst : PointwiseS
     GI.Statement.GraphIsomorphismInQuasipolynomialTime := by
   have hg : gsGen.length ≤ asmSlot := by rw [length_gsGen]; unfold asmSlot; omega
   refine final_modulo_gen hst hm hpre hfac hmb hO hC (rlRow rad cos) agg _ Wa
-    (rq_rowSpec hcite hst hm hpre hfac hAb hOut hTr hg hr hc hrad hcos _ Wa) hagg ?_
+    (rq_rowSpec hst hm hpre hfac hTr hg hr hc hrad hcos _ Wa) hagg ?_
   obtain ⟨A₁, D₁, h₁⟩ := rq_wr_bound hst hfac (rqAa_nonneg hst hm hpre hfac K D Ac)
   obtain ⟨A₂, D₂, h₂⟩ := hWa
   refine ⟨A₁ + A₂, D₁ + D₂, fun nd hnd hk hs => ⟨fun hk' => ?_, fun hk' => ?_, fun hk' => ?_⟩⟩
@@ -75,10 +79,10 @@ theorem final_modulo_row (hcite : GI.Cited.TransitiveAffected) (hst : PointwiseS
 
 /-- **Stage 2 up to the four phase contracts of the aggregation round and two pieces of the row
 terminal.** The row step of `rlRow` and the aggregation round of `asAgg` in one program. -/
-theorem final_modulo_row_agg (hcite : GI.Cited.TransitiveAffected) (hst : PointwiseStab)
+theorem final_modulo_row_agg (hst : PointwiseStab)
     (hm : Membership) (hpre : Preimage) (hfac : NormalizedFactor) (hmb : MinimalBlocks)
     (hO : GroupOrder) (hC : CameronRecognition) (hAb : GI.Cited.GMPAbelianFactors)
-    (hOut : GI.Cited.GMPOutBound) (hTr : GI.Cited.GMPTransitiveNonabelian)
+    (hTr : GI.Cited.GMPTransitiveNonabelian)
     (rad cos : List Expr) (hr : rad.length ≤ rlCosOff - rlRadOff)
     (hc : cos.length ≤ asmSlot - rlCosOff) {K D : ℕ} {Ac : ℝ}
     (H : AsHand) (X : ℕ → ℕ) (rd cr cm it : Expr) (rest : List Expr)
@@ -110,15 +114,15 @@ theorem final_modulo_row_agg (hcite : GI.Cited.TransitiveAffected) (hst : Pointw
   have hl : (rlRow rad cos).length ≤ asmSlot := by
     rw [length_rlRow hr]; unfold asmSlot rlCosOff at *; omega
   refine final_modulo_agg hst hm hpre hfac hmb hO hC (rlRow rad cos) _ H X rd cr cm it rest hl
-    (rq_rowSpec hcite hst hm hpre hfac hAb hOut hTr hg hr hc hrad hcos _ _) hrd hct hcm hi hX ?_
+    (rq_rowSpec hst hm hpre hfac hTr hg hr hc hrad hcos _ _) hrd hct hcm hi hX ?_
   obtain ⟨A, D', h⟩ := rq_wr_bound hst hfac (rqAa_nonneg hst hm hpre hfac K D Ac)
   exact ⟨A, D', fun nd _ _ _ => h nd⟩
 
 /-- **`final_modulo_row_agg` with more primitives** `ext` after `gsExtra`. -/
-theorem final_modulo_row_agg_ext (hcite : GI.Cited.TransitiveAffected) (hst : PointwiseStab)
+theorem final_modulo_row_agg_ext (hst : PointwiseStab)
     (hm : Membership) (hpre : Preimage) (hfac : NormalizedFactor) (hmb : MinimalBlocks)
     (hO : GroupOrder) (hC : CameronRecognition) (hAb : GI.Cited.GMPAbelianFactors)
-    (hOut : GI.Cited.GMPOutBound) (hTr : GI.Cited.GMPTransitiveNonabelian)
+    (hTr : GI.Cited.GMPTransitiveNonabelian)
     (ext : List Prim) (rad cos : List Expr) (hr : rad.length ≤ rlCosOff - rlRadOff)
     (hc : cos.length ≤ asmSlot - rlCosOff) {K D : ℕ} {Ac : ℝ}
     (H : AsHand) (X : ℕ → ℕ) (rd cr cm it : Expr) (rest : List Expr)
@@ -150,7 +154,7 @@ theorem final_modulo_row_agg_ext (hcite : GI.Cited.TransitiveAffected) (hst : Po
   have hl : (rlRow rad cos).length ≤ asmSlot := by
     rw [length_rlRow hr]; unfold asmSlot rlCosOff at *; omega
   refine final_modulo_agg_ext hst hm hpre hfac hmb hO hC ext (rlRow rad cos) _ H X rd cr cm it rest hl
-    (rq_rowSpec hcite hst hm hpre hfac hAb hOut hTr hg hr hc hrad hcos _ _) hrd hct hcm hi hX ?_
+    (rq_rowSpec hst hm hpre hfac hTr hg hr hc hrad hcos _ _) hrd hct hcm hi hX ?_
   obtain ⟨A, D', h⟩ := rq_wr_bound hst hfac (rqAa_nonneg hst hm hpre hfac K D Ac)
   exact ⟨A, D', fun nd _ _ _ => h nd⟩
 

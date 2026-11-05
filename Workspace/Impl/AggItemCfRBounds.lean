@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCfROrb
+module
+
+public import Workspace.Impl.AggItemCfROrb
+
+@[expose] public section
 
 /-! The orbital program's component bounds, collected in the input weight. -/
 

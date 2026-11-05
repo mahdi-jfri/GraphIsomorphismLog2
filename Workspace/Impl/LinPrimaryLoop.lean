@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimaryStepSpec
-import Workspace.Impl.LinPrimaryTerminal
+module
+
+public import Workspace.Impl.LinPrimaryStepSpec
+public import Workspace.Impl.LinPrimaryTerminal
+
+@[expose] public section
 
 /-! Bounded primary filtration. A failed accumulator is propagated; otherwise
 the current triple is expanded to the complete iteration input. -/

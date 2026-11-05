@@ -1,4 +1,8 @@
-import Workspace.Impl.LinMixedLoop
+module
+
+public import Workspace.Impl.LinMixedLoop
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

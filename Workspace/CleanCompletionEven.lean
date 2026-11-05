@@ -1,5 +1,9 @@
-import Workspace.CleanCompletionCoordinates
-import Mathlib.GroupTheory.Perm.Option
+module
+
+public import Workspace.CleanCompletionCoordinates
+public import Mathlib.GroupTheory.Perm.Option
+
+@[expose] public section
 
 /-! Compatible extension of already fixed clean coordinates by one new block. -/
 namespace GI.CleanEvenCoordinates
@@ -109,6 +113,7 @@ theorem generated_eq_map (t : B ≃ W) (a b : I) (hab : a ≠ b)
           dsimp [q]
           rw [map_equiv_removeNone, hfix]
           simp
+          rfl
         have hq : q ∈ alternatingGroup I := by
           rw [Equiv.Perm.mem_alternatingGroup] at hp ⊢
           have he := Equiv.optionCongr_sign q

@@ -1,6 +1,10 @@
-import Workspace.Proved.VsBComb
-import Workspace.Proved.VsBFldC
-import Workspace.Proved.VsQAlg
+module
+
+public import Workspace.Proved.VsBComb
+public import Workspace.Proved.VsBFldC
+public import Workspace.Proved.VsQAlg
+
+@[expose] public section
 
 /-!
 # The mathematics of the case `T = 0`
@@ -16,6 +20,8 @@ open Matrix
 namespace GI.Proved
 
 open GI.Impl GI.Cited GI.Lang Equiv
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 variable {I : VecStabInst}
 

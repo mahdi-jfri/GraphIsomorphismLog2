@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJSolKer
+module
+
+public import Workspace.Impl.TermJSolKer
+
+@[expose] public section
 
 /-!
 # Polynomial bounds for the zero-sum solve and the coefficient kernel

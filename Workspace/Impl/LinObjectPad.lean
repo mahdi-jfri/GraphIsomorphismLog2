@@ -1,7 +1,11 @@
-import Workspace.Impl.LinTabulate
-import Workspace.Lang.Lib.LinIntVector
-import Workspace.Lang.Lib.LinIntTests
-import Workspace.Impl.LinPresentation
+module
+
+public import Workspace.Impl.LinTabulate
+public import Workspace.Lang.Lib.LinIntVector
+public import Workspace.Lang.Lib.LinIntTests
+public import Workspace.Impl.LinPresentation
+
+@[expose] public section
 
 /-! Zero padding of local coordinate matrices. Different local stabilizers
 may have different generator counts; padding puts all blocks in one shape. -/
@@ -53,7 +57,7 @@ theorem linObjectPadCell_spec {P : Program} {f r d R : ℕ}
   have wz : (linVecVal (0 : Fin d → ℤ)).wt < ctx.wt := wt_le_wt_list (by simp [ctx])
   have hr : r < (encIntMatrix M).wt := by
     have hh := length_lt_wt_list ((List.finRange r).map fun i => linVecVal (M i))
-    simpa only [List.length_map, List.length_finRange] using hh
+    simpa only [encIntMatrix, linVecVal, List.length_map, List.length_finRange] using hh
   have dc := Det.arg' (P := P) (vs := [ctx, .nat i]) (rest := []) (j := 0) rfl
   have di := Det.arg' (P := P) (vs := [ctx, .nat i]) (rest := []) (j := 1) rfl
   have dm := Det.get' dc (Det.nat 0) rfl

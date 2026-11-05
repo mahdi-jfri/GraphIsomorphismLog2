@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectGluePrefix
+module
+
+public import Workspace.Impl.LinObjectGluePrefix
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -19,7 +23,7 @@ theorem linObjectGlueProblem.affine_correct (F : linObjectGlueFrame I.as I.ns I.
   have hh := F.correct_iff (gens I.coverGenerators) (I.normalA.mono I.cover_H) I.cover_conf
     (QuotientGroup.mk'_surjective _) (linObjectCanonical_ker_local I.as I.ns I.Y I.fixY) g
     (tmGlMs I.X ↼ I.τ) I.source_conf
-  simpa only [eq_comm,act_act] using hh
+  simpa only [linObjectGlueProblem.affineC,eq_comm,act_act] using hh
 
 theorem linObjectGlueProblem.zero_correct (F : linObjectGlueFrame I.as I.ns I.Y) (g : gens I.coverGenerators) :
     I.affineC F g = 0 ↔ ∃ a ∈ gens I.as,(tmGlMs I.Y ↼ g.val) ↼ a = tmGlMs I.Y := by
@@ -34,7 +38,7 @@ theorem linObjectGlueProblem.affine_nonempty (F : linObjectGlueFrame I.as I.ns I
   constructor
   · rintro ⟨r,hr⟩
     obtain ⟨g,hg,rfl⟩ := hr
-    have he : I.affineC F g = F.point (tmGlMs I.X ↼ I.τ) := by simpa only [map_zero,zero_add] using hg
+    have he : I.affineC F g = F.point (tmGlMs I.X ↼ I.τ) := by simpa only [Set.mem_setOf_eq,linObjectGlueProblem.affineC,map_zero,zero_add] using hg
     obtain ⟨a,ha,he⟩ := (I.affine_correct F g).mp he
     refine ⟨I.τ*g.val*a,(gens I.hs).mul_mem ((gens I.hs).mul_mem I.τH (I.cover_H g.property)) (I.AH ha),?_⟩
     rwa [← act_act]
@@ -47,7 +51,7 @@ theorem linObjectGlueProblem.affine_nonempty (F : linObjectGlueFrame I.as I.ns I
     have he : I.affineC F g = F.point (tmGlMs I.X ↼ I.τ) := (I.affine_correct F g).mpr ⟨1,(gens I.as).one_mem,by
       simpa only [g,mul_inv_cancel_left,act_one] using ht.2⟩
     refine ⟨g.val,g,?_,rfl⟩
-    simpa only [map_zero,zero_add] using he
+    simpa only [Set.mem_setOf_eq,linObjectGlueProblem.affineC,map_zero,zero_add] using he
 
 def linObjectGlueSuccessData (F : linObjectGlueFrame I.as I.ns I.Y) (r : Equiv.Perm (Fin n))
     (ls : List (Equiv.Perm (Fin n))) : Prop :=

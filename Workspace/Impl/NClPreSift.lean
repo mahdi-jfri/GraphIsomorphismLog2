@@ -1,5 +1,9 @@
-import Workspace.Impl.NClPreProg
-import Workspace.Impl.NClEntry
+module
+
+public import Workspace.Impl.NClPreProg
+public import Workspace.Impl.NClEntry
+
+@[expose] public section
 
 /-!
 # The sifting step of the preimage program

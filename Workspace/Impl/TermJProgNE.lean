@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJProgOut
+module
+
+public import Workspace.Impl.TermJProgOut
+
+@[expose] public section
 
 /-!
 # The `J`-answer for a nonempty label answer (program)

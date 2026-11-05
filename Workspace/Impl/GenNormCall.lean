@@ -1,5 +1,9 @@
-import Workspace.Impl.GenNormLabels
-import Workspace.Impl.Orbit
+module
+
+public import Workspace.Impl.GenNormLabels
+public import Workspace.Impl.Orbit
+
+@[expose] public section
 
 /-!
 # Keeping the supplied labels when reading a giant child's answer

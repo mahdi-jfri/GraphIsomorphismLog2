@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemHvInit
+module
+
+public import Workspace.Impl.AggItemHvInit
+
+@[expose] public section
 
 /-!
 # Case 2a init program, part 1: the data that need no choice
@@ -111,7 +115,7 @@ theorem it_hvDa_spec {P : Program} {f ind sg lc af fst : ℕ}
     have h := length_lt_wt_list ((Φ.sort (· ≤ ·)).map fun i : Fin q => Val.nat i)
     rw [List.length_map, Finset.length_sort] at h
     rw [hPx, itHv_encPts, natList]
-    simpa using h
+    simpa [Function.comp_def] using h
   have est : (Val.list [sv, kq, .list (ps.map pairV), .list (fx.map pairV), .list (fy.map pairV),
     cv]).wt = st.wt := rfl
   have ex : (Val.list [st, Px, Py]).wt = x.wt := rfl

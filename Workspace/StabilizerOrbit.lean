@@ -1,5 +1,9 @@
-import Workspace.StabilizerQuotient
-import Mathlib.Algebra.Group.Subgroup.Ker
+module
+
+public import Workspace.StabilizerQuotient
+public import Mathlib.Algebra.Group.Subgroup.Ker
+
+@[expose] public section
 
 namespace GI.StabilizerQuotient.Data
 

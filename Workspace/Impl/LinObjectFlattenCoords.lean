@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectVectorRow
+module
+
+public import Workspace.Impl.LinObjectVectorRow
+
+@[expose] public section
 
 /-! Convert the matrix of local coordinate rows into the interleaved
 vector used by the integer presentation. Both dimension headers are explicit. -/

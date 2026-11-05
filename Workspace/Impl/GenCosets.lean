@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.Schreier
+module
+
+public import Workspace.Lang.Lib.Schreier
+
+@[expose] public section
 
 /-!
 # Coset representatives of the kernel of a block action

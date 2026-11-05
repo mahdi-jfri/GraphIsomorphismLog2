@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectGlueFinish
-import Workspace.Impl.LinObjectGluePrefixStep
+module
+
+public import Workspace.Impl.LinObjectGlueFinish
+public import Workspace.Impl.LinObjectGluePrefixStep
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset

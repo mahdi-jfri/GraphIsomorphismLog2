@@ -1,5 +1,9 @@
-import Workspace.Impl.GenEnum
-import Workspace.Impl.GenNormModeCall
+module
+
+public import Workspace.Impl.GenEnum
+public import Workspace.Impl.GenNormModeCall
+
+@[expose] public section
 
 /-! # The recursive call on one normalization coset -/
 namespace GI.Impl

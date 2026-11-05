@@ -1,6 +1,10 @@
-import Workspace.Impl.TermJProgYg
-import Workspace.Impl.TermStep
-import Workspace.Impl.TermJData
+module
+
+public import Workspace.Impl.TermJProgYg
+public import Workspace.Impl.TermStep
+public import Workspace.Impl.TermJData
+
+@[expose] public section
 
 /-!
 # The table `O` from the stored `N`-tests

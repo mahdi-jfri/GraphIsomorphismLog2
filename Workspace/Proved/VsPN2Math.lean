@@ -1,5 +1,9 @@
-import Workspace.Proved.VsPBridge
-import Workspace.Proved.VsPHardMath
+module
+
+public import Workspace.Proved.VsPBridge
+public import Workspace.Proved.VsPHardMath
+
+@[expose] public section
 
 /-!
 # The facts for `N₂ = ⟨x₂⟩^H`
@@ -15,6 +19,8 @@ namespace GI.Proved
 
 open GI.Impl GI.Cited GI.Lang Equiv Module
 open scoped commutatorElement
+
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 variable {I : VecStabInst} {s : VsQSt I} (hs : VsQStOK s)
 

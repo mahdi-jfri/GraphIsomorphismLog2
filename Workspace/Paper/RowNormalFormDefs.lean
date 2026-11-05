@@ -1,5 +1,9 @@
-import Workspace.RowQuotients
-import Workspace.CleanRowKernel
+module
+
+public import Workspace.RowQuotients
+public import Workspace.CleanRowKernel
+
+@[expose] public section
 
 /-!
 # Definitions for the statement of Theorem A.18

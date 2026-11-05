@@ -1,5 +1,9 @@
-import Workspace.Impl.AggSpecDefs
-import Workspace.Impl.AggStructRel
+module
+
+public import Workspace.Impl.AggSpecDefs
+public import Workspace.Impl.AggStructRel
+
+@[expose] public section
 
 /-!
 # The hand-over from the comparison phase to the items

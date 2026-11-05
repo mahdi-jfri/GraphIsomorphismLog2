@@ -1,5 +1,9 @@
-import Workspace.Impl.AggRectRepT4
-import Workspace.Impl.AggKerRed
+module
+
+public import Workspace.Impl.AggRectRepT4
+public import Workspace.Impl.AggKerRed
+
+@[expose] public section
 
 /-!
 # Stage 4 of the representation program

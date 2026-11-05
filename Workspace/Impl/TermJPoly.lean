@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJHCoef
+module
+
+public import Workspace.Impl.TermJHCoef
+
+@[expose] public section
 
 /-!
 # Polynomial bounds and calls in a chain of `let`s

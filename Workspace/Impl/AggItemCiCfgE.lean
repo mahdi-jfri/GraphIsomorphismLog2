@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgMo
+module
+
+public import Workspace.Impl.AggItemCiCfgMo
+
+@[expose] public section
 
 /-!
 # The configuration query: extending a map of the fibers

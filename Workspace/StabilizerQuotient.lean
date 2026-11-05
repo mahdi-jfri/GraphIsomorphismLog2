@@ -1,5 +1,9 @@
-import Workspace.EqualFibers
-import Mathlib.Algebra.Group.Action.Hom
+module
+
+public import Workspace.EqualFibers
+public import Mathlib.Algebra.Group.Action.Hom
+
+@[expose] public section
 
 namespace GI.StabilizerQuotient
 

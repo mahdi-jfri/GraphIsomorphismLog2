@@ -1,8 +1,12 @@
-import Workspace.Proved.SolvNumeric
-import Workspace.PrimitiveAbelianNormal
-import Workspace.PrimitiveSolvableNormal
-import Mathlib.GroupTheory.Index
-import Mathlib.GroupTheory.Subgroup.Centralizer
+module
+
+public import Workspace.Proved.SolvNumeric
+public import Workspace.PrimitiveAbelianNormal
+public import Workspace.PrimitiveSolvableNormal
+public import Mathlib.GroupTheory.Index
+public import Mathlib.GroupTheory.Subgroup.Centralizer
+
+@[expose] public section
 
 /-!
 # Order of a primitive solvable group
@@ -156,10 +160,10 @@ theorem solvCent_chain [Finite G] (a : V) (N : Subgroup G) [N.Normal]
 
 /-- **Order of a primitive solvable group.** If a nontrivial solvable group `G` acts faithfully
 and primitively on a finite set `V`, then `|G| ≤ |V| · solvB |V| |V| 1`. -/
-theorem solvPrim_card_le [Finite G] [IsSolvable G] [Nontrivial G]
+theorem solvPrim_card_le [Finite G] [Group.IsSolvable G] [Nontrivial G]
     [MulAction.IsPreprimitive G V] :
     Nat.card G ≤ Nat.card V * solvB (Nat.card V) (Nat.card V) 1 := by
-  haveI : IsSolvable (⊤ : Subgroup G) :=
+  haveI : Group.IsSolvable (⊤ : Subgroup G) :=
     solvable_of_solvable_injective (Subgroup.subtype_injective ⊤)
   obtain ⟨N, hN, -, hc⟩ := exists_abelian_normal_of_solvable_normal (⊤ : Subgroup G) top_ne_bot
   haveI := hN.1

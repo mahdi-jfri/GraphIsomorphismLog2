@@ -1,5 +1,9 @@
-import Workspace.Impl.VsQTr
-import Workspace.Lang.Lib.LinIntBits
+module
+
+public import Workspace.Impl.VsQTr
+public import Workspace.Lang.Lib.LinIntBits
+
+@[expose] public section
 
 /-!
 # Binary powers in an encoded monoid

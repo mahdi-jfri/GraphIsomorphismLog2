@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectOffsets
+module
+
+public import Workspace.Impl.LinObjectOffsets
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

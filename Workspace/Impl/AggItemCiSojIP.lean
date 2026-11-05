@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojMA
-import Workspace.Impl.AggItemCiSojIM
-import Workspace.Impl.AggItemCiSojWt
+module
+
+public import Workspace.Impl.AggItemCiSojMA
+public import Workspace.Impl.AggItemCiSojIM
+public import Workspace.Impl.AggItemCiSojWt
+
+@[expose] public section
 
 /-!
 # The complete imprimitive partition program

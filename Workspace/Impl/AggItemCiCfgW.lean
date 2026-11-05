@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgV
+module
+
+public import Workspace.Impl.AggItemCiCfgV
+
+@[expose] public section
 
 /-!
 # The configuration query: the canonical value of the pair structure as a program

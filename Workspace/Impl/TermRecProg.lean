@@ -1,8 +1,13 @@
-import Workspace.Impl.TermRecProgList
-import Workspace.Impl.TermRecSpec
-import Workspace.Impl.TermSupFix
-import Workspace.Impl.Combine
-import Workspace.Lang.Prims.Reduce
+module
+
+public import Workspace.Impl.TermRecProgList
+public import Workspace.Impl.TermRecSpec
+public import Workspace.Impl.TermConj
+public import Workspace.Impl.NormCosetInt
+public import Workspace.Impl.Combine
+public import Workspace.Lang.Prims.Reduce
+
+@[expose] public section
 
 /-!
 # The recursion of Theorem A.20 as a `GI.Lang` program (T5)
@@ -56,7 +61,7 @@ open GI.Cited (Val SolvableCosetIntersection DerivedSubgroup Membership)
 /-! ### The functions -/
 
 /-- `0`, the entry, on `[ℓ, gens H, gens N, X, Y]`. -/
-def tmRiMainE (b : ℕ) : Expr := .ite (arg 0) (.call (b + 2) (.var 0)) (.call (b + 1) (.var 0))
+def tmRiMainE (b : ℕ) : Expr := .ite (arg 0) (.call (b + 105) (.var 0)) (.call (b + 1) (.var 0))
 
 /-- `1`, the case `ℓ = 0`. Environment `[a, gens 1]`. -/
 def tmRiBaseE (b : ℕ) : Expr :=
@@ -161,7 +166,10 @@ def tmRiYE (b jsci : ℕ) : Expr :=
       (.letE (.prim jsci (mk3 (.get tmRiYc (.nat 2)) (.var 4) (.get (.get tmRiYH (.nat 1)) (.nat 0))))
       (.letE (.call (b + 36) (mk2 (.get tmRiYH (.nat 0)) (.get (.var 5) (.nat 1))))
       (.letE (.call (b + 75) (mk2 (.var 3) tmRiYS))
-      (.letE (.call b (Expr.mkList [.get tmRiYc (.nat 0), .var 4, .var 6, .var 7, tmRiYT]))
+      (.letE (.ite (.get tmRiYc (.nat 0))
+          (.call (b + 96) (Expr.mkList [.get tmRiYc (.nat 0), .get tmRiYc (.nat 2),
+            .var 4, .var 6, .var 7, tmRiYT]))
+          (.call b (Expr.mkList [.get tmRiYc (.nat 0), .var 4, .var 6, .var 7, tmRiYT])))
         (mk2 (.var 3) (.var 8))))))))))
 
 /-- `12`, the shift of an object, on `[τ, [c, gens L, h]]`: `[c, gens L, h τ]`. -/
@@ -320,5 +328,73 @@ theorem comb : P.HasAt (b + 87) (foldlFuns (b + 87) (b + 16)) := h.mods.2.2.2.2.
 theorem cnf : P.HasAt (b + 90) (cosetNFFuns (b + 90) jmem) := h.mods.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2
 
 end TmRiAt
+
+/-! ### Rebasing into `H_x`-objects (`b + 96`) -/
+
+/-- `96`, rebasing `S'` and `T` into `H_x`-objects when `ℓ > 0`, then calling `b`.
+Input: `[ℓ, gens A, gens H_x, gens A_x, S', T]`.
+Environment: `[a, gens 1, PX, PY, P, gens B, tab, obsS, obsT]`. -/
+def tmRiRebMainE (b : ℕ) : Expr :=
+  .letE (mk2 (.get (arg 1) (.nat 0)) (mk1 (.get (.get (arg 1) (.nat 1)) (.nat 0))))
+  (.letE (.call (b + 6) (mk2 (.var 1) (arg 4)))
+  (.letE (.call (b + 6) (mk2 (.var 1) (arg 5)))
+  (.letE (.call (b + 48) (mk2 (.var 2) (.var 3)))
+  (.letE (.call (b + 43) (mk2 (.get (arg 1) (.nat 0))
+      (.call (b + 48) (mk2 (.get (arg 1) (.nat 1)) (.get (arg 2) (.nat 1))))))
+  (.letE (.call (b + 99) (mk2
+      (mk2 (Expr.mkList [.var 5, arg 3, arg 1,
+        mk3 (.nat 0) (.get (.get (arg 5) (.nat 0)) (.nat 1)) (.get (.get (arg 5) (.nat 0)) (.nat 2)),
+        .get (.get (arg 1) (.nat 1)) (.nat 0)]) (.var 4)) (.var 4)))
+  (.letE (.call (b + 78) (mk2 (mk3 (arg 3) (.var 6) (.nat 0)) (.call (b + 84) (.length (.var 2)))))
+  (.letE (.call (b + 78) (mk2 (mk3 (arg 3) (.var 6) (.length (.var 2)))
+      (.call (b + 84) (.length (.var 3)))))
+    (.call b (Expr.mkList [arg 0, arg 2, arg 3, .var 7, .var 8])))))))))
+
+/-- `97`, one row of the rebasing table, on `[[c0, P], Q]`. -/
+def tmRiRebRowE (b : ℕ) : Expr :=
+  .call (b + 102) (mk2 (mk2 (.get (arg 0) (.nat 0)) (arg 1)) (.get (arg 0) (.nat 1)))
+
+/-- `98`, one entry of the rebasing table, on `[[c0, Q], Q']`, where
+`c0 = [gens B, gens A_x, gens A, x_0, 1]`. -/
+def tmRiRebPairE (gObj : ℕ) : Expr :=
+  .ite (.arith .eq (.length (.get (arg 0) (.nat 1))) (.length (arg 1)))
+    (.ite (.arith .eq (.get (.get (.get (arg 0) (.nat 1)) (.nat 0)) (.nat 0))
+        (.get (.get (arg 1) (.nat 0)) (.nat 0)))
+      (.call gObj (Expr.mkList [
+        .get (.get (arg 0) (.nat 0)) (.nat 0),
+        .get (.get (arg 0) (.nat 0)) (.nat 1),
+        .get (.get (arg 0) (.nat 0)) (.nat 2),
+        mk2 (.get (.get (arg 0) (.nat 0)) (.nat 3))
+          (mk3 (.nat 1) (.get (.get (.get (arg 0) (.nat 1)) (.nat 0)) (.nat 1))
+            (.get (.get (.get (arg 0) (.nat 1)) (.nat 0)) (.nat 2))),
+        mk2 (.get (.get (arg 0) (.nat 0)) (.nat 3))
+          (mk3 (.nat 1) (.get (.get (arg 1) (.nat 0)) (.nat 1))
+            (.get (.get (arg 1) (.nat 0)) (.nat 2))),
+        .get (.get (arg 0) (.nat 0)) (.nat 0),
+        .get (.get (arg 0) (.nat 0)) (.nat 4)]))
+      .nil)
+    .nil
+
+/-- `105`, rebasing `X` and `Y` into `H`-objects when `ℓ > 0` (from `TmRiListNorm (gens σH)`),
+then calling `b + 2` (`tmRiStepE`).
+Input: `[ℓ + 1, gens H, gens N, X, Y]`.
+Environment: `[a, gens 1, PX, PY, Qs, tab, obsX, obsY]`. -/
+def tmRiNormStepE (b : ℕ) : Expr :=
+  .letE (mk2 (.get (arg 1) (.nat 0)) (mk1 (.get (.get (arg 1) (.nat 1)) (.nat 0))))
+  (.letE (.call (b + 6) (mk2 (.var 1) (arg 3)))
+  (.letE (.call (b + 6) (mk2 (.var 1) (arg 4)))
+  (.letE (.call (b + 48) (mk2 (.var 2) (.var 3)))
+  (.letE (.call (b + 66) (mk2 (mk4 (.nat 0) (arg 1) (arg 1) (.var 4)) (.var 4)))
+  (.letE (.call (b + 78) (mk2 (mk3 (arg 2) (.var 5) (.nat 0)) (.call (b + 84) (.length (.var 2)))))
+  (.letE (.call (b + 78) (mk2 (mk3 (arg 2) (.var 5) (.length (.var 2)))
+      (.call (b + 84) (.length (.var 3)))))
+    (.call (b + 2) (Expr.mkList [arg 0, arg 1, arg 2, .var 6, .var 7]))))))))
+
+/-- The `10` rebasing functions at `b + 96`. -/
+def tmRiRebFuns (b gObj : ℕ) : List Expr :=
+  [tmRiRebMainE b, tmRiRebRowE b, tmRiRebPairE gObj] ++
+    mapFuns (b + 99) (b + 97) ++ mapFuns (b + 102) (b + 98) ++ [tmRiNormStepE b]
+
+theorem length_tmRiRebFuns (b gObj : ℕ) : (tmRiRebFuns b gObj).length = 10 := rfl
 
 end GI.Impl

@@ -1,4 +1,8 @@
-import Workspace.Impl.GenCls
+module
+
+public import Workspace.Impl.GenCls
+
+@[expose] public section
 
 /-!
 # The candidate of the exposure program

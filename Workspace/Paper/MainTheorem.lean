@@ -1,5 +1,9 @@
-import Workspace.Paper.PhaseCost
-import Workspace.Paper.RunExistence
+module
+
+public import Workspace.Paper.PhaseCost
+public import Workspace.Paper.RunExistence
+
+@[expose] public section
 
 /-!
 # Theorems 1.1 and 1.2 at stage 1
@@ -23,7 +27,7 @@ cited results:
   of Section 7.5 compatible with `P` (`GI.Algorithm.Compat`), and `N₀` above the base size
   of Section 7.5 (`AboveBase`);
 * existence of runs: the subroutine data `GI.Algorithm.Supply`, Maróti's theorem
-  (`GI.Cited.MarotiPrimitive`, an axiom) and `a ≥ 128` (as in `GI.Paper.run_exists`);
+  (`GI.Cited.MarotiPrimitive`) and `a ≥ 128` (as in `GI.Paper.run_exists`);
 * the per-node hypothesis `GI.Algorithm.NodeBound w cw af` on the work `w` of the nodes,
   with `af + 1 ≤ a` (Section 7.4: "After increasing `a`");
 * the runs that stage 2 builds have root bounds (`GI.Algorithm.Run.RootsOK cσ`): the

@@ -1,4 +1,8 @@
-import Workspace.Impl.CamDefs
+module
+
+public import Workspace.Impl.CamDefs
+
+@[expose] public section
 
 /-!
 # Counting facts for the socle read through a Maróti identification

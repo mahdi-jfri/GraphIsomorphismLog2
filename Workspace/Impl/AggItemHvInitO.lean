@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemHvInitD
+module
+
+public import Workspace.Impl.AggItemHvInitD
+
+@[expose] public section
 
 /-!
 # Case 2a init program, part 2: the kept value

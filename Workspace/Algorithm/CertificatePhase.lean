@@ -1,4 +1,8 @@
-import Workspace.Algorithm.Certificates
+module
+
+public import Workspace.Algorithm.Certificates
+
+@[expose] public section
 
 /-!
 # The certificate phase of an aggregation round

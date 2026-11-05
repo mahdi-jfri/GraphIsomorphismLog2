@@ -1,4 +1,8 @@
-import Workspace.Impl.TermRecMath
+module
+
+public import Workspace.Impl.TermRecMath
+
+@[expose] public section
 
 /-!
 # One level of Theorem A.20 with the choices of the program (T5, mathematics)

@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemHvLift
-import Workspace.Impl.AggKer
-import Workspace.Impl.AggInc
+module
+
+public import Workspace.Impl.AggItemHvLift
+public import Workspace.Impl.AggKer
+public import Workspace.Impl.AggInc
+
+@[expose] public section
 
 /-!
 # Case 2a: the group value of the kernel `K`

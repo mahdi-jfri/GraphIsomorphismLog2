@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemCiSojDataBound
-import Workspace.Impl.AggItemCiSojColorsBound
-import Workspace.Impl.AggItemCiSojAskGlobal
+module
+
+public import Workspace.Impl.AggItemCiSojDataBound
+public import Workspace.Impl.AggItemCiSojColorsBound
+public import Workspace.Impl.AggItemCiSojAskGlobal
+
+@[expose] public section
 
 /-! # Installed program bodies for the rectangle's actual physical queries -/
 

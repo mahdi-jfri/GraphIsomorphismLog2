@@ -1,4 +1,8 @@
-import Workspace.Lang.Lib.LinInt
+module
+
+public import Workspace.Lang.Lib.LinInt
+
+@[expose] public section
 
 /-! Vector operations over the cited integer encoding. The scalar function is a
 proved program, not a primitive. The shared loop applies it pointwise to two vectors. -/

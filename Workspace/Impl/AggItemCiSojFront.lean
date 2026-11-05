@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojFiber
+module
+
+public import Workspace.Impl.AggItemCiSojFiber
+
+@[expose] public section
 
 /-!
 # The first-rectangle front: the literal cut test and fixed pair choice
@@ -143,9 +147,16 @@ theorem itcs_front_prog {q B : ℕ} {Pg : Program} {Ii : itcsCompIdx}
 
 /-- Polynomial cost for the complete front after inserting the round's palette bound. -/
 theorem itcs_front_pbu : PBU fun _ W _ => itcsFrontC (2 * W + 3) (2 * (2 * W + 3) ^ 64) := by
-  simp only [itcsFrontC, itcsFindC, itcsFiberC, itcsTestC, itcsSizeC, itcsCompTotal,
-    itcsCompC, itcsSqMapC, itcsCompW, itcsBalW, itCfObjB, itcsGenW, loopModK,
-    countK, mapK, orbitK]
-  norm_poly
+  have h1 : PBU fun _ W _ => 50 * (100 * itcsCompW (2 * W + 3) (2 * (2 * W + 3) ^ 64) + 1) +
+      7000 * (2 * W + 3 + 1) ^ 3 := by
+    simp only [itcsCompW, itCfObjB, itcsGenW]; norm_poly
+  have h2 : PBU fun _ W _ => 7000 * ((2 * W + 3) * (2 * W + 3) + 1) ^ 3 := by
+    change _; norm_poly
+  have h3 : PBU fun _ W _ => (2 * W + 3) * (2 * W + 3) := by
+    change _; norm_poly
+  have h4 : PBU fun _ W _ => loopModK * ((2 * W + 3) * (2 * W + 3) + 1) *
+      (100 * itcsCompW (2 * W + 3) (2 * (2 * W + 3) ^ 64) + 2 * ((2 * W + 3) * (2 * W + 3)) + 3) := by
+    simp only [itcsCompW, itCfObjB, itcsGenW, loopModK]; norm_poly
+  exact PBU.add (PBU.add (PBU.add h1 itcs_fiber_pbu) h2) (PBU.add (PBU.mul h3 itcs_test_pbu) h4)
 
 end GI.Impl

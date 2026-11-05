@@ -1,5 +1,9 @@
-import Workspace.Impl.LinAffineResidual
-import Workspace.Cited.AlgoPermGroups
+module
+
+public import Workspace.Impl.LinAffineResidual
+public import Workspace.Cited.AlgoPermGroups
+
+@[expose] public section
 
 /-! Convert the target-stabilizer right coset produced by successive affine
 layers to the left-coset convention of canonical answers. -/

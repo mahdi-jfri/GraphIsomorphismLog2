@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojStart
+module
+
+public import Workspace.Impl.AggItemCiSojStart
+
+@[expose] public section
 
 /-! # The exact implication branch of the first-rectangle item -/
 

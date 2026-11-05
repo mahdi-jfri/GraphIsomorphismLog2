@@ -1,5 +1,9 @@
-import Workspace.Lang.Lib.LinIntBits
-import Workspace.Lang.Lib.Perm
+module
+
+public import Workspace.Lang.Lib.LinIntBits
+public import Workspace.Lang.Lib.Perm
+
+@[expose] public section
 
 /-! Binary permutation powering for the cyclic-prefix relations in A.20. -/
 namespace GI.Impl

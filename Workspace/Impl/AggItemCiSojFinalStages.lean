@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojFinalRows
+module
+
+public import Workspace.Impl.AggItemCiSojFinalRows
+
+@[expose] public section
 
 /-! # Paid-for intermediate data of the nonempty rectangle finalizer -/
 

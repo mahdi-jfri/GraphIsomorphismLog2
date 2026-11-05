@@ -1,5 +1,9 @@
-import Workspace.Impl.AggRectRepRf
-import Workspace.Impl.AggTup
+module
+
+public import Workspace.Impl.AggRectRepRf
+public import Workspace.Impl.AggTup
+
+@[expose] public section
 
 /-!
 # What the program reads in the pair cases

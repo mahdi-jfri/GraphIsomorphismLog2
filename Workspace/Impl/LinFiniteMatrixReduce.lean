@@ -1,4 +1,8 @@
-import Workspace.Impl.LinConstRem
+module
+
+public import Workspace.Impl.LinConstRem
+
+@[expose] public section
 
 /-! Reduce every matrix row by the invariant factor of its target coordinate. -/
 namespace GI.Impl
@@ -90,7 +94,7 @@ theorem linFiniteMatrixReduce_spec {P : Program} {b r c : ℕ}
       have hh : rows[k]? = some (linVecVal (fun j => A i j % m i)) := by simp [rows, i, hkr]
       rw [hh]
       rfl
-    refine (Det.snoc dacc dr).post fun cost hc => ⟨by dsimp only; rw [heq], ?_⟩
+    refine (Det.snoc dacc dr).post fun cost hc => ⟨by rw [heq], ?_⟩
     have wo := (hrow i).wt_lt.le
     have wpre := hacc k
     have wpost := hacc (k + 1)

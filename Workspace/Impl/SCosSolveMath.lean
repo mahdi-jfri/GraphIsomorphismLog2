@@ -1,5 +1,9 @@
-import Workspace.Impl.SCosSpec
-import Workspace.Proved.SCosCount
+module
+
+public import Workspace.Impl.SCosSpec
+public import Workspace.Proved.SCosCount
+
+@[expose] public section
 
 /-!
 # The cost bound of the recursion

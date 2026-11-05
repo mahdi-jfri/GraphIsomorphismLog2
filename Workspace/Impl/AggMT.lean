@@ -1,4 +1,8 @@
-import Mathlib.GroupTheory.SpecificGroups.Alternating
+module
+
+public import Mathlib.GroupTheory.SpecificGroups.Alternating
+
+@[expose] public section
 
 /-!
 # Generators of the label group of `P_T`

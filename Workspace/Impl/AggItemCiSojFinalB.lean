@@ -1,7 +1,11 @@
-import Workspace.Impl.AggItemCiSojAnswersB
-import Workspace.Impl.AggItemCiSojFinishN
-import Workspace.Impl.AggItemCiSojGFRows
-import Workspace.Impl.AggItemCiSojRF
+module
+
+public import Workspace.Impl.AggItemCiSojAnswersB
+public import Workspace.Impl.AggItemCiSojFinishN
+public import Workspace.Impl.AggItemCiSojGFRows
+public import Workspace.Impl.AggItemCiSojRF
+
+@[expose] public section
 
 /-! # Uniform local-input costs for the full rectangle-answer finalizer -/
 

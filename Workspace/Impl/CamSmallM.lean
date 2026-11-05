@@ -1,4 +1,8 @@
-import Workspace.Impl.CamTransport
+module
+
+public import Workspace.Impl.CamTransport
+
+@[expose] public section
 
 /-!
 # `m ≥ 5` above the order threshold

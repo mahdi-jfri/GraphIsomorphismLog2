@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectCorrectOne
+module
+
+public import Workspace.Impl.LinObjectCorrectOne
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

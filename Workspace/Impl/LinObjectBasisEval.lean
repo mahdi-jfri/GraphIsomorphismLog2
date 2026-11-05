@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectMovedMath
-import Workspace.Impl.LinObjectAffineEval
+module
+
+public import Workspace.Impl.LinObjectMovedMath
+public import Workspace.Impl.LinObjectAffineEval
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset

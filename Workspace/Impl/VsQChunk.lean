@@ -1,5 +1,9 @@
-import Workspace.Impl.VsQTr
-import Workspace.Lang.Lib.OrbitT
+module
+
+public import Workspace.Impl.VsQTr
+public import Workspace.Lang.Lib.OrbitT
+
+@[expose] public section
 
 /-!
 # Cutting a list into pieces

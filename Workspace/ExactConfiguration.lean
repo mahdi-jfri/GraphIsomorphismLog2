@@ -1,8 +1,12 @@
-import Workspace.PrimitiveWidth
-import Workspace.CoherentCliqueBound
-import Workspace.PairActions
-import Mathlib.Data.Real.Archimedean
-import Mathlib.Data.Nat.Cast.Order.Field
+module
+
+public import Workspace.PrimitiveWidth
+public import Workspace.CoherentCliqueBound
+public import Workspace.PairActions
+public import Mathlib.Data.Real.Archimedean
+public import Mathlib.Data.Nat.Cast.Order.Field
+
+@[expose] public section
 
 /-!
 # The width of a configuration automorphism group (Lemma A.12, cap bound)
@@ -253,12 +257,10 @@ theorem config_cap (c : Coloring n) (hc : Coherent c) (side : Bool)
           obtain ⟨g, hg⟩ := hle σ.property
           have e1 : (g : Perm Γ) (ι i₀) = ι i := by
             have := congrArg (fun p : Perm O => (p ⟨a, MulAction.mem_orbit_self a⟩).val) hg
-            simp only at this
             rw [hi₀]
             exact this.trans (congrArg Subtype.val hσ1)
           have e2 : (g : Perm Γ) (ι j₀) = ι j := by
             have := congrArg (fun p : Perm O => (p ⟨y, hy⟩).val) hg
-            simp only at this
             rw [hj₀]
             exact this.trans (congrArg Subtype.val hσ2)
           exact (hK g.property).2 i₀ j₀ i j e1 e2

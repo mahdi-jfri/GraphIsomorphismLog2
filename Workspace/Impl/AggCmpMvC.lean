@@ -1,4 +1,8 @@
-import Workspace.Impl.AggCmpMvB
+module
+
+public import Workspace.Impl.AggCmpMvB
+
+@[expose] public section
 
 /-!
 # The move program: the start of a pair, the end of the phase, and the dispatch

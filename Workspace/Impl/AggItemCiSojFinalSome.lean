@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojFinalStages
-import Workspace.Impl.AggItemCiSojProcessedG
+module
+
+public import Workspace.Impl.AggItemCiSojFinalStages
+public import Workspace.Impl.AggItemCiSojProcessedG
+
+@[expose] public section
 
 /-! # The full finalizer on nonempty exact rectangle answers -/
 

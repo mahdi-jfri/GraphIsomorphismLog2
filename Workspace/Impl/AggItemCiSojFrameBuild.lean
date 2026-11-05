@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiSojAskFrame
-import Workspace.Impl.AggItemCiSojStartScalar
+module
+
+public import Workspace.Impl.AggItemCiSojAskFrame
+public import Workspace.Impl.AggItemCiSojStartScalar
+
+@[expose] public section
 
 /-! # Frames from the actual source and aligned target tables -/
 

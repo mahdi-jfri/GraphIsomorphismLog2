@@ -1,6 +1,10 @@
-import Workspace.Lang.Prims.Basic
-import Workspace.Lang.Prims.Repr
-import Workspace.Cited.AlgoJohnson
+module
+
+public import Workspace.Lang.Prims.Basic
+public import Workspace.Lang.Prims.Repr
+public import Workspace.Cited.AlgoJohnson
+
+@[expose] public section
 
 /-!
 # The Johnson identification as a primitive

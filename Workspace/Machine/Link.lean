@@ -13,8 +13,12 @@ and the memory holds an instance `x` at `b`, the call finishes, keeps the memory
 the address of a correct output in register `r`, changes no other register, and costs at most
 the polynomial bound plus the cost of `e`.
 -/
-import Workspace.Machine.Loops
-import Workspace.Cited.Algorithm
+module
+
+public import Workspace.Machine.Loops
+public import Workspace.Cited.Algorithm
+
+@[expose] public section
 
 namespace GI.Machine
 

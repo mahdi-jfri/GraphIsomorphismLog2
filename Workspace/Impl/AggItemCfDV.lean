@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCfDCol
-import Workspace.Impl.AggStructDesV
+module
+
+public import Workspace.Impl.AggItemCfDCol
+public import Workspace.Impl.AggStructDesV
+
+@[expose] public section
 
 namespace GI.Impl
 
@@ -16,7 +20,7 @@ theorem itCfD_col_wt (dl tl : List ℕ) (q κ m a b : ℕ) :
     have hw := (natList dl).two_le_size.trans (natList dl).size_le_wt
     simpa only [Option.getD_none, wt_nat, GI.Machine.len_zero, zero_add] using hw
   | some x =>
-    simpa only [Option.getD_some] using
+    simpa only [natList, Option.getD_some] using
       (wt_le_wt_list (vs := dl.map Val.nat)
         (List.mem_map.2 ⟨x, List.mem_of_getElem? h, rfl⟩)).le
 

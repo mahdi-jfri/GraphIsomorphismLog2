@@ -1,6 +1,10 @@
-import Mathlib.GroupTheory.GroupAction.Quotient
-import Mathlib.GroupTheory.Index
-import Mathlib.Algebra.Group.Subgroup.Basic
+module
+
+public import Mathlib.GroupTheory.GroupAction.Quotient
+public import Mathlib.GroupTheory.Index
+public import Mathlib.Algebra.Group.Subgroup.Basic
+
+@[expose] public section
 
 namespace GI.PrimitiveCartesian
 
@@ -78,11 +82,3 @@ theorem product_action_degree [Fintype I] [∀ i, Finite (S i)]
   rfl
 
 end GI.PrimitiveCartesian
-
-#print axioms GI.PrimitiveCartesian.cosetProductMap_bijective
-#print axioms GI.PrimitiveCartesian.cosetProductEquiv
-#print axioms GI.PrimitiveCartesian.transitiveCosetCoordinates
-#print axioms GI.PrimitiveCartesian.transitiveCosetCoordinates_smul
-#print axioms GI.PrimitiveCartesian.productActionCoordinates
-#print axioms GI.PrimitiveCartesian.productActionCoordinates_smul
-#print axioms GI.PrimitiveCartesian.product_action_degree

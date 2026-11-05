@@ -1,5 +1,9 @@
-import Workspace.Impl.LinCoordinateRow
-import Workspace.Impl.LinPermCertificate
+module
+
+public import Workspace.Impl.LinCoordinateRow
+public import Workspace.Impl.LinPermCertificate
+
+@[expose] public section
 
 /-! Collect all cyclic-order and exponent-vector pairs, allowing each cited
 constructive-membership call to choose any valid straight-line program. -/
@@ -110,7 +114,8 @@ theorem linCoordinateCollect_spec (ho : GroupOrder) (hm : ConstructiveMembership
     have hnew : Inv (k + 1) (.list (ws ++ [w])) := by
       refine ⟨ws ++ [w], rfl, ?_⟩
       rw [List.take_add_one, List.getElem?_eq_getElem (by simpa using hk)]
-      simpa only [List.getElem_finRange] using List.rel_append hws (List.Forall₂.cons hw.1 List.Forall₂.nil)
+      simpa only [List.getElem_finRange, Option.toList_some, Fin.cast_mk] using
+        List.rel_append hws (List.Forall₂.cons hw.1 List.Forall₂.nil)
     refine ⟨hnew, ?_⟩
     have wa := wt_list3_le a (.nat k) (.list ws)
     have wi := wt_nat_le k

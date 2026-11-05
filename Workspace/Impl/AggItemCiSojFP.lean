@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojFM
+module
+
+public import Workspace.Impl.AggItemCiSojFM
+
+@[expose] public section
 
 /-! # The full program for the even permutations fixing the left side -/
 

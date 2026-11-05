@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectMatrixSpec
-import Workspace.Impl.LinObjectFrameActions
+module
+
+public import Workspace.Impl.LinObjectMatrixSpec
+public import Workspace.Impl.LinObjectFrameActions
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

@@ -1,5 +1,9 @@
-import Workspace.Proved.SNFPot
-import Workspace.Impl.HNFMain
+module
+
+public import Workspace.Proved.SNFPot
+public import Workspace.Impl.HNFMain
+
+@[expose] public section
 
 /-!
 # Alternating Hermite forms make a nonsingular matrix diagonal (Smith form)
@@ -162,7 +166,7 @@ theorem snf_step_dich {H : Matrix (Fin n) (Fin n) ℤ} (hn : 0 < n) (hHf : IsHer
     have hle : ∀ k (hk : k ≤ n), snfPre k hk H' ≤ snfPre k hk H := fun k hk =>
       Int.le_of_dvd (snfPre_pos hk hpos) (hdvd k hk)
     have hlt : snfPhi H' < snfPhi H :=
-      Finset.prod_lt_prod (fun k _ => snfPre_pos _ hpos') (fun k _ => hle _ _)
+      Finset.prod_lt_prod₀ (fun k _ => snfPre_pos _ hpos') (fun k _ => hle _ _)
         ⟨⟨k, by omega⟩, Finset.mem_univ _, lt_of_le_of_ne (hle k hk) hne⟩
     have hd : snfPhi H' ∣ snfPhi H :=
       Finset.prod_dvd_prod_of_dvd _ _ fun k _ => hdvd _ _
@@ -215,7 +219,7 @@ theorem snfPhi_le {H : Matrix (Fin n) (Fin n) ℤ} (hHf : IsHermiteForm H) :
     exact Int.le_of_dvd (snfPre_pos _ hpos) this
   unfold snfPhi
   calc ∏ k : Fin (n + 1), snfPre k _ H ≤ ∏ _k : Fin (n + 1), |H.det| :=
-        Finset.prod_le_prod (fun k _ => (snfPre_pos _ hpos).le) (fun k _ => hk _ _)
+        Finset.prod_le_prod₀ (fun k _ => (snfPre_pos _ hpos).le) (fun k _ => hk _ _)
     _ = |H.det| ^ (n + 1) := by simp
 
 /-- **After enough steps the matrix is diagonal.** -/

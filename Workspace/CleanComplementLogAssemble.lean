@@ -1,4 +1,8 @@
-import Workspace.CleanComplementLog
+module
+
+public import Workspace.CleanComplementLog
+
+@[expose] public section
 
 /-! The odd and even completions of Theorem A.17 under the logarithmic
 threshold (LG1). The constructions are the earlier ones
@@ -15,7 +19,7 @@ open Equiv
 logarithmic threshold of `k`. -/
 def CleanBlockAction.BelowLogThreshold {I V : Type*} [Fintype I] [DecidableEq I]
     [Fintype V] {G : Subgroup (Perm V)} (A : CleanBlockAction G I) (k : ℕ) : Prop :=
-  ∀ i, max 8 (2 + Real.logb 2 (Fintype.card {x : V // A.label x = i})) < (k : ℝ)
+  ∀ i, max 63 (12 * Real.logb 2 (Fintype.card {x : V // A.label x = i})) < (k : ℝ)
 
 namespace CleanBlockAction
 variable {I : Type*} {V W : Type} [Fintype I] [DecidableEq I]
@@ -45,24 +49,24 @@ variable {G : Subgroup (Perm V)}
 /-- The threshold of (LG1) forces `k ≥ 9`, once there is a block. -/
 theorem nine_le_of_belowLogThreshold {A : CleanBlockAction G I} {k : ℕ}
     (h : A.BelowLogThreshold k) (i : I) : 9 ≤ k := by
-  have h8 : (8 : ℝ) < k := lt_of_le_of_lt (le_max_left _ _) (h i)
-  have : 8 < k := by exact_mod_cast h8
+  have h63 : (63 : ℝ) < k := lt_of_le_of_lt (le_max_left _ _) (h i)
+  have : 63 < k := by exact_mod_cast h63
   omega
 
-theorem localLiftAvailable_log (hcite : GI.Cited.TransitiveAffected)
+theorem localLiftAvailable_log
     (A : CleanBlockAction G I) (hker : A.KernelTransitive) {k : ℕ}
     (hthr : A.BelowLogThreshold k) (T : Finset I) (hT : T.card = k) (hk : 5 ≤ k) :
     LocalLiftAvailable A (T : Set I) := by
   classical
   have hc : Fintype.card T = k := by rw [Fintype.card_coe, hT]
-  exact CleanLocalization.localLiftAvailable_of_transitive_kernel A hcite hker T
+  exact CleanLocalization.localLiftAvailable_of_transitive_kernel A hker T
     (Fintype.equivFinOfCardEq hc).symm hk (fun i _ => hthr i)
 
 /-- The paper: "Choose `k`-sets `T₁, T₂` meeting in exactly one block index;
 (LG1) ensures their existence. Use (LG2) to lift a `k`-cycle on `T₁` to `g` and
 a `k`-cycle on `T₂` to `h`, fixing the complement pointwise. The cycles are
 even because `k` is odd." -/
-theorem localizedPair_exists_log (hcite : GI.Cited.TransitiveAffected)
+theorem localizedPair_exists_log
     (A : CleanBlockAction G I) (hker : A.KernelTransitive) {k : ℕ}
     (hthr : A.BelowLogThreshold k) (hodd : Odd k) (hm : 2 * k - 1 ≤ Fintype.card I) :
     Nonempty (LocalizedBlockPair A) := by
@@ -85,8 +89,8 @@ theorem localizedPair_exists_log (hcite : GI.Cited.TransitiveAffected)
   obtain ⟨p, hp⟩ := CleanLocalization.even_full_support T (by omega) (by simpa [hT] using hodd)
   obtain ⟨q, hq⟩ := CleanLocalization.even_full_support U (by omega) (by simpa [hU] using hodd)
   obtain ⟨d, _⟩ := localized_pair_of_LG2 A T U
-    (localLiftAvailable_log hcite A hker hthr T hT (by omega))
-    (localLiftAvailable_log hcite A hker hthr U hU (by omega)) p q a hp hq hmeet
+    (localLiftAvailable_log A hker hthr T hT (by omega))
+    (localLiftAvailable_log A hker hthr U hU (by omega)) p q a hp hq hmeet
   exact ⟨d⟩
 
 namespace CleanEvenConstruction
@@ -97,7 +101,7 @@ variable (A : CleanBlockAction G (Option I))
 /-- The even case: "Choose a `k`-set `T` containing `a, ℓ` and avoiding `b, c`;
 it exists by (LG1). Using (LG2), choose `h` with a `k`-cycle top on `T`
 sending `a` to `ℓ`." Here `ℓ` is the index `none`. -/
-theorem extraLift_exists_log (hcite : GI.Cited.TransitiveAffected)
+theorem extraLift_exists_log
     (hker : A.KernelTransitive) {k : ℕ} (hthr : A.BelowLogThreshold k) (hodd : Odd k)
     (hm : 2 * k - 1 ≤ Fintype.card (Option I))
     (a b c : I) (hab : a ≠ b) (hac : a ≠ c) : Nonempty (ExtraLift A a b c) := by
@@ -109,7 +113,7 @@ theorem extraLift_exists_log (hcite : GI.Cited.TransitiveAffected)
     (by simp) (by simpa using Ne.symm hab) (by simp) (by simpa using Ne.symm hac) (by simp)
   obtain ⟨p, hp, hsend⟩ := CleanLocalization.even_full_support_send T (by omega)
     (by simpa [hT] using hodd) (some a) none ha hz (by simp)
-  exact extraLift_of_LG2 A T (localLiftAvailable_log hcite A hker hthr T hT (by omega))
+  exact extraLift_of_LG2 A T (localLiftAvailable_log A hker hthr T hT (by omega))
     p a b c hp hsend hb hc
 
 end CleanEvenConstruction
@@ -119,12 +123,12 @@ variable {J : Type} [Fintype J] [DecidableEq J]
 /-- The odd completion, `m = 2r + 1`, with blocks indexed by
 `Option (J × Bool)`: the central block is `none`, and the pairs are
 `(some (j, false), some (j, true))`. -/
-noncomputable def logOddComplement (hcite : GI.Cited.TransitiveAffected)
+noncomputable def logOddComplement
     (A : CleanBlockAction G (Option (J × Bool))) (hker : A.KernelTransitive) {k : ℕ}
     (hthr : A.BelowLogThreshold k) (hodd : Odd k)
     (hm : 2 * k - 1 ≤ Fintype.card (Option (J × Bool))) : PureComplement A := by
   classical
-  let d := Classical.choice (localizedPair_exists_log hcite A hker hthr hodd hm)
+  let d := Classical.choice (localizedPair_exists_log A hker hthr hodd hm)
   have hk := nine_le_of_belowLogThreshold hthr none
   have hc : 5 ≤ Fintype.card (Option (J × Bool)) := by omega
   exact {
@@ -139,12 +143,12 @@ noncomputable def logOddComplement (hcite : GI.Cited.TransitiveAffected)
 
 /-- The even completion, `m = 2r + 2`: first the odd construction on the blocks
 other than `none`, then one extra clean cycle through the block `none`. -/
-noncomputable def logEvenComplement (hcite : GI.Cited.TransitiveAffected)
+noncomputable def logEvenComplement
     (A : CleanBlockAction G (Option (Option (J × Bool)))) (hker : A.KernelTransitive)
     {k : ℕ} (hthr : A.BelowLogThreshold k) (hodd : Odd k)
     (hm : 2 * k - 1 ≤ Fintype.card (Option (Option (J × Bool)))) : PureComplement A := by
   classical
-  let d := Classical.choice (localizedPair_exists_log hcite A hker hthr hodd hm)
+  let d := Classical.choice (localizedPair_exists_log A hker hthr hodd hm)
   have hk := nine_le_of_belowLogThreshold hthr none
   have hc : 5 ≤ Fintype.card (Option (Option (J × Bool))) := by omega
   have holdcard : 2 < (Finset.univ : Finset (Option (J × Bool))).card := by
@@ -166,7 +170,7 @@ noncomputable def logEvenComplement (hcite : GI.Cited.TransitiveAffected)
   have hthr' : (CleanEvenAssembly.oldAction d hc).BelowLogThreshold k :=
     hthr.relabel A (CleanOldRows.coordinates d hc).symm
   let z := Classical.choice (CleanEvenConstruction.extraLift_exists_log
-    (CleanEvenAssembly.oldAction d hc) hcite hker' hthr' hodd hm a b c hab hac)
+    (CleanEvenAssembly.oldAction d hc) hker' hthr' hodd hm a b c hab hac)
   exact {
     Fiber := (CleanOldRows.system d hc).Center
     base := (CleanOldRows.system d hc).centerBase

@@ -1,4 +1,8 @@
-import Workspace.Impl.HNFBarPiv
+module
+
+public import Workspace.Impl.HNFBarPiv
+
+@[expose] public section
 
 /-!
 # Bareiss elimination, as a program

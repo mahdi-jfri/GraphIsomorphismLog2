@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryStepInput
+module
+
+public import Workspace.Impl.LinPrimaryStepInput
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

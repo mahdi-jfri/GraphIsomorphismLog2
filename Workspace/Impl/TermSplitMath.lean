@@ -1,4 +1,8 @@
-import Workspace.Impl.TermLiftMath
+module
+
+public import Workspace.Impl.TermLiftMath
+
+@[expose] public section
 
 /-!
 # The split of the table transport over the radical cosets (mathematics)
@@ -31,8 +35,8 @@ variable {P : Params} {S : State Ω C} {L : GiantLabels S} (I : RowTerminal P S 
 
 open RowTerminal
 
-/-- The radical preimage `R ≤ H` of Corollary A.22. -/
-noncomputable def tmRad : Subgroup (Perm I.B) := radicalPreimage I.Hb I.Nb
+/-- The solvable-quotient subgroup `R' ≤ H` of Corollary A.22 (`I.rad`). -/
+def tmRad : Subgroup (Perm I.B) := I.rad
 
 /-- **The piece of the table transport over the radical coset `R r`.** -/
 def tmCosetT (r : Perm I.B) : Set ((Fin L.q → Perm I.B) × Perm (Fin L.q)) :=

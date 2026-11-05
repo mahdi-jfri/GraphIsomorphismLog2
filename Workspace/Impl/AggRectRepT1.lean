@@ -1,6 +1,10 @@
-import Workspace.Impl.AggRectRepS6
-import Workspace.Impl.AggCertBud
-import Workspace.Lang.Lib.SmallGroup
+module
+
+public import Workspace.Impl.AggRectRepS6
+public import Workspace.Impl.AggCertBud
+public import Workspace.Lang.Lib.SmallGroup
+
+@[expose] public section
 
 /-!
 # Stage 1 of the representation program

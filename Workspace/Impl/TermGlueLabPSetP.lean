@@ -1,4 +1,8 @@
-import Workspace.Impl.TermGlueLabPSet
+module
+
+public import Workspace.Impl.TermGlueLabPSet
+
+@[expose] public section
 
 /-!
 # The setup program of step 5

@@ -1,5 +1,9 @@
-import Workspace.Impl.AggSubMath
-import Workspace.Impl.AggCertWt
+module
+
+public import Workspace.Impl.AggSubMath
+public import Workspace.Impl.AggCertWt
+
+@[expose] public section
 
 /-!
 # The list of the test sets, as a program

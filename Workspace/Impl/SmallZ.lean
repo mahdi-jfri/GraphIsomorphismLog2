@@ -1,6 +1,10 @@
-import Workspace.Lang.Lib.Loop
-import Workspace.Machine.Len
-import Workspace.Assembly.Params
+module
+
+public import Workspace.Lang.Lib.Loop
+public import Workspace.Machine.Len
+public import Workspace.Assembly.Params
+
+@[expose] public section
 
 /-!
 # The integer small test as a program
@@ -265,10 +269,11 @@ theorem powStep_det {P : Program} (ord d e i : ℕ) :
     have h : min (t0 * d) (ord + 1) = min (d ^ (i + 1)) (ord + 1) := by
       rw [pow_succ]; exact min_mul_min _ _ _
     rw [← h]
-    simp only [BinOp.eval]
     by_cases hlt : ord < t0 * d
-    · rw [if_pos hlt, if_neg one_ne_zero, min_eq_right (by omega)]
-    · rw [if_neg hlt, if_pos rfl, min_eq_left (by omega)]
+    · simp only [BinOp.eval, hlt, ↓reduceIte, one_ne_zero,
+        min_eq_right (by omega : ord + 1 ≤ t0 * d)]
+    · simp only [BinOp.eval, hlt, ↓reduceIte,
+        min_eq_left (by omega : t0 * d ≤ ord + 1)]
   have dIte := Det.ite' dTest dAdd dV
   rw [hval] at dIte
   refine (Det.letE dM dIte).mono ?_
@@ -379,7 +384,8 @@ theorem smallZ_spec {P : Program} {b B : ℕ} (h : P.HasAt b (smallZFuns b B)) (
   have dT := Det.arith (op := .lt) dO3 (Det.arith (op := .add) dM (Det.nat 1))
   have hval : Val.nat (BinOp.eval .lt ord (BinOp.eval .add m 1)) =
       boolVal (decide (ord ≤ d ^ (B * L))) := by
-    simp only [BinOp.eval, boolVal]
+    change Val.nat (if ord < m + 1 then 1 else 0) =
+      Val.nat (decide (ord ≤ d ^ (B * L))).toNat
     by_cases hle : ord ≤ d ^ (B * L)
     · rw [if_pos ((le_iff_lt_min ord _).1 hle), decide_eq_true hle]; rfl
     · rw [if_neg (fun h' => hle ((le_iff_lt_min ord _).2 h')), decide_eq_false hle]; rfl

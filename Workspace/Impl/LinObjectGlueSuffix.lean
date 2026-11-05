@@ -1,5 +1,9 @@
-import Workspace.Impl.LinObjectGlueSuccess
-import Workspace.Impl.LinObjectGlueSize
+module
+
+public import Workspace.Impl.LinObjectGlueSuccess
+public import Workspace.Impl.LinObjectGlueSize
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -89,7 +93,7 @@ theorem linObjectGlueSuffixStep_spec (ho : GroupOrder) (hh : HermiteFullRank) (h
     refine ⟨input,hr,?_⟩
     have hτr : I.τ*r ∈ gens I.hs := (gens I.hs).mul_mem I.τH (I.cover_H hsuccess.1)
     refine (linObjectSourceCorrect_spec hh h.correct hjh I.as I.ns π hπ F.presentation.2.1 I.Y I.X I.jointOK
-      I.solvable_A I.NA (gens I.hs) I.AH I.normalA I.normalN I.abelian I.compact I.fixY I.fixX hk
+      I.norm_YX I.NA (gens I.hs) I.AH I.normalA I.normalN I.abelian I.compact I.fixY I.fixX hk
       F.blocks (by omega) F.fullRank F.localKernel (I.τ*r) hτr (I.source_cover_conf r hsuccess.1)).mono
       fun out cost hout => ⟨?_,?_⟩
     · obtain ⟨a,ha,he,hact⟩ := linObjectCorrectOneAnswer_success (gens I.as) (tmGlMs I.Y)
@@ -110,7 +114,7 @@ theorem linObjectGlueSuffixStep_spec (ho : GroupOrder) (hh : HermiteFullRank) (h
     have hcst := hb hr
     refine ⟨input,hr,?_⟩
     refine (linObjectStabilizer_spec hh h.stabilizer hjmem hjh I.as I.ns π hπ F.presentation.2.1 I.Y I.targetOK
-      I.solvable_A I.NA (gens I.hs) I.AH I.normalA I.normalN I.abelian I.compact I.fixY hk
+      I.norm_Y I.NA (gens I.hs) I.AH I.normalA I.normalN I.abelian I.compact I.fixY hk
       F.blocks (by omega) F.fullRank F.localKernel F.groups F.localGroups (1::ls)
       (fun g hg => (hsuccess.2.2.1 g hg).1) (fun g hg => (hsuccess.2.2.1 g hg).2.1)
       (fun g hg => (hsuccess.2.2.1 g hg).2.2) hsuccess.2.2.2).mono fun out cost hout => ⟨?_,?_⟩

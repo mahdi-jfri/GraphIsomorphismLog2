@@ -1,5 +1,9 @@
-import Workspace.Impl.LinMixedFiber
-import Workspace.Impl.LinPrimaryLoopInvariant
+module
+
+public import Workspace.Impl.LinMixedFiber
+public import Workspace.Impl.LinPrimaryLoopInvariant
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

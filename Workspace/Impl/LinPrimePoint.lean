@@ -1,5 +1,9 @@
-import Workspace.Impl.LinPrimeAction
-import Workspace.Impl.LinFinitePointReduce
+module
+
+public import Workspace.Impl.LinPrimeAction
+public import Workspace.Impl.LinFinitePointReduce
+
+@[expose] public section
 
 /-! Project a retained full point without changing its homogeneous scalar. -/
 namespace GI.Impl

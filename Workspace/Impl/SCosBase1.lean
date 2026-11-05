@@ -1,5 +1,9 @@
-import Workspace.Impl.SCosSpec
-import Workspace.Impl.Lift
+module
+
+public import Workspace.Impl.SCosSpec
+public import Workspace.Impl.Lift
+
+@[expose] public section
 
 /-!
 # The base case `Φ = {α}`, the mathematics

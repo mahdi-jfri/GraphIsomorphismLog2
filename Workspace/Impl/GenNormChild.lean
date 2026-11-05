@@ -1,5 +1,9 @@
-import Workspace.Impl.GenChild
-import Workspace.Algorithm.NormLabels
+module
+
+public import Workspace.Impl.GenChild
+public import Workspace.Algorithm.NormLabels
+
+@[expose] public section
 
 /-!
 # States and modes of normalization children

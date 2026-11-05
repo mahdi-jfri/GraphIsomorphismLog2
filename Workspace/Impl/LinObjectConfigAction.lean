@@ -1,4 +1,8 @@
-import Workspace.Impl.LinObjectConfigMath
+module
+
+public import Workspace.Impl.LinObjectConfigMath
+
+@[expose] public section
 
 /-! An arbitrary valid choice of local transporters obeys the same
 affine law. This is the form used when constructing matrix columns. -/

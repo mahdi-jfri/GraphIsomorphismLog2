@@ -1,4 +1,8 @@
-import Workspace.Proved.VsHCountMath
+module
+
+public import Workspace.Proved.VsHCountMath
+
+@[expose] public section
 
 /-!
 # Words of a family that commutes modulo `S`

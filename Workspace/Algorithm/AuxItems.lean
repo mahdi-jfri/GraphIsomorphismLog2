@@ -1,9 +1,13 @@
-import Workspace.Algorithm.AggregationCanon
-import Workspace.Algorithm.CertificatePhase
-import Workspace.Algorithm.ComparisonPhase
-import Workspace.Paper.Caps
-import Mathlib.GroupTheory.GroupAction.FixingSubgroup
-import Mathlib.Data.List.ReduceOption
+module
+
+public import Workspace.Algorithm.AggregationCanon
+public import Workspace.Algorithm.CertificatePhase
+public import Workspace.Algorithm.ComparisonPhase
+public import Workspace.Paper.Caps
+public import Mathlib.GroupTheory.GroupAction.FixingSubgroup
+public import Mathlib.Data.List.ReduceOption
+
+@[expose] public section
 
 /-!
 # The aggregation round as a procedure on its structural data

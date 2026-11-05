@@ -1,5 +1,9 @@
-import Workspace.Impl.TermRecStep
-import Workspace.Impl.PolyBd
+module
+
+public import Workspace.Impl.TermRecStep
+public import Workspace.Impl.PolyBd
+
+@[expose] public section
 
 /-!
 # T5, the own cost of one level is polynomial in `n + M`
@@ -134,12 +138,40 @@ theorem tmRiP_prC (hmem : Membership) : PBU fun k W _ => tmRiPrC hmem k W :=
       (PBU.addc (PBU.add tmRiP_V (PBU.smul 2000 tmRiP_B)) 5)))
     (PBU.smul 8000 (PBU.pow (PBU.addc (PBU.smul 2 PBU.W) 1) 3))
 
+theorem tmRiP_rebTab (Kg Dg : ℕ) :
+    PBU fun k W _ => tmRiRebTabC Kg Dg k W (2 * W) (tmRiVs k W) := by
+  have pm : PBU fun _ W _ => 2 * W := PBU.smul 2 PBU.W
+  have pW : PBU fun k W _ => 10 * tmRiVs k W + 20 := PBU.addc (PBU.smul 10 tmRiP_V) 20
+  have pc : PBU fun k _ _ => 1400 * (k + 1) ^ 6 + 1 := PBU.addc (PBU.smul 1400 (tmRiP_F 6)) 1
+  have pP : PBU fun k W _ =>
+      Kg * (tmRiVs k W + 1) ^ Dg + 5 * 10 ^ 4 * (tmRiVs k W + 1) :=
+    PBU.add (PBU.smul Kg (PBU.pow (PBU.addc tmRiP_V 1) Dg))
+      (PBU.smul (5 * 10 ^ 4) (PBU.addc tmRiP_V 1))
+  exact PBU.add (PBU.mul pm (PBU.add (PBU.add (PBU.add (PBU.add
+      (PBU.mul pm pP)
+      (PBU.mul (PBU.smul mapK (PBU.addc pm 1)) (PBU.addc (PBU.add pW (PBU.mul pm pc)) 5)))
+      (PBU.smul 150 tmRiP_V)) (PBU.const 300)) (PBU.mul pm pc)))
+    (PBU.mul (PBU.smul mapK (PBU.addc pm 1)) (PBU.addc (PBU.add tmRiP_V
+      (PBU.mul pm (PBU.addc (PBU.smul 2 (PBU.addc (PBU.mul pm pc) 4)) 1))) 5))
+
+theorem tmRiP_reb (psci : Prim) (hmem : Membership) (Kg Dg : ℕ) :
+    PBU fun k W _ => tmRiRebC psci hmem Kg Dg k W :=
+  PBU.add (PBU.add (PBU.add (PBU.add (PBU.add
+    (PBU.smul 2 (tmRiP_pcs psci))
+    (tmRiP_red hmem (PBU.addc (PBU.smul 2 (PBU.pow PBU.k 2)) 1)))
+    (tmRiP_rebTab Kg Dg))
+    (PBU.smul 2 (tmRiP_prC hmem)))
+    (PBU.smul 15 tmRiP_SQ))
+    (PBU.smul 10 (PBU.addc (PBU.smul 700 (tmRiP_F 6)) 1))
+
 theorem tmRiP_stepO (hsci : SolvableCosetIntersection) (hder : DerivedSubgroup)
     (hmem : Membership) (Kg Dg : ℕ) :
     PBU fun k W _ => tmRiStepO hsci hder hmem Kg Dg k W :=
-  PBU.add (PBU.add (PBU.add (PBU.add (PBU.add (PBU.add (PBU.add
+  PBU.add (PBU.add (PBU.add (PBU.add (PBU.add (PBU.add (PBU.add (PBU.add
     (tmRiP_der (derivedSubgroupPrim hder) hmem)
     (PBU.smul 2 (tmRiP_pcs (solvableCosetIntersectionPrim hsci))))
+    (PBU.mul (PBU.smul 4 (PBU.pow PBU.W 3))
+      (tmRiP_reb (solvableCosetIntersectionPrim hsci) hmem Kg Dg)))
     (PBU.mul (PBU.smul 4 (PBU.pow PBU.W 3)) (tmRiP_Y (solvableCosetIntersectionPrim hsci))))
     (tmRiP_tab hmem)) (PBU.smul 2 (tmRiP_prC hmem)))
     (PBU.smul Kg (PBU.pow (PBU.addc tmRiP_V 1) Dg))) (PBU.smul 10 tmRiP_SQ))
@@ -151,10 +183,24 @@ theorem tmRiP_base (psci : Prim) :
       (PBU.add (PBU.smul 10 tmRiP_V) (PBU.smul 2000 (tmRiP_F 6)))))
     (PBU.smul (10 ^ 7) (PBU.pow (PBU.addc (PBU.add tmRiP_V (tmRiP_F 6)) 1) 2))
 
+theorem tmRiP_normStepO (hsci : SolvableCosetIntersection) (hder : DerivedSubgroup)
+    (hmem : Membership) (Kg Dg : ℕ) :
+    PBU fun k W _ => tmRiNormStepO hsci hder hmem Kg Dg k W :=
+  PBU.add (PBU.add (PBU.add (PBU.add (PBU.add (PBU.add (PBU.add
+    (tmRiP_stepO hsci hder hmem Kg Dg)
+    (PBU.smul 2 (tmRiP_pcs (solvableCosetIntersectionPrim hsci))))
+    (PBU.mul (PBU.smul 4 (PBU.pow PBU.W 3))
+      (PBU.add (tmRiP_base (solvableCosetIntersectionPrim hsci)) (PBU.smul 10 tmRiP_V))))
+    (PBU.mul (PBU.smul 4 (PBU.pow PBU.W 3)) (tmRiP_Y (solvableCosetIntersectionPrim hsci))))
+    (tmRiP_tab hmem))
+    (PBU.smul 2 (tmRiP_prC hmem)))
+    (PBU.smul 15 tmRiP_SQ))
+    (PBU.smul 10 (PBU.addc (PBU.smul 700 (tmRiP_F 6)) 1))
+
 /-- **The own cost of one level**: the step, the case `ℓ = 0`, and the dispatch. -/
 noncomputable def tmRiOwnC (hsci : SolvableCosetIntersection) (hder : DerivedSubgroup)
     (hmem : Membership) (Kg Dg n M : ℕ) : ℕ :=
-  tmRiStepO hsci hder hmem Kg Dg n M +
+  tmRiNormStepO hsci hder hmem Kg Dg n M +
     tmRiBaseC (tmRiObjPC (solvableCosetIntersectionPrim hsci) n (2 * M)) n (tmRiVs n M) +
     10 * tmRiVs n M
 
@@ -163,7 +209,7 @@ theorem tmRiOwn_poly (hsci : SolvableCosetIntersection) (hder : DerivedSubgroup)
     (hmem : Membership) (Kg Dg : ℕ) :
     ∃ C D : ℕ, ∀ n M, tmRiOwnC hsci hder hmem Kg Dg n M ≤ C * (n + M + 2) ^ D := by
   obtain ⟨C, D, h⟩ : PBU fun k W _ => tmRiOwnC hsci hder hmem Kg Dg k W :=
-    PBU.add (PBU.add (tmRiP_stepO hsci hder hmem Kg Dg)
+    PBU.add (PBU.add (tmRiP_normStepO hsci hder hmem Kg Dg)
       (tmRiP_base (solvableCosetIntersectionPrim hsci))) (PBU.smul 10 tmRiP_V)
   refine ⟨C, D, fun n M => ?_⟩
   have := h n M 0

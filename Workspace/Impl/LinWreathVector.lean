@@ -1,4 +1,8 @@
-import Workspace.Impl.LinWreathMatrix
+module
+
+public import Workspace.Impl.LinWreathMatrix
+
+@[expose] public section
 
 /-! Instantiate the vector task on the explicit numbered two-copy cover. -/
 namespace GI.Impl
@@ -14,12 +18,19 @@ noncomputable def linWreathVecInst (I : VecStabInst) [Nonempty (Fin I.n)]
     (w : Fin I.d → ZMod I.p) : VecStabInst where
   n := I.n + I.n
   gs := linWreathCoverGenerators I.gs
-  solvable := linWreathCoverGenerators_solvable I.gs I.solvable
   p := I.p
   prime := I.prime
   p_le := I.p_le.trans (Nat.le_add_right _ _)
   d := I.d + I.d
   φ := (linWreathMatrixRep I.φ).comp (linWreathCoverEquiv I.gs).symm.toMonoidHom
+  solvable := by
+    have : Group.IsSolvable (linWreathMatrixRep I.φ).range :=
+      linWreathMatrixRep_range_solvable I.φ I.solvable
+    exact solvable_of_solvable_injective
+      (Subgroup.inclusion_injective
+        (show ((linWreathMatrixRep I.φ).comp (linWreathCoverEquiv I.gs).symm.toMonoidHom).range ≤
+            (linWreathMatrixRep I.φ).range by
+          rintro _ ⟨x, rfl⟩; exact ⟨_, rfl⟩))
   v := linWreathNumberLinear (linWreathPair I.v w)
 
 theorem linWreathVecInst_mem (I : VecStabInst) [Nonempty (Fin I.n)]

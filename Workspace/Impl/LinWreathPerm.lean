@@ -1,4 +1,8 @@
-import Workspace.Impl.LinWreathCopy
+module
+
+public import Workspace.Impl.LinWreathCopy
+
+@[expose] public section
 
 /-! Construct the complete two-copy covering permutation list. -/
 namespace GI.Impl

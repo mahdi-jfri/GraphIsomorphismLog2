@@ -1,4 +1,8 @@
-import Workspace.Assembly.BuildGens
+module
+
+public import Workspace.Assembly.BuildGens
+
+@[expose] public section
 
 /-!
 # Building the pair state (`BuildSpec`)

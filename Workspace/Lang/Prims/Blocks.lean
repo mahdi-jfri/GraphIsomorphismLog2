@@ -16,7 +16,11 @@ most `B` cells, plus a polynomial in the weight `T` of the argument (`kerK * T ^
 `blkK * T ^ 9`). They depend on the input alone, because the tasks bound the number of
 generators of their outputs by `n²`.
 -/
-import Workspace.Lang.Prims.Graph
+module
+
+public import Workspace.Lang.Prims.Graph
+
+@[expose] public section
 
 namespace GI.Lang
 
@@ -112,7 +116,8 @@ theorem ker_spec (h : Preimage) {P : Program} {b jpre : ℕ} (hb : P.HasAt b (ke
     (mkGroup_spec hmk hs)
   refine dM.post fun c hc => ⟨⟨gens hs, ⟨hs, rfl, rfl⟩, fun g => ?_⟩, wt_encGroup_le_sq hl, ?_⟩
   · have := hhs ▸ graphInst_kernel hr hgs g
-    simpa only [hrR] using this
+    simp only [hrR] at this
+    exact this
   -- the cost
   · have w1 : L.wt ≤ 4 * (n + 1) ^ 2 := hL ▸ wt_encRepr_le r
     have w2 := wt_encGroup_le gs
@@ -332,7 +337,8 @@ theorem blk_spec (hps : PointwiseStab) (h : Preimage) {P : Program} {b jps jpre 
       encGroup ((gs.map (psi r)).map sumToFin), .list (hs.map encPerm)]) (i := 3) rfl)
   refine dOut.post fun c hc => ⟨⟨_, _, rfl, gens hs, ⟨hs, rfl, rfl⟩, fun g => ?_⟩, hO, ?_⟩
   · have := hhs ▸ graphInst_block hr hgs a hms g
-    simpa only [hrR] using this
+    simp only [hrR] at this
+    exact this
   · clear dH dRa dIn hPS dM dG dI hP dF dOut hhs hI hpts
     -- weights of the pieces
     have hA0 : (encGroup gs).wt < (Val.list [encGroup gs, .list ls, .nat a]).wt :=

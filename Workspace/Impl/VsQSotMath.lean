@@ -1,5 +1,9 @@
-import Workspace.Impl.VsQInd
-import Workspace.Lang.Prims.PermGroups
+module
+
+public import Workspace.Impl.VsQInd
+public import Workspace.Lang.Prims.PermGroups
+
+@[expose] public section
 
 /-!
 # The stabilizer from an orbit list
@@ -50,7 +54,7 @@ theorem vsQPos_lt [DecidableEq Y] {y : Y} (hy : y ∈ vsQOrb α gs y₀) : vsQPo
 
 theorem vsQPos_get [DecidableEq Y] (i : Fin L.length) : vsQPos L (L[i]).1 = i := by
   unfold vsQPos
-  have := List.idxOf_getElem hL.nodup i (by simp)
+  have := hL.nodup.idxOf_getElem i (by simp)
   simpa using this
 
 theorem vsQ_get_mem (i : Fin L.length) : (L[i]).1 ∈ vsQOrb α gs y₀ :=

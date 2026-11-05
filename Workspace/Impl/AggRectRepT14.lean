@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectRepT13
+module
+
+public import Workspace.Impl.AggRectRepT13
+
+@[expose] public section
 
 /-!
 # The concrete representation program

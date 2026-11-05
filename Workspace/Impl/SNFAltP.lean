@@ -1,5 +1,9 @@
-import Workspace.Impl.SNFEnv
-import Workspace.Proved.SNFSize
+module
+
+public import Workspace.Impl.SNFEnv
+public import Workspace.Proved.SNFSize
+
+@[expose] public section
 
 /-!
 # One alternation step as a program (Smith form)

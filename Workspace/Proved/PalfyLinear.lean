@@ -1,4 +1,8 @@
-import Workspace.Proved.PalfyHard
+module
+
+public import Workspace.Proved.PalfyHard
+
+@[expose] public section
 
 /-!
 # Order of solvable completely reducible linear groups
@@ -56,7 +60,7 @@ theorem palfy_linear_aux : ∀ (n d : ℕ) (K V : Type) [Field K] [Finite K] [Ad
     have h2 : 1 < Nat.card W' := Finite.one_lt_card
     have hWlt : Nat.card W < Nat.card V := by rw [hVc]; nlinarith
     have hW'lt : Nat.card W' < Nat.card V := by rw [hVc]; nlinarith
-    haveI := hs
+    haveI : Group.IsSolvable H := hs
     have b1 := ihV W (hn ▸ hWlt) _ (palfyResGrp_solvable H W hW) (palfyCR_res hcr hW)
     have b2 := ihV W' (hn ▸ hW'lt) _ (palfyResGrp_solvable H W' hW') (palfyCR_res hcr hW')
     set c := 24 * Nat.card K ^ 6
@@ -78,7 +82,7 @@ theorem palfy_linear_aux : ∀ (n d : ℕ) (K V : Type) [Field K] [Finite K] [Ad
     by_cases h0 : W = ⊥
     · exact Or.inl h0
     · exact Or.inr (hred W hW h0)
-  haveI := hs
+  haveI : Group.IsSolvable H := hs
   by_cases hab : palfyAbSc H
   · exact palfy_hard hab
   -- a non-scalar abelian normal subgroup

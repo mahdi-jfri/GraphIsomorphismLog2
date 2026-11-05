@@ -1,5 +1,9 @@
-import Workspace.Impl.TermJWrMath
-import Workspace.Impl.TermJProgPair
+module
+
+public import Workspace.Impl.TermJWrMath
+public import Workspace.Impl.TermJProgPair
+
+@[expose] public section
 
 /-!
 # Generators of `N ≀ Sym(q)` on `Fin (m q)` (program)

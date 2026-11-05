@@ -1,4 +1,8 @@
-import Workspace.RadicalSocleSimpleFactors
+module
+
+public import Workspace.RadicalSocleSimpleFactors
+
+@[expose] public section
 
 namespace GI.RadicalSocle
 

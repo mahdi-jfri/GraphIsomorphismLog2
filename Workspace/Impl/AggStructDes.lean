@@ -1,4 +1,8 @@
-import Workspace.Impl.AggStructCol
+module
+
+public import Workspace.Impl.AggStructCol
+
+@[expose] public section
 
 /-!
 # The source tuple of Case 3, as a search

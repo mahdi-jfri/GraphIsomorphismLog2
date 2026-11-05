@@ -1,4 +1,8 @@
-import Workspace.Impl.AggRectSpec
+module
+
+public import Workspace.Impl.AggRectSpec
+
+@[expose] public section
 
 /-!
 # Generators of the permitted label group

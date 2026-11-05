@@ -1,4 +1,8 @@
-import Workspace.Impl.HNFTabs
+module
+
+public import Workspace.Impl.HNFTabs
+
+@[expose] public section
 
 /-!
 # The Hermite program

@@ -1,5 +1,9 @@
-import Workspace.FiniteBudget
-import Mathlib.NumberTheory.Padics.PadicVal.Basic
+module
+
+public import Workspace.FiniteBudget
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
+
+@[expose] public section
 
 namespace GI
 

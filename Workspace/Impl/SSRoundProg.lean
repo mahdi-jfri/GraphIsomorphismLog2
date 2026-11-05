@@ -1,4 +1,8 @@
-import Workspace.Impl.SSGenProg
+module
+
+public import Workspace.Impl.SSGenProg
+
+@[expose] public section
 
 /-!
 # The rounds, as programs

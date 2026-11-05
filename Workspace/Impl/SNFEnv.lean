@@ -1,6 +1,10 @@
-import Workspace.Impl.SNFTabs
-import Workspace.Impl.HNFPoly
-import Workspace.Impl.LinDenseMul
+module
+
+public import Workspace.Impl.SNFTabs
+public import Workspace.Impl.HNFPoly
+public import Workspace.Impl.LinDenseMul
+
+@[expose] public section
 
 /-!
 # One polynomial envelope for the costs used by the Smith program

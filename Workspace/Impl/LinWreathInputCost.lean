@@ -1,4 +1,8 @@
-import Workspace.Impl.LinWreathInputProg
+module
+
+public import Workspace.Impl.LinWreathInputProg
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

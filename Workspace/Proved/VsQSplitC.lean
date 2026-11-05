@@ -1,4 +1,8 @@
-import Workspace.Proved.VsQSplit1
+module
+
+public import Workspace.Proved.VsQSplit1
+
+@[expose] public section
 
 /-!
 # A split by a chain of local subspaces

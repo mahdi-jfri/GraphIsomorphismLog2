@@ -1,7 +1,11 @@
-import Workspace.Proved.VsQTMath
-import Workspace.Proved.VsQLoc
-import Workspace.Impl.VsQSot
-import Workspace.Impl.VsQChunk
+module
+
+public import Workspace.Proved.VsQTMath
+public import Workspace.Proved.VsQLoc
+public import Workspace.Impl.VsQSot
+public import Workspace.Impl.VsQChunk
+
+@[expose] public section
 
 /-!
 # The action of `H` on tuples of local subspaces

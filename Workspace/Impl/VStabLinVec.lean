@@ -1,6 +1,10 @@
-import Workspace.Lang.Lib.List
-import Workspace.Lang.Lib.NatList
-import Workspace.Lang.Lib.Tabulate
+module
+
+public import Workspace.Lang.Lib.List
+public import Workspace.Lang.Lib.NatList
+public import Workspace.Lang.Lib.Tabulate
+
+@[expose] public section
 
 /-!
 # Linear combinations of vectors over `𝔽_p`

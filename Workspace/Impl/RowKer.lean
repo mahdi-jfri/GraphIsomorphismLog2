@@ -1,4 +1,8 @@
-import Workspace.Impl.RowProg
+module
+
+public import Workspace.Impl.RowProg
+
+@[expose] public section
 
 /-!
 # The label kernel in graph form, in `GI.Lang`

@@ -1,4 +1,8 @@
-import Workspace.Impl.ScriptCont
+module
+
+public import Workspace.Impl.ScriptCont
+
+@[expose] public section
 
 /-!
 # The rest of the comparison phase, after some of its calls

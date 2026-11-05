@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojFrameWt
+module
+
+public import Workspace.Impl.AggItemCiSojFrameWt
+
+@[expose] public section
 
 /-! # The actual rectangle queue meets the global polynomial item bound -/
 

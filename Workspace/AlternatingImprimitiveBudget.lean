@@ -1,5 +1,9 @@
-import Workspace.AlternatingImprimitiveDegree
-import Workspace.BudgetInductionAlternatives
+module
+
+public import Workspace.AlternatingImprimitiveDegree
+public import Workspace.BudgetInductionAlternatives
+
+@[expose] public section
 
 namespace GI.AlternatingActions
 
@@ -59,7 +63,7 @@ theorem primitive_alternative_of_imprimitive_natural_stabilizer {m n : ℕ} {A�
   have hb := AlternatingActions.imprimitive_stabilizer_valuation_log_bound G giant v x imprimitive
   have hcard : Nat.card (Fin n) = n := by rw [Nat.card_eq_fintype_card, Fintype.card_fin]
   rw [hcard] at hb
-  have hn : 2 ≤ n := by simpa using (Fintype.one_lt_card (α := Fin n))
+  have hn : 1 < n := by simpa using (Fintype.one_lt_card (α := Fin n))
   have hlog : 0 ≤ Real.log (n : ℝ) := Real.log_nonneg (by exact_mod_cast (show 1 ≤ n by omega))
   exact Or.inl ⟨3, Or.inl rfl, hb.trans (mul_le_mul_of_nonneg_right hA hlog)⟩
 

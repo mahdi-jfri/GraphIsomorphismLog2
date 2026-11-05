@@ -1,4 +1,8 @@
-import Workspace.Impl.LinIntBasis
+module
+
+public import Workspace.Impl.LinIntBasis
+
+@[expose] public section
 
 /-! Assemble the integer relation rows from cyclic orders and SLP exponents. -/
 namespace GI.Impl
@@ -89,7 +93,9 @@ theorem linRelations_spec {P : Program} {b basis sub ib n : ℕ}
     (by simp) (fun k acc _ he => he ▸ wacc k) (fun k acc hk he => ?_)
   · refine hlp.mono fun out cost ho => ⟨?_, ?_⟩
     · have hlen : rows.length = n := by simp [rows]
-      simpa only [← hlen, List.take_length] using ho.1
+      have h1 := ho.1
+      rw [← hlen, List.take_length] at h1
+      exact h1
     · simpa only [Finset.sum_const, Finset.card_range, smul_eq_mul, linRelationsCost] using ho.2
   · subst acc
     let i : Fin n := ⟨k, hk⟩
@@ -128,8 +134,7 @@ theorem linRelations_spec {P : Program} {b basis sub ib n : ℕ}
       rw [List.take_add_one, List.getElem?_eq_getElem (by simp [rows]; exact hk)]
       simp [rows, i]
     refine step.post fun cost hc => ⟨?_, ?_⟩
-    · dsimp only
-      rw [hout]
+    · rw [hout]
     · have wa := wt_list3_le a (.nat k) (.list (rows.take k))
       have wcur := wacc k
       have wnext := wacc (k + 1)

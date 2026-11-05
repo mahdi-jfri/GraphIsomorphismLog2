@@ -1,4 +1,8 @@
-import Workspace.Impl.LinPrimaryStepCost
+module
+
+public import Workspace.Impl.LinPrimaryStepCost
+
+@[expose] public section
 
 /-! A complete primary iteration, with both answer branches and the full
 restricted dictionary, point and accumulated representative. -/
@@ -7,37 +11,40 @@ open GI.Cited GI.Lang
 set_option maxRecDepth 18000
 
 noncomputable def linPrimaryNextTarget {n p d : ℕ} (gs : List (Equiv.Perm (Fin n)))
-    (hs : IsSolvable (gens gs)) (hp : p.Prime) (hpn : p ≤ n) (ν : Fin d → ℕ) (level : ℕ)
+    (hp : p.Prime) (hpn : p ≤ n) (ν : Fin d → ℕ) (level : ℕ)
     (ρ : gens gs →* (linFiniteVec (linPrimaryOrders p ν) ≃+ linFiniteVec (linPrimaryOrders p ν)))
+    (hs : IsSolvable ρ.range)
     (c : gens gs → linFiniteVec (linPrimaryOrders p ν))
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g)
     (hf : ∀ g, linPrimaryFiber p ν level (c g)) (x : linFiniteVec (linPrimaryOrders p ν)) :
     Subgroup (Equiv.Perm (Fin n)) :=
-  linAffineTargetSub (linPrimaryLayerInst gs hs hp hpn ν level ρ x)
+  linAffineTargetSub (linPrimaryLayerInst gs hp hpn ν level ρ hs x)
     (fun g => linPrimaryCoord p ν level (c g))
-    (linPrimaryLayer_cocycle gs hs hp hpn ν level ρ c hc hf x) 0
+    (linPrimaryLayer_cocycle gs hp hpn ν level ρ hs c hc hf x) 0
 
 theorem linPrimaryNextTarget_le {n p d : ℕ} (gs : List (Equiv.Perm (Fin n)))
-    (hs : IsSolvable (gens gs)) (hp : p.Prime) (hpn : p ≤ n) (ν : Fin d → ℕ) (level : ℕ)
+    (hp : p.Prime) (hpn : p ≤ n) (ν : Fin d → ℕ) (level : ℕ)
     (ρ : gens gs →* (linFiniteVec (linPrimaryOrders p ν) ≃+ linFiniteVec (linPrimaryOrders p ν)))
+    (hs : IsSolvable ρ.range)
     (c : gens gs → linFiniteVec (linPrimaryOrders p ν))
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g)
     (hf : ∀ g, linPrimaryFiber p ν level (c g)) (x : linFiniteVec (linPrimaryOrders p ν)) :
-    linPrimaryNextTarget gs hs hp hpn ν level ρ c hc hf x ≤ gens gs := by
+    linPrimaryNextTarget gs hp hpn ν level ρ hs c hc hf x ≤ gens gs := by
   intro z hz
   obtain ⟨g, _, rfl⟩ := Subgroup.mem_map.mp hz
   exact g.property
 
 noncomputable def linPrimaryStepOut {n p d : ℕ} (gs : List (Equiv.Perm (Fin n)))
-    (hs : IsSolvable (gens gs)) (hp : p.Prime) (hpn : p ≤ n) (ν : Fin d → ℕ) (level : ℕ)
+    (hp : p.Prime) (hpn : p ≤ n) (ν : Fin d → ℕ) (level : ℕ)
     (ρ : gens gs →* (linFiniteVec (linPrimaryOrders p ν) ≃+ linFiniteVec (linPrimaryOrders p ν)))
+    (hs : IsSolvable ρ.range)
     (c : gens gs → linFiniteVec (linPrimaryOrders p ν))
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g)
     (hf : ∀ g, linPrimaryFiber p ν level (c g)) (x : linFiniteVec (linPrimaryOrders p ν))
     (acc : Equiv.Perm (Fin n)) (out : Val) : Prop :=
   (out = .list [] ∧ ¬∃ g : gens gs, linPrimaryFiber p ν (level + 1) (ρ g x + c g)) ∨
   ∃ (g : gens gs) (newgs : List (Equiv.Perm (Fin n))) (hle : gens newgs ≤ gens gs),
-    newgs.length ≤ n ^ 2 ∧ gens newgs = linPrimaryNextTarget gs hs hp hpn ν level ρ c hc hf x ∧
+    newgs.length ≤ n ^ 2 ∧ gens newgs = linPrimaryNextTarget gs hp hpn ν level ρ hs c hc hf x ∧
     out = .list [linActionContext newgs (linPrimaryOrders p ν) (ρ.comp (Subgroup.inclusion hle))
       (c ∘ Subgroup.inclusion hle), linFinitePointVal (linPrimaryOrders p ν) (ρ g x + c g), encPerm (g.val * acc)] ∧
     linPrimaryFiber p ν (level + 1) (ρ g x + c g)
@@ -59,23 +66,24 @@ private theorem linPrimaryTailInput {a z ans W Z L : ℕ} (ha : a ≤ W) (hz : z
 set_option maxHeartbeats 3000000 in
 theorem linPrimaryStep_spec (hm : ConstructiveMembership) (hv : VectorStabilizer)
     {P : Program} {b jm jv n p d : ℕ} (hat : linPrimaryStepAt P b jm jv hm hv)
-    (gs : List (Equiv.Perm (Fin n))) (hs : IsSolvable (gens gs)) (hp : p.Prime) (hpn : p ≤ n)
+    (gs : List (Equiv.Perm (Fin n))) (hp : p.Prime) (hpn : p ≤ n)
     [NeZero n] (ν : Fin d → ℕ) (level : ℕ)
     (ρ : gens gs →* (linFiniteVec (linPrimaryOrders p ν) ≃+ linFiniteVec (linPrimaryOrders p ν)))
+    (hs : IsSolvable ρ.range)
     (c : gens gs → linFiniteVec (linPrimaryOrders p ν))
     (hc : ∀ g k, c (g * k) = ρ g (c k) + c g)
     (hf : ∀ g, linPrimaryFiber p ν level (c g)) (x : linFiniteVec (linPrimaryOrders p ν))
     (hx : linPrimaryFiber p ν level x) (acc : Equiv.Perm (Fin n)) :
     let a := linPrimaryIterationVal gs (linPrimaryOrders p ν) ρ c x acc p ν level
-    FunAll P b a (fun out cost => linPrimaryStepOut gs hs hp hpn ν level ρ c hc hf x acc out ∧
+    FunAll P b a (fun out cost => linPrimaryStepOut gs hp hpn ν level ρ hs c hc hf x acc out ∧
       cost ≤ linPrimaryStepCost hm hv a.wt level) := by
   let m := linPrimaryOrders p ν
   let a := linPrimaryIterationVal gs m ρ c x acc p ν level
   let W := a.wt
   let zero := encVec (0 : Fin d → ZMod p)
-  let I := linPrimaryLayerInst gs hs hp hpn ν level ρ x
+  let I := linPrimaryLayerInst gs hp hpn ν level ρ hs x
   let c' : gens I.gs → Fin I.d → ZMod I.p := fun g => linPrimaryCoord p ν level (c g)
-  let hc' := linPrimaryLayer_cocycle gs hs hp hpn ν level ρ c hc hf x
+  let hc' := linPrimaryLayer_cocycle gs hp hpn ν level ρ hs c hc hf x
   let layerArg := Val.list [linPrimaryInputVal gs ν level ρ c x, zero]
   let Z := linPrimaryStepZeroBudget W
   let A := linPrimaryStepArgBudget W
@@ -97,7 +105,7 @@ theorem linPrimaryStep_spec (hm : ConstructiveMembership) (hv : VectorStabilizer
   have da : Det P [a, zero] linPrimaryStepLayerArgE layerArg A := da0.mono ha
   have warg : layerArg.wt ≤ A := linDet_wt_le da
   have hlayer : FunAll P (b + 4) layerArg (fun out cost => linAffineTransportOut I c' hc' 0 out ∧ cost ≤ L) :=
-    FunAll.mono (linPrimaryTransport_spec hv hat.layer gs hs hp hpn ν level ρ c hc hf x 0)
+    FunAll.mono (linPrimaryTransport_spec hv hat.layer gs hp hpn ν level ρ hs c hc hf x 0)
       (fun out cost ho => ⟨ho.1, ho.2.trans (linPrimaryTransportCost_mono hv warg le_rfl)⟩)
   have call := normBound_call da hlayer
   apply FunAll.intro hat.entry
@@ -108,7 +116,7 @@ theorem linPrimaryStep_spec (hm : ConstructiveMembership) (hv : VectorStabilizer
   intro ans cl ho
   have hcl := ho.2.2
   have wans := ho.2.1
-  have hnext := linPrimaryTransportOut_next gs hs hp hpn ν level ρ c hc hf x hx ans ho.1
+  have hnext := linPrimaryTransportOut_next gs hp hpn ν level ρ hs c hc hf x hx ans ho.1
   rcases hnext with ⟨rfl, hno⟩ | ⟨g, sv, hans, hg, hgens⟩
   · have dlen := Det.length (Det.var' (P := P) (env := [a, zero, .list []]) (i := 2) rfl)
     have de := Det.ite_zero (t := linPrimaryStepTailF (b + 233) (b + 300) (b + 347) (b + 425)) dlen (Det.nil (P := P) (env := [a, zero, .list []]))
@@ -124,7 +132,7 @@ theorem linPrimaryStep_spec (hm : ConstructiveMembership) (hv : VectorStabilizer
     obtain ⟨newgs, hraw, hlen, heq⟩ := hgens
     have hle : gens newgs ≤ gens gs := by
       rw [heq]
-      exact linPrimaryNextTarget_le gs hs hp hpn ν level ρ c hc hf x
+      exact linPrimaryNextTarget_le gs hp hpn ν level ρ hs c hc hf x
     subst sv
     let result := Val.list [linActionContext newgs m (ρ.comp (Subgroup.inclusion hle)) (c ∘ Subgroup.inclusion hle),
       linFinitePointVal m (ρ g x + c g), encPerm (g.val * acc)]

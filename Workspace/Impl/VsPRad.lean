@@ -1,5 +1,9 @@
-import Workspace.Impl.VsPDesc
-import Workspace.Impl.VsWProgImg
+module
+
+public import Workspace.Impl.VsPDesc
+public import Workspace.Impl.VsWProgImg
+
+@[expose] public section
 
 /-!
 # The radical stage

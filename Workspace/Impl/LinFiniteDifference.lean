@@ -1,4 +1,8 @@
-import Workspace.Impl.LinRecenterOffset
+module
+
+public import Workspace.Impl.LinRecenterOffset
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang

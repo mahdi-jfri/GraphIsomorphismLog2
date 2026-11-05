@@ -1,4 +1,8 @@
-import Workspace.Proved.SolvDerived
+module
+
+public import Workspace.Proved.SolvDerived
+
+@[expose] public section
 
 /-!
 # Abelian normal subgroups of a group transitive on the nonidentity elements

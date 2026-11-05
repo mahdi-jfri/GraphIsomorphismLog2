@@ -1,5 +1,9 @@
-import Workspace.Impl.AggItemCiCfgS
-import Workspace.Impl.AggItemCiCfgC
+module
+
+public import Workspace.Impl.AggItemCiCfgS
+public import Workspace.Impl.AggItemCiCfgC
+
+@[expose] public section
 
 /-!
 # The configuration branch: the list of pair colors

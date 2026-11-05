@@ -1,5 +1,9 @@
-import Mathlib.GroupTheory.SpecificGroups.Alternating
-import Aesop
+module
+
+public import Mathlib.GroupTheory.SpecificGroups.Alternating
+public import Aesop
+
+@[expose] public section
 
 /-! The explicit permutation generation used in the compatible completion of A.17. -/
 namespace GI

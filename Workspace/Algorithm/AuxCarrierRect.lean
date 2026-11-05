@@ -1,5 +1,9 @@
-import Workspace.Algorithm.AuxPairRect
-import Workspace.Paper.RectangleCarrier
+module
+
+public import Workspace.Algorithm.AuxPairRect
+public import Workspace.Paper.RectangleCarrier
+
+@[expose] public section
 
 /-!
 # The rectangle on the row--column diagonal orbit (Lemma A.30)

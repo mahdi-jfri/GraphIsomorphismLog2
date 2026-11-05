@@ -1,5 +1,9 @@
-import Workspace.Impl.VsPBas
-import Workspace.Impl.VsWProgEig
+module
+
+public import Workspace.Impl.VsPBas
+public import Workspace.Impl.VsWProgEig
+
+@[expose] public section
 
 /-!
 # The elements `∏ b_l^{c_l}`, `c_l < r`
@@ -152,7 +156,7 @@ theorem vsPEMid_spec {P : Program} {f mpI it pow comp : ℕ} (hf : P.funs[f]? = 
   have eR : (natList (List.range r)).wt = (Val.list ((List.range r).map Val.nat)).wt := rfl
   have wres : (Val.list ((List.range r).map fun c => encPerm (e * b ^ c))).wt ≤ 20 * (N + 1) ^ 3 := by
     have := vsP_wt_perms hn ((List.range r).map fun c => e * b ^ c) (by simp; omega)
-    simpa [List.map_map, Function.comp] using this
+    rw [List.map_map] at this; exact this
   have w1 := hp2 e
   have w2 := hp2 b
   have w3 := hp2 1
@@ -249,7 +253,7 @@ theorem vsPEStep_spec {P : Program} {f mpM mid mpI it pow comp cat : ℕ}
       simp only [xss, List.map_map, List.mem_map, Function.comp] at hv
       obtain ⟨e, -, rfl⟩ := hv
       have := vsP_wt_perms hn ((List.range r).map fun c => e * b ^ c) (by simp; omega)
-      simpa [List.map_map, Function.comp] using this)
+      rw [List.map_map] at this; exact this)
     rw [List.length_map] at h1
     have hxl : xss.length = E.length := by simp [xss]
     rw [hxl] at h1

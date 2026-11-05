@@ -1,6 +1,10 @@
-import Workspace.Impl.AggItemHvMath
-import Workspace.Impl.AggItemC1Sch
-import Workspace.Impl.AggItemC1Chk
+module
+
+public import Workspace.Impl.AggItemHvMath
+public import Workspace.Impl.AggItemC1Sch
+public import Workspace.Impl.AggItemC1Chk
+
+@[expose] public section
 
 /-!
 # Case 2a as a program: the generators of `A`

@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJ
+module
+
+public import Workspace.Impl.TermJ
+
+@[expose] public section
 
 /-!
 # Pairs as permutations of `B × [q]` (the algebra behind `TermJSpec`)

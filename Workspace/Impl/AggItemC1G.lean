@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemC1Sw
+module
+
+public import Workspace.Impl.AggItemC1Sw
+
+@[expose] public section
 
 /-!
 # Case 1 as a program: the generators of the stabilizer

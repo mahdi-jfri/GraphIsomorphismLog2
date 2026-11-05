@@ -1,4 +1,8 @@
-import Workspace.Impl.LinCoordinates
+module
+
+public import Workspace.Impl.LinCoordinates
+
+@[expose] public section
 
 /-! The ordered word used to lift an integer vector. Its image in an
 abelian quotient is the specified integer-coordinate sum. -/

@@ -1,5 +1,9 @@
-import Workspace.Impl.LinBackSub
-import Workspace.Lang.Lib.LinIntTail
+module
+
+public import Workspace.Impl.LinBackSub
+public import Workspace.Lang.Lib.LinIntTail
+
+@[expose] public section
 
 /-! Bit bounds for the recursive triangular algorithm. Each residual increases
 its coordinate bit bound by at most B+1, with B a bound for the matrix entries.

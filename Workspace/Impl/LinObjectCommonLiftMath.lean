@@ -1,7 +1,11 @@
-import Workspace.Impl.LinObjectShiftOffsetsSpec
-import Workspace.Impl.LinObjectLiftSpec
-import Workspace.Impl.LinObjectReindexPresentation
-import Workspace.Impl.LinObjectFrameActions
+module
+
+public import Workspace.Impl.LinObjectShiftOffsetsSpec
+public import Workspace.Impl.LinObjectLiftSpec
+public import Workspace.Impl.LinObjectReindexPresentation
+public import Workspace.Impl.LinObjectFrameActions
+
+@[expose] public section
 
 namespace GI.Impl
 open GI.Cited GI.Lang GI.Multicoset
@@ -28,11 +32,12 @@ theorem linObjectCommonLift_exists {n : ℕ} {Q : Type*} [CommGroup Q]
           (linObjectUnflatten _ _ w))) = 0 := by
     rw [hcoord,linObjectPieceReindex_indexedConfig]
     exact hz
-  rw [Submodule.mkQ_apply,Submodule.Quotient.mk_eq_zero,linObjectPieceReindex_mem_diagonal] at hh
+  rw [Submodule.mkQ_apply,Submodule.Quotient.mk_eq_zero] at hh
   have hh' : (LinearMap.range (linObjectDiagonal (linObjectLocalImages as π Y))).mkQ
       (linObjectProductMap (linObjectLocalImages as π Y) (linObjectLiftCoord as π)
         (linObjectUnflatten _ _ w)) = 0 := by
-    rwa [Submodule.mkQ_apply,Submodule.Quotient.mk_eq_zero]
+    rw [Submodule.mkQ_apply,Submodule.Quotient.mk_eq_zero]
+    exact (linObjectPieceReindex_mem_diagonal as π Y _).mp hh
   exact (linObjectCommonCorrection_coordinates (linObjectLocalImages as π Y) (linObjectLiftCoord as π)
     (linObjectUnflatten _ _ w)).mp hh'
 

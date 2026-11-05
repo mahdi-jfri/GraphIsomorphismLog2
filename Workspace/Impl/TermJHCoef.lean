@@ -1,7 +1,11 @@
-import Workspace.Impl.TermJHProg2
-import Workspace.Impl.TermJSolPoly
-import Workspace.Impl.PolyBd
-import Workspace.Lang.Lib.LinIntColumn
+module
+
+public import Workspace.Impl.TermJHProg2
+public import Workspace.Impl.TermJSolPoly
+public import Workspace.Impl.PolyBd
+public import Workspace.Lang.Lib.LinIntColumn
+
+@[expose] public section
 
 /-!
 # The transporter of one label: the context and the coefficients

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiCfgG
+module
+
+public import Workspace.Impl.AggItemCiCfgG
+
+@[expose] public section
 
 /-!
 # The configuration query: reading the answer

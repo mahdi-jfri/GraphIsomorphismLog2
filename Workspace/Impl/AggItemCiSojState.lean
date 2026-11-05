@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojQV
+module
+
+public import Workspace.Impl.AggItemCiSojQV
+
+@[expose] public section
 
 /-!
 # Retaining the parent fields in the inherited query encoding

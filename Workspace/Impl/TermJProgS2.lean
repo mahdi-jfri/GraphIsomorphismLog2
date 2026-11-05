@@ -1,4 +1,8 @@
-import Workspace.Impl.TermJHProg2
+module
+
+public import Workspace.Impl.TermJHProg2
+
+@[expose] public section
 
 /-!
 # The kernel part of `Aut_J(X)` (program)
@@ -147,7 +151,7 @@ theorem tmJ_s2_spec {P : Program} {f mp lam fld st pw dc pp comp iv locA dsA rg 
     exact tmJS2_row_le hZ le_rfl (by omega) (wo.trans (by omega)) le_rfl
   have hM := mapList_spec hA.hmp (List.finRange G) (fun i => linVecVal (K i))
     (fun i => encPerm (toFin (finProdFinEquiv : Fin m × Fin q ≃ Fin (m * q)) (tmJLam lg (K i))))
-    (c := (Val.list [tmJLgVal lg, tmJLocCtx m q])) (fun i _ i' _ he => by simp only at he ⊢; rw [linVecVal_injective he]) hrow
+    (c := (Val.list [tmJLgVal lg, tmJLocCtx m q])) (fun i _ i' _ he => by rw [linVecVal_injective he]) hrow
   have a0 := Det.arg' (P := P) (vs := [tmJLgVal lg, encIntMatrix K, tmJLocCtx m q]) (rest := [])
     (j := 0) (v := tmJLgVal lg) rfl
   have a1 := Det.arg' (P := P) (vs := [tmJLgVal lg, encIntMatrix K, tmJLocCtx m q]) (rest := [])

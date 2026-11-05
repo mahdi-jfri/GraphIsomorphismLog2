@@ -1,7 +1,11 @@
-import Workspace.Algorithm.LocalTestCalls
-import Workspace.Algorithm.QueryChild
-import Workspace.CertificateEndpoint
-import Workspace.CertificateComparison
+module
+
+public import Workspace.Algorithm.LocalTestCalls
+public import Workspace.Algorithm.QueryChild
+public import Workspace.CertificateEndpoint
+public import Workspace.CertificateComparison
+
+@[expose] public section
 
 /-!
 # `CheckNewWindow` and the endpoint procedure as query scripts (Algorithm 2)

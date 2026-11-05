@@ -1,6 +1,10 @@
-import Workspace.Impl.LinObjectQuotientBuild
-import Workspace.Impl.LinObjectNormalMath
-import Workspace.Impl.TermGlueLabQ
+module
+
+public import Workspace.Impl.LinObjectQuotientBuild
+public import Workspace.Impl.LinObjectNormalMath
+public import Workspace.Impl.TermGlueLabQ
+
+@[expose] public section
 
 /-! Assemble the object quotient and compute its finite abelian normal
 form. The zero-column case is direct and makes no cited normal-form call. -/

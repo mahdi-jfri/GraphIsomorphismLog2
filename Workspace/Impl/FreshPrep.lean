@@ -1,4 +1,8 @@
-import Workspace.Impl.FreshColor
+module
+
+public import Workspace.Impl.FreshColor
+
+@[expose] public section
 
 /-!
 # The value of a fresh state, in `GI.Lang`

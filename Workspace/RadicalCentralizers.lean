@@ -1,5 +1,9 @@
-import Workspace.RadicalSocleQuotient
-import Mathlib.GroupTheory.Commutator.Basic
+module
+
+public import Workspace.RadicalSocleQuotient
+public import Mathlib.GroupTheory.Commutator.Basic
+
+@[expose] public section
 
 /-!
 # The radical as an intersection of centralizers of nonabelian chief factors
@@ -97,14 +101,14 @@ theorem centInter_normal : (centInter hs).Normal := by
 
 include hs in
 /-- A solvable normal subgroup meets a nonabelian chief factor trivially, hence centralizes it. -/
-theorem solvable_centralizes {R : Subgroup Q} [R.Normal] [IsSolvable R] {i : ℕ} (hi : i < n)
+theorem solvable_centralizes {R : Subgroup Q} [R.Normal] [Group.IsSolvable R] {i : ℕ} (hi : i < n)
     (hna : ¬ ⁅s (i + 1), s (i + 1)⁆ ≤ s i) : ∀ x ∈ R, ∀ u ∈ s (i + 1), ⁅x, u⁆ ∈ s i := by
   haveI := hs.normal i
   haveI := hs.normal (i + 1)
   set U := s (i + 1)
   set V := s i
   have hVU : V ≤ U := (hs.lt i hi).le
-  haveI : IsSolvable (R ⊓ U : Subgroup Q) :=
+  haveI : Group.IsSolvable (R ⊓ U : Subgroup Q) :=
     solvable_of_solvable_injective (Subgroup.inclusion_injective (inf_le_left : R ⊓ U ≤ R))
   -- `M = (R ∩ U) V` is normal between `V` and `U`
   rcases hs.chief i hi ((R ⊓ U) ⊔ V) (Subgroup.sup_normal _ _) le_sup_right
@@ -139,7 +143,7 @@ theorem solvable_centralizes {R : Subgroup Q} [R.Normal] [IsSolvable R] {i : ℕ
                 rw [Subgroup.commutator_comm (D k) (D k ⊔ V), Subgroup.commutator_comm (D k) (D k)]
                 exact commutator_sup_le
             _ = D (k + 1) ⊔ V := by rw [hDk, sup_assoc, sup_idem, sup_assoc, sup_idem]
-    obtain ⟨k, hk⟩ := (inferInstance : IsSolvable (R ⊓ U : Subgroup Q)).solvable
+    obtain ⟨k, hk⟩ := (inferInstance : Group.IsSolvable (R ⊓ U : Subgroup Q)).solvable
     have h := hD k
     simp only [D, hk, Subgroup.map_bot, bot_sup_eq] at h
     exact (hs.lt i hi).not_ge h
@@ -173,7 +177,7 @@ theorem centInter_factor {i : ℕ} (hi : i < n) :
 
 include hs in
 /-- The intersection is solvable: its restricted chief series has abelian factors. -/
-theorem centInter_solvable : IsSolvable (centInter hs) := by
+theorem centInter_solvable : Group.IsSolvable (centInter hs) := by
   set C := centInter hs
   have key : ∀ k, k ≤ n → (derivedSeries C k).map C.subtype ≤ s (n - k) := by
     intro k

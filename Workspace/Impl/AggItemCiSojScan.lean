@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCiSojOne
+module
+
+public import Workspace.Impl.AggItemCiSojOne
+
+@[expose] public section
 
 /-!
 # One scan for the cut test and the imprimitive choice
@@ -114,6 +118,6 @@ theorem itcs_imp_scan_prog {Pg : Program} {fd ft : ℕ}
       obtain ⟨t, ht', rfl⟩ := List.mem_map.1 hw
       exact ht t ht')
   simpa only [itcsImpScan, List.map_const', List.sum_replicate, List.length_map,
-    List.length_range, smul_eq_mul] using h
+    List.length_range, smul_eq_mul, natList, FunDet] using h
 
 end GI.Impl

@@ -1,4 +1,8 @@
-import Workspace.Impl.AggItemCfDHit
+module
+
+public import Workspace.Impl.AggItemCfDHit
+
+@[expose] public section
 
 namespace GI.Impl
 

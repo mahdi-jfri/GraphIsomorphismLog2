@@ -1,5 +1,9 @@
-import Workspace.Impl.VsPKey
-import Workspace.Proved.VsPPairMath
+module
+
+public import Workspace.Impl.VsPKey
+public import Workspace.Proved.VsPPairMath
+
+@[expose] public section
 
 /-!
 # Words `∏ g_i ^ a_i` as a program
