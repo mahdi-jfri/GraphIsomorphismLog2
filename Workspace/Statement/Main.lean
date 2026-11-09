@@ -1,9 +1,9 @@
 /-
-The main theorem as a statement. This file and `Workspace.Statement.Machine` are the trusted
-statement: a reader must check both to know what is claimed. Everything else in the project is
-proof, checked by Lean.
+The theorem for all graphs as a statement. This file, `Workspace.Statement.Degree` and
+`Workspace.Statement.Machine` are the trusted statement: a reader must check all three to know
+what is claimed. Everything else in the project is proof, checked by Lean.
 
-The claim is Theorem 1.1 of the paper (Hajiaghayi and JafariRaviz, "Deterministic `n^{O(log n)}`
+The claim is Corollary 1.2 of the paper (Hajiaghayi and JafariRaviz, "Deterministic `n^{O(log n)}`
 Graph Isomorphism Algorithm via Inherited Decompositions"). There is a deterministic algorithm
 that, given two graphs on `n` vertices, decides whether they are isomorphic in time
 `exp (O ((log (n + 2)) ^ 2))`. If they are, it also returns one isomorphism and generators for
@@ -67,7 +67,7 @@ def CorrectOutput (G H : SimpleGraph (Fin n)) (mem : ℕ → ℕ) (r : ℕ) : Pr
       (∀ (t : Fin gens.length) (i : Fin n), mem (r + 2 + n + n * t + i) = gens.get t i) ∧
       Subgroup.closure {g | g ∈ gens} = autGroup G)
 
-/-- **Theorem 1.1 of the paper, as a statement.** There are one program `p` and one constant
+/-- **Corollary 1.2 of the paper, as a statement.** There are one program `p` and one constant
 `C` such that the following holds for every `n` and all graphs `G` and `H` on `Fin n`. The run
 of `p` on the memory holding `G` and `H` finishes with a correct output, at a cost of at most
 `exp (C * (log (n + 2)) ^ 2)`. This bound equals `(n + 2) ^ (C * log (n + 2))`, so it

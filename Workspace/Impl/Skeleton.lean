@@ -20,7 +20,7 @@ receives an input value (`Iface.InVal`):
 * `Solve`: any value of the state (`StateVal`), with any injective color code;
 * `Continue`: a canonical value (`Canon`, `Workspace/Impl/Canon.lean`);
 * `GiantStep`: a pair `[sv, lv]` of a canonical value of the state and a value `lv` of the
-  supplied labels (Algorithm 5 passes the labels of the normalization to `GiantStep`). How the
+  supplied labels (Algorithm 3 passes the labels of the normalization to `GiantStep`). How the
   labels are stored is a choice of the implementation (`Iface.LabVal`, with a weight bound
   `Iface.labW`).
 
@@ -186,7 +186,7 @@ noncomputable def excess (m : Mode) (v : Val) : ℝ :=
   if m = .solve then (I.K₀ : ℝ) * ((v.wt : ℝ) + 1) ^ I.d₀ else 0
 
 /-- **The labels of a call** with input value `v`, as the label index of its run: none for
-`Solve` and `Continue`, and for `GiantStep` the supplied labels that `v` stores (Algorithm 5,
+`Solve` and `Continue`, and for `GiantStep` the supplied labels that `v` stores (Algorithm 3,
 `GiantStep(S, Γ)`: "for the supplied alternating label set"). -/
 def LabOf (m : Mode) {Ω C : Type} {k : ℕ} (e : Ω ≃ Fin k) (v : Val) (S : State Ω C)
     (L : Option (SuppliedLabels S)) : Prop :=

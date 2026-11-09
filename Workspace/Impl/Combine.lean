@@ -9,7 +9,7 @@ public import Workspace.Lang.Lib.Perm
 /-!
 # Combining the answers of the cosets
 
-Algorithm 5: "apply that reduction and solve its children with `Continue`; return their exact
+Algorithm 3: "apply that reduction and solve its children with `Continue`; return their exact
 combined answer", and for the normalization "Return the exact combination of these answers".
 A reduction splits the group `G` into cosets `τ_j K`; the child on `τ_j K` returns its answer
 `A_j`, and the answer of the parent is the union `U = ⋃_j τ_j A_j`. Each `A_j` is empty or a

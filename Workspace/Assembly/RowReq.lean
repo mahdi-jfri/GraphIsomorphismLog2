@@ -24,7 +24,7 @@ hypotheses:
 `final_modulo_row_agg` is the same with the aggregation round (`asAgg` at
 `asmAggBase`, `final_modulo_agg`): the aggregation side is then its four phase contracts
 (`AsReadOK`, `AsCertOK`, `AsCompOK`, `AsItemsOK`) and a polynomial bound on its weight function
-`X`, and the only other open hypotheses are `TermRadSpec` and `TermCosetSpec`.
+`X`, and the only other hypotheses are `TermRadSpec` and `TermCosetSpec`.
 
 The work of the row step is `rqWr` with the terminal constant `rqAa`; its bounds are
 `rq_wr_bound`.
@@ -54,7 +54,8 @@ theorem final_modulo_row (hst : PointwiseStab)
       (asmProg hst hm hpre hfac (gsExtra hmb hO hC) gsGen (rlRow rad cos) agg) asmF asmAggBase)
     (hWa : ∃ A D : ℕ, ∀ nd : Node P₀, nd.m ≠ .solve → Nat.card nd.Ω ≤ nd.S.N → Small nd.S →
       nd.run.kind = .aggregate → Wa nd ≤ A * ((nd.S.N : ℝ) + 2) ^ D) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime := by
+    Solved
+      (asmProg hst hm hpre hfac (gsExtra hmb hO hC) gsGen (rlRow rad cos) agg) := by
   have hg : gsGen.length ≤ asmSlot := by rw [length_gsGen]; unfold asmSlot; omega
   refine final_modulo_gen hst hm hpre hfac hmb hO hC (rlRow rad cos) agg _ Wa
     (rq_rowSpec hst hm hpre hfac hTr hg hr hc hrad hcos _ Wa) hagg ?_
@@ -109,7 +110,8 @@ theorem final_modulo_row_agg (hst : PointwiseStab)
       (asmProg hst hm hpre hfac (gsExtra hmb hO hC) gsGen (rlRow rad cos)
         (asAgg rd cr cm it rest)) asmF H X (asb 4))
     (hX : PBU fun _ W _ => X W) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime := by
+    Solved
+      (asmProg hst hm hpre hfac (gsExtra hmb hO hC) gsGen (rlRow rad cos) (asAgg rd cr cm it rest)) := by
   have hg : gsGen.length ≤ asmSlot := by rw [length_gsGen]; unfold asmSlot; omega
   have hl : (rlRow rad cos).length ≤ asmSlot := by
     rw [length_rlRow hr]; unfold asmSlot rlCosOff at *; omega
@@ -149,7 +151,10 @@ theorem final_modulo_row_agg_ext (hst : PointwiseStab)
       (asmProg hst hm hpre hfac (gsExtra hmb hO hC ++ ext) gsGen (rlRow rad cos)
         (asAgg rd cr cm it rest)) asmF H X (asb 4))
     (hX : PBU fun _ W _ => X W) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime := by
+    SolvedQ (asmProg hst hm hpre hfac (gsExtra hmb hO hC ++ ext) gsGen (rlRow rad cos)
+        (asAgg rd cr cm it rest))
+      (· = (asmRest hst hm hpre hfac (gsWg hst hm hpre hmb hO hC)
+        (rqWr hst hfac (rqAa hst hm hpre hfac K D Ac)) (asWa hst hm hpre hfac X)).iface) := by
   have hg : gsGen.length ≤ asmSlot := by rw [length_gsGen]; unfold asmSlot; omega
   have hl : (rlRow rad cos).length ≤ asmSlot := by
     rw [length_rlRow hr]; unfold asmSlot rlCosOff at *; omega

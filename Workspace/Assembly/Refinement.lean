@@ -15,8 +15,8 @@ This file states the three obligations of stage 2 as definitions. `GI.Assembly.f
   the value of every state `S`, every evaluation returns the value of the answer `A` of some run
   `r` of `Solve` on `S` (at the parameters `P₀`), at a language cost of at most
   `K (r.total w + wt v + 1)^d`.
-* **(b) `GraphWrapper Pg fm fs`.** Function `fm` is Algorithm 1 around `fs`: it builds the value
-  of the pair state `graphState G H` from the input value (`BuildSpec`), calls `fs`, and turns
+* **(b) `GraphWrapper Pg fm fs`.** Function `fm` is the graph wrapper around `fs`: it builds the
+  value of the pair state `graphState G H` from the input value (`BuildSpec`), calls `fs`, and turns
   the answer into the output format of the statement (`ConvertSpec`), each at polynomial cost.
 * **(c) `WorkBound w`.** The work function `w` satisfies the work bounds `NodeBound' w cw` of
   Section 7.4 for some `cw ≥ 0`.
@@ -67,7 +67,7 @@ def Implements (m : Mode) (Pg : Program) (f : ℕ) (w : Node P₀ → ℝ) : Pro
       FunAll Pg f v fun u cost => ∃ (A : Set (Perm Ω)) (r : Run P₀ m S none A),
         AnswerVal e u A ∧ (cost : ℝ) ≤ K * (r.total w + v.wt + 1) ^ d
 
-/-! ### (b) Algorithm 1 -/
+/-! ### (b) The graph wrapper -/
 
 /-- The positions of the pair state on `n` vertices, `Fin n × Fin n`, as numbers: `(u, v)` is
 `n u + v`. -/
@@ -80,7 +80,7 @@ theorem pairCode_injective : Function.Injective pairCode := by
   rintro ⟨a, b⟩ ⟨a', b'⟩ h
   cases a <;> cases b <;> cases a' <;> cases b' <;> simp_all [pairCode]
 
-/-- **Algorithm 1 as a main function.** On the input value: build the value of the pair state
+/-- **The graph wrapper as a main function.** On the input value: build the value of the pair state
 (function `fb`), call `Solve` (function `fs`) on it, and convert the answer (function `fc`, on
 the pair `[input, answer]`). -/
 def mainBody (fb fs fc : ℕ) : Expr :=
@@ -88,7 +88,7 @@ def mainBody (fb fs fc : ℕ) : Expr :=
 
 open Classical in
 /-- **Building the pair state.** On the input value of two graphs `G, H` on `n` vertices,
-function `fb` returns a value of the pair state `graphState G H` of Algorithm 1 (positions
+function `fb` returns a value of the pair state `graphState G H` of the graph wrapper (positions
 enumerated by `pairEnum`, colors coded by `pairCode`), at cost at most `K (n + 1)^d`. -/
 def BuildSpec (Pg : Program) (fb : ℕ) : Prop :=
   ∃ K d : ℕ, ∀ (n : ℕ) (G H : SimpleGraph (Fin n)),
@@ -106,7 +106,7 @@ def ConvertSpec (Pg : Program) (fc : ℕ) : Prop :=
       FunAll Pg fc (.list [inputVal G H, u]) fun out cost =>
         AnswerOK G H out ∧ cost ≤ K * (u.wt + n + 1) ^ d
 
-/-- **Obligation (b).** Function `fm` of `Pg` is Algorithm 1 around function `fs`: its body is
+/-- **Obligation (b).** Function `fm` of `Pg` is the graph wrapper around function `fs`: its body is
 `mainBody fb fs fc`, where `fb` builds the pair state (`BuildSpec`) and `fc` converts the answer
 (`ConvertSpec`). -/
 def GraphWrapper (Pg : Program) (fm fs : ℕ) : Prop :=

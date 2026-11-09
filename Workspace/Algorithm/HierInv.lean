@@ -709,7 +709,7 @@ theorem caps_set {G : Subgroup (Perm Ω)} {D : Set Ω} :
   | _, I :: l, i + 1, hi, J, hp, h, hv =>
     ⟨h.1, caps_set I.part l i (by simpa using hi) J hp h.2 (by simpa using hv)⟩
 
-/-- **A cap update keeps the invariant** when the new bound is valid (Algorithm 3,
+/-- **A cap update keeps the invariant** when the new bound is valid (Algorithm 2,
 `LiftAndContinue`: the selected bound becomes `min{c, βq}`; the partitions and ratios are
 unchanged; Section 7.2: "the new cap bounds its entire restricted action"). -/
 theorem HierInv.capUpdate {P : Params} {G : Subgroup (Perm Ω)} {D : Set Ω}
@@ -747,7 +747,7 @@ theorem orbitSetoid_inv (G : Subgroup (Perm Ω)) :
     refine ⟨g * k * g⁻¹, G.mul_mem (G.mul_mem hg hk) (G.inv_mem hg), ?_⟩
     simp
 
-/-- **The hierarchy of a fresh phase** (Algorithm 5, `Solve`: "Initialize each original orbit's
+/-- **The hierarchy of a fresh phase** (Algorithm 3, `Solve`: "Initialize each original orbit's
 hierarchy and interval bounds"; Section 3.3: "The initial bound `c_i = d_i` is always
 available"): one interval from the points to the orbits, with ratio and bound `M`, the size of a
 largest orbit. On each original orbit it is the hierarchy from the points to that orbit. -/

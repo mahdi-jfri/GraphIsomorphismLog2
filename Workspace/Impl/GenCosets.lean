@@ -7,7 +7,7 @@ public import Workspace.Lang.Lib.Schreier
 /-!
 # Coset representatives of the kernel of a block action
 
-The enumeration and product steps of the dispatcher (Algorithm 5) split `G` into the cosets of
+The enumeration and product steps of the dispatcher (Algorithm 3) split `G` into the cosets of
 a subgroup `K` and solve one child per coset. For the kernel of the action on a block system we
 get the representatives from the orbit program with a transversal (`Workspace.Lang.Lib.OrbitT`).
 

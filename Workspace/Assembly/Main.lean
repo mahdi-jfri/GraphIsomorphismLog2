@@ -6,7 +6,7 @@ public import Workspace.Impl.LinObjectGlueUniform
 @[expose] public section
 
 /-!
-# Theorem 1.1: graph isomorphism in quasipolynomial time
+# Corollary 1.2: graph isomorphism in quasipolynomial time
 
 This is the last step of the chain of reductions. `final_modulo_glueObj`
 (`Workspace/Assembly/FinalGlue.lean`) proves the statement from one remaining part, the object glue:
@@ -44,11 +44,20 @@ theorem GI.Assembly.mainGObjF_hasAt :
   have hg : gsGen.length ≤ asmSlot := by rw [length_gsGen]; unfold asmSlot; omega
   exact (tmRi_recF_hasAt (flc_hasAt hg hF).2.1).2
 
-/-- **Theorem 1.1.** Graph isomorphism is decidable in quasipolynomial time, in the model of
-`Workspace/Statement/Main.lean`. -/
-theorem GI.Assembly.graphIsomorphismInQuasipolynomialTime :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
+/-- **The final program holds the general solver**, with the contracts of the round that the
+degree-sensitive algorithm reuses (`RoundOK`). -/
+theorem GI.Assembly.finalProg_solvedR : SolvedR (cProg mainGObjF fc11SojF) :=
   final_modulo_glueObj mainGObjF mainGObjF_fits
     (linObjectGlue_iface_fixed_of GI.Proved.solvableCosetIntersection GI.Proved.derivedSubgroup GI.Proved.membership
       GI.Proved.groupOrder GI.Proved.constructiveMembership GI.Proved.hermiteFullRank GI.Proved.smithNonsingular GI.Proved.vectorStabilizer
       mainGObjF_hasAt rfl rfl rfl rfl rfl rfl rfl rfl)
+
+/-- **The final program holds the general solver.** -/
+theorem GI.Assembly.finalProg_solved : Solved (cProg mainGObjF fc11SojF) :=
+  GI.Assembly.finalProg_solvedR.solved
+
+/-- **Corollary 1.2.** Graph isomorphism is decidable in quasipolynomial time, in the model of
+`Workspace/Statement/Main.lean`. -/
+theorem GI.Assembly.graphIsomorphismInQuasipolynomialTime :
+    GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
+  GI.Assembly.finalProg_solved.final

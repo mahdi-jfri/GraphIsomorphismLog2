@@ -8,7 +8,7 @@ public import Workspace.CertificateComparison
 @[expose] public section
 
 /-!
-# `CheckNewWindow` and the endpoint procedure as query scripts (Algorithm 2)
+# `CheckNewWindow` and the endpoint procedure as query scripts (Algorithm 1)
 
 Section 4: "The operation `CheckNewWindow` returns the full subgroup of `A`
 preserving `x` on `V`. It enumerates the constantly many cosets of `ker(φ_T|_A)` in
@@ -21,7 +21,7 @@ the colorings `(x, x ∘ τ)` (an inherited call: the bookkeeping is that of the
 parent `S₀`), and returns the union of the translates `τ · A_τ`. The `Continue` call
 on the intransitive `N` splits into kernel-orbit calls by the orbit chain.
 
-`endpointScript` runs the loop of Algorithm 2 with these calls; when the calls are
+`endpointScript` runs the loop of Algorithm 1 with these calls; when the calls are
 exact it computes the stages `GI.Endpoint.stage` of the endpoint procedure
 (`endpointScript_evalExact`), which Lemma 4.1 (`GI.Paper.lem_main_local_test`) is
 about. The lockstep comparisons are computed the same way
@@ -125,7 +125,7 @@ section Endpoint
 
 variable {P : Subgroup (Perm Ω)} (phi : P →* Q)
 
-/-- The loop of **Algorithm 2** (`LocalCertificate`), `t` rounds, with `CheckNewWindow`
+/-- The loop of **Algorithm 1** (`LocalCertificate`), `t` rounds, with `CheckNewWindow`
 for the window updates: `A ← CheckNewWindow(S, A, V, x)`, `W ← W ∪ V`. A round with
 empty increment (a stop) makes no call. -/
 noncomputable def endpointScript (S₀ : State Ω C) (x : Ω → C) :
@@ -142,7 +142,7 @@ theorem invariant_coe {A : Subgroup (Perm Ω)} {W : Finset Ω} (h : GI.Endpoint.
     GI.Algorithm.Invariant A (W : Set Ω) := fun a ha v => by
   simpa using h a ha v
 
-/-- **Algorithm 2 computes the endpoint stages.** If every `Continue` call made by
+/-- **Algorithm 1 computes the endpoint stages.** If every `Continue` call made by
 `CheckNewWindow` returns its exact answer, round `t` of the loop holds the stage
 `(A_t, W_t)` of `GI.Endpoint.stage` (`GI.Paper.alg_local_certificate`). -/
 theorem endpointScript_evalExact (S₀ : State Ω C) (x : Ω → C) (t : ℕ) :
@@ -374,7 +374,7 @@ theorem checkNewWindowLift_evalExact (R : CosetRepFn S.dom) {A N : Subgroup (Per
 
 variable {Q : Type} [Group Q] {P' : Subgroup (Perm S.dom)} (R : CosetRepFn S.dom) (phi : P' →* Q)
 
-/-- **Algorithm 2 with lifted calls**: the loop of `endpointScript` on the faithful image
+/-- **Algorithm 1 with lifted calls**: the loop of `endpointScript` on the faithful image
 `G|_dom`, with `checkNewWindowLift` for the window updates and the coset representatives `R`. -/
 noncomputable def endpointScriptLift (x : S.dom → C₀) :
     ℕ → Script (Subgroup (Perm S.dom) × Finset S.dom)
@@ -385,7 +385,7 @@ noncomputable def endpointScriptLift (x : S.dom → C₀) :
       else (checkNewWindowLift S R AW.1 (kernelIn phi AW.1) (increment phi AW.1 AW.2) x).bind
         fun B => Script.done (Subgroup.closure B, AW.2 ∪ increment phi AW.1 AW.2)
 
-/-- **Algorithm 2 with lifted calls computes the endpoint stages** on `G|_dom`. -/
+/-- **Algorithm 1 with lifted calls computes the endpoint stages** on `G|_dom`. -/
 theorem endpointScriptLift_evalExact (hP : P' ≤ S.domGroup) (x : S.dom → C₀) (t : ℕ) :
     (endpointScriptLift S R phi x t).evalExact = stage phi x t := by
   classical

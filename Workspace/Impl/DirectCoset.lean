@@ -9,7 +9,7 @@ public import Workspace.Lang.Prims.Reduce
 /-!
 # The answer coset on a small domain, by enumeration
 
-Algorithm 5, `Solve` with `|dom| ≤ N₀`: "return the answer by direct enumeration". On the
+Algorithm 3, `Solve` with `|dom| ≤ N₀`: "return the answer by direct enumeration". On the
 positions `Fin s` of the domain, the restricted group `G' = ⟨hs⟩` has at most `s!` elements. We
 list them (`enum_spec`, with a bound `B ≥ s!` written into the program), keep those that carry
 the coloring `fx` to `fy` (the transporter `T`) and those that fix `fx` (the stabilizer `K`).

@@ -12,7 +12,7 @@ public import Mathlib.Data.Fintype.Powerset
 
 Section 3.3: "The standard primitive-group reduction either enumerates a group of order
 `d^{O(log d)}` on an actual `d`-block quotient, or exposes a large alternating action";
-"Product actions refine the actual hierarchy". Algorithm 5: "**if** enumeration or a product
+"Product actions refine the actual hierarchy". Algorithm 3: "**if** enumeration or a product
 refinement applies **then** apply that reduction and solve its children with `Continue`";
 otherwise "Normalize the single alternating factor". Section A.5, "Selection of the quotient
 and its cap": "Ordinary Cameron dispatch uses the coarsest available primitive quotient of the
@@ -24,7 +24,7 @@ group: enumerating it has its stated quotient index and leaves kernel orbits of 
 
 A `PrimitiveQuotient` of a state is the block map `blk : Ω → [d]` of the coarsest primitive
 quotient, the action `ρ : G → Sym(d)` on the blocks, with `blk` equivariant on the domain and
-onto, `ρ(G)` primitive, and the exposed hierarchy (Algorithm 5: "Expose the next primitive
+onto, `ρ(G)` primitive, and the exposed hierarchy (Algorithm 3: "Expose the next primitive
 quotient"): a hierarchy `pre ++ top :: post` with no larger `ρ` and `Q` than the stored one,
 which satisfies the hierarchy invariant, and whose interval `top` goes from the blocks of the
 quotient to the whole domain (ratio `d`). It is built from the stored hierarchy in
@@ -248,7 +248,7 @@ theorem Params.smallExp_le (P : Params) (ha : 0 ≤ P.a) : (P.smallExp : ℝ) �
 
 /-- **The coarsest primitive quotient** of a state (Section A.5, "Selection of the quotient and
 its cap"): the block map `blk` onto `d` blocks, the block action `ρ`, primitive on the blocks,
-and the exposed hierarchy `pre ++ top :: post` (Algorithm 5: "Expose the next primitive quotient
+and the exposed hierarchy `pre ++ top :: post` (Algorithm 3: "Expose the next primitive quotient
 above any retained column partition"; Section 3.3: "new invariant partitions only refine it").
 The fine end of `top` is the block partition of the quotient on the domain, its coarse end
 holds the whole domain, and its ratio is `d`. The exposed hierarchy satisfies the hierarchy
@@ -408,7 +408,7 @@ def ProductStructure (m k r : ℕ) (e : Fin Q.d ≃ (Fin r → Product.KSet m k)
     (e.trans ((Equiv.piCongrRight fun i => GI.Cited.kSetPerm (h i)).trans e.symm) :
       Perm (Fin Q.d)) ∈ Q.ρ.range)
 
-/-- **The single-factor case**: Maróti's case (i) with one coordinate (Algorithm 5,
+/-- **The single-factor case**: Maróti's case (i) with one coordinate (Algorithm 3,
 "Normalize the single alternating factor"). -/
 def SingleFactor : Prop :=
   ∃ (m k : ℕ) (e : Fin Q.d ≃ (Fin 1 → Product.KSet m k)), Q.ProductStructure m k 1 e
@@ -746,14 +746,14 @@ noncomputable def Reduction.withReps {P : Params} {S : State Ω C} (R : Reductio
       exact Set.mem_iUnion.2 ⟨Fin.cast hn.symm j, by simpa using hj⟩ }
 
 
-/-- **The dispatcher step** (Algorithm 5, "**if** enumeration or a product refinement applies
+/-- **The dispatcher step** (Algorithm 3, "**if** enumeration or a product refinement applies
 **then** apply that reduction and solve its children with `Continue`"). It carries the coarsest
 primitive quotient `Q` of the state (Section A.5, "Selection of the quotient and its cap") and
 the case of the dispatcher that applies, in the order of `PrimitiveQuotient.dispatch`:
 
 * `enumeration`: the quotient is small, `|ρ(G)| ≤ exp(a (log d)²)`;
 * `product`: the quotient is in Maróti's product case with `r ≥ 2`. The step does not ask that
-  the quotient is not small: Algorithm 5 says "if enumeration or a product refinement applies
+  the quotient is not small: Algorithm 3 says "if enumeration or a product refinement applies
   then apply that reduction", so either may be taken when both apply, and no proof uses the
   guard.
 
@@ -847,7 +847,7 @@ end DispatchStep
 
 /-- The outcome of the dispatcher on a primitive quotient: a reduction, or the single-factor
 case of a quotient that fails the integer small test (`SmallZ`) and is not a product with at
-least two coordinates, where Algorithm 5 normalizes. -/
+least two coordinates, where Algorithm 3 normalizes. -/
 inductive DispatchOutcome (P : Params) {Ω C : Type} (S : State Ω C) (Q : PrimitiveQuotient S) :
     Type 1
   | step (I : DispatchStep P S)
@@ -858,7 +858,7 @@ namespace PrimitiveQuotient
 variable {S : State Ω C} (Q : PrimitiveQuotient S)
 
 open Classical in
-/-- **The dispatcher** (Algorithm 5): enumerate if the quotient is small; otherwise refine the
+/-- **The dispatcher** (Algorithm 3): enumerate if the quotient is small; otherwise refine the
 product if it has `r ≥ 2` coordinates; otherwise it is a single factor. This dispatcher decides
 with the real test `Small`; it is used only to show that runs exist. A single factor that fails
 `Small` also fails the integer test `SmallZ`, which is what `Run.normalize` asks. -/

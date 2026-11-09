@@ -34,7 +34,7 @@ open scoped Pointwise
 
 variable {P : Params}
 
-/-- **Theorem 1.2 at stage 1, for every run** (`thm:main-string`). There is a constant `C'`
+/-- **Theorem 1.3 at stage 1, for every run** (`thm:main-string`). There is a constant `C'`
 such that for every state `S` on a finite position set, `Solve` has a run on `S`, and every run
 returns the exact transporter, which is empty or a coset `t · Aut_G(x)`, at total cost at most
 `exp(C' (log(s+2))²)`. -/
@@ -54,9 +54,9 @@ theorem thm_main_string_stage1' (hP : P.Terminating) (hM : GI.Cited.MarotiPrimit
     (hw.toNodeBound h5) hcw (by linarith) ha
   exact ⟨C', fun S => ⟨(h S).1, fun r => ⟨((h S).2 r).1, ((h S).2 r).2 (hok r)⟩⟩⟩
 
-/-- **Theorem 1.1 at stage 1, for every run** (`thm:main-graph`). There is a constant `C'`
+/-- **Corollary 1.2 at stage 1, for every run** (`cor:main-general`). There is a constant `C'`
 such that for all graphs `X, Y` on `n` vertices, `Solve` has a run on the pair state of
-Algorithm 1, and every run `r` with answer `A` gives exactly the isomorphisms from `X` to `Y`
+the graph wrapper, and every run `r` with answer `A` gives exactly the isomorphisms from `X` to `Y`
 (empty exactly when there is none, and `σ · Aut(X)` for every isomorphism `σ`), at total cost
 at most `exp(C' (log(n+2))²)`. -/
 theorem thm_main_graph_stage1' (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)

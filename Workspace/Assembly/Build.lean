@@ -7,10 +7,10 @@ public import Workspace.Assembly.BuildGens
 /-!
 # Building the pair state (`BuildSpec`)
 
-`buildFuns b` is a program of 34 functions at base `b`. On the input value `inputVal G H`, its
-entry returns the value of the pair state `graphState G H` of Algorithm 1 (`build_spec`), at cost
-at most `buildK * (n + 1)^8`. So `BuildSpec` holds for every program that holds `buildFuns b` at
-`b` (`buildSpec_of_hasAt`).
+`buildFuns b` is a program of 34 functions at base `b`. On the input value `inputVal G H`, its entry
+returns the value of the pair state `graphState G H` of the graph wrapper (`build_spec`), at cost at
+most `buildK * (n + 1)^8`. So `BuildSpec` holds for every program that holds `buildFuns b` at `b`
+(`buildSpec_of_hasAt`).
 
 The entry reads the two adjacency matrices (`decode_inputVal`), builds the points
 `ids = [0, …, n² - 1]`, the generators of the diagonal action (`genMap_spec`, with the identity

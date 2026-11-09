@@ -17,7 +17,7 @@ enter as hypotheses.
 
 ## Which cited results instantiate `Reduction`
 
-The dispatcher (Section 3.3; Algorithm 5, "if enumeration or a product refinement applies";
+The dispatcher (Section 3.3; Algorithm 3, "if enumeration or a product refinement applies";
 Section A.5, "Constructive recognition" and "Selection of the quotient and its cap") cites
 "the constructive reduction stated in [H, Theorem 3.1 and Section 2.8]". Mathematically this is
 the Cameron–Maróti theorem, `GI.Cited.MarotiPrimitive`, applied to the primitive action of the
@@ -277,13 +277,13 @@ theorem hierQ_split (pre post js : List (Interval Ω)) (I : Interval Ω) {e r : 
     exact this
   linarith
 
-/-- **A `Reduction` of kind `product r`** (Section 7.2, row "Product refinement"): the
-children run under the coordinate subgroup `K ≤ G` on its cosets, and the hierarchy splits the
-interval `I` of ratio `e^r` of a hierarchy `pre ++ I :: post` into `r` coordinate intervals of
-ratio `e`. The hierarchy `pre ++ I :: post` is the stored one, or a refinement of it with no
-larger `ρ` and `Q` (the exposed quotient, Algorithm 5: "Expose the next primitive quotient"). The facts of
-`DispatchFacts.product` are proved from the split; `r ≤ log₂ s` follows from `e^r ≤ s`. The
-index bound `[G : K] ≤ 2^r r!` is a hypothesis (from Maróti's case (i)). -/
+/-- **A `Reduction` of kind `product r`** (Section 7.2, row "Product refinement"): the children run
+under the coordinate subgroup `K ≤ G` on its cosets, and the hierarchy splits the interval `I` of
+ratio `e^r` of a hierarchy `pre ++ I :: post` into `r` coordinate intervals of ratio `e`. The
+hierarchy `pre ++ I :: post` is the stored one, or a refinement of it with no larger `ρ` and `Q`
+(the exposed quotient, Algorithm 3: "Expose the next primitive quotient"). The facts of
+`DispatchFacts.product` are proved from the split; `r ≤ log₂ s` follows from `e^r ≤ s`. The index
+bound `[G : K] ≤ 2^r r!` is a hypothesis (from Maróti's case (i)). -/
 noncomputable def Reduction.ofProduct [Finite Ω] (P : Params) (S : State Ω C)
     (blocks : Setoid Ω) (blocks_inv : ∀ g ∈ S.G, ∀ v w, blocks.r (g v) (g w) ↔ blocks.r v w)
     (K : Subgroup (Perm Ω)) (hK : K ≤ S.G) {e r : ℕ} (he : 2 ≤ e) (hr : 2 ≤ r)

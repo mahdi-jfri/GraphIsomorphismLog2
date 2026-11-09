@@ -15,11 +15,11 @@ public import Workspace.Statement.Main
 # Paper statements: the algorithm of Sections 3 and 6
 
 * Lemma 6.1 (`lem:main-correctness`): `GI.Paper.lem_main_correctness`.
-* Algorithm 1 (`alg:graph-wrapper`) and the reduction of Theorem 1.1 to string
-  isomorphism on ordered vertex pairs (Section 1.1, "For a graph, the positions are
-  ordered vertex pairs, the colors record adjacency, and the allowed permutations
-  apply the same vertex permutation to both coordinates"; Section 3: "Thus the
-  reduction preserves exactly the graph isomorphisms"):
+* The graph wrapper: the reduction of graph isomorphism to string isomorphism on ordered
+  vertex pairs. The positions are the ordered vertex pairs, the colors record adjacency, and
+  the allowed permutations apply the same vertex permutation to both coordinates. The paper
+  obtains Corollary 1.2 from its degree theorem. This library also proves it directly, by running
+  the general procedure on the pair state:
   `GI.Paper.alg_graph_wrapper`, `GI.Paper.graph_reduction_answer`,
   `GI.Paper.graph_reduction_automorphisms`.
 * Section 3.2, the orbit chain rule and the coset rule:
@@ -38,10 +38,11 @@ The procedure itself is `GI.Algorithm.Run` (`Workspace/Algorithm/Procedure.lean`
 with the state of Section 6.1 in `Workspace/Algorithm/State.lean` and the
 interfaces in `Workspace/Algorithm/Interfaces.lean`.
 
-## Deferred to stage 2
+## Stage 2
 
-The polynomial bounds on structural work, the generator representation of
-answers, and the running time of `GraphIso` (Theorem 1.1 itself).
+The polynomial bounds on structural work, the generator representation of answers, and the
+running time of the graph wrapper (Corollary 1.2 itself) are handled by the programs of
+`Workspace/Impl` and `Workspace/Assembly`.
 -/
 
 namespace GI.Paper
@@ -61,9 +62,8 @@ hypothesis is "exact answers to the recursive calls"; one step per case is
 `GI.Algorithm.step_orbitChain`, `step_cosets`, `step_aggregate`, …), the returned
 set `A` is the set of `g ∈ G` with `y (g v) = x v` for every `v` of the active
 domain. Consequently `A` is empty or a full coset `t · Aut_G(x on dom)` with `t ∈ G`:
-the complete isomorphism coset. The interfaces of the subroutines that are not yet
-proved (`GI.Algorithm.RowTerminal`, `GI.Algorithm.Aggregation`) enter as data of
-the run. -/
+the complete isomorphism coset. The subroutines `GI.Algorithm.RowTerminal` and
+`GI.Algorithm.Aggregation` enter through their interfaces, as data of the run. -/
 theorem lem_main_correctness {P : Params} {Ω C : Type} {S : State Ω C} {A : Set (Perm Ω)}
     (r : Run P .cont S none A) :
     A = {g | g ∈ S.G ∧ ∀ v ∈ S.dom, S.y (g v) = S.x v} ∧
@@ -80,14 +80,13 @@ theorem lem_main_correctness_all {P : Params} {m : Mode} {Ω C : Type} {S : Stat
     {A : Set (Perm Ω)} (r : Run P m S L A) : A = S.answer :=
   r.exact
 
-/-! ### Algorithm 1: from graphs to colored positions -/
+/-! ### The graph wrapper: from graphs to colored positions -/
 
 section Graph
 
 variable {V : Type} [DecidableEq V]
 
-/-- The action of vertex permutations on ordered pairs: `p ↦ ((u, v) ↦ (p u, p v))`
-(Algorithm 1: "Let `G` be the action of all vertex permutations on `Ω`"). -/
+/-- The action of vertex permutations on ordered pairs: `p ↦ ((u, v) ↦ (p u, p v))`. -/
 def diagonalHom (V : Type) : Perm V →* Perm (V × V) where
   toFun := GI.diagonal
   map_one' := by ext ⟨u, v⟩ <;> rfl
@@ -100,12 +99,11 @@ omit [DecidableEq V] in
 theorem diagonalHom_injective : Function.Injective (diagonalHom V) :=
   GI.diagonal_injective
 
-/-- The color of an ordered pair: its diagonal status and its adjacency (Algorithm 1:
-"Let `x, y` color each pair by its diagonal status and adjacency in `X, Y`"). -/
+/-- The color of an ordered pair: its diagonal status and its adjacency. -/
 def pairColor (X : SimpleGraph V) [DecidableRel X.Adj] : V × V → Bool × Bool :=
   fun uv => (decide (uv.1 = uv.2), decide (X.Adj uv.1 uv.2))
 
-/-- The initial state of Algorithm 1: positions `Ω = V²`, the diagonal action of all
+/-- The initial state of the graph wrapper: positions `Ω = V²`, the diagonal action of all
 vertex permutations, the two pair colorings, an empty hierarchy, `h = 2` and phase
 size `|Ω|`. -/
 def graphState [Fintype V] (X Y : SimpleGraph V) [DecidableRel X.Adj] [DecidableRel Y.Adj] :
@@ -145,9 +143,9 @@ theorem graph_reduction_answer [Fintype V] (X Y : SimpleGraph V) [DecidableRel X
     simp only [pairColor, diagonalHom_apply, Prod.mk.injEq]
     exact ⟨decide_eq_decide.mpr p.injective.eq_iff, decide_eq_decide.mpr (hp u v).symm⟩
 
-/-- **Algorithm 1** (`alg:graph-wrapper`, `GraphIso`), correctness. Let `A` be the
+/-- **The graph wrapper**, correctness. Let `A` be the
 output of a run of `Solve` on the pair state of `X` and `Y`. The vertex permutations
-induced by `A` ("return the vertex permutations induced by the full answer") are
+induced by `A` are
 exactly the graph isomorphisms from `X` to `Y`. In particular the output is empty
 exactly when the graphs are not isomorphic, and for `Y = X` the induced
 permutations form the automorphism group of `X`. -/
@@ -172,7 +170,7 @@ theorem alg_graph_wrapper [Fintype V] {P : Params} (X Y : SimpleGraph V) [Decida
       intro p hp
       exact h.false ⟨p, fun {u v} => (hp u v).symm⟩
 
-/-- For `Y = X`, the induced vertex permutations of the output of Algorithm 1 form the
+/-- For `Y = X`, the induced vertex permutations of the output of the graph wrapper form the
 automorphism group of `X` in the sense of the trusted statement
 (`GI.Statement.autGroup`): "returns … generators for the full automorphism group of
 the first graph". -/
@@ -244,7 +242,7 @@ open GI.Endpoint GI.LocalGroups GI.LocalCertificates
 
 variable {Ω Γ C : Type} [Fintype Ω] [DecidableEq Ω] [Fintype Γ] [DecidableEq Γ]
 
-/-- **Algorithm 2 with `CheckNewWindow`** (Section 4: "The operation `CheckNewWindow`
+/-- **Algorithm 1 with `CheckNewWindow`** (Section 4: "The operation `CheckNewWindow`
 returns the full subgroup of `A` preserving `x` on `V`. It enumerates the constantly
 many cosets of `ker(φ_T|_A)` in `A` and uses `Continue` on the kernel orbits in `V`").
 When those `Continue` calls are exact, round `t` of the loop holds the stage
@@ -307,7 +305,7 @@ theorem cases_column_giant_natural {α : ℝ} (hα : 1 / 3 < α) :
       (N : ℝ) ^ (1 - α) < (q.choose 2 : ℕ) :=
   column_giant_natural hα
 
-/-- **The giant-step dispatch is exhaustive** (Algorithm 5 with Sections 5.2, 5.3 and
+/-- **The giant-step dispatch is exhaustive** (Algorithm 3 with Sections 5.2, 5.3 and
 6.2). A large action (`q > λ`) that `GiantStep` does not send to `RowStep` has a
 non-natural (two-label) kernel-orbit map, or a retained row action of degree
 `m ≥ q`: the pair rectangle of Section 5.2 or the diagonal rectangle of Section 5.3

@@ -7,7 +7,7 @@ public import Workspace.Impl.Weights
 /-!
 # The rest of the selector of `Continue`
 
-Above the phase threshold, Algorithm 5 asks two questions before it reaches the general
+Above the phase threshold, Algorithm 3 asks two questions before it reaches the general
 dispatcher: "if `G` is intransitive" (the orbit chain, case `1`) and "if the active column
 floor has been entered" (the floor reset, case `2`). Otherwise the general dispatcher runs
 (case `3`). This file decides both, on a canonical state value

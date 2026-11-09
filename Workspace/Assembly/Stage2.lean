@@ -8,7 +8,8 @@ public import Workspace.Assembly.ReqChildren
 /-!
 # Stage 2 up to the three missing steps
 
-`final_modulo` proves the trusted statement `GraphIsomorphismInQuasipolynomialTime` from
+`final_modulo` proves `Solved` (in the form `SolvedQ`, which also names the interface), and so the
+trusted statement `GraphIsomorphismInQuasipolynomialTime` (`Solved.final`), from
 
 * the cited algorithms that the implemented steps call (`PointwiseStab`, `Membership`,
   `Preimage`, `NormalizedFactor`), as hypotheses;
@@ -28,6 +29,36 @@ namespace GI.Assembly
 
 open GI.Algorithm GI.Lang GI.Paper GI.Impl
 open GI.Cited (Val PointwiseStab Preimage NormalizedFactor Membership)
+
+/-- **The general solver of a program.** The program holds the step specifications of a concrete
+interface for the procedures at `asmF`, the graph wrapper at `fm`, and the work bounds of that
+interface. `Solved.final` gives the trusted statement. The degree-sensitive algorithm uses the
+parts directly: it sits in an extension of the program and calls the function `asmF.solve`. -/
+def Solved (Pg : Program) : Prop :=
+  ∃ (R : Rest) (L : Iface.Layout) (fm : ℕ), L.F = asmF ∧ Iface.Layout.OK R.iface Pg L ∧
+    GraphWrapper Pg fm L.F.solve ∧ R.Req
+
+theorem Solved.final {Pg : Program} (h : Solved Pg) :
+    GI.Statement.GraphIsomorphismInQuasipolynomialTime := by
+  obtain ⟨R, L, fm, -, hL, hb, hR⟩ := h
+  exact Rest.final R hL hb hR
+
+/-- **`Solved` with a property `Q` of the interface.** The chain of reductions proves this form:
+the lower steps say which interface it is (`Q I` is `I = I₀`), and the step of the items adds the
+contracts of the round that the degree-sensitive algorithm reuses (`RoundOK`,
+`Workspace/Assembly/ItemsReq.lean`). -/
+def SolvedQ (Pg : Program) (Q : Iface → Prop) : Prop :=
+  ∃ (R : Rest) (L : Iface.Layout) (fm : ℕ), L.F = asmF ∧ Iface.Layout.OK R.iface Pg L ∧
+    GraphWrapper Pg fm L.F.solve ∧ R.Req ∧ Q R.iface
+
+theorem SolvedQ.solved {Pg : Program} {Q : Iface → Prop} (h : SolvedQ Pg Q) : Solved Pg := by
+  obtain ⟨R, L, fm, hF, hL, hb, hR, -⟩ := h
+  exact ⟨R, L, fm, hF, hL, hb, hR⟩
+
+theorem SolvedQ.mono {Pg : Program} {Q Q' : Iface → Prop} (h : SolvedQ Pg Q)
+    (hQ : ∀ I, Q I → Q' I) : SolvedQ Pg Q' := by
+  obtain ⟨R, L, fm, hF, hL, hb, hR, hq⟩ := h
+  exact ⟨R, L, fm, hF, hL, hb, hR, hQ _ hq⟩
 
 /-- **What `Rest.Req` asks of the three missing steps.** There are `A, D` such that at every
 `Continue` or `GiantStep` node that fits its phase (`|Ω| ≤ N`, `Small`), with `X = N + 2`:
@@ -135,9 +166,10 @@ theorem final_modulo (hst : PointwiseStab) (hm : Membership) (hpre : Preimage)
     (hagg : (asmRest hst hm hpre hfac Wg Wr Wa).iface.AggSpec
       (asmProg hst hm hpre hfac extra gen row agg) asmF asmAggBase)
     (hreq : AsmOpenReq Wg Wr Wa) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
-  Rest.final (asmRest hst hm hpre hfac Wg Wr Wa)
-    (asm_layoutOK hst hm hpre hfac Wg Wr Wa extra gen row agg hgen hrow hagg)
-    (fm := 347) (graphWrapper_of_hasAt (asm_block 347 rfl)) (asmRest_req hst hm hpre hfac hreq)
+    SolvedQ (asmProg hst hm hpre hfac extra gen row agg)
+      (· = (asmRest hst hm hpre hfac Wg Wr Wa).iface) :=
+  ⟨asmRest hst hm hpre hfac Wg Wr Wa, _, 347, rfl,
+    asm_layoutOK hst hm hpre hfac Wg Wr Wa extra gen row agg hgen hrow hagg,
+    graphWrapper_of_hasAt (asm_block 347 rfl), asmRest_req hst hm hpre hfac hreq, rfl⟩
 
 end GI.Assembly

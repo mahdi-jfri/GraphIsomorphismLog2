@@ -26,10 +26,10 @@ def camPB (X : ℕ) : ℕ := 10 ^ 12 * X ^ 12
 /-- The four cited bounds. -/
 noncomputable def camS4 (ho : GroupOrder) (hp : PointwiseStab) (hncl : NormalClosure)
     (hd : DerivedSubgroup) (hqc : GMPNormalCentralizer)
-    (hj : JohnsonIdentification) (X : ℕ) : ℕ :=
+    (pJ : Prim) (X : ℕ) : ℕ :=
   (groupOrderPrim ho).boundSize (camPB X) +
     (camDirectPrim ho hp hncl hd).boundSize (camPB X) +
-    (gmpNormalCentralizerPrim hqc).boundSize (camPB X) + (johnsonPrim hj).boundSize (camPB X)
+    (gmpNormalCentralizerPrim hqc).boundSize (camPB X) + pJ.boundSize (camPB X)
 
 theorem cam_ge_one_six (n : ℕ) : 1 ≤ (n + 1) ^ 6 := Nat.one_le_pow _ _ (by omega)
 
@@ -63,13 +63,13 @@ theorem cam_ctx_wt_le (ns : List (Perm (Fin n))) (hnsl : ns.length ≤ n ^ 2) (h
   have : n + 1 ≤ (n + 1) ^ 6 := Nat.le_self_pow (by norm_num) _
   omega
 
-theorem cam_fac_bound {hj : JohnsonIdentification} {hqc : GMPNormalCentralizer} {ctx y : Val}
+theorem cam_fac_bound {pJ : Prim} {hqc : GMPNormalCentralizer} {ctx y : Val}
     {X : ℕ} (hctx : ctx.wt ≤ 1300 * (n + 1) ^ 6) (hy : y.wt ≤ 320 * (n + 1) ^ 6)
     (hnX : n + 1 ≤ X) {c : ℕ}
-    (hc : c ≤ (johnsonPrim hj).boundSize (camFacB ((Val.list [ctx, y]).wt + 1)) +
+    (hc : c ≤ pJ.boundSize (camFacB ((Val.list [ctx, y]).wt + 1)) +
       (gmpNormalCentralizerPrim hqc).boundSize (camFacB ((Val.list [ctx, y]).wt + 1)) +
       camFacK * ((Val.list [ctx, y]).wt + 1) ^ 30) :
-    c ≤ (johnsonPrim hj).boundSize (camPB X) + (gmpNormalCentralizerPrim hqc).boundSize (camPB X) +
+    c ≤ pJ.boundSize (camPB X) + (gmpNormalCentralizerPrim hqc).boundSize (camPB X) +
       camFacK * 4000 ^ 30 * X ^ 180 := by
   have w2 := wt_list2_le ctx y
   have h6 := Nat.pow_le_pow_left hnX 6
@@ -80,7 +80,7 @@ theorem cam_fac_bound {hj : JohnsonIdentification} {hqc : GMPNormalCentralizer} 
     have h1 := Nat.pow_le_pow_left hZ 2
     have e : (4000 * X ^ 6) ^ 2 = 16000000 * X ^ 12 := by ring
     omega
-  have h1 := cam_boundSize_mono (johnsonPrim hj) hB
+  have h1 := cam_boundSize_mono pJ hB
   have h2 := cam_boundSize_mono (gmpNormalCentralizerPrim hqc) hB
   have h3 : ((Val.list [ctx, y]).wt + 1) ^ 30 ≤ 4000 ^ 30 * X ^ 180 := by
     calc _ ≤ (4000 * X ^ 6) ^ 30 := Nat.pow_le_pow_left hZ 30
@@ -137,20 +137,33 @@ theorem cam_K0 : 10 ^ 40 ≤ camFacK * 4000 ^ 30 := by unfold camFacK; norm_num
 /-- The cost bound of the tail. -/
 noncomputable def camTailCost (ho : GroupOrder) (hp : PointwiseStab) (hncl : NormalClosure)
     (hd : DerivedSubgroup) (hqc : GMPNormalCentralizer)
-    (hj : JohnsonIdentification) (X : ℕ) : ℕ :=
-  2 * X * camS4 ho hp hncl hd hqc hj X + 2 * camFacK * 4000 ^ 30 * X ^ 182
+    (pJ : Prim) (X : ℕ) : ℕ :=
+  2 * X * camS4 ho hp hncl hd hqc pJ X + 2 * camFacK * 4000 ^ 30 * X ^ 182
+
+/-- What the tail answers, for the identification `e`: with the test on (`tb = true`), `[2]` when
+`m + 2 ≤ (k + 1)²`. Otherwise `[1, m, k, r, E]` for an identification `e'` with the same `m, k, r`,
+and then `(k + 1)² < m + 2` when the test is on. -/
+def CamTailOut (tb : Bool) (G : Subgroup (Perm (Fin n)))
+    (_e : Fin n ≃ (Fin r → {A : Finset (Fin m) // A.card = k})) (v : Val) : Prop :=
+  (tb = true ∧ m + 2 ≤ (k + 1) ^ 2 ∧ v = .list [.nat 2]) ∨
+  ((tb = true → (k + 1) ^ 2 < m + 2) ∧
+    ∃ e' : Fin n ≃ (Fin r → {A : Finset (Fin m) // A.card = k}), MarotiStructure G e' ∧
+      v = .list [.nat 1, .nat m, .nat k, .nat r, encKSetTuples e'])
 
 set_option maxHeartbeats 2000000 in
-/-- **The tail.** -/
-theorem camTail_spec {ho : GroupOrder} {hp : PointwiseStab} {hncl : NormalClosure}
+/-- **The tail**, for a primitive `pJ` that does Johnson identification when `Q m k`, and the test
+`camTest tb`. The hypotheses `hQ` and `hsix` may use the result of the test. -/
+theorem camTailG_spec {ho : GroupOrder} {hp : PointwiseStab} {hncl : NormalClosure}
     {hd : DerivedSubgroup} {hqc : GMPNormalCentralizer}
-    {hj : JohnsonIdentification} {P : Program} {b jo jp jn jd jq jj : ℕ}
-    (hP : CamAt P b jo jp jn jd jq jj ho hp hncl hd hqc hj) (gs : List (Perm (Fin n)))
+    {pJ : Prim} {Q : ℕ → ℕ → Prop} {tb : Bool} {P : Program} {b jo jp jn jd jq jj : ℕ}
+    (hP : CamAt P b jo jp jn jd jq jj ho hp hncl hd hqc pJ tb) (hJo : JohnPrimOK pJ Q)
+    (gs : List (Perm (Fin n)))
     (e : Fin n ≃ (Fin r → {A : Finset (Fin m) // A.card = k})) (hM : MarotiStructure (gens gs) e)
     (hprim : MulAction.IsPreprimitive (gens gs) (Fin n)) (hn : 25 ≤ n) (h5 : 5 ≤ m)
-    (hk1 : 1 ≤ k) (hk : 2 * k < m) :
-    FunAll P (b + 1) (encGroup gs) (fun v c => CameronOut (gens gs) v ∧
-      c ≤ camTailCost ho hp hncl hd hqc hj ((encGroup gs).wt + 1)) := by
+    (hk1 : 1 ≤ k) (hk : 2 * k < m) (hQ : (tb = true → (k + 1) ^ 2 < m + 2) → Q m k)
+    (hsix : (tb = true → (k + 1) ^ 2 < m + 2) → m = 6 → k = 1) :
+    FunAll P (b + 1) (encGroup gs) (fun v c => CamTailOut tb (gens gs) e v ∧
+      c ≤ camTailCost ho hp hncl hd hqc pJ ((encGroup gs).wt + 1)) := by
   obtain ⟨hr1, hrn, hmn⟩ := cam_sizes e hn hk1 hk
   have hn0 : 0 < n := by omega
   set x₀ : Fin n := ⟨0, hn0⟩ with hx₀
@@ -235,13 +248,13 @@ theorem camTail_spec {ho : GroupOrder} {hp : PointwiseStab} {hncl : NormalClosur
     (Det.mk2 (Det.var' (P := P) (env := E3) (i := 2) rfl) (Det.nil (P := P) (env := E3)))
   have fL := camLoop_spec hd hP.loop hP.iter e hn0 h5 hk1 hk hrn ns hnsl hns
   refine EvalAll.letE (Ra := fun w c => CamInv e n w ∧
-      c ≤ X * camS4 ho hp hncl hd hqc hj X + 10 ^ 14 * X ^ 13)
+      c ≤ X * camS4 ho hp hncl hd hqc pJ X + 10 ^ 14 * X ^ 13)
     (EvalAll.call_funAll dLa fun v ca hv => ?_) fun vL cL hL => ?_
   · obtain ⟨rfl, hca⟩ := hv
     refine fL.mono fun w cb hw => ⟨hw.1, ?_⟩
     obtain ⟨hw1, hcb⟩ := hw
     have hww := cam_wt_inv_le e hrn hw1
-    have hLc : camLoopCost ho hp hncl hd hqc n ≤ camS4 ho hp hncl hd hqc hj X + 10 ^ 9 * X ^ 12 := by
+    have hLc : camLoopCost ho hp hncl hd hqc n ≤ camS4 ho hp hncl hd hqc pJ X + 10 ^ 9 * X ^ 12 := by
       have hB : camLoopB n ≤ 10 ^ 12 * X ^ 12 := by
         unfold camLoopB
         have := hnXp 6; have := hXp 6 12 (by norm_num); omega
@@ -253,8 +266,8 @@ theorem camTail_spec {ho : GroupOrder} {hp : PointwiseStab} {hncl : NormalClosur
       simp only [camLoopK] at h4 ⊢
       omega
     have k1 := Nat.mul_le_mul (show n ≤ X by omega) hLc
-    have e1 : X * (camS4 ho hp hncl hd hqc hj X + 10 ^ 9 * X ^ 12) =
-        X * camS4 ho hp hncl hd hqc hj X + 10 ^ 9 * X ^ 13 := by ring
+    have e1 : X * (camS4 ho hp hncl hd hqc pJ X + 10 ^ 9 * X ^ 12) =
+        X * camS4 ho hp hncl hd hqc pJ X + 10 ^ 9 * X ^ 13 := by ring
     have k2 : loopModK * (n + 1) * (15000 * (n + 1) ^ 7) ≤ loopModK * X * (15000 * X ^ 7) :=
       Nat.mul_le_mul (Nat.mul_le_mul_left _ hnX) (Nat.mul_le_mul_left _ (hnXp 7))
     have e2 : loopModK * X * (15000 * X ^ 7) = 15000 * loopModK * X ^ 8 := by ring
@@ -441,45 +454,55 @@ theorem camTail_spec {ho : GroupOrder} {hp : PointwiseStab} {hncl : NormalClosur
     clear * - hck w1 w5 w6 w7 h3 e hne hch wm wk wc w8 kk h6 h2' h26 h16 hmn hnX hk
     simp only [camSearchK, pow_one] at *
     omega
-  -- the test `m + 2 ≤ (k + 1)²`
+  -- the test `m + 2 ≤ (k + 1)²`, when it is on
   set E8 := E7 ++ [Val.nat k] with hE8
-  have dT := Det.arith (op := .lt) (Det.arith (op := .add) (Det.var' (P := P) (env := E8) (i := 6) rfl)
-    (Det.nat (P := P) (env := E8) 1)) (Det.arith (op := .mul)
-      (Det.arith (op := .add) (Det.var' (P := P) (env := E8) (i := 8) rfl) (Det.nat (P := P) (env := E8) 1))
-      (Det.arith (op := .add) (Det.var' (P := P) (env := E8) (i := 8) rfl) (Det.nat (P := P) (env := E8) 1)))
+  have hsq : (k + 1) ^ 2 = (k + 1) * (k + 1) := by ring
+  obtain ⟨t, ct0, dT, hct0, ht⟩ : ∃ t ct0, Det P E8 (camTest tb) (.nat t) ct0 ∧ ct0 ≤ 100 * X ^ 2 ∧
+      (t = 0 ↔ (tb = true → ¬ m + 1 < (k + 1) * (k + 1))) := by
+    cases tb
+    · refine ⟨0, 3, Det.nat 0, ?_, by simp⟩
+      have := hXp 0 2 (by norm_num)
+      simp only [pow_zero] at this
+      omega
+    have dT := Det.arith (op := .lt) (Det.arith (op := .add) (Det.var' (P := P) (env := E8) (i := 6) rfl)
+      (Det.nat (P := P) (env := E8) 1)) (Det.arith (op := .mul)
+        (Det.arith (op := .add) (Det.var' (P := P) (env := E8) (i := 8) rfl) (Det.nat (P := P) (env := E8) 1))
+        (Det.arith (op := .add) (Det.var' (P := P) (env := E8) (i := 8) rfl) (Det.nat (P := P) (env := E8) 1)))
+    refine ⟨_, _, dT, ?_, ?_⟩
+    · have w1 := wt_nat_le m
+      have w2 := wt_nat_le k
+      have w3 := wt_nat_le (BinOp.eval .add m 1)
+      have w4 := wt_nat_le (BinOp.eval .add k 1)
+      have w5 := wt_nat_le (BinOp.eval .mul (BinOp.eval .add k 1) (BinOp.eval .add k 1))
+      have w6 := wt_nat_le (BinOp.eval .lt (BinOp.eval .add m 1)
+        (BinOp.eval .mul (BinOp.eval .add k 1) (BinOp.eval .add k 1)))
+      have hlt1 : BinOp.eval .lt (BinOp.eval .add m 1)
+          (BinOp.eval .mul (BinOp.eval .add k 1) (BinOp.eval .add k 1)) ≤ 1 := by
+        by_cases h : m + 1 < (k + 1) * (k + 1) <;> simp [BinOp.eval, h]
+      have ea : BinOp.eval .add m 1 = m + 1 := rfl
+      have eb : BinOp.eval .add k 1 = k + 1 := rfl
+      have ec : BinOp.eval .mul (BinOp.eval .add k 1) (BinOp.eval .add k 1) = (k + 1) * (k + 1) := rfl
+      have hkX : k + 1 ≤ X := by clear * - hk hmn hnX; omega
+      have hkk : (k + 1) * (k + 1) ≤ X ^ 2 := by
+        rw [pow_two]; exact Nat.mul_le_mul hkX hkX
+      have hX2 := hXp 1 2 (by norm_num)
+      clear * - w1 w2 w3 w4 w5 w6 hlt1 ea eb ec hkk hX2 hmn hnX hk
+      simp only [pow_one] at *
+      omega
+    · by_cases h : m + 1 < (k + 1) * (k + 1) <;> simp [BinOp.eval, h]
   refine EvalAll.ite dT (fun _ _ h => ⟨_, h.1⟩) fun xt ct hxt => ?_
   obtain ⟨hxt1, hct⟩ := hxt
   cases hxt1
-  have hct1 : ct ≤ 100 * X ^ 2 := by
-    have w1 := wt_nat_le m
-    have w2 := wt_nat_le k
-    have w3 := wt_nat_le (BinOp.eval .add m 1)
-    have w4 := wt_nat_le (BinOp.eval .add k 1)
-    have w5 := wt_nat_le (BinOp.eval .mul (BinOp.eval .add k 1) (BinOp.eval .add k 1))
-    have w6 := wt_nat_le (BinOp.eval .lt (BinOp.eval .add m 1)
-      (BinOp.eval .mul (BinOp.eval .add k 1) (BinOp.eval .add k 1)))
-    have hlt1 : BinOp.eval .lt (BinOp.eval .add m 1)
-        (BinOp.eval .mul (BinOp.eval .add k 1) (BinOp.eval .add k 1)) ≤ 1 := by
-      by_cases h : m + 1 < (k + 1) * (k + 1) <;> simp [BinOp.eval, h]
-    have ea : BinOp.eval .add m 1 = m + 1 := rfl
-    have eb : BinOp.eval .add k 1 = k + 1 := rfl
-    have ec : BinOp.eval .mul (BinOp.eval .add k 1) (BinOp.eval .add k 1) = (k + 1) * (k + 1) := rfl
-    have hkX : k + 1 ≤ X := by clear * - hk hmn hnX; omega
-    have hkk : (k + 1) * (k + 1) ≤ X ^ 2 := by
-      rw [pow_two]; exact Nat.mul_le_mul hkX hkX
-    have hX2 := hXp 1 2 (by norm_num)
-    clear * - hct w1 w2 w3 w4 w5 w6 hlt1 ea eb ec hkk hX2 hmn hnX hk
-    simp only [pow_one] at *
-    omega
-  have hsq : (k + 1) ^ 2 = (k + 1) * (k + 1) := by ring
-  by_cases hlt : m + 1 < (k + 1) * (k + 1)
+  have hct1 : ct ≤ 100 * X ^ 2 := hct.trans hct0
+  by_cases ht0 : t = 0
+  swap
   · -- the answer `[2]`
-    have hev : BinOp.eval .lt (BinOp.eval .add m 1)
-        (BinOp.eval .mul (BinOp.eval .add k 1) (BinOp.eval .add k 1)) = 1 := by
-      simp [BinOp.eval, hlt]
-    rw [hev, if_neg one_ne_zero]
+    have hlt : tb = true ∧ m + 1 < (k + 1) * (k + 1) := by
+      by_contra hc
+      exact ht0 (ht.mpr fun h1 h2 => hc ⟨h1, h2⟩)
+    rw [if_neg ht0]
     refine (Det.snoc (Det.nil (P := P) (env := E8)) (Det.nat 2)).post fun cc hcc =>
-      ⟨cam_out_two hM hk (by omega), ?_⟩
+      ⟨Or.inl ⟨hlt.1, by omega, rfl⟩, ?_⟩
     have hW2 : (Val.list ([] ++ [Val.nat 2])).wt ≤ 30 := by decide
     have q2 := hXp 2 182 (by norm_num); have q4 := hXp 4 182 (by norm_num)
     have q6 := hXp 6 182 (by norm_num); have q7 := hXp 7 182 (by norm_num)
@@ -495,11 +518,10 @@ theorem camTail_spec {ho : GroupOrder} {hp : PointwiseStab} {hncl : NormalClosur
       (by clear * - q2 q4 q6 q7 q8 q9 q13 q42 q0; omega) cam_K0 ?_
     clear * - hcs1 hcN1 hcE1 hcL hco1 hcm1 hcA1 hck1 hct1 hcc hW2
     omega
-  · have hev : BinOp.eval .lt (BinOp.eval .add m 1)
-        (BinOp.eval .mul (BinOp.eval .add k 1) (BinOp.eval .add k 1)) = 0 := by
-      simp [BinOp.eval, hlt]
-    rw [hev, if_pos rfl]
-    have hb : (k + 1) ^ 2 < m + 2 := by omega
+  · rw [if_pos ht0]
+    have hgo : tb = true → (k + 1) ^ 2 < m + 2 := fun h1 => by
+      have := ht.mp ht0 h1
+      omega
     -- the columns, one factor at a time
     set ctx := Val.list [encGroup ns, encGroup ([] : List (Perm (Fin n))), .nat m, .nat k] with hctx
     set xs := ps.map fun p => encGroup p.2 with hxs
@@ -507,12 +529,12 @@ theorem camTail_spec {ho : GroupOrder} {hp : PointwiseStab} {hncl : NormalClosur
     set R : Val → Val → Prop := fun y w => ∀ (i : Fin r) (ts : List (Perm (Fin n))),
       y = encGroup ts → gens ts = camProd e {i} → CamFacOut e i x₀ w with hR
     have hctxw : ctx.wt ≤ 1300 * (n + 1) ^ 6 := cam_ctx_wt_le ns hnsl (by omega) (by omega)
-    set BF := (johnsonPrim hj).boundSize (camPB X) + (gmpNormalCentralizerPrim hqc).boundSize (camPB X) +
+    set BF := pJ.boundSize (camPB X) + (gmpNormalCentralizerPrim hqc).boundSize (camPB X) +
       camFacK * 4000 ^ 30 * X ^ 180 with hBF
     have hf : ∀ y ∈ xs, FunAll P (b + 103) (.list [ctx, y]) (fun w c => R y w ∧ c ≤ BF) := by
       intro y hy
       obtain ⟨p, hp, rfl⟩ := List.mem_map.mp hy
-      refine (camFac_spec hP.fac e hn0 h5 hk1 hk hb hmn ns p.2 hns p.1 (hps p hp).1).mono
+      refine (camFac_spec hP.fac hJo e hn0 h5 hk1 hk (hQ hgo) hmn ns p.2 hns p.1 (hps p hp).1).mono
         fun w c hw => ⟨fun i ts hts hgi => ?_, ?_⟩
       · obtain rfl := encGroup_injective hts
         have : p.1 = i := cam_prod_single_inj e (by omega) (by omega) hch2 x₀
@@ -590,7 +612,7 @@ theorem camTail_spec {ho : GroupOrder} {hp : PointwiseStab} {hncl : NormalClosur
         simp only [camFsts, List.get_eq_getElem, List.getElem_map]
       rw [h4]
       exact h3
-    obtain ⟨e', hM', colsF, rfl, hEnc⟩ := cam_assemble hM h5 hk1 hk hb x₀ (camFsts ps) hnd
+    obtain ⟨e', hM', colsF, rfl, hEnc⟩ := cam_assemble hM h5 hk1 hk (hsix hgo) x₀ (camFsts ps) hnd
       (by simp [hpsl]) ws hS
     set E9 := E8 ++ [Val.list (colsF.map camColV)] with hE9
     have fT := camTr_spec hP.tr colsF
@@ -607,7 +629,7 @@ theorem camTail_spec {ho : GroupOrder} {hp : PointwiseStab} {hncl : NormalClosur
       (Det.var' (P := P) (env := E10) (i := 6) rfl) (Det.var' (P := P) (env := E10) (i := 8) rfl)
       (Det.length dXs')) (Det.var' (P := P) (env := E10) (i := 10) rfl)
     rw [hxl] at dOut
-    refine dOut.post fun cc hcc => ⟨cam_out_one hM' hk hb, ?_⟩
+    refine dOut.post fun cc hcc => ⟨Or.inr ⟨hgo, e', hM', rfl⟩, ?_⟩
     -- the weights of the columns and of the answer
     have hcolw : (Val.list (colsF.map camColV)).wt ≤ 30 * (n + 1) ^ 4 := by
       have h1 := cam_wt_list_le_of (hwsw _ hws)
@@ -690,7 +712,7 @@ theorem camTail_spec {ho : GroupOrder} {hp : PointwiseStab} {hncl : NormalClosur
       clear * - w5 wm wk wr w1' hencw h5 h57 h17 hmn hk hrn hnX
       simp only [pow_one] at *
       omega
-    have eBF : X * BF = X * ((johnsonPrim hj).boundSize (camPB X) +
+    have eBF : X * BF = X * (pJ.boundSize (camPB X) +
         (gmpNormalCentralizerPrim hqc).boundSize (camPB X)) + camFacK * 4000 ^ 30 * X ^ 181 := by
       rw [hBF]; ring
     rw [eBF] at hcC
@@ -712,5 +734,22 @@ theorem camTail_spec {ho : GroupOrder} {hp : PointwiseStab} {hncl : NormalClosur
       (by clear * - q2 q4 q6 q7 q8 q9 q10 q16 q13 q42 q0; omega) cam_K0 ?_
     clear * - hcs1 hcN1 hcE1 hcL hco1 hcm1 hcA1 hck1 hct1 hcC hcT1 hcc1 hfw
     omega
+
+/-- **The tail.** -/
+theorem camTail_spec {ho : GroupOrder} {hp : PointwiseStab} {hncl : NormalClosure}
+    {hd : DerivedSubgroup} {hqc : GMPNormalCentralizer}
+    {hj : JohnsonIdentification} {P : Program} {b jo jp jn jd jq jj : ℕ}
+    (hP : CamAt P b jo jp jn jd jq jj ho hp hncl hd hqc (johnsonPrim hj) true)
+    (gs : List (Perm (Fin n)))
+    (e : Fin n ≃ (Fin r → {A : Finset (Fin m) // A.card = k})) (hM : MarotiStructure (gens gs) e)
+    (hprim : MulAction.IsPreprimitive (gens gs) (Fin n)) (hn : 25 ≤ n) (h5 : 5 ≤ m)
+    (hk1 : 1 ≤ k) (hk : 2 * k < m) :
+    FunAll P (b + 1) (encGroup gs) (fun v c => CameronOut (gens gs) v ∧
+      c ≤ camTailCost ho hp hncl hd hqc (johnsonPrim hj) ((encGroup gs).wt + 1)) := by
+  refine (camTailG_spec hP (johnsonPrim_ok hj) gs e hM hprim hn h5 hk1 hk
+    (fun h => ⟨h5, hk1, h rfl⟩) (fun h => cam_six hk1 hk (h rfl))).mono fun v c hv => ⟨?_, hv.2⟩
+  rcases hv.1 with ⟨-, h2, rfl⟩ | ⟨hb, e', hM', rfl⟩
+  · exact cam_out_two hM hk h2
+  · exact cam_out_one hM' hk (hb rfl)
 
 end GI.Impl

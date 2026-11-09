@@ -8,7 +8,7 @@ public import Workspace.Algorithm.HierInv
 /-!
 # The state of a fresh phase
 
-Algorithm 5, `Solve`: "Use the faithful action and jointly compressed colors on `Ω`. …
+Algorithm 3, `Solve`: "Use the faithful action and jointly compressed colors on `Ω`. …
 Set `N ← |Ω|`, `λ ← N^α`, and `h ← 2`. Initialize each original orbit's hierarchy and
 interval bounds. Return `Continue(S)` for the resulting state `S`."
 
@@ -65,7 +65,7 @@ def TowerFrom (G : Subgroup (Perm Ω)) (O : Set Ω) (a : Ω) : Setoid Ω → Lis
   | fine, I :: l => (∀ g ∈ G, ∀ v w, I.part.r (g v) (g w) ↔ I.part.r v w) ∧ fine ≤ I.part ∧
       I.ratio * blockCard O a fine = blockCard O a I.part ∧ TowerFrom G O a I.part l
 
-/-- **The initial tower of a fresh phase** (Section 3.3 and Algorithm 5: "Initialize each
+/-- **The initial tower of a fresh phase** (Section 3.3 and Algorithm 3: "Initialize each
 original orbit's hierarchy and interval bounds"): a hierarchy of `G`-invariant partitions of a
 largest orbit `O = a^G` of `G` in `D`, from the singletons (`⊥`) up to `O`, with the initial
 bounds `c_i = d_i`. -/
@@ -181,7 +181,7 @@ theorem exists_initialTower [Finite Ω] (G : Subgroup (Perm Ω)) {D : Set Ω}
 
 /-- **The hierarchy of all original orbits** is an initial tower and satisfies the hierarchy
 invariant, on a nonempty finite domain: one interval from the points to the orbits of `G`, with
-ratio and bound the size `M` of a largest orbit (Algorithm 5, `Solve`: "Initialize each
+ratio and bound the size `M` of a largest orbit (Algorithm 3, `Solve`: "Initialize each
 original orbit's hierarchy and interval bounds"). -/
 theorem exists_orbitHier [Finite Ω] (G : Subgroup (Perm Ω)) {D : Set Ω} (hD : Invariant G D)
     (hne : D.Nonempty) :
@@ -210,7 +210,7 @@ namespace State
 /-- The whole type is invariant under every group. -/
 theorem invariant_univ (G : Subgroup (Perm Ω)) : Invariant G Set.univ := fun _ _ _ => by simp
 
-/-- **The state of a fresh phase** started on `S` (Algorithm 5, `Solve`; Section 3: "Every
+/-- **The state of a fresh phase** started on `S` (Algorithm 3, `Solve`; Section 3: "Every
 fresh call uses the faithful permutation image on its own active domain"; Section 6.1: "At a
 fresh intransitive instance, initialize the hierarchy and interval bounds on each original
 orbit"). The new state `S'` lives on the active domain `S.dom` of `S`:

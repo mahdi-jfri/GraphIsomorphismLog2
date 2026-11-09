@@ -13,6 +13,8 @@ label is `υ`, it computes `C(p / n, p % n)` and adds it to the list unless it i
 
 namespace GI.Impl
 
+variable {P : GI.Lang.Program} [JohnAt P]
+
 open GI.Lang GI.Cited GI.Proved Equiv
 open GI.Machine (BinOp)
 
@@ -54,16 +56,16 @@ theorem john_wt_acc {n : ℕ} {accL : List (List ℕ)} (h : JohnAccOK n accL) :
 /-- **The equality test.** -/
 theorem john_eqF_spec {n : ℕ} {cl vl : List ℕ} (hc : cl.length = n ∧ ∀ b ∈ cl, b ≤ 1)
     (hv : vl.length = n ∧ ∀ b ∈ vl, b ≤ 1) :
-    FunDet johnProgram 94 (.list [natList cl, natList vl]) (boolVal (johnQE cl (natList vl)))
+    FunDet P 94 (.list [natList cl, natList vl]) (boolVal (johnQE cl (natList vl)))
       (200000 * (n + 1) ^ 2) := by
   set a := Val.list [natList cl, natList vl]
-  have h0 : Det johnProgram [a] (arg 0) (natList cl) (2 * a.wt + 5) := Det.arg' rfl
-  have h1 : Det johnProgram [a] (arg 1) (natList vl) (2 * a.wt + 6) := Det.arg' rfl
-  have hcall := Det.call (Det.mk2 h1 h0) (eqNats_spec john_at_eqNats vl cl)
+  have h0 : Det P [a] (arg 0) (natList cl) (2 * a.wt + 5) := Det.arg' rfl
+  have h1 : Det P [a] (arg 1) (natList vl) (2 * a.wt + 6) := Det.arg' rfl
+  have hcall := Det.call (Det.mk2 h1 h0) (eqNats_spec (john_at_eqNats (P := P)) vl cl)
   have hq : johnQE cl (natList vl) = decide (vl = cl) := by
     simp [johnQE, john_nats_natList]
   rw [← hq] at hcall
-  refine FunDet.intro john_at_eqF.single (hcall.mono ?_)
+  refine FunDet.intro (john_at_eqF (P := P)).single (hcall.mono ?_)
   have wc := john_wt_bitsN hc
   have wv := john_wt_bitsN hv
   have e1 := wt_list2_le (natList cl) (natList vl)
@@ -87,15 +89,17 @@ end GI.Impl
 
 namespace GI.Impl
 
+variable {P : GI.Lang.Program} [JohnAt P]
+
 open GI.Lang GI.Cited GI.Proved Equiv
 open GI.Machine (BinOp)
 
 /-- **The search for a set.** -/
 theorem john_anyEq_spec {n : ℕ} {cl : List ℕ} {accL : List (List ℕ)}
     (hc : cl.length = n ∧ ∀ b ∈ cl, b ≤ 1) (ha : JohnAccOK n accL) :
-    FunDet johnProgram 91 (.list [natList cl, .list (accL.map natList)])
+    FunDet P 91 (.list [natList cl, .list (accL.map natList)])
       (boolVal (accL.any fun v => decide (v = cl))) (500000 * (n + 1) ^ 3) := by
-  have hA := any_spec john_at_anyEq (c := natList cl) (xs := accL.map natList)
+  have hA := any_spec (john_at_anyEq (P := P)) (c := natList cl) (xs := accL.map natList)
     (q := johnQE cl) (B := fun _ => 200000 * (n + 1) ^ 2) (by
       intro w hw
       obtain ⟨v, hv, rfl⟩ := List.mem_map.mp hw
@@ -164,7 +168,7 @@ theorem john_step_val (n : ℕ) (labL : List ℕ) (δ υ : ℕ) (accL : List (Li
 /-- **One step over the pairs.** -/
 theorem john_stepF_spec {n : ℕ} {labL : List ℕ} {δ υ : ℕ} (hL : JohnLabOK n labL δ)
     (hυ : υ ≤ n * n) {accL : List (List ℕ)} (ha : JohnAccOK n accL) {p : ℕ} (hp : p < n * n) :
-    FunDet johnProgram 77 (.list [johnCtxV n labL δ υ, .list (accL.map natList), .nat p])
+    FunDet P 77 (.list [johnCtxV n labL δ υ, .list (accL.map natList), .nat p])
       (.list ((johnStep n labL δ υ accL p).map natList)) (10000000 * (n + 1) ^ 4) := by
   have hn : 0 < n := Nat.pos_of_mul_pos_left (Nat.zero_lt_of_lt hp)
   have hx : p / n < n := Nat.div_lt_of_lt_mul hp
@@ -173,9 +177,9 @@ theorem john_stepF_spec {n : ℕ} {labL : List ℕ} {δ υ : ℕ} (hL : JohnLabO
   set accV := Val.list (accL.map natList)
   set a := Val.list [ctx, accV, .nat p]
   set Cl := johnC n labL δ (p / n) (p % n)
-  have hc : Det johnProgram [a] (arg 0) ctx (2 * a.wt + 5) := Det.arg' rfl
-  have hA : Det johnProgram [a] (arg 1) accV (2 * a.wt + 6) := Det.arg' rfl
-  have hP : Det johnProgram [a] (arg 2) (.nat p) (2 * a.wt + 7) := Det.arg' rfl
+  have hc : Det P [a] (arg 0) ctx (2 * a.wt + 5) := Det.arg' rfl
+  have hA : Det P [a] (arg 1) accV (2 * a.wt + 6) := Det.arg' rfl
+  have hP : Det P [a] (arg 2) (.nat p) (2 * a.wt + 7) := Det.arg' rfl
   have g0 := Det.get' hc (Det.nat 0)
     (show [johnDV n labL δ, natList labL, .nat n, .nat υ, natList (List.range n)][0]? =
       some (johnDV n labL δ) from rfl)
@@ -201,8 +205,8 @@ theorem john_stepF_spec {n : ℕ} {labL : List ℕ} {δ υ : ℕ} (hL : JohnLabO
   have hmod := Det.arith (op := .mod) hP g2
   have hC := Det.call (Det.mk4 g0 g4 hdiv hmod) (john_compC_spec (labL := labL) (δ := δ) hx hy)
   -- The search, in the environment `[a, C]`.
-  have hA' : Det johnProgram [a, natList Cl] (arg 1) accV (2 * a.wt + 6) := Det.arg' rfl
-  have hCv : Det johnProgram [a, natList Cl] (.var 1) (natList Cl) ((natList Cl).wt + 1) :=
+  have hA' : Det P [a, natList Cl] (arg 1) accV (2 * a.wt + 6) := Det.arg' rfl
+  have hCv : Det P [a, natList Cl] (.var 1) (natList Cl) ((natList Cl).wt + 1) :=
     Det.var' rfl
   have hany := Det.call (Det.mk2 hCv hA') (john_anyEq_spec (john_C_shape n labL δ _ _) ha)
   have hin := john_det_ite hany hA' (Det.snoc hA' hCv)
@@ -210,7 +214,7 @@ theorem john_stepF_spec {n : ℕ} {labL : List ℕ} {δ υ : ℕ} (hL : JohnLabO
   have hout := john_det_ite hcond hlet hA
   have hval := john_step_val n labL δ υ accL p
   rw [hval] at hout
-  refine FunDet.intro john_at_stepF.single (hout.mono ?_)
+  refine FunDet.intro (john_at_stepF (P := P)).single (hout.mono ?_)
   -- The bound.
   have wD := john_wt_DV n labL δ
   have wl := john_wt_natList_sq hL.len hL.le

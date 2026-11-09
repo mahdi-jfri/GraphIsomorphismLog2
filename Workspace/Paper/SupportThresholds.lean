@@ -246,7 +246,7 @@ bijection from the `K`-orbits). If in addition `n < C(m,2)`, only the natural
 action is possible, so `K` is transitive inside each of its `m` natural
 blocks (the fibers).
 
-Deferred: "the equivariant quotient map is polynomial-time computable". -/
+The clause "the equivariant quotient map is polynomial-time computable" is handled at stage 2. -/
 theorem cor_physical_support_thresholds
     (G : Subgroup (Perm Ω)) [MulAction.IsPretransitive G Ω]
     (φ : G →* alternatingGroup Γ) (hφ : Function.Surjective φ)
@@ -287,7 +287,7 @@ map `f : Ω → Ξ`, built from `φ`, `x` and `D`, whose fibers are precisely th
 
 Here `Alt(Γ ∖ D)` is the image of `Alt(Γ ∖ D)` under extension by the
 identity (`GI.AlternatingSimple.extend`), and `Alt(Γ)_{D}` is the setwise
-stabilizer of `D`. Deferred: the polynomial-time construction. -/
+stabilizer of `D`. The polynomial-time construction is handled at stage 2. -/
 theorem lem_support_two_orbit_quotient
     (G : Subgroup (Perm Ω)) [MulAction.IsPretransitive G Ω]
     (φ : G →* alternatingGroup Γ) (hφ : Function.Surjective φ)

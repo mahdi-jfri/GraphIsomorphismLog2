@@ -10,7 +10,7 @@ public import Workspace.Impl.GenCosetsMath
 /-!
 # The block kernel as a canonical group value
 
-The children of the enumeration step (Algorithm 5) run under the kernel `K` of the action on the
+The children of the enumeration step (Algorithm 3) run under the kernel `K` of the action on the
 blocks. Their state values must be canonical (`Canon`), so the group value of `K` must have at
 most `k²` generators (`GroupValC`). The kernel program (`ker_spec`, with the cited `Preimage`)
 gives some generators of `K`; the reduction (`reduce_spec`, with the cited `Membership`) keeps

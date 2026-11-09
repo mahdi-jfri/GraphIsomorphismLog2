@@ -11,7 +11,7 @@ public import Workspace.Paper.RunningTime
 `GI.Paper.lem_main_phase_bound` is proved for an abstract phase tree. Here it is applied
 to the phase tree of the runs of `GI.Algorithm.Run` (`GI.Algorithm.phaseTree`), whose
 hypotheses are proved in `Workspace/Algorithm/PhaseTree.lean` except the two cost
-fields, which stay hypotheses until stage 2 defines the cost of a run.
+fields. These stay hypotheses here, since stage 2 defines the cost of a run.
 -/
 
 namespace GI.Paper

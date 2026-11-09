@@ -9,7 +9,7 @@ public import Mathlib.Data.Nat.Digits.Defs
 /-!
 # The product refinement: the mathematics
 
-Algorithm 5: "if … a product refinement applies then apply that reduction and solve its
+Algorithm 3: "if … a product refinement applies then apply that reduction and solve its
 children with `Continue`". The quotient `Q` has a product structure `E : Fin d ≃ (Fin r → KSet m
 l)` with `r ≥ 2` coordinates. The children run under the coordinate group `K`, the elements of
 `G` whose block action fixes every coordinate (`PrimitiveQuotient.coordinateGroup`). A program

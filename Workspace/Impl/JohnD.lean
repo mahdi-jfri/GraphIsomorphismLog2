@@ -14,6 +14,8 @@ rows. The program builds it with `mapFuns 66 69` (`john_matD_spec`).
 
 namespace GI.Impl
 
+variable {P : GI.Lang.Program} [JohnAt P]
+
 open GI.Lang GI.Cited GI.Proved Equiv
 open GI.Machine (BinOp)
 
@@ -83,12 +85,12 @@ theorem john_D_toNat (n : ℕ) (labL : List ℕ) (δ x y : ℕ) :
 /-- **An entry of `D`.** -/
 theorem john_entD_spec {n : ℕ} {labL : List ℕ} {δ : ℕ} (hL : JohnLabOK n labL δ) {x y : ℕ}
     (hx : x < n) (hy : y < n) :
-    FunDet johnProgram 73
+    FunDet P 73
       (.list [.list [natList labL, .nat n, .nat δ, .nat x], .nat y])
       (.nat (johnD n labL δ x y).toNat) (1000 * (n + 1) ^ 4) := by
   have hxy : n * x + y < n * n := by nlinarith
   set a := Val.list [.list [natList labL, .nat n, .nat δ, .nat x], .nat y]
-  have hc : Det johnProgram [a] (arg 0) (.list [natList labL, .nat n, .nat δ, .nat x])
+  have hc : Det P [a] (arg 0) (.list [natList labL, .nat n, .nat δ, .nat x])
       (2 * a.wt + 5) := Det.arg' rfl
   have hl := Det.get' hc (Det.nat 0)
     (show [natList labL, Val.nat n, .nat δ, .nat x][0]? = some (natList labL) from rfl)
@@ -98,7 +100,7 @@ theorem john_entD_spec {n : ℕ} {labL : List ℕ} {δ : ℕ} (hL : JohnLabOK n 
     (show [natList labL, Val.nat n, .nat δ, .nat x][2]? = some (.nat δ) from rfl)
   have hX := Det.get' hc (Det.nat 3)
     (show [natList labL, Val.nat n, .nat δ, .nat x][3]? = some (.nat x) from rfl)
-  have hY : Det johnProgram [a] (arg 1) (.nat y) (2 * a.wt + 6) := Det.arg' rfl
+  have hY : Det P [a] (arg 1) (.nat y) (2 * a.wt + 6) := Det.arg' rfl
   have hidx := Det.arith (op := .add) (Det.arith (op := .mul) hn hX) hY
   have hget : (labL.map Val.nat)[BinOp.eval .add (BinOp.eval .mul n x) y]? =
       some (.nat (labL.getD (n * x + y) 0)) := by
@@ -108,7 +110,7 @@ theorem john_entD_spec {n : ℕ} {labL : List ℕ} {δ : ℕ} (hL : JohnLabOK n 
   have h1 := Det.get' (v := .nat (labL.getD (n * x + y) 0)) hl hidx hget
   have h2 := Det.arith (op := .eq) h1 hd
   rw [← john_D_toNat] at h2
-  refine FunDet.intro john_at_entDF.single (h2.mono ?_)
+  refine FunDet.intro (john_at_entDF (P := P)).single (h2.mono ?_)
   -- The bound.
   have wl := john_wt_natList_sq hL.len hL.le
   have hge : labL.getD (n * x + y) 0 ≤ n * n := by
@@ -137,6 +139,8 @@ end GI.Impl
 
 namespace GI.Impl
 
+variable {P : GI.Lang.Program} [JohnAt P]
+
 open GI.Lang GI.Cited GI.Proved Equiv
 open GI.Machine (BinOp)
 
@@ -149,10 +153,10 @@ theorem john_pow_le {Y i j : ℕ} (hY : 1 ≤ Y) (hij : i ≤ j) : Y ^ i ≤ Y ^
 /-- **A row of `D`.** -/
 theorem john_rowD_spec {n : ℕ} {labL : List ℕ} {δ : ℕ} (hL : JohnLabOK n labL δ) {x : ℕ}
     (hx : x < n) :
-    FunDet johnProgram 70
+    FunDet P 70
       (.list [.list [natList labL, .nat n, .nat δ, .nat x], natList (List.range n)])
       (natList (johnDRow n labL δ x)) (200000 * (n + 1) ^ 5) := by
-  have hT := john_tab john_at_mapEntD (c := .list [natList labL, .nat n, .nat δ, .nat x])
+  have hT := john_tab (john_at_mapEntD (P := P)) (c := .list [natList labL, .nat n, .nat δ, .nat x])
     (n := n) (B := 1000 * (n + 1) ^ 4)
     (G := fun y => .nat (johnD n labL δ x y).toNat) fun y hy => john_entD_spec hL hx hy
   have e : Val.list ((List.range n).map fun y => Val.nat (johnD n labL δ x y).toNat) =
@@ -188,12 +192,12 @@ theorem john_rowD_spec {n : ℕ} {labL : List ℕ} {δ : ℕ} (hL : JohnLabOK n 
 /-- **A row of `D`, as the function `johnRowDF`.** -/
 theorem john_rowDF_spec {n : ℕ} {labL : List ℕ} {δ : ℕ} (hL : JohnLabOK n labL δ) {x : ℕ}
     (hx : x < n) :
-    FunDet johnProgram 69
+    FunDet P 69
       (.list [.list [natList labL, .nat n, .nat δ, natList (List.range n)], .nat x])
       (natList (johnDRow n labL δ x)) (400000 * (n + 1) ^ 5) := by
   set c := Val.list [natList labL, .nat n, .nat δ, natList (List.range n)]
   set a := Val.list [c, .nat x]
-  have hc : Det johnProgram [a] (arg 0) c (2 * a.wt + 5) := Det.arg' rfl
+  have hc : Det P [a] (arg 0) c (2 * a.wt + 5) := Det.arg' rfl
   have h0 := Det.get' hc (Det.nat 0)
     (show [natList labL, Val.nat n, .nat δ, natList (List.range n)][0]? = some (natList labL)
       from rfl)
@@ -204,9 +208,9 @@ theorem john_rowDF_spec {n : ℕ} {labL : List ℕ} {δ : ℕ} (hL : JohnLabOK n
   have h3 := Det.get' hc (Det.nat 3)
     (show [natList labL, Val.nat n, .nat δ, natList (List.range n)][3]? =
       some (natList (List.range n)) from rfl)
-  have hX : Det johnProgram [a] (arg 1) (.nat x) (2 * a.wt + 6) := Det.arg' rfl
+  have hX : Det P [a] (arg 1) (.nat x) (2 * a.wt + 6) := Det.arg' rfl
   have hcall := Det.call (Det.mk2 (Det.mk4 h0 h1 h2 hX) h3) (john_rowD_spec hL hx)
-  refine FunDet.intro john_at_rowDF.single (hcall.mono ?_)
+  refine FunDet.intro (john_at_rowDF (P := P)).single (hcall.mono ?_)
   have wl := john_wt_natList_sq hL.len hL.le
   have wR := john_wt_Rn n
   have wo := john_wt_DRow n labL δ x
@@ -227,11 +231,11 @@ theorem john_rowDF_spec {n : ℕ} {labL : List ℕ} {δ : ℕ} (hL : JohnLabOK n
 
 /-- **The matrix `D`.** -/
 theorem john_matD_spec {n : ℕ} {labL : List ℕ} {δ : ℕ} (hL : JohnLabOK n labL δ) :
-    FunDet johnProgram 66
+    FunDet P 66
       (.list [.list [natList labL, .nat n, .nat δ, natList (List.range n)],
         natList (List.range n)])
       (johnDV n labL δ) (1000000 * (n + 1) ^ 6) := by
-  have hT := john_tab john_at_mapRowD
+  have hT := john_tab (john_at_mapRowD (P := P))
     (c := .list [natList labL, .nat n, .nat δ, natList (List.range n)])
     (n := n) (B := 400000 * (n + 1) ^ 5) (G := fun x => natList (johnDRow n labL δ x))
     fun x hx => john_rowDF_spec hL hx

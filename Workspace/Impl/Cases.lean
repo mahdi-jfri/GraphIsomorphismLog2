@@ -7,7 +7,7 @@ public import Workspace.Impl.Dispatch
 /-!
 # The cases of the three procedures
 
-Algorithms 4 and 5 split each procedure into guarded cases. The constructors of
+Algorithms 3 and 4 split each procedure into guarded cases. The constructors of
 `GI.Algorithm.Run` follow them. Here each case gets a guard (`CasePred`), the constructors that
 its step may produce, and a named step specification (`Iface.StepSpec`).
 

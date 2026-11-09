@@ -10,7 +10,7 @@ public import Workspace.Impl.Skeleton
 The body of the function of a procedure (`Solve`, `Continue`, `GiantStep`) is a dispatcher
 (`modeBody sel fs`): a selector function `sel` reads the input value and returns the number `j`
 of the case that applies, and the body calls the step function `fs[j]` of that case on the same
-input. This is the structure of Algorithms 4 and 5: each procedure is a list of guarded cases.
+input. This is the structure of Algorithms 3 and 4: each procedure is a list of guarded cases.
 
 * `CasePred`: the guard of a case, a predicate on the state and the input value.
 * `Iface.SelSpec m Ps sel`: on every input of a call of `m`, `sel` returns a case `j` whose

@@ -8,7 +8,7 @@ public import Workspace.Impl.Cases
 /-!
 # The general dispatcher: the outer step
 
-Algorithm 5, `Continue` above the threshold, transitive and off the floor. The general step on
+Algorithm 3, `Continue` above the threshold, transitive and off the floor. The general step on
 the canonical value `v` of the state
 
 1. exposes a primitive quotient `Q` (`expose_spec`): `x = [ρ(G), blocks, hierarchy, labels, t]`;

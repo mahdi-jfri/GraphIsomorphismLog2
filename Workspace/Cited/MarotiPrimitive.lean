@@ -9,7 +9,7 @@ public import Mathlib.Data.Finset.Card
 /-!
 # Cited input: the Cameron–Maróti theorem on large primitive groups
 
-The paper's dispatcher (Section 3.3, Algorithm 5, Section A.5 "Constructive recognition")
+The paper's dispatcher (Section 3.3, Algorithm 3, Section A.5 "Constructive recognition")
 cites "the constructive reduction stated in [H, Theorem 3.1 and Section 2.8]". [H, Theorem 3.1]
 is the Cameron–Maróti theorem. This file states its mathematical content. The constructive part
 (finding the normal subgroup and the Johnson coordinates, [H, Section 2.8] and [BLS]) is an

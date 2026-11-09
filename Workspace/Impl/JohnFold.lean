@@ -10,10 +10,12 @@ public import Workspace.Impl.JohnStep
 The function at `74` folds `johnStepF` over the pair indices `0, …, n² - 1`, starting from the
 empty list. It computes `johnLam` (`john_fold_spec`). The cost bound needs a bound on the
 partial results, which is the hypothesis `hok`. It holds for the labels of the program by
-`john_prefix` and `JohnHyp.m_le`.
+`john_prefix` and `JohnHypG.m_le`.
 -/
 
 namespace GI.Impl
+
+variable {P : GI.Lang.Program} [JohnAt P]
 
 open GI.Lang GI.Cited GI.Proved Equiv
 
@@ -26,14 +28,14 @@ theorem john_sq1_le (n : ℕ) : n * n + 1 ≤ (n + 1) ^ 4 := by
 theorem john_fold_spec {n : ℕ} {labL : List ℕ} {δ υ : ℕ} (hL : JohnLabOK n labL δ)
     (hυ : υ ≤ n * n)
     (hok : ∀ i ≤ n * n, JohnAccOK n (((List.range (n * n)).take i).foldl (johnStep n labL δ υ) [])) :
-    FunDet johnProgram 74 (.list [johnCtxV n labL δ υ, natList (List.range (n * n)), .list []])
+    FunDet P 74 (.list [johnCtxV n labL δ υ, natList (List.range (n * n)), .list []])
       (.list ((johnLam n labL δ υ).map natList)) (100000000 * (n + 1) ^ 8) := by
   set xs := (List.range (n * n)).map Val.nat with hxs
   have hxl : xs.length = n * n := by simp [xs]
   have hR : natList (List.range (n * n)) = .list xs := rfl
   rw [hR]
   set F := fun i => ((List.range (n * n)).take i).foldl (johnStep n labL δ υ) [] with hF
-  refine (foldl_spec john_at_fold (c := johnCtxV n labL δ υ) (xs := xs) (acc0 := .list [])
+  refine (foldl_spec (john_at_fold (P := P)) (c := johnCtxV n labL δ υ) (xs := xs) (acc0 := .list [])
     (Inv := fun i acc => acc = .list ((F i).map natList)) (M := 20 * (n + 1) ^ 2)
     (B := fun _ => 10000000 * (n + 1) ^ 4) (by simp [F]) ?_ ?_).mono fun w cost hw => ⟨?_, ?_⟩
   · intro i acc hi hinv

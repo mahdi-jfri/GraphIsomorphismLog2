@@ -7,7 +7,7 @@ public import Workspace.Algorithm.Dispatch
 /-!
 # Exposing the primitive quotient
 
-Algorithm 5, `Continue`: "Expose the next primitive quotient above any retained column
+Algorithm 3, `Continue`: "Expose the next primitive quotient above any retained column
 partition". Section A.5, "Selection of the quotient and its cap": "Ordinary Cameron dispatch
 uses the coarsest available primitive quotient of the whole current group". Section 3.3: "The
 old hierarchy is retained; new invariant partitions only refine it."
@@ -471,7 +471,7 @@ theorem pairCount_le_of_maximal [Finite Ω] {G : Subgroup (Perm Ω)} {D : Set Ω
   unfold pairCount
   rw [this]
 
-/-- **A primitive quotient from a maximal candidate** (the form a program can reach: Algorithm 5,
+/-- **A primitive quotient from a maximal candidate** (the form a program can reach: Algorithm 3,
 "Expose the next primitive quotient above any retained column partition"). Let the stored
 hierarchy be `pre ++ J :: post`, where the coarse end of `J` holds the domain, and let `M` be a
 candidate above the fine end `f` of `pre` (`G`-invariant on the domain, coarser than `f`, not
@@ -733,7 +733,7 @@ theorem exists_primitiveQuotient_of_cand [Finite Ω] {C : Type} (S : State Ω C)
         exact hc v hv w hw
 
 /-- **The exposed primitive quotient exists** on a transitive state with the hierarchy invariant
-and two points (Algorithm 5: "Expose the next primitive quotient above any retained column
+and two points (Algorithm 3: "Expose the next primitive quotient above any retained column
 partition"). Among the candidates, the coarsest is taken among those above the retained column
 partition when there is one. -/
 theorem exists_primitiveQuotient [Finite Ω] {C : Type} (S : State Ω C) (htr : S.Transitive)
@@ -795,7 +795,7 @@ noncomputable def State.expose [Finite Ω] {C : Type} (S : State Ω C) (htr : S.
     (hinv : S.HierInv) (h2 : ¬ UnivOn S.dom ⊥) : PrimitiveQuotient S :=
   Classical.choose (exists_primitiveQuotient S htr hinv h2)
 
-/-- **The exposed quotient lies above the retained column partition** (Algorithm 5: "Expose
+/-- **The exposed quotient lies above the retained column partition** (Algorithm 3: "Expose
 the next primitive quotient above any retained column partition"), when that partition is a
 block system that splits the domain and is comparable with the stored levels. -/
 theorem State.expose_aboveCols [Finite Ω] {C : Type} (S : State Ω C) (htr : S.Transitive)

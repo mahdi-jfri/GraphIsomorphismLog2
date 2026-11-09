@@ -66,7 +66,11 @@ theorem final_modulo_cert (hst : PointwiseStab)
         (linA20Extra hs hh hn hcmb hv ++ ext') (tmRiRecF flcRecIdx 14 8 1 gObjF) labF jF fcrE cmE
         itE fcrF cmF itF) asmF asHandImpl Xi (asb 4))
     (hXm : PBU fun _ W _ => Xm W) (hXi : PBU fun _ W _ => Xi W) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime := by
+    SolvedQ (fagProg hst hm hpre hfac hmb hO hC hder hni hnc (linA20Extra hs hh hn hcmb hv ++ ext')
+        (tmRiRecF flcRecIdx 14 8 1 gObjF) labF jF fcrE cmE itE fcrF cmF itF)
+      (· = fagIface hst hm hpre hfac hmb hO hC hder hni hnc Kl Dl Kj Dj
+        (fglRecK hs hder hm Kg Dg) (fglRecD hs hder hm Kg Dg)
+        (fagX hpre (cpCertX hst hpre hm) Xm Xi)) := by
   -- The room of the coset slot, as in `final_modulo_glue`; it is needed by `fag_hasAt`.
   have hF : FlcFits (tmRiRecF flcRecIdx 14 8 1 gObjF) labF jF :=
     ⟨tmRi_recF_fits hgo, hlF, hjF⟩

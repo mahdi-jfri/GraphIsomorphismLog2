@@ -21,7 +21,7 @@ proves what keeps it.
   for example after a cap update.
 * **The exposed quotient lies above the columns** (`State.expose_killsCols`). The columns are a
   level of the hierarchy, so they are comparable with every level (`ColsLevel.comparable`), and
-  the exposed quotient is chosen above them (`State.expose_aboveCols`; Algorithm 5: "Expose the
+  the exposed quotient is chosen above them (`State.expose_aboveCols`; Algorithm 3: "Expose the
   next primitive quotient above any retained column partition"). So every element that fixes
   every column acts trivially on the exposed blocks (`PrimitiveQuotient.KillsCols`).
 -/
@@ -188,7 +188,7 @@ theorem PrimitiveQuotient.killsCols_of {S : State Ω C} (Q : PrimitiveQuotient S
   have hcR : S.retainedCols = some c := by simp [State.retainedCols, hR, hc]
   exact congrArg Fin.val (hQ c hcR (S.colsComparable hinv hR hc) _ hgv v hv (hg v hv))
 
-/-- **The exposed quotient lies above the retained columns** (Algorithm 5: "Expose the next
+/-- **The exposed quotient lies above the retained columns** (Algorithm 3: "Expose the next
 primitive quotient above any retained column partition"). -/
 theorem State.expose_killsCols [Finite Ω] (S : State Ω C) (htr : S.Transitive)
     (hinv : S.HierInv) (h2 : ¬ UnivOn S.dom ⊥) : (S.expose htr hinv h2).KillsCols :=

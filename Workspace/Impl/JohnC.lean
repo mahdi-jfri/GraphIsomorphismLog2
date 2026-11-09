@@ -12,6 +12,8 @@ public import Workspace.Impl.JohnD
 
 namespace GI.Impl
 
+variable {P : GI.Lang.Program} [JohnAt P]
+
 open GI.Lang GI.Cited GI.Proved Equiv
 open GI.Machine (BinOp)
 
@@ -67,25 +69,25 @@ theorem john_ctx_wt3 (a b c : Val) {A : ℕ} (ha : a.wt ≤ A) (hb : b.wt ≤ A)
 
 /-- **The test of `B(x, y)`.** -/
 theorem john_bF_spec {x y z : ℕ} (hx : x < n) (hy : y < n) (hz : z < n) :
-    FunDet johnProgram 82 (.list [.list [johnDV n labL δ, .nat x, .nat y], .nat z])
+    FunDet P 82 (.list [.list [johnDV n labL δ, .nat x, .nat y], .nat z])
       (boolVal (johnQB n labL δ x y (.nat z))) (2000 * (n + 1) ^ 2) := by
   set c := Val.list [johnDV n labL δ, .nat x, .nat y]
   set a := Val.list [c, .nat z]
-  have hc : Det johnProgram [a] (arg 0) c (2 * a.wt + 5) := Det.arg' rfl
+  have hc : Det P [a] (arg 0) c (2 * a.wt + 5) := Det.arg' rfl
   have hD := Det.get' hc (Det.nat 0)
     (show [johnDV n labL δ, Val.nat x, .nat y][0]? = some (johnDV n labL δ) from rfl)
   have hX := Det.get' hc (Det.nat 1)
     (show [johnDV n labL δ, Val.nat x, .nat y][1]? = some (.nat x) from rfl)
   have hY := Det.get' hc (Det.nat 2)
     (show [johnDV n labL δ, Val.nat x, .nat y][2]? = some (.nat y) from rfl)
-  have hZ : Det johnProgram [a] (arg 1) (.nat z) (2 * a.wt + 6) := Det.arg' rfl
+  have hZ : Det P [a] (arg 1) (.nat z) (2 * a.wt + 6) := Det.arg' rfl
   have h := john_det_ite (john_det_DE hD hX hZ hx hz) (Det.nat 0) (john_det_DE hD hY hZ hy hz)
   have hv : (if (johnD n labL δ x z).toNat = 0 then Val.nat (johnD n labL δ y z).toNat
       else Val.nat 0) = boolVal (johnQB n labL δ x y (.nat z)) := by
     simp only [johnQB]
     cases johnD n labL δ x z <;> cases johnD n labL δ y z <;> rfl
   rw [hv] at h
-  refine FunDet.intro john_at_bF.single (h.mono ?_)
+  refine FunDet.intro (john_at_bF (P := P)).single (h.mono ?_)
   have wD := john_wt_DV n labL δ
   have e1 := wt_list3_le (johnDV n labL δ) (.nat x) (.nat y)
   have e2 := wt_list2_le c (.nat z)
@@ -101,10 +103,10 @@ theorem john_bF_spec {x y z : ℕ} (hx : x < n) (hy : y < n) (hz : z < n) :
 
 /-- **The set `B(x, y)`.** -/
 theorem john_B_spec {x y : ℕ} (hx : x < n) (hy : y < n) :
-    FunDet johnProgram 79
+    FunDet P 79
       (.list [.list [johnDV n labL δ, .nat x, .nat y], natList (List.range n)])
       (natList (johnB n labL δ x y)) (1000000 * (n + 1) ^ 3) := by
-  have hF := filter_spec john_at_filterB (c := .list [johnDV n labL δ, .nat x, .nat y])
+  have hF := filter_spec (john_at_filterB (P := P)) (c := .list [johnDV n labL δ, .nat x, .nat y])
     (xs := (List.range n).map Val.nat) (q := johnQB n labL δ x y)
     (B := fun _ => 2000 * (n + 1) ^ 2) (by
       intro v hv
@@ -155,6 +157,8 @@ end GI.Impl
 
 namespace GI.Impl
 
+variable {P : GI.Lang.Program} [JohnAt P]
+
 open GI.Lang GI.Cited GI.Proved Equiv
 open GI.Machine (BinOp)
 
@@ -169,22 +173,22 @@ theorem john_wt_B (x y : ℕ) : (natList (johnB n labL δ x y)).wt ≤ 5 * (n + 
 
 /-- **The test of `johnCF`.** -/
 theorem john_aF_spec {r z : ℕ} (hr : r < n) (hz : z < n) :
-    FunDet johnProgram 90 (.list [.list [johnDV n labL δ, .nat r], .nat z])
+    FunDet P 90 (.list [.list [johnDV n labL δ, .nat r], .nat z])
       (boolVal (johnQA n labL δ r (.nat z))) (2000 * (n + 1) ^ 2) := by
   set c := Val.list [johnDV n labL δ, .nat r]
   set a := Val.list [c, .nat z]
-  have hc : Det johnProgram [a] (arg 0) c (2 * a.wt + 5) := Det.arg' rfl
+  have hc : Det P [a] (arg 0) c (2 * a.wt + 5) := Det.arg' rfl
   have hD := Det.get' hc (Det.nat 0)
     (show [johnDV n labL δ, Val.nat r][0]? = some (johnDV n labL δ) from rfl)
   have hR := Det.get' hc (Det.nat 1)
     (show [johnDV n labL δ, Val.nat r][1]? = some (.nat r) from rfl)
-  have hZ : Det johnProgram [a] (arg 1) (.nat z) (2 * a.wt + 6) := Det.arg' rfl
+  have hZ : Det P [a] (arg 1) (.nat z) (2 * a.wt + 6) := Det.arg' rfl
   have h := Det.arith (op := .sub) (Det.nat 1) (john_det_DE hD hZ hR hz hr)
   have hv : BinOp.eval .sub 1 (johnD n labL δ z r).toNat = (johnQA n labL δ r (.nat z)).toNat := by
     simp only [johnQA, BinOp.eval]
     cases johnD n labL δ z r <;> rfl
   rw [hv] at h
-  refine FunDet.intro john_at_aF.single (h.mono ?_)
+  refine FunDet.intro (john_at_aF (P := P)).single (h.mono ?_)
   have wD := john_wt_DV n labL δ
   have e1 := wt_list2_le (johnDV n labL δ) (.nat r)
   have e2 := wt_list2_le c (.nat z)
@@ -198,11 +202,11 @@ theorem john_aF_spec {r z : ℕ} (hr : r < n) (hz : z < n) :
 
 /-- **An entry of `C(x, y)`, by `all`.** -/
 theorem john_allA_spec {x y r : ℕ} (hr : r < n) :
-    FunDet johnProgram 87
+    FunDet P 87
       (.list [.list [johnDV n labL δ, .nat r], natList (johnB n labL δ x y)])
       (.nat ((johnB n labL δ x y).all fun z => !johnD n labL δ z r).toNat)
       (300000 * (n + 1) ^ 3) := by
-  have hA := all_spec john_at_allA (c := .list [johnDV n labL δ, .nat r])
+  have hA := all_spec (john_at_allA (P := P)) (c := .list [johnDV n labL δ, .nat r])
     (xs := (johnB n labL δ x y).map Val.nat) (q := johnQA n labL δ r)
     (B := fun _ => 2000 * (n + 1) ^ 2) (by
       intro v hv
@@ -246,21 +250,21 @@ theorem john_allA_spec {x y r : ℕ} (hr : r < n) :
 
 /-- **An entry of `C(x, y)`, as the function `johnCF`.** -/
 theorem john_cF_spec {x y r : ℕ} (hr : r < n) :
-    FunDet johnProgram 86
+    FunDet P 86
       (.list [.list [johnDV n labL δ, natList (johnB n labL δ x y)], .nat r])
       (.nat ((johnB n labL δ x y).all fun z => !johnD n labL δ z r).toNat)
       (400000 * (n + 1) ^ 3) := by
   set c := Val.list [johnDV n labL δ, natList (johnB n labL δ x y)]
   set a := Val.list [c, .nat r]
-  have hc : Det johnProgram [a] (arg 0) c (2 * a.wt + 5) := Det.arg' rfl
+  have hc : Det P [a] (arg 0) c (2 * a.wt + 5) := Det.arg' rfl
   have hD := Det.get' hc (Det.nat 0)
     (show [johnDV n labL δ, natList (johnB n labL δ x y)][0]? = some (johnDV n labL δ) from rfl)
   have hB := Det.get' hc (Det.nat 1)
     (show [johnDV n labL δ, natList (johnB n labL δ x y)][1]? =
       some (natList (johnB n labL δ x y)) from rfl)
-  have hR : Det johnProgram [a] (arg 1) (.nat r) (2 * a.wt + 6) := Det.arg' rfl
+  have hR : Det P [a] (arg 1) (.nat r) (2 * a.wt + 6) := Det.arg' rfl
   have hcall := Det.call (Det.mk2 (Det.mk2 hD hR) hB) (john_allA_spec (x := x) (y := y) hr)
-  refine FunDet.intro john_at_cF.single (hcall.mono ?_)
+  refine FunDet.intro (john_at_cF (P := P)).single (hcall.mono ?_)
   have wD := john_wt_DV n labL δ
   have wB := john_wt_B (n := n) (labL := labL) (δ := δ) x y
   have e1 := wt_list2_le (johnDV n labL δ) (natList (johnB n labL δ x y))
@@ -286,10 +290,10 @@ theorem john_wt_C (x y : ℕ) : (natList (johnC n labL δ x y)).wt ≤ 7 * n + 4
 
 /-- **The set `C(x, y)` from `B(x, y)`.** -/
 theorem john_mapC_spec (x y : ℕ) :
-    FunDet johnProgram 83
+    FunDet P 83
       (.list [.list [johnDV n labL δ, natList (johnB n labL δ x y)], natList (List.range n)])
       (natList (johnC n labL δ x y)) (1000000 * (n + 1) ^ 4) := by
-  have hT := john_tab john_at_mapC (c := .list [johnDV n labL δ, natList (johnB n labL δ x y)])
+  have hT := john_tab (john_at_mapC (P := P)) (c := .list [johnDV n labL δ, natList (johnB n labL δ x y)])
     (n := n) (B := 400000 * (n + 1) ^ 3)
     (G := fun r => .nat ((johnB n labL δ x y).all fun z => !johnD n labL δ z r).toNat)
     fun r hr => john_cF_spec hr
@@ -326,22 +330,22 @@ theorem john_mapC_spec (x y : ℕ) :
 
 /-- **The set `C(x, y)`.** -/
 theorem john_compC_spec {x y : ℕ} (hx : x < n) (hy : y < n) :
-    FunDet johnProgram 78
+    FunDet P 78
       (.list [johnDV n labL δ, natList (List.range n), .nat x, .nat y])
       (natList (johnC n labL δ x y)) (3000000 * (n + 1) ^ 4) := by
   set a := Val.list [johnDV n labL δ, natList (List.range n), .nat x, .nat y]
-  have hD : Det johnProgram [a] (arg 0) (johnDV n labL δ) (2 * a.wt + 5) := Det.arg' rfl
-  have hR : Det johnProgram [a] (arg 1) (natList (List.range n)) (2 * a.wt + 6) := Det.arg' rfl
-  have hX : Det johnProgram [a] (arg 2) (.nat x) (2 * a.wt + 7) := Det.arg' rfl
-  have hY : Det johnProgram [a] (arg 3) (.nat y) (2 * a.wt + 8) := Det.arg' rfl
+  have hD : Det P [a] (arg 0) (johnDV n labL δ) (2 * a.wt + 5) := Det.arg' rfl
+  have hR : Det P [a] (arg 1) (natList (List.range n)) (2 * a.wt + 6) := Det.arg' rfl
+  have hX : Det P [a] (arg 2) (.nat x) (2 * a.wt + 7) := Det.arg' rfl
+  have hY : Det P [a] (arg 3) (.nat y) (2 * a.wt + 8) := Det.arg' rfl
   have hB := Det.call (Det.mk2 (Det.mk3 hD hX hY) hR) (john_B_spec (labL := labL) (δ := δ) hx hy)
   set Bv := natList (johnB n labL δ x y)
-  have hD' : Det johnProgram [a, Bv] (arg 0) (johnDV n labL δ) (2 * a.wt + 5) := Det.arg' rfl
-  have hR' : Det johnProgram [a, Bv] (arg 1) (natList (List.range n)) (2 * a.wt + 6) :=
+  have hD' : Det P [a, Bv] (arg 0) (johnDV n labL δ) (2 * a.wt + 5) := Det.arg' rfl
+  have hR' : Det P [a, Bv] (arg 1) (natList (List.range n)) (2 * a.wt + 6) :=
     Det.arg' rfl
-  have hBv : Det johnProgram [a, Bv] (.var 1) Bv (Bv.wt + 1) := Det.var' rfl
+  have hBv : Det P [a, Bv] (.var 1) Bv (Bv.wt + 1) := Det.var' rfl
   have hC := Det.call (Det.mk2 (Det.mk2 hD' hBv) hR') (john_mapC_spec (labL := labL) (δ := δ) x y)
-  refine FunDet.intro john_at_compCF.single ((Det.letE hB hC).mono ?_)
+  refine FunDet.intro (john_at_compCF (P := P)).single ((Det.letE hB hC).mono ?_)
   have wD := john_wt_DV n labL δ
   have wB : Bv.wt ≤ 5 * (n + 1) ^ 2 := john_wt_B x y
   have wR := john_wt_Rn n

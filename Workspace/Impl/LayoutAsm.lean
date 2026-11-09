@@ -13,7 +13,7 @@ public import Workspace.Assembly.Wrapper
 # The concrete program of stage 2
 
 This file builds one `GI.Lang` program that holds every step of the recursion that is
-implemented, the three dispatchers, the selectors and the wrapper of Algorithm 1. The three
+implemented, the three dispatchers, the selectors and the graph wrapper. The three
 steps that are not implemented yet (the general dispatcher, the row step and the aggregation
 round) are given as function lists `gen`, `row`, `agg`, placed at fixed bases.
 

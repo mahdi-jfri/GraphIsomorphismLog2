@@ -7,7 +7,7 @@ public import Workspace.Impl.GenEnum
 /-!
 # `CombineExact` of an aggregation round
 
-Algorithm 5, `CombineExact`: the answer of the round is the union of the exact pieces of the
+Algorithm 3, `CombineExact`: the answer of the round is the union of the exact pieces of the
 items and of the translated continuation answers, `(⋃ pieces) ∪ ⋃_j τ_j A_j` (`Run.aggregate`).
 This union is the set of parent isomorphisms (`Run.exact`), so it is empty or a left coset.
 

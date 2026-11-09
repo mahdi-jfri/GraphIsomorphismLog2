@@ -120,7 +120,7 @@ structure RowForm (S : State Ω C) (L : GiantLabels S) where
   B : Type
   [fin : Fintype B]
   [dec : DecidableEq B]
-  /-- The natural row labels (Algorithm 5: "Recover the one-label or two-label map for the
+  /-- The natural row labels (Algorithm 3: "Recover the one-label or two-label map for the
   physical kernel orbits"; "this map is natural"). -/
   label : Ω → Fin L.q
   natural : NaturalRows S L label

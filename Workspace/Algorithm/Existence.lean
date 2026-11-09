@@ -26,7 +26,7 @@ action, with upper-bound ratios and clamped bounds):
 
 * `cont`: at a transitive `Continue` state above the threshold, off the column floor, the
   coarsest primitive quotient of the action, and the single-factor normalization for the
-  case where the quotient is one alternating factor (Algorithm 5). The dispatcher
+  case where the quotient is one alternating factor (Algorithm 3). The dispatcher
   (`PrimitiveQuotient.dispatch`, `Workspace/Algorithm/Dispatch.lean`) then decides between
   enumeration, product refinement and normalization; that these cases are exhaustive is
   Maróti's theorem (`GI.Cited.MarotiPrimitive`, a hypothesis) with `a ≥ 128`. This field is
@@ -60,7 +60,7 @@ resources matters, not the size of the decrease, so we use the lexicographic ord
 `(N or s, [Solve], s, [transitive], σ, ρ, 3 [floor] + h, Σ c_i, [not giant])`
 
 where the first entry is `s` for `Solve` and the phase size `N` otherwise. Each case of
-Algorithms 4 and 5 decreases it:
+Algorithms 3 and 4 decreases it:
 
 * a fresh phase keeps the first entry and leaves `Solve`; the threshold, the row
   terminal and the configuration calls of an aggregation are fresh calls on fewer than
@@ -146,7 +146,7 @@ structure Params.Terminating (P : Params) : Prop where
   q₀_pos : 1 ≤ P.q₀
 
 /-- The step of a transitive `Continue` state above the threshold and off the column
-floor (Algorithm 5): a dispatcher reduction ("if enumeration or a product refinement
+floor (Algorithm 3): a dispatcher reduction ("if enumeration or a product refinement
 applies"), or the single-factor normalization of a primitive quotient that fails the integer
 small test (`PrimitiveQuotient.SmallZ`) and is not a product with at least two coordinates. -/
 inductive ContStep (P : Params) {Ω C : Type} [Finite Ω] (S : State Ω C) : Type 1
@@ -166,7 +166,7 @@ inductive ContCase (P : Params) {Ω C : Type} [Finite Ω] (S : State Ω C) : Typ
   | quotient (Q : PrimitiveQuotient S) (hkc : Q.KillsCols) (hkl : Q.KeepsLevels)
       (hq : ∀ (_ : ¬ Q.SmallZ P.smallExp) (h : Q.SingleFactor), P.q₀ < (Q.normalization h).q)
 
-/-- **The dispatcher** (Algorithm 5) on the case data: enumerate a small quotient, refine a
+/-- **The dispatcher** (Algorithm 3) on the case data: enumerate a small quotient, refine a
 product with at least two coordinates, or normalize a single factor
 (`PrimitiveQuotient.dispatch`). -/
 noncomputable def ContCase.step {P : Params} {Ω C : Type} [Finite Ω] {S : State Ω C}
@@ -178,7 +178,7 @@ noncomputable def ContCase.step {P : Params} {Ω C : Type} [Finite Ω] {S : Stat
     | .single hs hp h => .normalize Q hs hp h (norm hs h) hkc hkl
 
 /-- The case data of a transitive `GiantStep` state above the threshold with the supplied
-labels `L` (Algorithms 4 and 5, `GiantStep(S, Γ)`: "Put `q ← |Γ|` for the supplied alternating
+labels `L` (Algorithms 3 and 4, `GiantStep(S, Γ)`: "Put `q ← |Γ|` for the supplied alternating
 label set"): the row terminal, the column step (whose new hierarchy satisfies the hierarchy
 invariant), or an aggregation round. The recursive questions of the aggregation are asked on
 finite position sets. The data of the row terminal and of the column step are those of
@@ -219,7 +219,7 @@ theorem Aggregation.child_hierInv {P : Params} {Ω C : Type} [Finite Ω] {S : St
   rwa [← hsel] at this
 
 /-- **The subroutine data**: for each state that the recursion reaches, what its case of
-Algorithms 4 and 5 needs. A reached state lies inside a phase (above the base size, with at most
+Algorithms 3 and 4 needs. A reached state lies inside a phase (above the base size, with at most
 `N` positions) and its hierarchy satisfies the invariant `HierInv`. -/
 structure Supply (P : Params) : Type 1 where
   /-- The case of a transitive `Continue` state above the threshold, off the floor. -/
@@ -447,7 +447,7 @@ theorem exists_run_aux (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive) (ha 
         have h0 : 0 < Nat.card S.dom := by change 0 < S.size; omega
         obtain ⟨⟨v, hv⟩⟩ := Nat.card_pos_iff.1 h0 |>.1
         exact ⟨v, hv⟩
-      -- The hierarchy of all original orbits (Algorithm 5: "Initialize each original orbit's
+      -- The hierarchy of all original orbits (Algorithm 3: "Initialize each original orbit's
       -- hierarchy and interval bounds").
       obtain ⟨M, hT, hH⟩ := exists_orbitHier S.domGroup (D := Set.univ) (fun _ _ _ => by simp) (by
         obtain ⟨v, hv⟩ := hne

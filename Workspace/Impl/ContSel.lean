@@ -7,7 +7,7 @@ public import Workspace.Impl.Size
 /-!
 # The choice of case of `Continue`: the phase threshold
 
-The selector of `Continue` first compares `s = |dom|` with `N^γ`, `γ = 9/10` (Algorithm 5:
+The selector of `Continue` first compares `s = |dom|` with `N^γ`, `γ = 9/10` (Algorithm 3:
 "if `|Ω| ≤ N^γ` then return `Solve`"). For natural numbers, `s ≤ N^{9/10}` holds exactly when
 `s^10 ≤ N^9` (`le_rpow_iff`), so the test is exact arithmetic. At or below the threshold it
 answers case `0`. Above the threshold it calls a function `rest` that chooses among the other

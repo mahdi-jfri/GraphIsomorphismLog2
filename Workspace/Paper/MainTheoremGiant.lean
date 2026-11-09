@@ -40,7 +40,7 @@ theorem run_exists_giant (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
         A = {g | g ∈ S.G ∧ ∀ v ∈ S.dom, S.y (g v) = S.x v} :=
   run_exists hP hM ha (Supply.ofGiant hP hγ hE Gs) S
 
-/-- **Theorem 1.2 at stage 1, for every run, given the giant-step data** (`thm:main-string`).
+/-- **Theorem 1.3 at stage 1, for every run, given the giant-step data** (`thm:main-string`).
 The hypotheses are those of `thm_main_string_stage1'`, with `GiantSupply P` and
 `Params.EnumeratesBounded` in place of `Supply P`. -/
 theorem thm_main_string_stage1_giant
@@ -57,7 +57,7 @@ theorem thm_main_string_stage1_giant
   thm_main_string_stage1' hP hM ha128 (Supply.ofGiant hP (γ_nonneg_of hP hαγ) hE Gs)
     hκ hc hαγ hbase hw hcw ha
 
-/-- **Theorem 1.1 at stage 1, for every run, given the giant-step data** (`thm:main-graph`).
+/-- **Corollary 1.2 at stage 1, for every run, given the giant-step data** (`cor:main-general`).
 The hypotheses are those of `thm_main_graph_stage1'`, with `GiantSupply P` and
 `Params.EnumeratesBounded` in place of `Supply P`. -/
 theorem thm_main_graph_stage1_giant

@@ -141,7 +141,7 @@ structure CarrierSpec (G : Subgroup (Perm Ω)) (D : Set Ω) (m : ℕ) (rows cols
 def hierLevel (pre : List (Interval Ω)) : Setoid Ω := pre.foldl (fun _ I => I.part) ⊥
 
 /-- The column partition is a level of the hierarchy on `D` (Section 6, "The old row factor and
-the new column factor are distinct actual intervals of the same hierarchy"; Algorithm 5:
+the new column factor are distinct actual intervals of the same hierarchy"; Algorithm 3:
 "Expose the next primitive quotient above any retained column partition"). -/
 def ColsLevel (D : Set Ω) (hier : List (Interval Ω)) (c : Setoid Ω) : Prop :=
   ∃ pre post, hier = pre ++ post ∧ ∀ v ∈ D, ∀ w ∈ D, ((hierLevel pre).r v w ↔ c.r v w)
@@ -237,14 +237,14 @@ theorem LargestOrbit.invariant {S : State Ω C} {D₁ : Set Ω} (h : S.LargestOr
     exact ⟨g * k, S.G.mul_mem hg hk, rfl⟩
 
 /-- The fixed-floor mode is active and the active domain has entered one proper
-column of the retained column partition (Algorithm 5: "if the active column floor
+column of the retained column partition (Algorithm 3: "if the active column floor
 has been entered"). -/
 def FloorEntered (S : State Ω C) : Prop :=
   S.floor = true ∧ ∃ R : RowRecord Ω, S.rows = some R ∧ ∃ cols : Setoid Ω, R.cols = some cols ∧
     ∃ v ∈ S.dom, ∀ w ∈ S.dom, cols.r v w
 
 /-- Fresh initialization of the interval bounds (Section 3.3: "The initial bound
-`c_i = d_i` is always available"; Algorithm 5, `Solve`: "Initialize each original
+`c_i = d_i` is always available"; Algorithm 3, `Solve`: "Initialize each original
 orbit's hierarchy and interval bounds"). -/
 def InitialBounds (S : State Ω C) : Prop := ∀ I ∈ S.hier, I.cap = I.ratio
 

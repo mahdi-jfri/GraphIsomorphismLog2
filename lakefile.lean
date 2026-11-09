@@ -25,10 +25,18 @@ require MarotiOrdersOfPrimitiveGroups from git
 lean_lib «Workspace» where
   globs := #[.andSubmodules `Workspace]
 
-/-- The statement of the main theorem, with `sorry`, for comparator. -/
+/-- The statement of the theorem for all graphs, with `sorry`, for comparator. -/
 @[default_target]
 lean_lib «Challenge»
 
-/-- The main theorem, proved. -/
+/-- The theorem for all graphs, proved. -/
 @[default_target]
 lean_lib «Solution»
+
+/-- The statement of the theorem for graphs of maximum degree `d`, with `sorry`, for comparator. -/
+@[default_target]
+lean_lib «ChallengeDegree»
+
+/-- The theorem for graphs of maximum degree `d`, proved. -/
+@[default_target]
+lean_lib «SolutionDegree»

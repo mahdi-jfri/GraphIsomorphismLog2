@@ -38,7 +38,7 @@ constants are only asked to be "large enough":
 
 `P₀` and `cc₀` are these values. `P₀_hyps` proves every parameter hypothesis of
 `GI.Paper.thm_main_graph_stage1'` and `GI.Paper.run_exists` for them, and
-`thm_main_graph_stage1''` is Theorem 1.1 at stage 1 at these parameters, for every run.
+`thm_main_graph_stage1''` is Corollary 1.2 at stage 1 at these parameters, for every run.
 -/
 
 namespace GI.Assembly
@@ -218,11 +218,11 @@ theorem P₀_hyps : P₀.Terminating ∧ 128 ≤ P₀.a ∧ 64 ≤ P₀.κ ∧ C
   ⟨P₀_terminating, P₀_a, P₀_κ, P₀_compat, P₀_αγ, P₀_aboveBase, P₀_a_succ, P₀_γ,
     P₀_enumeratesBounded, P₀_rowThreshold⟩
 
-/-- **Theorem 1.1 at stage 1, at the paper's parameters, for every run.** Assume the work
-bounds `NodeBound' w cw` with `0 ≤ cw`. Then there is a constant `C'` such that for all graphs
-`X, Y` on `n` vertices, every run `r` of `Solve` on the pair state of Algorithm 1 with answer `A`
-gives exactly the isomorphisms from `X` to `Y` (empty exactly when there is none, and
-`σ · Aut(X)` for every isomorphism `σ`), and has total cost at most `exp(C' (log(n+2))²)`.
+/-- **Corollary 1.2 at stage 1, at the paper's parameters, for every run.** Assume the work bounds
+`NodeBound' w cw` with `0 ≤ cw`. Then there is a constant `C'` such that for all graphs `X, Y` on
+`n` vertices, every run `r` of `Solve` on the pair state of the graph wrapper with answer `A` gives
+exactly the isomorphisms from `X` to `Y` (empty exactly when there is none, and `σ · Aut(X)` for
+every isomorphism `σ`), and has total cost at most `exp(C' (log(n+2))²)`.
 
 Compared with `GI.Paper.thm_main_graph_stage1'`: the parameters are fixed to `P₀`, and the
 existence of a run is left out, so neither `Supply` nor Maróti's theorem is needed. -/

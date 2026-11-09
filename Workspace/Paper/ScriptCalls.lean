@@ -104,7 +104,7 @@ theorem Exec.calls_length {α : Type} {s : Script α} {a : α} (e : Exec P s a) 
 
 section Cert
 
-/-- Every call of the lifted endpoint script (Algorithm 2) is a `Continue` call. -/
+/-- Every call of the lifted endpoint script (Algorithm 1) is a `Continue` call. -/
 theorem endpointScriptLift_cont {Ω C C₀ : Type} [DecidableEq Ω] (S : State Ω C)
     [Fintype S.dom] {Q : Type} [Group Q] (R : CosetRepFn S.dom) {P' : Subgroup (Perm S.dom)}
     (phi : P' →* Q) (hP : P' ≤ S.domGroup) (x : S.dom → C₀) (t : ℕ) :

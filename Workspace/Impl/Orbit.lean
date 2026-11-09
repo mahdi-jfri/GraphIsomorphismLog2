@@ -9,7 +9,7 @@ public import Workspace.Impl.ColsSplit
 /-!
 # The orbit chain of `Continue`
 
-Algorithm 5: "if `G` is intransitive then return the inherited orbit-chain answer". Section 3.2
+Algorithm 3: "if `G` is intransitive then return the inherited orbit-chain answer". Section 3.2
 says how: take a largest orbit `D₁` first and solve it with `Continue`. If its answer is empty,
 so is the whole answer (`Run.orbitStop`). Otherwise it is a coset `t H₁` with
 `H₁ = Aut_G(x on D₁)`; the rest `D \ D₁` continues under `H₁` with target `y ∘ t`, and the answer

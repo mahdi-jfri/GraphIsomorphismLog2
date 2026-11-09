@@ -9,13 +9,13 @@ public import Workspace.Algorithm.Certificates
 
 Section 4.1: "Aggregate the full certificates, and use the comparison classes of the nonfull
 certificates as tuple colors." Before it aggregates, the round computes the local certificate of
-every test set `T` of size `κ`, for both strings (Algorithm 2, `LocalCertificate`). Lemma 4.1:
+every test set `T` of size `κ`, for both strings (Algorithm 1, `LocalCertificate`). Lemma 4.1:
 "all test certificates … can be computed with polynomial structural work and polynomially many
 inherited recursive calls" of the two charged types.
 
 `certPhase` is this phase as a query script: for every `κ`-subset `T` of the labels it runs the
-lifted endpoint script of Algorithm 2 (`endpointScriptLift`, `Workspace/Algorithm/Certificates.lean`)
-to its final stage `n = |dom|` for `x` and then for `y`.
+lifted endpoint script of Algorithm 1 (`endpointScriptLift`,
+`Workspace/Algorithm/Certificates.lean`) to its final stage `n = |dom|` for `x` and then for `y`.
 
 * `certPhase_evalExact`: with exact answers it returns the final stages of the endpoint
   procedure, which are what the canonical structure of the round is built from
@@ -161,7 +161,7 @@ abbrev StagePair (S : State Ω C) : Type :=
 variable (O : TestSetOrder q κ) (R : CosetRepFn S.dom)
 
 /-- **The certificate phase**: for each test set `T`, in the order `O`, the local certificate of
-`x` and then of `y` (Algorithm 2 with lifted calls and the coset representatives `R`, run to the
+`x` and then of `y` (Algorithm 1 with lifted calls and the coset representatives `R`, run to the
 final stage `n = |dom|`). -/
 noncomputable def certPhase (x y : S.dom → C) : Script (List (StagePair S)) :=
   Script.seqList (O.sets.map fun T =>

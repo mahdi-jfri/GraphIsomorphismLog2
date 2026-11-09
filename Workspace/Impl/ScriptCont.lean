@@ -16,7 +16,7 @@ that move from one to the next.
 
 * `scr_bind_assoc`, `scr_bind_done`: `Script.bind` is associative, with `done` as unit.
 * `scr_seqList_cons`: running a list of scripts is running the first one, then the rest.
-* `epStep`, `epFrom`: one round of Algorithm 2 with lifted calls, and `m` rounds from a stage.
+* `epStep`, `epFrom`: one round of Algorithm 1 with lifted calls, and `m` rounds from a stage.
   `endpointScriptLift_eq_epFrom`: the loop `endpointScriptLift` is `epFrom` from the first stage.
   So the rest of the loop after some rounds is `(epFrom AW m).bind K`, a right-nested form.
 * `winCont`: inside a round, after the window calls of the first representatives, the rest is
@@ -104,7 +104,7 @@ variable {Ω C C₀ : Type} [DecidableEq Ω] (S : State Ω C) [Fintype S.dom]
   {Q : Type} [Group Q] {P' : Subgroup (Perm S.dom)} (R : CosetRepFn S.dom) (phi : P' →* Q)
   (x : S.dom → C₀)
 
-/-- **One round of Algorithm 2** with lifted calls, from the stage `AW = (A_t, W_t)`. -/
+/-- **One round of Algorithm 1** with lifted calls, from the stage `AW = (A_t, W_t)`. -/
 noncomputable def epStep (AW : Subgroup (Perm S.dom) × Finset S.dom) :
     Script (Subgroup (Perm S.dom) × Finset S.dom) := by
   classical
@@ -116,7 +116,7 @@ theorem endpointScriptLift_succ (t : ℕ) :
     endpointScriptLift S R phi x (t + 1) = (endpointScriptLift S R phi x t).bind (epStep S R phi x) :=
   rfl
 
-/-- **`m` rounds of Algorithm 2** from the stage `AW`, nested to the right. -/
+/-- **`m` rounds of Algorithm 1** from the stage `AW`, nested to the right. -/
 noncomputable def epFrom (AW : Subgroup (Perm S.dom) × Finset S.dom) :
     ℕ → Script (Subgroup (Perm S.dom) × Finset S.dom)
   | 0 => Script.done AW

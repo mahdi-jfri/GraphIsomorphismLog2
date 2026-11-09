@@ -88,7 +88,10 @@ theorem final_modulo_glue (hst : PointwiseStab)
         (linA20Extra hs hh hn hcmb hv ++ ext') (tmRiRecF flcRecIdx 14 8 1 gObjF) labF jF crE cmE
         itE crF cmF itF) asmF asHandImpl Xi (asb 4))
     (hXc : PBU fun _ W _ => Xc W) (hXm : PBU fun _ W _ => Xm W) (hXi : PBU fun _ W _ => Xi W) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime := by
+    SolvedQ (fagProg hst hm hpre hfac hmb hO hC hder hni hnc (linA20Extra hs hh hn hcmb hv ++ ext')
+        (tmRiRecF flcRecIdx 14 8 1 gObjF) labF jF crE cmE itE crF cmF itF)
+      (· = fagIface hst hm hpre hfac hmb hO hC hder hni hnc Kl Dl Kj Dj
+        (fglRecK hs hder hm Kg Dg) (fglRecD hs hder hm Kg Dg) (fagX hpre Xc Xm Xi)) := by
   -- The room of the three lists; the one of `recF` comes from the bound on `gObjF`.
   have hF : FlcFits (tmRiRecF flcRecIdx 14 8 1 gObjF) labF jF :=
     ⟨tmRi_recF_fits hgo, hlF, hjF⟩

@@ -8,7 +8,7 @@ public import Workspace.Lang.Prims.BlockMath
 /-!
 # The mathematics of the row test of `GiantStep`
 
-`GiantStep` first decides the row case `RowCase α S L` for its supplied labels `L` (Algorithm 5:
+`GiantStep` first decides the row case `RowCase α S L` for its supplied labels `L` (Algorithm 3:
 "if `q > λ` … if this map is natural and (no rows are retained, or `q` exceeds their degree)").
 The three parts of the test are decided as follows.
 

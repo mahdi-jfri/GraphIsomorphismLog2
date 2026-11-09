@@ -7,7 +7,7 @@ public import Workspace.Algorithm.Dispatch
 /-!
 # The single-factor normalization
 
-Algorithm 5: "Normalize the single alternating factor, with at most two cosets." Section 6.1:
+Algorithm 3: "Normalize the single alternating factor, with at most two cosets." Section 6.1:
 "The single-factor normalization has index at most two above the bounded exceptional degrees.
 Its preimage is normal."
 
@@ -207,7 +207,7 @@ structure NormChoice where
   τ_mem : ∀ j, τ j ∈ S.G
   cover : (S.G : Set (Perm Ω)) ⊆ ⋃ j, τ j • (Q.normGroup e hS : Set (Perm Ω))
 
-/-- **The single-factor normalization of a choice** (Algorithm 5: "Normalize the single
+/-- **The single-factor normalization of a choice** (Algorithm 3: "Normalize the single
 alternating factor, with at most two cosets"; Section 6.1: "The single-factor normalization has
 index at most two … Its preimage is normal"): the preimage `G'` of `Alt(m)` maps onto `Alt(m)`,
 is normal in `G`, and has at most two cosets in `G`. -/

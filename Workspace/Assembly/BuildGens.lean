@@ -7,7 +7,7 @@ public import Workspace.Assembly.BuildMath
 /-!
 # Building the generators of the pair state
 
-The group of the pair state of Algorithm 1 is the diagonal action of `Sym(n)` on the positions
+The group of the pair state of the graph wrapper is the diagonal action of `Sym(n)` on the positions
 `Fin (n * n)`. A program builds it from the generators `pairGens n`, the diagonal images of all
 transpositions `(i j)` (`gens_pairGens`, `Workspace/Assembly/BuildMath.lean`).
 

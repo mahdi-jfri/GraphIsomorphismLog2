@@ -248,7 +248,7 @@ variable {Ω C : Type}
 are indexed by single labels, ordered pairs, or unordered pairs. If the state is not
 sent to `RowStep`, then the kernel-orbit map is not natural, or a row action of degree
 at least `q` is retained. These are the two inherited rectangle representations of
-Algorithm 3: the pair orbit of Section 5.2 and the row–column diagonal orbit of
+Algorithm 2: the pair orbit of Section 5.2 and the row–column diagonal orbit of
 Section 5.3 (Lemma A.30 needs `q ≤ m`). -/
 theorem giantStep_cases {α : ℝ} (S : State Ω C) (L : GiantLabels S)
     (hq : (S.N : ℝ) ^ α < L.q) (hnot : ¬ RowCase α S L) :

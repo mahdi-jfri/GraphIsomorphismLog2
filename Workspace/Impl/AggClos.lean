@@ -8,7 +8,7 @@ public import Workspace.Impl.ScriptCont
 /-!
 # The new stage of a round: the coset closure `A_{t+1}`
 
-A round of Algorithm 2 asks one window call per coset representative `τ` of the kernel `N` in
+A round of Algorithm 1 asks one window call per coset representative `τ` of the kernel `N` in
 `A_t`, and sets `A_{t+1} = ⟨⋃ τ · B_τ⟩`, where `B_τ` is the answer of the call restricted to the
 domain (`winCont_nil`, `Workspace/Impl/ScriptCont.lean`). The program keeps groups as their lifts
 to `G` in graph form (`PairGens`), so it must compute the graph form of the lift of `A_{t+1}`.

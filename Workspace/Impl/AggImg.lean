@@ -7,7 +7,7 @@ public import Workspace.Impl.AggCosets
 /-!
 # The order of `φ_T` on a pointwise stabilizer
 
-Rules 1 to 4 of Algorithm 2 test the image under `φ_T` of subgroups of `A` of one form: the
+Rules 1 to 4 of Algorithm 1 test the image under `φ_T` of subgroups of `A` of one form: the
 pointwise stabilizer `A_{(U)}` of a set `U` of points of the domain.
 
 * rule 1, `Full A`: `U = ∅`, the image is `Alt(T)`;

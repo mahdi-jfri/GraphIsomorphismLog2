@@ -68,7 +68,8 @@ theorem final_modulo_contracts
     (hsoj : ∀ Kj Dj : ℕ, ItciSojSpec (cIface Kj Dj Kg Dg Xs) (cProg gObjF sojF)
       asmF (fitC23Idx + 101000) (fitC23Idx + 101001) (fitC23Idx + 101002) Xs)
     (hXs : PBU fun _ W _ => Xs W) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
+    SolvedR
+      (cProg gObjF sojF) :=
   final_modulo_open GI.Proved.pointwiseStab GI.Proved.membership GI.Proved.preimage GI.Proved.normalizedFactor GI.Proved.minimalBlocks GI.Proved.groupOrder
     GI.Proved.johnsonIdentification GI.Proved.derivedSubgroup
     GI.Proved.normalizedIntersection GI.Proved.normalClosure GI.Proved.solvableCosetIntersection

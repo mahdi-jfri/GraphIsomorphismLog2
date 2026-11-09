@@ -7,7 +7,7 @@ public import Workspace.Assembly.Final
 @[expose] public section
 
 /-!
-# The wrapper of Algorithm 1 (obligation (b))
+# The graph wrapper (obligation (b))
 
 `wrapperFuns b fs` is a block of 55 functions at base `b`:
 

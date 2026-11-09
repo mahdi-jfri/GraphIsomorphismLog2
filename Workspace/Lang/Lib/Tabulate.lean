@@ -1,5 +1,5 @@
 /-
-Small tools for the wrapper of Algorithm 1 (`Workspace/Assembly/Build.lean`,
+Small tools for the graph wrapper (`Workspace/Assembly/Build.lean`,
 `Workspace/Assembly/Convert.lean`).
 
 * `tabulate_spec`: `map f` over the points `0, …, m - 1` (the value `encFun id`) tabulates a

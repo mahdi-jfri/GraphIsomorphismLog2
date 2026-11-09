@@ -27,6 +27,15 @@ open Equiv Finset GI.Cited
 
 variable {n m k : ℕ}
 
+/-- The hypotheses that the counts of row `0` need: `1 ≤ k`, `2k + 2 ≤ m`, and the labels of the
+pairs. -/
+structure JohnHyp0 (ι : Fin n ≃ {A : Finset (Fin m) // A.card = k}) (lab : Fin (n * n) → ℕ) :
+    Prop where
+  one_le : 1 ≤ k
+  two_mul : 2 * k + 2 ≤ m
+  lab_iff : ∀ x y x' y', lab (johnPair x y) = lab (johnPair x' y') ↔
+    johnInter ι x y = johnInter ι x' y'
+
 /-- The hypotheses: the promise of the task on `m, k`, and the labels of the pairs. -/
 structure JohnHyp (ι : Fin n ≃ {A : Finset (Fin m) // A.card = k}) (lab : Fin (n * n) → ℕ) :
     Prop where
@@ -53,15 +62,17 @@ theorem JohnHyp.three_mul (h : JohnHyp ι lab) : 3 * k ≤ m := by
   have := h.sq; have := h.one_le
   nlinarith
 
+theorem JohnHyp.to0 (h : JohnHyp ι lab) : JohnHyp0 ι lab := ⟨h.one_le, h.two_mul, h.lab_iff⟩
+
 /-- A `k`-set exists, so there is a point. -/
-theorem JohnHyp.pos (h : JohnHyp ι lab) : 0 < n := by
+theorem JohnHyp0.pos (h : JohnHyp0 ι lab) : 0 < n := by
   have := h.two_mul
   obtain ⟨A, -, hA⟩ := exists_subset_card_eq (s := (univ : Finset (Fin m))) (n := k)
     (by rw [card_univ, Fintype.card_fin]; omega)
   exact Fin.pos (ι.symm ⟨A, hA⟩)
 
 /-- The base point `0`. -/
-def JohnHyp.x0 (h : JohnHyp ι lab) : Fin n := ⟨0, h.pos⟩
+def JohnHyp0.x0 (h : JohnHyp0 ι lab) : Fin n := ⟨0, h.pos⟩
 
 end
 
@@ -102,12 +113,12 @@ theorem john_count_finRange (p : Fin n → Bool) :
 section
 variable {ι : Fin n ≃ {A : Finset (Fin m) // A.card = k}} {lab : Fin (n * n) → ℕ}
 
-theorem john_row_eq (h : JohnHyp ι lab) :
+theorem john_row_eq (h : JohnHyp0 ι lab) :
     johnRow n (johnLabL lab) = (List.finRange n).map fun z => lab (johnPair h.x0 z) := by
   rw [johnRow, ← List.map_coe_finRange_eq_range, List.map_map]
   refine List.map_congr_left fun z _ => ?_
   have := john_labL_getD lab h.x0 z
-  simp only [JohnHyp.x0, mul_zero, zero_add] at this
+  simp only [JohnHyp0.x0, mul_zero, zero_add] at this
   exact this
 
 theorem john_inter_le (ι : Fin n ≃ {A : Finset (Fin m) // A.card = k}) (x y : Fin n) :
@@ -135,7 +146,7 @@ theorem john_card_points (ι : Fin n ≃ {A : Finset (Fin m) // A.card = k}) (x 
     simp [hZ.1]
 
 /-- **The count of a label in row `0`.** -/
-theorem john_row_count (h : JohnHyp ι lab) (y : Fin n) :
+theorem john_row_count (h : JohnHyp0 ι lab) (y : Fin n) :
     (johnRow n (johnLabL lab)).count (lab (johnPair h.x0 y)) =
       johnVal m k (k - johnInter ι h.x0 y) := by
   rw [john_row_eq h, List.count_eq_countP, List.countP_map, john_count_finRange]
@@ -147,7 +158,7 @@ theorem john_row_count (h : JohnHyp ι lab) (y : Fin n) :
   simp only [mem_filter, mem_univ, true_and, Function.comp_apply, beq_iff_eq]
   exact h.lab_iff _ _ _ _
 
-theorem john_cnt_eq (h : JohnHyp ι lab) :
+theorem john_cnt_eq (h : JohnHyp0 ι lab) :
     johnCnt (johnRow n (johnLabL lab)) =
       (List.finRange n).map fun y => johnVal m k (k - johnInter ι h.x0 y) := by
   unfold johnCnt
@@ -199,12 +210,12 @@ theorem john_findIdx {l : List ℕ} {c : ℕ} (hc : c ∈ l) :
   exact ⟨hlt, by simpa using List.findIdx_getElem (w := hlt)⟩
 
 /-- The entry of the row at the index of an entry of the counts. -/
-theorem john_row_getD (h : JohnHyp ι lab) {t : ℕ} (ht : t < n) :
+theorem john_row_getD (h : JohnHyp0 ι lab) {t : ℕ} (ht : t < n) :
     (johnRow n (johnLabL lab)).getD t 0 = lab (johnPair h.x0 ⟨t, ht⟩) := by
   rw [john_row_eq h]
   simp [List.getD_eq_getElem?_getD, ht]
 
-theorem john_cnt_getElem (h : JohnHyp ι lab) {t : ℕ} (ht : t < (johnCnt (johnRow n (johnLabL lab))).length) :
+theorem john_cnt_getElem (h : JohnHyp0 ι lab) {t : ℕ} (ht : t < (johnCnt (johnRow n (johnLabL lab))).length) :
     ∃ ht' : t < n, (johnCnt (johnRow n (johnLabL lab)))[t] =
       johnVal m k (k - johnInter ι h.x0 ⟨t, ht'⟩) := by
   have ht' : t < n := by
@@ -221,14 +232,14 @@ theorem john_cnt_max (h : JohnHyp ι lab) :
   apply le_antisymm
   · apply GI.Lang.foldl_max_le (Nat.zero_le _)
     intro c hc
-    rw [hcnt, john_cnt_eq h] at hc
+    rw [hcnt, john_cnt_eq h.to0] at hc
     obtain ⟨y, -, rfl⟩ := List.mem_map.mp hc
-    rcases Nat.eq_or_lt_of_le (Nat.sub_le k (johnInter ι h.x0 y)) with he | hlt
+    rcases Nat.eq_or_lt_of_le (Nat.sub_le k (johnInter ι h.to0.x0 y)) with he | hlt
     · rw [he]
     · exact (john_val_lt h.bound hlt le_rfl).le
-  · obtain ⟨y, hy⟩ := john_exists_inter ι hkm h.x0 0 (Nat.zero_le _)
+  · obtain ⟨y, hy⟩ := john_exists_inter ι hkm h.to0.x0 0 (Nat.zero_le _)
     have hmem : johnVal m k k ∈ cnt := by
-      rw [hcnt, john_cnt_eq h]
+      rw [hcnt, john_cnt_eq h.to0]
       exact List.mem_map.mpr ⟨y, List.mem_finRange _, by rw [hy, Nat.sub_zero]⟩
     exact (GI.Lang.le_foldl_max cnt 0).2 _ hmem
 
@@ -243,7 +254,7 @@ theorem john_max_mem (h : JohnHyp ι lab) :
   · exact h0
 
 /-- The valency `k (m - k)` is one of the counts. -/
-theorem john_ups_mem (h : JohnHyp ι lab) : k * (m - k) ∈ johnCnt (johnRow n (johnLabL lab)) := by
+theorem john_ups_mem (h : JohnHyp0 ι lab) : k * (m - k) ∈ johnCnt (johnRow n (johnLabL lab)) := by
   have hkm : 2 * k ≤ m := by have := h.two_mul; omega
   have hk := h.one_le
   obtain ⟨y, hy⟩ := john_exists_inter ι hkm h.x0 (k - 1) (Nat.sub_le _ _)
@@ -258,18 +269,18 @@ theorem john_delta_iff (h : JohnHyp ι lab) (x y : Fin n) :
   have hmax : cnt.foldl max 0 = johnVal m k k := john_cnt_max h
   have hmem : cnt.foldl max 0 ∈ cnt := john_max_mem h
   obtain ⟨hlt, hget⟩ := john_findIdx hmem
-  obtain ⟨ht, hval⟩ := john_cnt_getElem h hlt
+  obtain ⟨ht, hval⟩ := john_cnt_getElem h.to0 hlt
   have hd : johnDelta (johnRow n (johnLabL lab)) =
-      lab (johnPair h.x0 ⟨_, ht⟩) := by
+      lab (johnPair h.to0.x0 ⟨_, ht⟩) := by
     unfold johnDelta
     rw [← hcnt]
-    exact john_row_getD h ht
+    exact john_row_getD h.to0 ht
   rw [hd, h.lab_iff]
-  have h0 : johnInter ι h.x0 ⟨_, ht⟩ = 0 := by
-    have e : johnVal m k k = johnVal m k (k - johnInter ι h.x0 ⟨_, ht⟩) := by
+  have h0 : johnInter ι h.to0.x0 ⟨_, ht⟩ = 0 := by
+    have e : johnVal m k k = johnVal m k (k - johnInter ι h.to0.x0 ⟨_, ht⟩) := by
       rw [← hmax]; exact hget.symm.trans hval
     have := john_val_inj h.bound (le_refl k) (Nat.sub_le _ _) e
-    have := john_inter_le ι h.x0 ⟨_, ht⟩
+    have := john_inter_le ι h.to0.x0 ⟨_, ht⟩
     omega
   rw [h0, johnInter, card_eq_zero, disjoint_iff_inter_eq_empty]
 
@@ -279,19 +290,19 @@ theorem john_ups_iff (h : JohnHyp ι lab) (x y : Fin n) :
   have hkm : 2 * k ≤ m := by have := h.two_mul; omega
   have hk := h.one_le
   set cnt := johnCnt (johnRow n (johnLabL lab)) with hcnt
-  have hmem : k * (m - k) ∈ cnt := john_ups_mem h
+  have hmem : k * (m - k) ∈ cnt := john_ups_mem h.to0
   obtain ⟨hlt, hget⟩ := john_findIdx hmem
-  obtain ⟨ht, hval⟩ := john_cnt_getElem h hlt
-  have hd : johnUps m k (johnRow n (johnLabL lab)) = lab (johnPair h.x0 ⟨_, ht⟩) := by
+  obtain ⟨ht, hval⟩ := john_cnt_getElem h.to0 hlt
+  have hd : johnUps m k (johnRow n (johnLabL lab)) = lab (johnPair h.to0.x0 ⟨_, ht⟩) := by
     unfold johnUps
     rw [← hcnt]
-    exact john_row_getD h ht
+    exact john_row_getD h.to0 ht
   rw [hd, h.lab_iff]
-  have h1 : johnInter ι h.x0 ⟨_, ht⟩ + 1 = k := by
-    have e : johnVal m k 1 = johnVal m k (k - johnInter ι h.x0 ⟨_, ht⟩) := by
+  have h1 : johnInter ι h.to0.x0 ⟨_, ht⟩ + 1 = k := by
+    have e : johnVal m k 1 = johnVal m k (k - johnInter ι h.to0.x0 ⟨_, ht⟩) := by
       rw [john_val_one]; exact hget.symm.trans hval
     have := john_val_inj h.bound (by omega) (Nat.sub_le _ _) e
-    have := john_inter_le ι h.x0 ⟨_, ht⟩
+    have := john_inter_le ι h.to0.x0 ⟨_, ht⟩
     omega
   omega
 

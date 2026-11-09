@@ -13,18 +13,20 @@ to `j` (`john_mapCnt_spec`). It computes `johnCnt`.
 
 namespace GI.Impl
 
+variable {P : GI.Lang.Program} [JohnAt P]
+
 open GI.Lang GI.Cited GI.Proved Equiv
 
 /-- **The count of one entry.** -/
 theorem john_cntF_spec {row : List ℕ} {B j : ℕ} (hB : ∀ x ∈ row, x ≤ B) (hl : row.length ≤ B)
     (hj : j ≤ B) :
-    FunDet johnProgram 51 (.list [natList row, .nat j]) (.nat (row.count j))
+    FunDet P 51 (.list [natList row, .nat j]) (.nat (row.count j))
       (countK * (B + 1) ^ 3 + 200 * (B + 1) ^ 2) := by
   set a := Val.list [natList row, .nat j]
-  have h0 : Det johnProgram [a] (arg 0) (natList row) (2 * a.wt + 5) := Det.arg' rfl
-  have h1 : Det johnProgram [a] (arg 1) (.nat j) (2 * a.wt + 6) := Det.arg' rfl
-  have hcall := Det.call (Det.mk2 h1 h0) (count_spec john_at_count hB hj hl)
-  refine FunDet.intro john_at_cntF.single (hcall.mono ?_)
+  have h0 : Det P [a] (arg 0) (natList row) (2 * a.wt + 5) := Det.arg' rfl
+  have h1 : Det P [a] (arg 1) (.nat j) (2 * a.wt + 6) := Det.arg' rfl
+  have hcall := Det.call (Det.mk2 h1 h0) (count_spec (john_at_count (P := P)) hB hj hl)
+  refine FunDet.intro (john_at_cntF (P := P)).single (hcall.mono ?_)
   have wr := wt_natList_le_sq hB hl
   have e1 := wt_list2_le (natList row) (.nat j)
   have e2 := wt_list2_le (.nat j) (natList row)
@@ -39,9 +41,9 @@ theorem john_wt_list_nat {xs : List ℕ} : Val.list (xs.map Val.nat) = natList x
 
 /-- **The counts of the row.** -/
 theorem john_mapCnt_spec {row : List ℕ} {B : ℕ} (hB : ∀ x ∈ row, x ≤ B) (hl : row.length ≤ B) :
-    FunDet johnProgram 48 (.list [natList row, natList row]) (natList (johnCnt row))
+    FunDet P 48 (.list [natList row, natList row]) (natList (johnCnt row))
       (countK * (B + 1) ^ 4 + 2000000 * (B + 1) ^ 3) := by
-  have hM := map_spec john_at_mapCnt (c := natList row) (xs := row.map Val.nat)
+  have hM := map_spec (john_at_mapCnt (P := P)) (c := natList row) (xs := row.map Val.nat)
     (R := fun x w => ∃ j, x = .nat j ∧ w = .nat (row.count j))
     (B := fun _ => countK * (B + 1) ^ 3 + 200 * (B + 1) ^ 2) (by
       intro x hx

@@ -29,7 +29,7 @@ variable {Ω C : Type}
 
 /-! ### The interface -/
 
-/-- **Interface for an aggregation round** (Algorithm 5, `GiantStep` after "Freeze
+/-- **Interface for an aggregation round** (Algorithm 3, `GiantStep` after "Freeze
 `S_0 ← S`"; Section 4.1; Algorithm `alg:auxiliary`). The structural data of the paper's
 aggregation step:
 * the selected interval;
@@ -40,7 +40,7 @@ aggregation step:
 * the cited inputs: the coherent refinement (`hK`) and the Design Lemma (`hD`);
 * the parameter conditions `Params.Aggregates P` (Section 7.5, including `q₀ ≥ 2064`, the explicit
   label threshold of Lemma A.12) and the phase facts `q > q₀` and `N > N₀`;
-* the state is not in the row case (`hnot`; Algorithm 5: `GiantStep` aggregates only when the
+* the state is not in the row case (`hnot`; Algorithm 3: `GiantStep` aggregates only when the
   labels are not natural or retained rows have degree at least `q`).
 
 The data of Lemma A.30 for natural labels (`carrierData`: the carrier quotient, the column giant
@@ -97,7 +97,7 @@ structure AggregationData (P : Params) {Ω C : Type} (S : State Ω C) (L : Giant
   /-- `GiantStep` is asked with labels on `q > q₀` points (Section A.3: "When `m ≤ q₀`,
   enumerate the alternating quotient"). -/
   q_large : P.q₀ < L.q
-  /-- The state lies inside a phase: `N > N₀` (Algorithm 5: "if `|Ω| ≤ N₀` then return the
+  /-- The state lies inside a phase: `N > N₀` (Algorithm 3: "if `|Ω| ≤ N₀` then return the
   answer by direct enumeration"). -/
   N_large : P.N₀ < S.N
   /-- The data of the selected Cameron constituent, carried by the supplied labels
@@ -112,7 +112,7 @@ structure AggregationData (P : Params) {Ω C : Type} (S : State Ω C) (L : Giant
   hK : JointFn
   /-- The Design Lemma behind Case 3 (cited, [H, Proposition 5.1]). -/
   hD : GI.Cited.DesignLemma
-  /-- The state is not in the row case (Algorithm 5: "if this map is natural and (no rows are
+  /-- The state is not in the row case (Algorithm 3: "if this map is natural and (no rows are
   retained, or `q` exceeds their degree) then return `RowStep`"). -/
   hnot : ¬ RowCase P.α S L
 

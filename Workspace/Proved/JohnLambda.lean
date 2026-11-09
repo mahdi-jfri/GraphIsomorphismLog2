@@ -128,21 +128,47 @@ abbrev JohnHyp.δ (_ : JohnHyp ι lab) : ℕ := johnDelta (johnRow n (johnLabL l
 /-- The label `Υ` of `lab`. -/
 abbrev JohnHyp.υ (_ : JohnHyp ι lab) : ℕ := johnUps m k (johnRow n (johnLabL lab))
 
-theorem john_D_eq (h : JohnHyp ι lab) (x y : Fin n) :
-    johnD n (johnLabL lab) h.δ x y = decide (Disjoint (ι x).1 (ι y).1) := by
+/-- **The facts that the construction of `Λ` uses.** `δ` is the label of the disjoint pairs and `υ`
+the label of the pairs that meet in `k - 1` elements. `JohnHyp.toG` gives these facts for the
+labels `Δ, Υ` that the program finds from the counts, under the promise `(k + 1)² < m + 2`. -/
+structure JohnHypG (ι : Fin n ≃ {A : Finset (Fin m) // A.card = k}) (lab : Fin (n * n) → ℕ)
+    (δ υ : ℕ) : Prop where
+  one_le : 1 ≤ k
+  two_mul : 2 * k + 2 ≤ m
+  three_mul : 3 * k ≤ m
+  delta_iff : ∀ x y, lab (johnPair x y) = δ ↔ Disjoint (ι x).1 (ι y).1
+  ups_iff : ∀ x y, lab (johnPair x y) = υ ↔ johnInter ι x y + 1 = k
+
+theorem JohnHyp.toG (h : JohnHyp ι lab) : JohnHypG ι lab h.δ h.υ :=
+  ⟨h.one_le, h.two_mul, h.three_mul, john_delta_iff h, john_ups_iff h⟩
+
+variable {δ υ : ℕ}
+
+/-- A `k`-set exists, so there is a point. -/
+theorem JohnHypG.pos (h : JohnHypG ι lab δ υ) : 0 < n := by
+  have := h.two_mul
+  obtain ⟨A, -, hA⟩ := exists_subset_card_eq (s := (univ : Finset (Fin m))) (n := k)
+    (by rw [card_univ, Fintype.card_fin]; omega)
+  exact Fin.pos (ι.symm ⟨A, hA⟩)
+
+/-- The base point `0`. -/
+def JohnHypG.x0 (h : JohnHypG ι lab δ υ) : Fin n := ⟨0, h.pos⟩
+
+theorem john_D_eq (h : JohnHypG ι lab δ υ) (x y : Fin n) :
+    johnD n (johnLabL lab) δ x y = decide (Disjoint (ι x).1 (ι y).1) := by
   unfold johnD
   rw [john_labL_getD]
-  exact decide_eq_decide.mpr (john_delta_iff h x y)
+  exact decide_eq_decide.mpr (h.delta_iff x y)
 
 /-- **`C(x, y)` for a pair with label `Υ`.** -/
-theorem john_C_eq (h : JohnHyp ι lab) {x y : Fin n} {i : Fin m} (hiA : i ∈ (ι x).1)
+theorem john_C_eq (h : JohnHypG ι lab δ υ) {x y : Fin n} {i : Fin m} (hiA : i ∈ (ι x).1)
     (hiB : i ∉ (ι y).1) (hxy : johnInter ι x y + 1 = k) :
-    johnC n (johnLabL lab) h.δ x y = johnInd ι i := by
+    johnC n (johnLabL lab) δ x y = johnInd ι i := by
   unfold johnC johnInd
   rw [← List.map_coe_finRange_eq_range, List.map_map]
   refine List.map_congr_left fun r _ => ?_
   simp only [Function.comp_apply]
-  have key : ((johnB n (johnLabL lab) h.δ x y).all fun z => !johnD n (johnLabL lab) h.δ z r) =
+  have key : ((johnB n (johnLabL lab) δ x y).all fun z => !johnD n (johnLabL lab) δ z r) =
       decide (i ∈ (ι r).1) := by
     rw [Bool.eq_iff_iff, List.all_eq_true, decide_eq_true_iff,
       ← john_C_iff h.three_mul (ι x).2 (ι y).2 hiA hiB hxy (ι r).1 (ι r).2]
@@ -177,7 +203,7 @@ theorem john_exists_set (hk : 1 ≤ k) (hkm : k + 1 ≤ m) (i j : Fin m) (hij : 
   · simpa using hT h
 
 /-- The lists `johnInd ι i` are distinct. -/
-theorem john_ind_inj (h : JohnHyp ι lab) {i j : Fin m} (he : johnInd ι i = johnInd ι j) :
+theorem john_ind_inj (h : JohnHypG ι lab δ υ) {i j : Fin m} (he : johnInd ι i = johnInd ι j) :
     i = j := by
   by_contra hij
   have hkm := h.two_mul
@@ -203,16 +229,16 @@ theorem john_labL_getD_idx (lab : Fin (n * n) → ℕ) {p : ℕ} (hp : p < n * n
   exact e
 
 /-- **The members of `Λ`.** -/
-theorem john_lam_mem (h : JohnHyp ι lab) (v : List ℕ) :
-    v ∈ johnLam n (johnLabL lab) h.δ h.υ ↔ ∃ i, johnInd ι i = v := by
+theorem john_lam_mem (h : JohnHypG ι lab δ υ) (v : List ℕ) :
+    v ∈ johnLam n (johnLabL lab) δ υ ↔ ∃ i, johnInd ι i = v := by
   unfold johnLam johnStep
-  rw [(john_dedup (fun p => decide ((johnLabL lab).getD p 0 = h.υ))
-    (fun p => johnC n (johnLabL lab) h.δ (p / n) (p % n)) _ [] List.nodup_nil).2]
+  rw [(john_dedup (fun p => decide ((johnLabL lab).getD p 0 = υ))
+    (fun p => johnC n (johnLabL lab) δ (p / n) (p % n)) _ [] List.nodup_nil).2]
   simp only [List.not_mem_nil, false_or, List.mem_range, decide_eq_true_eq]
   constructor
   · rintro ⟨p, hp, hυ, rfl⟩
     obtain ⟨x, y, hx, hy, hl⟩ := john_labL_getD_idx lab hp
-    rw [hl, john_ups_iff h] at hυ
+    rw [hl, h.ups_iff] at hυ
     obtain ⟨i, hiA, hiAB⟩ := exists_mem_notMem_of_card_lt_card
       (s := (ι x).1 ∩ (ι y).1) (t := (ι x).1) (by
         have := (ι x).2; unfold johnInter at hυ; omega)
@@ -250,20 +276,20 @@ theorem john_lam_mem (h : JohnHyp ι lab) (v : List ℕ) :
     have hmod : (n * x + y) % n = y := by
       rw [Nat.add_comm, Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt y.isLt]
     refine ⟨n * x + y, hlt, ?_, ?_⟩
-    · rw [john_labL_getD, john_ups_iff h]; exact hxy
+    · rw [john_labL_getD, h.ups_iff]; exact hxy
     · rw [hdiv, hmod]
       refine john_C_eq h (by rw [hxA]; exact mem_insert_self _ _) ?_ hxy
       rw [hyB, mem_insert, not_or]
       exact ⟨hij, hiT⟩
 
-theorem john_lam_nodup (h : JohnHyp ι lab) : (johnLam n (johnLabL lab) h.δ h.υ).Nodup := by
+theorem john_lam_nodup (h : JohnHypG ι lab δ υ) : (johnLam n (johnLabL lab) δ υ).Nodup := by
   unfold johnLam johnStep
-  exact (john_dedup (fun p => decide ((johnLabL lab).getD p 0 = h.υ))
-    (fun p => johnC n (johnLabL lab) h.δ (p / n) (p % n)) _ [] List.nodup_nil).1
+  exact (john_dedup (fun p => decide ((johnLabL lab).getD p 0 = υ))
+    (fun p => johnC n (johnLabL lab) δ (p / n) (p % n)) _ [] List.nodup_nil).1
 
-theorem john_lam_length (h : JohnHyp ι lab) : (johnLam n (johnLabL lab) h.δ h.υ).length = m := by
+theorem john_lam_length (h : JohnHypG ι lab δ υ) : (johnLam n (johnLabL lab) δ υ).length = m := by
   rw [← List.toFinset_card_of_nodup (john_lam_nodup h)]
-  have : (johnLam n (johnLabL lab) h.δ h.υ).toFinset = univ.image (johnInd ι) := by
+  have : (johnLam n (johnLabL lab) δ υ).toFinset = univ.image (johnInd ι) := by
     ext v
     rw [List.mem_toFinset, john_lam_mem h]
     simp
@@ -289,10 +315,10 @@ theorem john_sort_eq (s : Finset (Fin m)) :
       exact ⟨⟨a, ha⟩, hs, rfl⟩
 
 /-- **The output.** The program's output is `ι` followed by a renaming of `Fin m`. -/
-theorem john_out_eq (h : JohnHyp ι lab) : ∃ π : Perm (Fin m),
-    johnOut n (johnLam n (johnLabL lab) h.δ h.υ) = (List.finRange n).map fun x =>
+theorem john_out_eq (h : JohnHypG ι lab δ υ) : ∃ π : Perm (Fin m),
+    johnOut n (johnLam n (johnLabL lab) δ υ) = (List.finRange n).map fun x =>
       (((ι.trans (kSetPerm π)) x).1.sort (· ≤ ·)).map fun a : Fin m => (a : ℕ) := by
-  set L := johnLam n (johnLabL lab) h.δ h.υ with hL
+  set L := johnLam n (johnLabL lab) δ υ with hL
   have hlen : L.length = m := john_lam_length h
   have hex : ∀ t : Fin m, ∃ i, johnInd ι i = L[(t : ℕ)]'(by rw [hlen]; exact t.isLt) :=
     fun t => (john_lam_mem h _).mp (List.getElem_mem _)
@@ -324,7 +350,7 @@ theorem john_out_eq (h : JohnHyp ι lab) : ∃ π : Perm (Fin m),
 /-- **There are at least `m` points.** Fix the point `x0`. The points `z` with
 `|ι x0 ∩ ι z| = k - 1` number `k (m - k)` (`john_card_points`, `john_card_val`), and `x0` is not
 one of them. So `n ≥ k (m - k) + 1 ≥ m`. -/
-theorem JohnHyp.m_le (h : JohnHyp ι lab) : m ≤ n := by
+theorem JohnHypG.m_le (h : JohnHypG ι lab δ υ) : m ≤ n := by
   have hk := h.one_le
   have hkm := h.two_mul
   have hc := john_card_points ι h.x0 (k - 1)
@@ -341,11 +367,11 @@ theorem JohnHyp.m_le (h : JohnHyp ι lab) : m ≤ n := by
   omega
 
 /-- Each list `C(x, y)` of a pair with label `Υ` is a list `johnInd ι i`. -/
-theorem john_C_ind (h : JohnHyp ι lab) {p : ℕ} (hp : p < n * n)
-    (hυ : (johnLabL lab).getD p 0 = h.υ) :
-    ∃ i, johnInd ι i = johnC n (johnLabL lab) h.δ (p / n) (p % n) := by
+theorem john_C_ind (h : JohnHypG ι lab δ υ) {p : ℕ} (hp : p < n * n)
+    (hυ : (johnLabL lab).getD p 0 = υ) :
+    ∃ i, johnInd ι i = johnC n (johnLabL lab) δ (p / n) (p % n) := by
   obtain ⟨x, y, hx, hy, hl⟩ := john_labL_getD_idx lab hp
-  rw [hl, john_ups_iff h] at hυ
+  rw [hl, h.ups_iff] at hυ
   obtain ⟨i, hiA, hiAB⟩ := exists_mem_notMem_of_card_lt_card
     (s := (ι x).1 ∩ (ι y).1) (t := (ι x).1) (by
       have := (ι x).2; unfold johnInter at hυ; omega)
@@ -355,13 +381,13 @@ theorem john_C_ind (h : JohnHyp ι lab) {p : ℕ} (hp : p < n * n)
 
 /-- **The partial results of the fold.** After any list of pairs, the collected lists are
 lists `johnInd ι i`, without repeats, so there are at most `m` of them. -/
-theorem john_prefix (h : JohnHyp ι lab) (l : List ℕ) (hl : ∀ p ∈ l, p < n * n) :
-    (l.foldl (johnStep n (johnLabL lab) h.δ h.υ) []).length ≤ m ∧
-      ∀ v ∈ l.foldl (johnStep n (johnLabL lab) h.δ h.υ) [], ∃ i, johnInd ι i = v := by
-  have hd := john_dedup (fun p => decide ((johnLabL lab).getD p 0 = h.υ))
-    (fun p => johnC n (johnLabL lab) h.δ (p / n) (p % n)) l [] List.nodup_nil
-  have hnd : (l.foldl (johnStep n (johnLabL lab) h.δ h.υ) []).Nodup := hd.1
-  have hmem : ∀ v ∈ l.foldl (johnStep n (johnLabL lab) h.δ h.υ) [], ∃ i, johnInd ι i = v := by
+theorem john_prefix (h : JohnHypG ι lab δ υ) (l : List ℕ) (hl : ∀ p ∈ l, p < n * n) :
+    (l.foldl (johnStep n (johnLabL lab) δ υ) []).length ≤ m ∧
+      ∀ v ∈ l.foldl (johnStep n (johnLabL lab) δ υ) [], ∃ i, johnInd ι i = v := by
+  have hd := john_dedup (fun p => decide ((johnLabL lab).getD p 0 = υ))
+    (fun p => johnC n (johnLabL lab) δ (p / n) (p % n)) l [] List.nodup_nil
+  have hnd : (l.foldl (johnStep n (johnLabL lab) δ υ) []).Nodup := hd.1
+  have hmem : ∀ v ∈ l.foldl (johnStep n (johnLabL lab) δ υ) [], ∃ i, johnInd ι i = v := by
     intro v hv
     obtain h0 | ⟨p, hpl, hP, rfl⟩ := (hd.2 v).mp hv
     · simp at h0

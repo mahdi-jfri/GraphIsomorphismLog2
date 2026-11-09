@@ -60,7 +60,8 @@ theorem final_modulo_items3 (hst : PointwiseStab)
       hnc (linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ (karyRefinementPrim h2 :: ext'''))) (tmRiRecF flcRecIdx 14 8 1 gObjF)
       (tmGLPLabF neF) jF fcrE fcmE fitE fcrF fcmF (fitF itHvHvIF (fc23F fc23ObF cfPrF) (rcRepF fitRpIdx))) asmF (fitC23Idx + 100000) (fitC23Idx + 100001) (fitC23Idx + 100002) Xp)
     (hXp : PBU fun _ W _ => Xp W) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime := by
+    SolvedR
+      (fagProg hst hm hpre hfac hmb hO hC hder hni hnc (linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ (karyRefinementPrim h2 :: ext'''))) (tmRiRecF flcRecIdx 14 8 1 gObjF) (tmGLPLabF neF) jF fcrE fcmE fitE fcrF fcmF (fitF itHvHvIF (fc23F fc23ObF cfPrF) (rcRepF fitRpIdx))) := by
   have hF : FlcFits (tmRiRecF flcRecIdx 14 8 1 gObjF) (tmGLPLabF neF) jF :=
     ⟨tmRi_recF_fits hgo, tmGLPLabF_fits hneF, hjF⟩
   have hfit : FitFits itHvHvIF (fc23F fc23ObF cfPrF) (rcRepF fitRpIdx) :=

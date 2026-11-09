@@ -26,6 +26,11 @@ search) are fixed. Three lists are not written yet, and stay parameters with the
 
 The contract `AsItemsOK` is `fit_asItemsOK`, which holds for every interface. The growth of the
 bound is `fit_Xi_pbu`.
+
+From this step on, the chain also returns `RoundOK` for the interface of the solved program: the
+contracts of the reading, of the structure step and of the three cases. The degree-sensitive
+algorithm has its own copies of the other phases, which call these programs of the round. They are
+proved here by the same lemmas that `fit_asItemsOK` and `final_modulo_aggph` use.
 -/
 
 namespace GI.Assembly
@@ -35,6 +40,23 @@ open GI.Cited (Val PointwiseStab Preimage NormalizedFactor Membership MinimalBlo
   CameronRecognition DerivedSubgroup NormalizedIntersection
   NormalClosure SolvableCosetIntersection HermiteFullRank
   SmithNonsingular ConstructiveMembership VectorStabilizer KaryRefinement)
+
+/-- **The contracts of the round that the degree-sensitive algorithm reuses**, at their places in
+the final layout, each with a polynomial bound: the reading at `asb 1`, the structure step of the
+items at `fagItIdx`, and the three cases (Case 1 at `fagItIdx + 38`, `fagItIdx + 39`; Case 2a at
+`fitHvIdx`, `fagItIdx + 59`; Cases 2b and 3 at `fitC23Idx`, `fitC23Idx + 1`). -/
+def RoundOK (I : Iface) (Pg : Program) : Prop :=
+  (∃ X : ℕ → ℕ, (PBU fun _ W _ => X W) ∧ AsReadOK I Pg asmF asHandImpl X (asb 1)) ∧
+  (∃ Xs : ℕ → ℕ, (PBU fun _ W _ => Xs W) ∧ ItSStrOK I Pg asmF (fagItIdx + 0) Xs) ∧
+  ∃ Xc : ℕ → ℕ, (PBU fun _ W _ => Xc W) ∧
+    ItSCaseOK I Pg asmF (· = .one) (fagItIdx + 38) (fagItIdx + 39) Xc ∧
+    ItSCaseOK I Pg asmF (· = .twoA) fitHvIdx (fagItIdx + 59) Xc ∧
+    ItSCaseOK I Pg asmF (fun a => a = .twoB ∨ a = .three) fitC23Idx (fitC23Idx + 1) Xc
+
+/-- **`Solved` with the contracts of the round** for its interface. -/
+def SolvedR (Pg : Program) : Prop := SolvedQ Pg fun I => RoundOK I Pg
+
+theorem SolvedR.solved {Pg : Program} (h : SolvedR Pg) : Solved Pg := SolvedQ.solved h
 
 /-- **Stage 2 up to the glue program of Lemma A.20, the two abelian computations of
 Theorem A.23, the init program of Case 2a, the programs of Cases 2b and 3, and the rectangle
@@ -81,15 +103,34 @@ theorem final_modulo_items (hst : PointwiseStab)
         labF jF fcrE fcmE fitE fcrF fcmF (fitF hvIF c23F rpF)) asmF
       (fun a => a = .twoB ∨ a = .three) fitC23Idx (fitC23Idx + 1) X3)
     (hX3 : PBU fun _ W _ => X3 W) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime := by
+    SolvedR
+      (fagProg hst hm hpre hfac hmb hO hC hder hni hnc (linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ ext'')) (tmRiRecF flcRecIdx 14 8 1 gObjF) labF jF fcrE fcmE fitE fcrF fcmF (fitF hvIF c23F rpF)) := by
   -- the room of the coset slot and of the two phase lists, as in `final_modulo_cmp`
   have hF : FlcFits (tmRiRecF flcRecIdx 14 8 1 gObjF) labF jF :=
     ⟨tmRi_recF_fits hgo, hlF, hjF⟩
-  exact final_modulo_cmp_k hst hm hpre hfac hmb hO hC hAb hTr hder hni
+  -- the items' list sits at `fagItIdx`, and its fixed part meets `FitAt`
+  obtain ⟨-, -, -, -, -, -, -, hit⟩ := fag_hasAt (hst := hst) (hm := hm) (hpre := hpre)
+    (hfac := hfac) (hmb := hmb) (hO := hO) (hC := hC) (hder := hder)
+    (hni := hni) (hnc := hnc)
+    (ext := linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ ext'')) hF (crE := fcrE) (cmE := fcmE)
+    (itE := fitE) (itF := fitF hvIF c23F rpF) ⟨fcr_fits, fcm_fits⟩
+  obtain ⟨hC', -, -, -⟩ := fit_hasAt_parts ⟨hhv, hc23, hrp⟩ hit
+  have h := final_modulo_cmp_k hst hm hpre hfac hmb hO hC hAb hTr hder hni
     hnc hs hh hn hcmb hv dixon hK hDl hk ext'' gObjF labF jF hgo hlF hjF fitE
     (fitF hvIF c23F rpF) (fitXi hk hst hO Xh X3) hgl hlab hjj
     -- the items, for the interface of `final_modulo_cmp_k` (`fit_asItemsOK`)
     (fit_asItemsOK hk hF ⟨fcr_fits, fcm_fits⟩ ⟨hhv, hc23, hrp⟩ _ hinit h23)
     (fit_Xi_pbu hk hst hO hXh hX3)
+  refine h.mono fun I hI => ?_
+  subst hI
+  -- the three case contracts at the common bound `fitXc`, as in `fit_asItemsOK`
+  exact ⟨⟨rdX hpre, rd_pbu hpre, fag_asReadOK hK hDl hF ⟨fcr_fits, fcm_fits⟩ fun _ => le_rfl⟩,
+    ⟨itSXs hk hst hO, itS_Xs_pbu hk hst hO,
+      fit_strOK hC' hk hst hO fcr_prim_kary rfl rfl _ asmF⟩,
+    fitXc Xh X3, (PBU.add (PBU.add itS_sc1X_pbu (fit_hvX_pbu hXh)) hX3).mono
+      fun _ _ _ => le_of_eq rfl,
+    ItSCaseOK.mono _ _ (fit_c1 hC' _ asmF) fun W => by unfold fitXc; omega,
+    ItSCaseOK.mono _ _ (fit_c2a hC' _ asmF hinit) fun W => by unfold fitXc; omega,
+    ItSCaseOK.mono _ _ h23 fun W => by unfold fitXc; omega⟩
 
 end GI.Assembly

@@ -7,7 +7,7 @@ public import Workspace.Impl.AggIncMath
 /-!
 # The window increment as a program
 
-`incFuns` computes the increment `V_t` of rules 1 to 4 of Algorithm 2 (`inc_spec`). Its input is
+`incFuns` computes the increment `V_t` of rules 1 to 4 of Algorithm 1 (`inc_spec`). Its input is
 `[[k, q], pairs, x₀, B, a, outside]`: a graph-form generating list of the lift of `A`, the label
 points `x₀` of `T`, a bound `B ≥ |Alt(T)|` on orbit sizes, the order `a = |Alt(T)|`, and the
 positions of the points outside the window. It follows `incList` (`AggIncMath.lean`): each

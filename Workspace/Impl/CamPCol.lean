@@ -95,20 +95,20 @@ def camColFuns (b jj jq : ℕ) : List Expr :=
     camIdxFuns (b + 44)
 
 /-- Where the parts of the column function sit. -/
-structure CamColAt (P : Program) (b jj jq : ℕ) (hj : JohnsonIdentification)
+structure CamColAt (P : Program) (b jj jq : ℕ) (pJ : Prim)
     (hqc : GMPNormalCentralizer) : Prop where
   body : P.funs[b]? = some (camColBody b jj jq)
   mg : P.HasAt (b + 1) (mkGroupFuns (b + 1))
   orb : P.HasAt (b + 8) (orbitFuns (b + 8))
   gat : P.HasAt (b + 40) (gatherFuns (b + 40))
   idx : P.HasAt (b + 44) (camIdxFuns (b + 44))
-  pj : P.prims[jj]? = some (johnsonPrim hj)
+  pj : P.prims[jj]? = some pJ
   pq : P.prims[jq]? = some (gmpNormalCentralizerPrim hqc)
 
-theorem camColAt_of {P : Program} {b jj jq : ℕ} {hj : JohnsonIdentification}
+theorem camColAt_of {P : Program} {b jj jq : ℕ} {pJ : Prim}
     {hqc : GMPNormalCentralizer} (h : P.HasAt b (camColFuns b jj jq))
-    (pj : P.prims[jj]? = some (johnsonPrim hj)) (pq : P.prims[jq]? = some (gmpNormalCentralizerPrim hqc)) :
-    CamColAt P b jj jq hj hqc := by
+    (pj : P.prims[jj]? = some pJ) (pq : P.prims[jq]? = some (gmpNormalCentralizerPrim hqc)) :
+    CamColAt P b jj jq pJ hqc := by
   simp only [camColFuns] at h
   exact
   { body := h.left.left.left.left.single
@@ -135,11 +135,11 @@ theorem cam_gather_lab (lab : Fin n → ℕ) (O : List (Fin n)) :
 def camColK : ℕ := 10 ^ 18
 
 /-- **The coordinate of one factor.** -/
-theorem camCol_spec {hj : JohnsonIdentification} {hqc : GMPNormalCentralizer} {P : Program}
-    {b jj jq : ℕ} (hP : CamColAt P b jj jq hj hqc) (ns ts : List (Perm (Fin n)))
+theorem camCol_spec {pJ : Prim} {Q : ℕ → ℕ → Prop} {hqc : GMPNormalCentralizer} {P : Program}
+    {b jj jq : ℕ} (hP : CamColAt P b jj jq pJ hqc) (hJo : JohnPrimOK pJ Q) (ns ts : List (Perm (Fin n)))
     (O : List (Fin n)) (hO : O.Nodup) (ts' : List (Perm (Fin O.length))) {m k : ℕ}
     (_hTN : gens ts ≤ gens ns) (hnorm : ∀ y ∈ gens ns, ∀ x ∈ gens ts, y * x * y⁻¹ ∈ gens ts)
-    (h5 : 5 ≤ m) (hk1 : 1 ≤ k) (hb : (k + 1) ^ 2 < m + 2) (hmn : m ≤ n)
+    (hQ : Q m k) (hmn : m ≤ n)
     (hJ : ∃ ι : Fin O.length ≃ {A : Finset (Fin m) // A.card = k}, IsJohnsonId (gens ts') ι)
     (hcov : ∀ C, CamCent (gens ns) (gens ts) C → ∀ x, ∃ u ∈ O, u ∈ MulAction.orbit C x) :
     FunAll P b (.list [.list [encGroup ns, encGroup ([] : List (Perm (Fin n))), .nat m, .nat k],
@@ -148,7 +148,7 @@ theorem camCol_spec {hj : JohnsonIdentification} {hqc : GMPNormalCentralizer} {P
         IsJohnsonId (gens ts') ι ∧ ∃ w : Fin n → Fin O.length,
           (∀ C, CamCent (gens ns) (gens ts) C → ∀ x, O.get (w x) ∈ MulAction.orbit C x) ∧
           v = .list ((List.finRange n).map fun x => kVal (ι (w x))) ∧
-          cost ≤ (johnsonPrim hj).boundSize (10 * ((Val.list [.list [encGroup ns,
+          cost ≤ pJ.boundSize (10 * ((Val.list [.list [encGroup ns,
               encGroup ([] : List (Perm (Fin n))), .nat m, .nat k],
               .list [natList (O.map Fin.val), encGroup ts', encGroup ts]]).wt + 1)) +
             (gmpNormalCentralizerPrim hqc).boundSize (10 * ((Val.list [.list [encGroup ns,
@@ -170,7 +170,7 @@ theorem camCol_spec {hj : JohnsonIdentification} {hqc : GMPNormalCentralizer} {P
       .nat k][2]? = some (.nat m) from rfl))
     (Det.get' dA0 (Det.nat 3) (show [encGroup ns, encGroup ([] : List (Perm (Fin n))), .nat m,
       .nat k][3]? = some (.nat k) from rfl))
-  refine FunAll.intro hP.body (EvalAll.letE (johnson_call hj hP.pj dJa ⟨ts', rfl, rfl⟩ h5 hk1 hb hJ)
+  refine FunAll.intro hP.body (EvalAll.letE (EvalAll.prim_spec hP.pj dJa (hJo ⟨ts', rfl, rfl⟩ hQ hJ))
     fun vI cI hI => ?_)
   obtain ⟨⟨ι, hι, rfl⟩, hcI⟩ := hI
   -- 2. the centralizer
@@ -297,7 +297,7 @@ theorem camCol_spec {hj : JohnsonIdentification} {hqc : GMPNormalCentralizer} {P
   have hXX : X ^ 1 = X := pow_one X
   -- the primitive calls
   have wJa := wt_list3_le (encGroup ts') (.nat m) (.nat k)
-  have A1 := (johnsonPrim hj).bound_le (v := .list [encGroup ts', .nat m, .nat k])
+  have A1 := pJ.bound_le (v := .list [encGroup ts', .nat m, .nat k])
     (B := 10 * X) ((Val.size_le_wt _).trans (by omega))
   have wQa := wt_list2_le (encGroup ns) (encGroup ts)
   have A2 := (gmpNormalCentralizerPrim hqc).bound_le (v := .list [encGroup ns, encGroup ts])

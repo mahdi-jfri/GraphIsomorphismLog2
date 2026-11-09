@@ -9,7 +9,7 @@ public import Workspace.Paper.Algorithm
 # Every state has a run of the recursion
 
 Lemma 6.1 (`GI.Paper.lem_main_correctness`) is about the runs of `GI.Algorithm.Run`. This
-file states that runs exist: given the subroutine data of Algorithms 4 and 5
+file states that runs exist: given the subroutine data of Algorithms 3 and 4
 (`GI.Algorithm.Supply`), the parameter inequalities of Section 6
 (`GI.Algorithm.Params.Terminating`), Maróti's theorem (`GI.Cited.MarotiPrimitive`, which makes
 the dispatcher's cases exhaustive) and `a ≥ 128` (the enumeration exponent, Section A.5), `Solve` has a run on every state of a finite

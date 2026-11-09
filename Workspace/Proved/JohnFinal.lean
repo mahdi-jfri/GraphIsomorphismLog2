@@ -42,7 +42,7 @@ theorem john_hyp (I : JohnsonInst) : ∃ (ι : Fin I.n ≃ {A : Finset (Fin I.m)
         (orbitK * ((((1 :: I.gs).map johnPairPerm).length + 1) * (I.n * I.n + 1)) ^ 5) ∧
       (∀ x, lab x < I.n * I.n) ∧ JohnHyp ι lab := by
   obtain ⟨ι, hι⟩ := I.johnson
-  obtain ⟨lab, horb, hiff, hlt⟩ := orbits_spec john_at_orbit ((1 :: I.gs).map johnPairPerm)
+  obtain ⟨lab, horb, hiff, hlt⟩ := orbits_spec (john_at_orbit (P := johnProgram)) ((1 :: I.gs).map johnPairPerm)
   have hm2 := john_two_mul I.five_le I.one_le I.bound
   exact ⟨ι, lab, hι, horb, fun x => (hlt x).fst,
     ⟨I.five_le, I.one_le, I.bound, john_lab_iff hι hm2 hiff⟩⟩
@@ -87,7 +87,7 @@ theorem john_cells {n : ℕ} (gs : List (Perm (Fin n))) {m k : ℕ} (hm : m ≤ 
 theorem johnsonIdentification : GI.Cited.JohnsonIdentification := by
   refine polyTimeAt_ofVal_of_lang_cells johnProgram 0 johnK 15 1 1 (fun I => ?_) fun I => ?_
   · obtain ⟨ι, lab, -, -, -, h⟩ := john_hyp I
-    exact john_cells I.gs h.m_le (by have := h.two_mul; omega)
+    exact john_cells I.gs h.toG.m_le (by have := h.two_mul; omega)
   obtain ⟨ι, lab, hι, horb, hlt, h⟩ := john_hyp I
   have hcntlen : (johnCnt (johnRow I.n (johnLabL lab))).length = I.n := by
     simp [johnCnt, johnRow]
@@ -97,24 +97,24 @@ theorem johnsonIdentification : GI.Cited.JohnsonIdentification := by
     obtain ⟨y, -, rfl⟩ := hv
     exact List.count_le_length.trans (by simp [johnRow])
   have hδ := (john_findIdx (john_max_mem h)).fst
-  have hυ := (john_findIdx (john_ups_mem h)).fst
+  have hυ := (john_findIdx (john_ups_mem h.to0)).fst
   rw [hcntlen] at hδ hυ
   have hkm : I.k * (I.m - I.k) ≤ I.n * I.n :=
-    (hcntle _ (john_ups_mem h)).trans (Nat.le_mul_self _)
+    (hcntle _ (john_ups_mem h.to0)).trans (Nat.le_mul_self _)
   have hok : ∀ i ≤ I.n * I.n, JohnAccOK I.n (((List.range (I.n * I.n)).take i).foldl
       (johnStep I.n (johnLabL lab) (johnDelta (johnRow I.n (johnLabL lab)))
         (johnUps I.m I.k (johnRow I.n (johnLabL lab)))) []) := by
     intro i _
-    obtain ⟨hl, hv⟩ := john_prefix h ((List.range (I.n * I.n)).take i)
+    obtain ⟨hl, hv⟩ := john_prefix h.toG ((List.range (I.n * I.n)).take i)
       (fun p hp => List.mem_range.mp (List.mem_of_mem_take hp))
-    refine ⟨hl.trans h.m_le, fun v hvm => ?_⟩
+    refine ⟨hl.trans h.toG.m_le, fun v hvm => ?_⟩
     obtain ⟨j, rfl⟩ := hv v hvm
     refine ⟨by simp [johnInd], fun b hb => ?_⟩
     simp only [johnInd, List.mem_map] at hb
     obtain ⟨r, -, rfl⟩ := hb
     split <;> omega
-  obtain ⟨π, hπ⟩ := john_out_eq h
-  refine FunAll.mono (john_main_spec I.gs I.m I.k lab horb hlt h.m_le hkm hδ hυ hok)
+  obtain ⟨π, hπ⟩ := john_out_eq h.toG
+  refine FunAll.mono (john_main_spec I.gs I.m I.k lab horb hlt h.toG.m_le hkm hδ hυ hok)
     fun v c hv => ⟨⟨ι.trans (kSetPerm π), john_isJohnsonId_trans π hι, ?_⟩, hv.2⟩
   rw [hv.1]
   erw [hπ]

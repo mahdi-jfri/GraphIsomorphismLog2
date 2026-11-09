@@ -5,7 +5,7 @@ public import Workspace.Assembly.BuildMath
 @[expose] public section
 
 /-!
-# Reading the answer of Algorithm 1
+# Reading the answer of the graph wrapper
 
 The answer of the pair state `graphState G H` is the image of the graph isomorphisms under the
 diagonal map `pairHom n` (`graph_reduction_answer`). If it is a coset `x · K`, given by a

@@ -9,7 +9,7 @@ public import Workspace.Impl.Weights
 /-!
 # A fresh phase of `Solve`
 
-Algorithm 5, `Solve` with `N₀ < |dom|`: start a fresh phase on the domain. In the recursion
+Algorithm 3, `Solve` with `N₀ < |dom|`: start a fresh phase on the domain. In the recursion
 this is `Run.fresh`: one `Continue` child on the fresh state `S' = S.freshOn (freshHier G' M)`
 on the type `S.dom`, where `G' = G|_dom` and `M` is the size of a largest orbit of `G'`. Its
 answer `A'` is lifted back to `S.liftAnswer A'`.

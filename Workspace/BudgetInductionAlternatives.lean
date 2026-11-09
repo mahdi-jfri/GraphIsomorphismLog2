@@ -68,9 +68,10 @@ theorem unsupported_primitive_witness {cutoff : ℕ} {C A₀ : ℝ}
   exact not_lt_of_ge
     (sigma_of_primitive_alternative hcutoff hC (by omega) absorb ih H a alt) hfail
 
-/-- Conditional completion interface, not a completed proof of A.9:
-the primitive-exhaustion theorem displayed as `exhaustion` remains to be
-proved. All induction, orbit, block and representation adapters are checked. -/
+/-- Theorem A.9 from primitive exhaustion. The hypothesis `exhaustion` says that every primitive
+group of degree at least the cutoff that does not contain the alternating group satisfies
+`PrimitiveReductionAlternative`. Theorem A.9 itself is `hereditary_budget`
+(`Workspace/PrimitiveExhaustion.lean`). -/
 theorem natural_bound_of_primitive_exhaustion {cutoff : ℕ} {C A₀ : ℝ}
     (hcutoff : 64 ≤ cutoff) (hC : 128 ≤ C)
     (absorb : ∀ r : ℕ, 3 ≤ r → A₀ * Real.log r ≤ degreeAllowance C r)

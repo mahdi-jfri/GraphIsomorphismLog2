@@ -39,16 +39,16 @@ def camFacBody (b : ℕ) : Expr :=
 def camFacFuns (b jj jq : ℕ) : List Expr :=
   [camFacBody b] ++ camRestrFuns (b + 1) ++ camColFuns (b + 64) jj jq
 
-structure CamFacAt (P : Program) (b jj jq : ℕ) (hj : JohnsonIdentification)
+structure CamFacAt (P : Program) (b jj jq : ℕ) (pJ : Prim)
     (hqc : GMPNormalCentralizer) : Prop where
   body : P.funs[b]? = some (camFacBody b)
   restr : CamRestrAt P (b + 1)
-  col : CamColAt P (b + 64) jj jq hj hqc
+  col : CamColAt P (b + 64) jj jq pJ hqc
 
-theorem camFacAt_of {P : Program} {b jj jq : ℕ} {hj : JohnsonIdentification}
+theorem camFacAt_of {P : Program} {b jj jq : ℕ} {pJ : Prim}
     {hqc : GMPNormalCentralizer} (h : P.HasAt b (camFacFuns b jj jq))
-    (pj : P.prims[jj]? = some (johnsonPrim hj))
-    (pq : P.prims[jq]? = some (gmpNormalCentralizerPrim hqc)) : CamFacAt P b jj jq hj hqc := by
+    (pj : P.prims[jj]? = some pJ)
+    (pq : P.prims[jq]? = some (gmpNormalCentralizerPrim hqc)) : CamFacAt P b jj jq pJ hqc := by
   simp only [camFacFuns] at h
   exact ⟨h.left.left.single, camRestrAt_of h.left.right,
     camColAt_of (by simpa [length_camRestrFuns, Nat.add_assoc] using h.right) pj pq⟩
@@ -74,16 +74,16 @@ theorem cam_boundSize_mono (p : Prim) {B B' : ℕ} (h : B ≤ B') : p.boundSize 
   Nat.mul_le_mul_left _ (Nat.pow_le_pow_left (by omega) _)
 
 /-- **The coordinate of one factor.** -/
-theorem camFac_spec {hj : JohnsonIdentification} {hqc : GMPNormalCentralizer} {P : Program}
-    {b jj jq : ℕ} (hP : CamFacAt P b jj jq hj hqc)
+theorem camFac_spec {pJ : Prim} {Q : ℕ → ℕ → Prop} {hqc : GMPNormalCentralizer} {P : Program}
+    {b jj jq : ℕ} (hP : CamFacAt P b jj jq pJ hqc) (hJo : JohnPrimOK pJ Q)
     (e : Fin n ≃ (Fin r → {A : Finset (Fin m) // A.card = k})) (hn : 0 < n)
-    (h5 : 5 ≤ m) (hk1 : 1 ≤ k) (hk : 2 * k < m) (hb : (k + 1) ^ 2 < m + 2) (hmn : m ≤ n)
+    (h5 : 5 ≤ m) (hk1 : 1 ≤ k) (hk : 2 * k < m) (hQ : Q m k) (hmn : m ≤ n)
     (ns ts : List (Perm (Fin n))) (hns : gens ns = camProd e Finset.univ) (i : Fin r)
     (hts : gens ts = camProd e {i}) :
     FunAll P b (.list [.list [encGroup ns, encGroup ([] : List (Perm (Fin n))), .nat m, .nat k],
         encGroup ts])
       (fun v cost => CamFacOut e i ⟨0, hn⟩ v ∧
-        cost ≤ (johnsonPrim hj).boundSize (camFacB ((Val.list [.list [encGroup ns,
+        cost ≤ pJ.boundSize (camFacB ((Val.list [.list [encGroup ns,
             encGroup ([] : List (Perm (Fin n))), .nat m, .nat k], encGroup ts]).wt + 1)) +
           (gmpNormalCentralizerPrim hqc).boundSize (camFacB ((Val.list [.list [encGroup ns,
             encGroup ([] : List (Perm (Fin n))), .nat m, .nat k], encGroup ts]).wt + 1)) +
@@ -120,7 +120,7 @@ theorem camFac_spec {hj : JohnsonIdentification} {hqc : GMPNormalCentralizer} {P
     · rw [List.mem_iff_get]
       exact (hν _).mpr fun j hj => by simp [Function.update_of_ne hj]
     · rw [horb C hC]; simp
-  have hcol := camCol_spec hP.col ns ts O hO ts' hTN hnorm h5 hk1 hb hmn ⟨ι₀, hJ₀⟩ hcov
+  have hcol := camCol_spec hP.col hJo ns ts O hO ts' hTN hnorm hQ hmn ⟨ι₀, hJ₀⟩ hcov
   have dA1 := Det.arg' (P := P) (vs := [cx, encGroup ts]) (rest := []) (j := 1) rfl
   have dR := Det.call (Det.mk2 (Det.nil (P := P) (env := [a])) dA1) fR
   refine FunAll.intro hP.body (EvalAll.letE dR fun vA cA hA => ?_)
@@ -177,7 +177,7 @@ theorem camFac_spec {hj : JohnsonIdentification} {hqc : GMPNormalCentralizer} {P
     have hA' : A.wt ≤ 350 * Z ^ 2 := by omega
     have hW := wt_list2_le cx A
     have hW' : (Val.list [cx, A]).wt + 1 ≤ 811 * Z ^ 2 := by omega
-    have hB1 := cam_boundSize_mono (johnsonPrim hj) (show 10 * ((Val.list [cx, A]).wt + 1) ≤
+    have hB1 := cam_boundSize_mono pJ (show 10 * ((Val.list [cx, A]).wt + 1) ≤
       camFacB Z by unfold camFacB; omega)
     have hB2 := cam_boundSize_mono (gmpNormalCentralizerPrim hqc) (show 10 * ((Val.list [cx, A]).wt + 1) ≤
       camFacB Z by unfold camFacB; omega)

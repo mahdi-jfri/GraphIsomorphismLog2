@@ -7,7 +7,7 @@ public import Workspace.Impl.GenExposeCand
 /-!
 # The exposure program
 
-Algorithm 5 ("Expose the next primitive quotient above any retained column partition") as a
+Algorithm 3 ("Expose the next primitive quotient above any retained column partition") as a
 `GI.Lang` program. Its pieces:
 
 * `hsplitFuns`: the index `t` of the first interval of the hierarchy whose partition holds the

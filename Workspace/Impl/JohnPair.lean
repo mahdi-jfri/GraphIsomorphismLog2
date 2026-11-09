@@ -14,6 +14,8 @@ public import Workspace.Proved.JohnOrbital
 
 namespace GI.Impl
 
+variable {P : GI.Lang.Program} [JohnAt P]
+
 open GI.Lang GI.Cited GI.Proved Equiv
 open GI.Machine (BinOp)
 
@@ -38,7 +40,7 @@ theorem john_wt_list2 {a b : Val} {A : ℕ} (ha : a.wt ≤ A) (hb : b.wt ≤ A) 
 
 /-- **One entry of a pair generator.** -/
 theorem john_pgE_spec (σ : Perm (Fin n)) {p : ℕ} (hp : p < n * n) :
-    FunDet johnProgram 11 (.list [.list [encPerm σ, .nat n], .nat p])
+    FunDet P 11 (.list [.list [encPerm σ, .nat n], .nat p])
       (.nat (n * σ ⟨p / n, Nat.div_lt_of_lt_mul hp⟩ +
         σ ⟨p % n, Nat.mod_lt _ (Nat.pos_of_mul_pos_left (Nat.zero_lt_of_lt hp))⟩))
       (2000 * (n + 1) ^ 2) := by
@@ -46,16 +48,16 @@ theorem john_pgE_spec (σ : Perm (Fin n)) {p : ℕ} (hp : p < n * n) :
   have hd : p / n < n := Nat.div_lt_of_lt_mul hp
   have hm : p % n < n := Nat.mod_lt _ hn
   set a := Val.list [.list [encPerm σ, .nat n], .nat p] with ha
-  have hc : Det johnProgram [a] (arg 0) (.list [encPerm σ, .nat n]) (2 * a.wt + 5) := Det.arg' rfl
-  have hg : Det johnProgram [a] (.get (arg 0) (.nat 0)) (encPerm σ) _ :=
+  have hc : Det P [a] (arg 0) (.list [encPerm σ, .nat n]) (2 * a.wt + 5) := Det.arg' rfl
+  have hg : Det P [a] (.get (arg 0) (.nat 0)) (encPerm σ) _ :=
     Det.get' hc (Det.nat 0) (show [encPerm σ, Val.nat n][0]? = some (encPerm σ) from rfl)
-  have hN : Det johnProgram [a] (.get (arg 0) (.nat 1)) (.nat n) _ :=
+  have hN : Det P [a] (.get (arg 0) (.nat 1)) (.nat n) _ :=
     Det.get' hc (Det.nat 1) (show [encPerm σ, Val.nat n][1]? = some (.nat n) from rfl)
-  have hP : Det johnProgram [a] (arg 1) (.nat p) (2 * a.wt + 6) := Det.arg' rfl
+  have hP : Det P [a] (arg 1) (.nat p) (2 * a.wt + 6) := Det.arg' rfl
   have h1 := Det.get' hg (Det.arith (op := .div) hP hN) (john_encPerm_get σ hd)
   have h2 := Det.get' hg (Det.arith (op := .mod) hP hN) (john_encPerm_get σ hm)
   have h3 := Det.arith (op := .add) (Det.arith (op := .mul) hN h1) h2
-  refine FunDet.intro john_at_pgE.single (h3.mono ?_)
+  refine FunDet.intro (john_at_pgE (P := P)).single (h3.mono ?_)
   -- The bound.
   have wσ := wt_encPerm_le σ
   have wa : a.wt ≤ 4 * (4 * (4 * (n + 1) ^ 2) + 6) + 6 + 4 * (n * n + 2) := by
@@ -88,6 +90,8 @@ end GI.Impl
 
 namespace GI.Impl
 
+variable {P : GI.Lang.Program} [JohnAt P]
+
 open GI.Lang GI.Cited GI.Proved Equiv
 open GI.Machine (BinOp)
 
@@ -111,26 +115,26 @@ theorem john_wt_R2 : (natList (List.range (n * n))).wt ≤ 4 * (n + 1) ^ 4 := by
 
 /-- **A pair generator.** -/
 theorem john_pgF_spec (σ : Perm (Fin n)) :
-    FunDet johnProgram 7 (.list [.list [.nat n, natList (List.range (n * n))], encPerm σ])
+    FunDet P 7 (.list [.list [.nat n, natList (List.range (n * n))], encPerm σ])
       (encPerm (johnPairPerm σ)) (1000000 * (n + 1) ^ 6) := by
-  have hT := tabulate_spec (m := n * n) john_at_mapPgE (c := .list [encPerm σ, .nat n])
+  have hT := tabulate_spec (m := n * n) (john_at_mapPgE (P := P)) (c := .list [encPerm σ, .nat n])
     (F := fun q => .nat (johnPairPerm σ q)) (B := 2000 * (n + 1) ^ 2) fun q => by
-      have := john_pgE_spec σ q.isLt
+      have := john_pgE_spec (P := P) σ q.isLt
       show FunDet _ _ _ (Val.nat (johnPairPerm σ q)) _
       rw [john_pairPerm_val σ q]
       exact this
   rw [encFun_id] at hT
   set a := Val.list [.list [.nat n, natList (List.range (n * n))], encPerm σ]
-  have hc : Det johnProgram [a] (arg 0) (.list [.nat n, natList (List.range (n * n))])
+  have hc : Det P [a] (arg 0) (.list [.nat n, natList (List.range (n * n))])
       (2 * a.wt + 5) := Det.arg' rfl
-  have hg : Det johnProgram [a] (arg 1) (encPerm σ) (2 * a.wt + 6) := Det.arg' rfl
+  have hg : Det P [a] (arg 1) (encPerm σ) (2 * a.wt + 6) := Det.arg' rfl
   have hN := Det.get' hc (Det.nat 0)
     (show [Val.nat n, natList (List.range (n * n))][0]? = some (.nat n) from rfl)
   have hR := Det.get' hc (Det.nat 1)
     (show [Val.nat n, natList (List.range (n * n))][1]? = some (natList (List.range (n * n)))
       from rfl)
   have hcall := Det.call (Det.mk2 (Det.mk2 hg hN) hR) hT
-  refine FunDet.intro john_at_pgF.single (hcall.mono ?_)
+  refine FunDet.intro (john_at_pgF (P := P)).single (hcall.mono ?_)
   -- The bound.
   have wσ := wt_encPerm_le σ
   have wτ := wt_encPerm_le (johnPairPerm σ)
@@ -170,6 +174,8 @@ end GI.Impl
 
 namespace GI.Impl
 
+variable {P : GI.Lang.Program} [JohnAt P]
+
 open GI.Lang GI.Cited GI.Proved Equiv
 
 theorem john_sum_le {α : Type} {l : List α} {f : α → ℕ} {B : ℕ} (h : ∀ x ∈ l, f x ≤ B) :
@@ -190,10 +196,10 @@ variable {n : ℕ}
 
 /-- **The pair generators.** On `[[n, R2], gens]`, the list of the pair generators. -/
 theorem john_mapPg_spec (gs : List (Perm (Fin n))) :
-    FunDet johnProgram 4 (.list [.list [.nat n, natList (List.range (n * n))],
+    FunDet P 4 (.list [.list [.nat n, natList (List.range (n * n))],
         .list (gs.map encPerm)])
       (.list (gs.map fun g => encPerm (johnPairPerm g))) (100000000 * (n + gs.length + 1) ^ 8) := by
-  have hM := map_spec john_at_mapPg (c := .list [.nat n, natList (List.range (n * n))])
+  have hM := map_spec (john_at_mapPg (P := P)) (c := .list [.nat n, natList (List.range (n * n))])
     (xs := gs.map encPerm) (R := fun x w => ∃ σ, x = encPerm σ ∧ w = encPerm (johnPairPerm σ))
     (B := fun _ => 1000000 * (n + 1) ^ 6) (by
       intro x hx

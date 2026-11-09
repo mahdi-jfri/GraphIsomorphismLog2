@@ -11,12 +11,12 @@ public import Workspace.Assembly.Refinement
 `Workspace/Assembly/Refinement.lean` gives `GI.Statement.GraphIsomorphismInQuasipolynomialTime`.
 
 * (a) `Implements .solve Pg fs w`: function `fs` implements `Solve` at the parameters `P₀`;
-* (b) `GraphWrapper Pg fm fs`: function `fm` is Algorithm 1 around `fs`;
+* (b) `GraphWrapper Pg fm fs`: function `fm` is the graph wrapper around `fs`;
 * (c) `WorkBound w`: the work function satisfies the work bounds of Section 7.4.
 
 The proof follows the main function on the input value of two graphs `G, H` on `n` vertices.
 Building the pair state costs a polynomial in `n` (b). `Solve` returns the value of the answer
-of a run `r` on the pair state at cost `K (r.total w + …)^d` (a). Theorem 1.1 at stage 1
+of a run `r` on the pair state at cost `K (r.total w + …)^d` (a). Corollary 1.2 at stage 1
 (`thm_main_graph_stage1''`, with (c)) bounds `r.total w` by `exp(C' (log(n+2))²)`, and every run
 returns the exact answer, so the conversion gives a correct output (b). A polynomial in
 `exp(C' (log(n+2))²)` and `n` is again at most `exp(C'' (log(n+2))²)` (`qp_poly`), and `glue`
@@ -146,7 +146,7 @@ theorem mainBody_spec {Pg : Program} {fb fs fc : ℕ} {inp : Val}
 /-- **The final reduction.** Let `Pg` be a `GI.Lang` program with
 
 * (a) `Implements .solve Pg fs w`: function `fs` implements `Solve` at the parameters `P₀`;
-* (b) `GraphWrapper Pg fm fs`: function `fm` is Algorithm 1 around `fs`;
+* (b) `GraphWrapper Pg fm fs`: function `fm` is the graph wrapper around `fs`;
 * (c) `WorkBound w`: the work function `w` satisfies the work bounds of Section 7.4.
 
 Then graph isomorphism is in quasipolynomial time. -/

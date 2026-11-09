@@ -14,7 +14,7 @@ input `[sv, lv]` of a `GiantStep` call:
 1. **reading** (`AsReadOK`): the program state of the certificate phase and the context of
    `LiftAndContinue` (`lcCtx`: the state value, the graph pairs `[g, π g]`, the selected interval,
    the new cap `⌊βq⌋`);
-2. **the certificate phase** (`AsCertOK`): a run of `Ag.certScript` (Algorithm 2, Lemma 4.1);
+2. **the certificate phase** (`AsCertOK`): a run of `Ag.certScript` (Algorithm 1, Lemma 4.1);
 3. **the comparison phase** (`AsCompOK`): a run of `Ag.compScript`;
 4. **the items** (`AsItemsOK`): the canonical structures (class numbers, source tuple, the
    joint refinement; this includes the case test of each branch) and a run of `Ag.itemsScript`

@@ -91,9 +91,12 @@ def johnOutF : Expr :=
 def johnOutP : Expr :=
   .arith .eq (.get (.get (.get (arg 0) (.nat 0)) (arg 1)) (.get (arg 0) (.nat 1))) (.nat 1)
 
-/-- The main function, on `[[n, gens], m, k]`. The environment grows by one value per `letE`:
+/-- The step of `johnMain` that finds `δ`: the label that occurs most often in row `0`. -/
+def johnDeltaE : Expr := .get (.var 8) (.call 62 (mk2 (.call 57 (.var 9)) (.var 9)))
+
+/-- The main function with the step `δE` for `δ`, on `[[n, gens], m, k]`. The environment grows by one value per `letE`:
 `1: G, 2: n, 3: n * n, 4: R2, 5: pg, 6: lab, 7: Rn, 8: row, 9: cnt, 10: δ, 11: υ, 12: D, 13: Λ`. -/
-def johnMain : Expr :=
+def johnMainG (δE : Expr) : Expr :=
   .letE (.get (.var 0) (.nat 0)) <|
   .letE (.get (.var 1) (.nat 0)) <|
   .letE (.arith .mul (.var 2) (.var 2)) <|
@@ -103,12 +106,15 @@ def johnMain : Expr :=
   .letE (.call 1 (.var 2)) <|
   .letE (.call 44 (mk2 (.var 6) (.var 7))) <|
   .letE (.call 48 (mk2 (.var 8) (.var 8))) <|
-  .letE (.get (.var 8) (.call 62 (mk2 (.call 57 (.var 9)) (.var 9)))) <|
+  .letE δE <|
   .letE (.get (.var 8) (.call 62 (mk2 (.arith .mul (.get (.var 0) (.nat 2))
     (.arith .sub (.get (.var 0) (.nat 1)) (.get (.var 0) (.nat 2)))) (.var 9)))) <|
   .letE (.call 66 (mk2 (mk4 (.var 6) (.var 2) (.var 10) (.var 7)) (.var 7))) <|
   .letE (.call 74 (mk3 (.snoc (mk4 (.var 12) (.var 6) (.var 2) (.var 11)) (.var 7)) (.var 4) .nil))
     (.call 98 (mk2 (mk2 (.var 13) (.call 1 (.length (.var 13)))) (.var 7)))
+
+/-- The main function, on `[[n, gens], m, k]`. -/
+def johnMain : Expr := johnMainG johnDeltaE
 
 /-- **The function table.** -/
 def johnFuns : List Expr :=
@@ -130,100 +136,109 @@ theorem john_length : johnFuns.length = 106 := by
     findFuns, iterFuns, roundFoldFuns, foldlFuns, minMapFuns, gatherFuns, countFuns, filterFuns,
     maxFuns, findEqFuns, allFuns, anyFuns, eqNatsFuns]
 
-theorem john_at_range : johnProgram.HasAt 1 (rangeFuns 1) := by
-  simpa using john_hasAt.block 1 rfl
+/-- **The functions of the program after the main function**, at indices `1, …, 105`. The specs of
+the parts hold in every program with these functions; the main function at `0` may differ. -/
+class JohnAt (P : Program) : Prop where
+  tail : P.HasAt 1 johnFuns.tail
 
-theorem john_at_mapPg : johnProgram.HasAt 4 (mapFuns 4 7) := by
-  simpa using john_hasAt.block 4 rfl
+instance : JohnAt johnProgram := ⟨by simpa using john_hasAt.block 1 rfl⟩
 
-theorem john_at_pgF : johnProgram.HasAt 7 ([johnPgF]) := by
-  simpa using john_hasAt.block 7 rfl
+variable {P : Program} [JohnAt P]
 
-theorem john_at_mapPgE : johnProgram.HasAt 8 (mapFuns 8 11) := by
-  simpa using john_hasAt.block 8 rfl
+theorem john_at_range : P.HasAt 1 (rangeFuns 1) := by
+  simpa using (JohnAt.tail (P := P)).block 0 rfl
 
-theorem john_at_pgE : johnProgram.HasAt 11 ([johnPgE]) := by
-  simpa using john_hasAt.block 11 rfl
+theorem john_at_mapPg : P.HasAt 4 (mapFuns 4 7) := by
+  simpa using (JohnAt.tail (P := P)).block 3 rfl
 
-theorem john_at_orbit : johnProgram.HasAt 12 (orbitFuns 12) := by
-  simpa using john_hasAt.block 12 rfl
+theorem john_at_pgF : P.HasAt 7 ([johnPgF]) := by
+  simpa using (JohnAt.tail (P := P)).block 6 rfl
 
-theorem john_at_gather : johnProgram.HasAt 44 (gatherFuns 44) := by
-  simpa using john_hasAt.block 44 rfl
+theorem john_at_mapPgE : P.HasAt 8 (mapFuns 8 11) := by
+  simpa using (JohnAt.tail (P := P)).block 7 rfl
 
-theorem john_at_mapCnt : johnProgram.HasAt 48 (mapFuns 48 51) := by
-  simpa using john_hasAt.block 48 rfl
+theorem john_at_pgE : P.HasAt 11 ([johnPgE]) := by
+  simpa using (JohnAt.tail (P := P)).block 10 rfl
 
-theorem john_at_cntF : johnProgram.HasAt 51 ([johnCntF]) := by
-  simpa using john_hasAt.block 51 rfl
+theorem john_at_orbit : P.HasAt 12 (orbitFuns 12) := by
+  simpa using (JohnAt.tail (P := P)).block 11 rfl
 
-theorem john_at_count : johnProgram.HasAt 52 (countFuns 52) := by
-  simpa using john_hasAt.block 52 rfl
+theorem john_at_gather : P.HasAt 44 (gatherFuns 44) := by
+  simpa using (JohnAt.tail (P := P)).block 43 rfl
 
-theorem john_at_max : johnProgram.HasAt 57 (maxFuns 57) := by
-  simpa using john_hasAt.block 57 rfl
+theorem john_at_mapCnt : P.HasAt 48 (mapFuns 48 51) := by
+  simpa using (JohnAt.tail (P := P)).block 47 rfl
 
-theorem john_at_findEq : johnProgram.HasAt 62 (findEqFuns 62) := by
-  simpa using john_hasAt.block 62 rfl
+theorem john_at_cntF : P.HasAt 51 ([johnCntF]) := by
+  simpa using (JohnAt.tail (P := P)).block 50 rfl
 
-theorem john_at_mapRowD : johnProgram.HasAt 66 (mapFuns 66 69) := by
-  simpa using john_hasAt.block 66 rfl
+theorem john_at_count : P.HasAt 52 (countFuns 52) := by
+  simpa using (JohnAt.tail (P := P)).block 51 rfl
 
-theorem john_at_rowDF : johnProgram.HasAt 69 ([johnRowDF]) := by
-  simpa using john_hasAt.block 69 rfl
+theorem john_at_max : P.HasAt 57 (maxFuns 57) := by
+  simpa using (JohnAt.tail (P := P)).block 56 rfl
 
-theorem john_at_mapEntD : johnProgram.HasAt 70 (mapFuns 70 73) := by
-  simpa using john_hasAt.block 70 rfl
+theorem john_at_findEq : P.HasAt 62 (findEqFuns 62) := by
+  simpa using (JohnAt.tail (P := P)).block 61 rfl
 
-theorem john_at_entDF : johnProgram.HasAt 73 ([johnEntDF]) := by
-  simpa using john_hasAt.block 73 rfl
+theorem john_at_mapRowD : P.HasAt 66 (mapFuns 66 69) := by
+  simpa using (JohnAt.tail (P := P)).block 65 rfl
 
-theorem john_at_fold : johnProgram.HasAt 74 (foldlFuns 74 77) := by
-  simpa using john_hasAt.block 74 rfl
+theorem john_at_rowDF : P.HasAt 69 ([johnRowDF]) := by
+  simpa using (JohnAt.tail (P := P)).block 68 rfl
 
-theorem john_at_stepF : johnProgram.HasAt 77 ([johnStepF]) := by
-  simpa using john_hasAt.block 77 rfl
+theorem john_at_mapEntD : P.HasAt 70 (mapFuns 70 73) := by
+  simpa using (JohnAt.tail (P := P)).block 69 rfl
 
-theorem john_at_compCF : johnProgram.HasAt 78 ([johnCompCF]) := by
-  simpa using john_hasAt.block 78 rfl
+theorem john_at_entDF : P.HasAt 73 ([johnEntDF]) := by
+  simpa using (JohnAt.tail (P := P)).block 72 rfl
 
-theorem john_at_filterB : johnProgram.HasAt 79 (filterFuns 79 82) := by
-  simpa using john_hasAt.block 79 rfl
+theorem john_at_fold : P.HasAt 74 (foldlFuns 74 77) := by
+  simpa using (JohnAt.tail (P := P)).block 73 rfl
 
-theorem john_at_bF : johnProgram.HasAt 82 ([johnBF]) := by
-  simpa using john_hasAt.block 82 rfl
+theorem john_at_stepF : P.HasAt 77 ([johnStepF]) := by
+  simpa using (JohnAt.tail (P := P)).block 76 rfl
 
-theorem john_at_mapC : johnProgram.HasAt 83 (mapFuns 83 86) := by
-  simpa using john_hasAt.block 83 rfl
+theorem john_at_compCF : P.HasAt 78 ([johnCompCF]) := by
+  simpa using (JohnAt.tail (P := P)).block 77 rfl
 
-theorem john_at_cF : johnProgram.HasAt 86 ([johnCF]) := by
-  simpa using john_hasAt.block 86 rfl
+theorem john_at_filterB : P.HasAt 79 (filterFuns 79 82) := by
+  simpa using (JohnAt.tail (P := P)).block 78 rfl
 
-theorem john_at_allA : johnProgram.HasAt 87 (allFuns 87 90) := by
-  simpa using john_hasAt.block 87 rfl
+theorem john_at_bF : P.HasAt 82 ([johnBF]) := by
+  simpa using (JohnAt.tail (P := P)).block 81 rfl
 
-theorem john_at_aF : johnProgram.HasAt 90 ([johnAF]) := by
-  simpa using john_hasAt.block 90 rfl
+theorem john_at_mapC : P.HasAt 83 (mapFuns 83 86) := by
+  simpa using (JohnAt.tail (P := P)).block 82 rfl
 
-theorem john_at_anyEq : johnProgram.HasAt 91 (anyFuns 91 94) := by
-  simpa using john_hasAt.block 91 rfl
+theorem john_at_cF : P.HasAt 86 ([johnCF]) := by
+  simpa using (JohnAt.tail (P := P)).block 85 rfl
 
-theorem john_at_eqF : johnProgram.HasAt 94 ([johnEqF]) := by
-  simpa using john_hasAt.block 94 rfl
+theorem john_at_allA : P.HasAt 87 (allFuns 87 90) := by
+  simpa using (JohnAt.tail (P := P)).block 86 rfl
 
-theorem john_at_eqNats : johnProgram.HasAt 95 (eqNatsFuns 95) := by
-  simpa using john_hasAt.block 95 rfl
+theorem john_at_aF : P.HasAt 90 ([johnAF]) := by
+  simpa using (JohnAt.tail (P := P)).block 89 rfl
 
-theorem john_at_mapOut : johnProgram.HasAt 98 (mapFuns 98 101) := by
-  simpa using john_hasAt.block 98 rfl
+theorem john_at_anyEq : P.HasAt 91 (anyFuns 91 94) := by
+  simpa using (JohnAt.tail (P := P)).block 90 rfl
 
-theorem john_at_outF : johnProgram.HasAt 101 ([johnOutF]) := by
-  simpa using john_hasAt.block 101 rfl
+theorem john_at_eqF : P.HasAt 94 ([johnEqF]) := by
+  simpa using (JohnAt.tail (P := P)).block 93 rfl
 
-theorem john_at_filterOut : johnProgram.HasAt 102 (filterFuns 102 105) := by
-  simpa using john_hasAt.block 102 rfl
+theorem john_at_eqNats : P.HasAt 95 (eqNatsFuns 95) := by
+  simpa using (JohnAt.tail (P := P)).block 94 rfl
 
-theorem john_at_outP : johnProgram.HasAt 105 ([johnOutP]) := by
-  simpa using john_hasAt.block 105 rfl
+theorem john_at_mapOut : P.HasAt 98 (mapFuns 98 101) := by
+  simpa using (JohnAt.tail (P := P)).block 97 rfl
+
+theorem john_at_outF : P.HasAt 101 ([johnOutF]) := by
+  simpa using (JohnAt.tail (P := P)).block 100 rfl
+
+theorem john_at_filterOut : P.HasAt 102 (filterFuns 102 105) := by
+  simpa using (JohnAt.tail (P := P)).block 101 rfl
+
+theorem john_at_outP : P.HasAt 105 ([johnOutP]) := by
+  simpa using (JohnAt.tail (P := P)).block 104 rfl
 
 end GI.Impl

@@ -18,7 +18,7 @@ records and what the labels carry:
   `row : dom → [m]`, the row action `ρ : G → Alt(m)`, the invariant columns, the subgroup `J` of
   the column-fixing elements with `ρ(J) = Alt(m)`, and `M = J ∩ ker ρ` transitive on every cell;
 * the labels are natural (`NaturalRows`) and lie above the retained columns: every element of
-  `J` has trivial label image (`GiantLabels.Constituent.kills`; Algorithm 5: "Expose the next
+  `J` has trivial label image (`GiantLabels.Constituent.kills`; Algorithm 3: "Expose the next
   primitive quotient above any retained column partition");
 * `q ≤ m` (the state is not in the row case);
 * `G` is transitive on its domain.

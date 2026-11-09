@@ -12,9 +12,10 @@ public import Mathlib.Analysis.Complex.ExponentialBounds
 /-!
 # The Cameron range not covered by [H, Section 2.8]
 
-Section A.5, "Constructive recognition": "For the Johnson recognition procedure in that
-source, the range not covered by its simple polynomial construction has entire constituent
-order `d^{O(log d)}`, where `d` is the physical interval degree." The source is
+Section A.5, "Constructive recognition": for the Johnson recognition procedure in that
+source, the range not covered by its simple polynomial construction is `m ≤ (k+1)² − 2`, and
+in this range "the entire constituent has order `b^{O(log b)}`, where `b` is the physical
+interval degree." This file writes `d` for that degree. The source is
 [H] = Helfgott, Bajpai, Dona, arXiv:1710.04574v1, Section 2.8: "We will suppose that
 `m > (k+1)² − 2`", with footnote (14): "If `m ≤ (k+1)² − 2`, then `n` is so large that
 `m! = n^{O(log n)}`." [H] gives no proof, so the claim is the paper's own and is proved here.

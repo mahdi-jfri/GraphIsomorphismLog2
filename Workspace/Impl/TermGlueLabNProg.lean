@@ -151,7 +151,7 @@ def TmGLNSupOK (P : Program) (sup : ℕ) (F : ℕ → ℕ) : Prop :=
           Group.IsSolvable (S ⧸ (gens σN).subgroupOf S)) ∧
         S ⊔ gens σN = gens (U.map fun x => τ * x * τ⁻¹) ∧ c ≤ F B)
 
-/-! ### Contracts of the callees in progress -/
+/-! ### Contracts of the callees -/
 
 /-- **The stabilizer generators** at `bsb`, on `[us, q]` (`tmGLPBs_spec`: entry
 `i + 2qi` of the `N`-test table is `Aut_N(x_i)`; take its generators for all `i`). The result

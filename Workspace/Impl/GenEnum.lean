@@ -12,7 +12,7 @@ public import Workspace.Lang.Lib.Tabulate
 /-!
 # The enumeration step of the dispatcher
 
-Algorithm 5: "if enumeration … applies, apply that reduction and solve its children with
+Algorithm 3: "if enumeration … applies, apply that reduction and solve its children with
 `Continue`; return their exact combined answer". For a small primitive quotient `Q` the
 reduction splits `G` into the cosets `τ_j K` of the block kernel `K`, and the child on `τ_j K`
 runs under `K` with target `y ∘ τ_j` and the exposed hierarchy (`Run.dispatch`).

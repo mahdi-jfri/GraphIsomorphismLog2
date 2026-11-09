@@ -6,7 +6,7 @@ public import Workspace.Lang.Lib.Tabulate
 @[expose] public section
 
 /-!
-# The pair state of Algorithm 1, entry by entry
+# The pair state of the graph wrapper, entry by entry
 
 `BuildSpec` (`Workspace/Assembly/Refinement.lean`) asks for the value of `graphState G H` on the
 positions `Fin (n * n)` (`pairEnum n`). This file computes the entries of that value as numbers,

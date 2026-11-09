@@ -8,7 +8,7 @@ public import Workspace.Impl.GenExpose
 /-!
 # The exposure program
 
-The full exposure step of Algorithm 5 as a `GI.Lang` program (`expose_spec`). The first part
+The full exposure step of Algorithm 3 as a `GI.Lang` program (`expose_spec`). The first part
 (`exPrep_spec`) computes the split index, the class numbering of the fine end and of the base
 partition, and the action on the base classes. This file adds the call of the cited
 `MinimalBlocks`, the pull back of its labels to the points, the class numbering of the new

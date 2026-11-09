@@ -60,7 +60,11 @@ theorem final_modulo_rad (hst : PointwiseStab)
       (asmProg hst hm hpre hfac (gsExtra hmb hO hC ++ (flRadExtra hder hni ++ ext)) gsGen
         (rlRow flRad cos) (asAgg rd cr cm it rest)) asmF H X (asb 4))
     (hX : PBU fun _ W _ => X W) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
+    SolvedQ (asmProg hst hm hpre hfac (gsExtra hmb hO hC ++ (flRadExtra hder hni ++ ext)) gsGen
+        (rlRow flRad cos) (asAgg rd cr cm it rest))
+      (· = (asmRest hst hm hpre hfac (gsWg hst hm hpre hmb hO hC)
+        (rqWr hst hfac (rqAa hst hm hpre hfac (flRadK hder hni hm hpre hO)
+          (flRadD hder hni hm hpre hO) Ac)) (asWa hst hm hpre hfac X)).iface) :=
   final_modulo_row_agg_ext hst hm hpre hfac hmb hO hC hAb hTr
     (flRadExtra hder hni ++ ext) flRad cos length_flRad hc H X rd cr cm it rest
     (fl_termRadSpec (by rw [length_gsGen]; unfold asmSlot; omega) hc) hcos hrd hct hcm hi hX

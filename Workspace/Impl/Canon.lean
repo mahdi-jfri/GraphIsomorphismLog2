@@ -28,8 +28,8 @@ stored in the state (the ratios, bounds and origins of the hierarchy, the row de
 A **canonical answer** (`AnsC e u A`) is `[]` for the empty answer, or a coset value
 `[x, encGroup gs]` with at most `k²` generators. Its weight is at most `ansW k` (`AnsC.wt_le`).
 
-The first call, on the input of Algorithm 1, may have any value. `Solve` makes its values
-canonical before it starts a phase (the joint color compression of Algorithm 5).
+The first call, on the input of the graph wrapper, may have any value. `Solve` makes its values
+canonical before it starts a phase (the joint color compression of Algorithm 3).
 -/
 
 namespace GI.Impl

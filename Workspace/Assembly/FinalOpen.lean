@@ -122,7 +122,8 @@ theorem final_modulo_open (hst : PointwiseStab) (hm : Membership) (hpre : Preima
         gObjF sojF)
       asmF (fitC23Idx + 101000) (fitC23Idx + 101001) (fitC23Idx + 101002) Xs)
     (hXs : PBU fun _ W _ => Xs W) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
+    SolvedR
+      (finProg hst hm hpre hfac hmb hO hj hder hni hnc hs hh hn hcmb hv hk h2 gObjF sojF) :=
   final_modulo_items6 hst hm hpre hfac hmb hO (finCam hj hO)
     GI.Proved.gmpAbelianFactors GI.Proved.gmpTransitiveNonabelian hder
     hni hnc hs hh hn hcmb hv GI.Proved.dixonDerivedLength

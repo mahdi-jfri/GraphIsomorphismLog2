@@ -15,7 +15,7 @@ with a supplied alternating label map `π : G|_dom → Alt(Γ)` and a test set `
 `|T| = κ` labels.
 
 The calls of the local test are `Continue` calls under the kernel group `N_t` of a stage on
-the increment window `V_t` (Algorithm 2, `CheckNewWindow`). In `Ω` such a call runs under
+the increment window `V_t` (Algorithm 1, `CheckNewWindow`). In `Ω` such a call runs under
 the lift of `N_t` (the elements of `G` whose restriction lies in `N_t`) on part of the lifted
 window. Clause 2 of Lemma 4.1 gives the two call types `(s, σ) ↦ (s/κ, σ)` and
 `(s, σ) ↦ (s, σ - κ)`. With `θ κ ≥ 1` both are of the types of `ChargedCall`.

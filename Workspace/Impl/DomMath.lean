@@ -7,7 +7,7 @@ public import Workspace.Impl.LargestOrbit
 /-!
 # The faithful image on the domain, and lifting answers back
 
-Algorithm 5, `Solve`: "Use the faithful action and jointly compressed colors on `Ω`", and
+Algorithm 3, `Solve`: "Use the faithful action and jointly compressed colors on `Ω`", and
 Section 3: "Every fresh call uses the faithful permutation image on its own active domain … Its
 caller retains the homomorphism used to lift the returned generators and representative."
 

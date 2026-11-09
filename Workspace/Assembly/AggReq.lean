@@ -52,7 +52,8 @@ theorem final_modulo_agg (hst : PointwiseStab) (hm : Membership) (hpre : Preimag
     (hrr : ∃ A D : ℕ, ∀ nd : Node P₀, nd.m ≠ .solve → Nat.card nd.Ω ≤ nd.S.N → Small nd.S →
       (nd.run.kind = .rowTerminal → Wr nd ≤ expLogSq A nd.S.N) ∧
       (nd.run.kind = .rowColumns → Wr nd ≤ A * ((nd.S.N : ℝ) + 2) ^ D)) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime := by
+    Solved
+      (asmProg hst hm hpre hfac (gsExtra hmb hO hC) gsGen row (asAgg rd cr cm it rest)) := by
   refine final_modulo_gen hst hm hpre hfac hmb hO hC row (asAgg rd cr cm it rest) Wr
     (asWa hst hm hpre hfac X) hrow
     (as_asm_agg hst hm hpre hfac _ gsGen row _ _ H X rd cr cm it rest
@@ -105,7 +106,9 @@ theorem final_modulo_agg_ext
     (hrr : ∃ A D : ℕ, ∀ nd : Node P₀, nd.m ≠ .solve → Nat.card nd.Ω ≤ nd.S.N → Small nd.S →
       (nd.run.kind = .rowTerminal → Wr nd ≤ expLogSq A nd.S.N) ∧
       (nd.run.kind = .rowColumns → Wr nd ≤ A * ((nd.S.N : ℝ) + 2) ^ D)) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime := by
+    SolvedQ (asmProg hst hm hpre hfac (gsExtra hmb hO hC ++ ext) gsGen row (asAgg rd cr cm it rest))
+      (· = (asmRest hst hm hpre hfac (gsWg hst hm hpre hmb hO hC) Wr
+        (asWa hst hm hpre hfac X)).iface) := by
   refine final_modulo_gen_ext hst hm hpre hfac hmb hO hC ext row (asAgg rd cr cm it rest) Wr
     (asWa hst hm hpre hfac X) hrow
     (as_asm_agg hst hm hpre hfac _ gsGen row _ _ H X rd cr cm it rest

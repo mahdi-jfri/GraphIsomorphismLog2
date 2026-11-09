@@ -70,7 +70,12 @@ theorem final_modulo_cos (hst : PointwiseStab)
       (flcProg hst hm hpre hfac hmb hO hC hder hni hnc ext gsGen recF labF jF
         (asAgg rd cr cm it rest)) asmF H X (asb 4))
     (hX : PBU fun _ W _ => X W) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
+    SolvedQ (flcProg hst hm hpre hfac hmb hO hC hder hni hnc ext gsGen recF labF jF
+        (asAgg rd cr cm it rest))
+      (· = (asmRest hst hm hpre hfac (gsWg hst hm hpre hmb hO hC)
+        (rqWr hst hfac (rqAa hst hm hpre hfac (flRadK hder hni hm hpre hO)
+          (flRadD hder hni hm hpre hO) (flcA hst hm hpre hO hder hni hnc Kl Dl Kj Dj Kc
+            Dc))) (asWa hst hm hpre hfac X)).iface) :=
   final_modulo_rad hst hm hpre hfac hmb hO hC hAb hTr hder hni
     (flSupExtra hnc ++ ext) (flCos (flcCos recF labF jF))
     (length_flCos (length_flcCos hF)) H X rd cr cm it rest

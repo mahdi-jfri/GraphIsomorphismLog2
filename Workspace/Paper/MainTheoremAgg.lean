@@ -8,7 +8,7 @@ public import Workspace.Algorithm.RowSupply
 /-!
 # The main theorems from the aggregation data alone
 
-The giant-step data `GiantSupply P` has three cases (Algorithms 4 and 5). The two row cases
+The giant-step data `GiantSupply P` has three cases (Algorithms 3 and 4). The two row cases
 are now built (`GI.Algorithm.GiantSupply.ofAggregate`, `Workspace/Algorithm/RowSupply.lean`):
 the row terminal and the column step. The versions below take only the data of the
 aggregation round, for the states outside the row case, with:
@@ -43,7 +43,7 @@ theorem run_exists_agg
         A = {g | g ∈ S.G ∧ ∀ v ∈ S.dom, S.y (g v) = S.x v} :=
   run_exists_giant hP hM ha hγ hE (GiantSupply.ofAggregate hT agg) S
 
-/-- **Theorem 1.2 at stage 1, for every run, given the aggregation data** (`thm:main-string`).
+/-- **Theorem 1.3 at stage 1, for every run, given the aggregation data** (`thm:main-string`).
 The hypotheses are those of `thm_main_string_stage1_giant`, with the aggregation data and
 `Params.RowThreshold` in place of `GiantSupply P`. -/
 theorem thm_main_string_stage1_agg
@@ -61,7 +61,7 @@ theorem thm_main_string_stage1_agg
   thm_main_string_stage1_giant hP hM ha128 hE (GiantSupply.ofAggregate hT agg)
     hκ hc hαγ hbase hw hcw ha
 
-/-- **Theorem 1.1 at stage 1, for every run, given the aggregation data** (`thm:main-graph`).
+/-- **Corollary 1.2 at stage 1, for every run, given the aggregation data** (`cor:main-general`).
 The hypotheses are those of `thm_main_graph_stage1_giant`, with the aggregation data and
 `Params.RowThreshold` in place of `GiantSupply P`. -/
 theorem thm_main_graph_stage1_agg

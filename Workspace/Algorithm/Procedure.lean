@@ -15,7 +15,7 @@ public import Workspace.Algorithm.NormLabels
 the state `S` with the labels `L` of the call, returning the set `A`. A `GiantStep` call
 carries its supplied alternating labels (`L = some Γ`, Algorithm 4: "for the supplied
 alternating label set"); `Solve` and `Continue` carry none. It is a finite tree: each constructor is one
-case of Algorithms 4 and 5 (the paper's `alg:row-step` and `alg:main-recursion`),
+case of Algorithms 3 and 4 (the paper's `alg:main-recursion` and `alg:row-step`),
 and its arguments are the recursive runs that the case makes. `Exec P s a` is a run
 of a query script `s` with result `a`: every question of the script is answered by
 a recursive run.
@@ -91,11 +91,11 @@ that the pseudocode states:
 * the bookkeeping of the dispatcher's children: kept (`hbk`), and their hierarchy, with its
   origin labels, is the refined hierarchy `I.hier'`.
 
-## Deferred to stage 2
+## Stage 2
 
-The machine clauses: generators and representatives instead of sets, the joint color
-compression at fresh calls (its mathematical content is `GI.Algorithm.answer_recolor`), and
-the polynomial bounds on the structural work.
+The machine clauses are handled by the programs of `Workspace/Impl`: generators and
+representatives instead of sets, the joint color compression at fresh calls (its mathematical
+content is `GI.Algorithm.answer_recolor`), and the polynomial bounds on the structural work.
 -/
 
 namespace GI.Algorithm
@@ -104,7 +104,7 @@ open Equiv Equiv.Perm
 open scoped Pointwise
 
 /-- The labels that a call in mode `m` passes down: the supplied alternating labels `L` for
-`GiantStep` (Algorithm 5, `GiantStep(S, Γ)`: "for the supplied alternating label set"), and
+`GiantStep` (Algorithm 3, `GiantStep(S, Γ)`: "for the supplied alternating label set"), and
 none for `Solve` and `Continue`. -/
 def Mode.labels {Ω C : Type} {T : State Ω C} : Mode → SuppliedLabels T → Option (SuppliedLabels T)
   | .giant, L => some L
@@ -129,7 +129,7 @@ noncomputable def NormAbove.childLabels {P : Params} {Ω C : Type} {S : State Ω
 set_option genInjectivity false in
 mutual
 
-/-- **The phase recursion** (Algorithms 4 and 5). `Run P m S L A`: the procedure `m`
+/-- **The phase recursion** (Algorithms 3 and 4). `Run P m S L A`: the procedure `m`
 on the state `S` returns `A`. The index `L` is the label set passed with the call: the
 supplied alternating labels for `GiantStep`, and `none` for `Solve` and `Continue`. -/
 inductive Run (P : Params) : Mode → {Ω C : Type} → (S : State Ω C) →
@@ -190,13 +190,14 @@ inductive Run (P : Params) : Mode → {Ω C : Type} → (S : State Ω C) →
       (hbk : ∀ j, (child j).book = S.book)
       (A : Fin I.n → Set (Perm Ω)) (r : ∀ j, Run P .cont (child j) none (A j)) :
       Run P .cont S none (⋃ j, I.τ j • A j)
-  /-- `Continue`: the single-factor normalization. The dispatcher's primitive quotient `Q` fails
-  the integer small test `SmallZ` (which implies the real test `Small`, so a program can decide
-  it) and is a single factor through the choice `c` (Algorithm 5: "Normalize the single alternating factor, with at most two cosets"), and the
-  normalization is the one of `Q` (`PrimitiveQuotient.normAbove`). Each of the at most two
-  cosets `τ_j G'` continues under `G'` on `(x, y ∘ τ_j)` (`NormAbove.child`): by the orbit chain
-  if `G'` is intransitive (mode `cont`), and by `GiantStep` on the labels of the normalized
-  factor otherwise (mode `giant`, `NormAbove.childLabels`). -/
+  /-- `Continue`: the single-factor normalization. The dispatcher's primitive quotient `Q` fails the
+  integer small test `SmallZ` (which implies the real test `Small`, so a program can decide it) and
+  is a single factor through the choice `c` (Algorithm 3: "Normalize the single alternating factor,
+  with at most two cosets"), and the normalization is the one of `Q`
+  (`PrimitiveQuotient.normAbove`). Each of the at most two cosets `τ_j G'` continues under `G'` on
+  `(x, y ∘ τ_j)` (`NormAbove.child`): by the orbit chain if `G'` is intransitive (mode `cont`), and
+  by `GiantStep` on the labels of the normalized factor otherwise (mode `giant`,
+  `NormAbove.childLabels`). -/
   | normalize {Ω C : Type} {hfin : Finite Ω} {S : State Ω C}
       (hs : (S.N : ℝ) ^ P.γ < S.size) (htr : S.Transitive) (hfl : ¬ S.FloorEntered)
       (Q : PrimitiveQuotient S) (hsm : ¬ Q.SmallZ P.smallExp)

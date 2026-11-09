@@ -12,7 +12,7 @@ node, what the analysis of Section 7 reads from it:
 
 * `Run.res`: the resources `s, ρ, σ, Q, h` of the potential (Section 7.1), read from
   the state (`GI.Algorithm.State.res`);
-* `Run.kind`: which case of Algorithms 4 and 5 the node is;
+* `Run.kind`: which case of Algorithms 3 and 4 the node is;
 * `Run.children`: its immediate recursive runs, with the script runs (`Exec.calls`).
 
 The following fields of `GI.Paper.PhaseTree.Hyp` follow from the guards of the
@@ -28,7 +28,7 @@ constructors and are proved here:
 
 The remaining fields need the potential decrease of each row of the table of
 Section 7.2 and the multiplicity bounds; they rest on interface data that the
-abstract run does not yet carry (see the module docstring of
+abstract run does not carry (see the module docstring of
 `Workspace/Algorithm/Procedure.lean`).
 -/
 
@@ -49,13 +49,13 @@ structure Node (P : Params) where
   A : Set (Perm Ω)
   run : Run P m S L A
 
-/-- The cases of Algorithms 4 and 5. -/
+/-- The cases of Algorithms 3 and 4. -/
 inductive CallKind
   | direct | fresh | threshold | orbitStop | orbitChain | floorReset | dispatch
   | normalize | rowTerminal | rowColumns | aggregate
   deriving DecidableEq
 
-/-- The case of Algorithms 4 and 5 that a run starts with. -/
+/-- The case of Algorithms 3 and 4 that a run starts with. -/
 def Run.kind {m : Mode} {Ω C : Type} {S : State Ω C} {L : Option (SuppliedLabels S)}
     {A : Set (Perm Ω)} :
     Run P m S L A → CallKind

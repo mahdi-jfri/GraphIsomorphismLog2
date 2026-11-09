@@ -10,7 +10,7 @@ public import Workspace.Algorithm.SupplyBuild
 /-!
 # The case decision of the general dispatcher
 
-Algorithm 5, `Continue` off the floor: the dispatcher has a primitive quotient `Q` of the state
+Algorithm 3, `Continue` off the floor: the dispatcher has a primitive quotient `Q` of the state
 (degree `d`, block action `ρ`) and must decide which reduction applies. Section 3.3: "The
 standard primitive-group reduction either enumerates a group of order `d^{O(log d)}` on an
 actual `d`-block quotient, or exposes a large alternating action". The program decides as

@@ -178,7 +178,7 @@ theorem run_exists_carrier (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
         A = {g | g ∈ S.G ∧ ∀ v ∈ S.dom, S.y (g v) = S.x v} :=
   run_exists_agg hP hM hT ha hγ hE (AggSupply.ofCarrier hA hK hD cs) S
 
-/-- **Theorem 1.2 at stage 1, for every run, given the carrier data** (`thm:main-string`).
+/-- **Theorem 1.3 at stage 1, for every run, given the carrier data** (`thm:main-string`).
 The hypotheses are those of `thm_main_string_stage1_agg`, with the carrier data, the cited
 results of the aggregation round and `Params.Aggregates` in place of `AggSupply P`. -/
 theorem thm_main_string_stage1_carrier
@@ -198,7 +198,7 @@ theorem thm_main_string_stage1_carrier
   thm_main_string_stage1_agg hP hM hT ha128 hE (AggSupply.ofCarrier hA hK hD cs)
     hκ hc hαγ hbase hw hcw ha
 
-/-- **Theorem 1.1 at stage 1, for every run, given the carrier data** (`thm:main-graph`).
+/-- **Corollary 1.2 at stage 1, for every run, given the carrier data** (`cor:main-general`).
 The hypotheses are those of `thm_main_graph_stage1_agg`, with the carrier data, the cited
 results of the aggregation round and `Params.Aggregates` in place of `AggSupply P`. -/
 theorem thm_main_graph_stage1_carrier
@@ -233,7 +233,7 @@ theorem run_exists_built (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
         A = {g | g ∈ S.G ∧ ∀ v ∈ S.dom, S.y (g v) = S.x v} :=
   run_exists_carrier hP hM hT ha hγ hE hA hK hD (carrierSupply P) S
 
-/-- **Theorem 1.2 at stage 1, for every run** (`thm:main-string`):
+/-- **Theorem 1.3 at stage 1, for every run** (`thm:main-string`):
 `thm_main_string_stage1_carrier` with the carrier data built (`carrierSupply`). -/
 theorem thm_main_string_stage1_built
     (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)
@@ -252,7 +252,7 @@ theorem thm_main_string_stage1_built
   thm_main_string_stage1_carrier hP hM hT ha128 hE hA hK hD (carrierSupply P)
     hκ hc hαγ hbase hw hcw ha
 
-/-- **Theorem 1.1 at stage 1, for every run** (`thm:main-graph`):
+/-- **Corollary 1.2 at stage 1, for every run** (`cor:main-general`):
 `thm_main_graph_stage1_carrier` with the carrier data built (`carrierSupply`). -/
 theorem thm_main_graph_stage1_built
     (hP : P.Terminating) (hM : GI.Cited.MarotiPrimitive)

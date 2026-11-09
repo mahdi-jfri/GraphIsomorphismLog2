@@ -69,7 +69,8 @@ theorem final_modulo_items6 (hst : PointwiseStab)
       hnc (linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ (karyRefinementPrim h2 :: ext'''))) (tmRiRecF flcRecIdx 14 8 1 gObjF)
       (tmGLPLabF (tmGLNeConc (flcLabIdx + 1) flSupIdx)) tmJFinF fcrE fcmE fitE fcrF fcmF (fitF itHvHvIF (fc23F fc23ObF (fc10PrF sojF)) (rcRepF fitRpIdx))) asmF (fitC23Idx + 101000) (fitC23Idx + 101001) (fitC23Idx + 101002) Xs)
     (hXs : PBU fun _ W _ => Xs W) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime := by
+    SolvedR
+      (fagProg hst hm hpre hfac hmb hO hC hder hni hnc (linA20Extra hs hh hn hcmb hv ++ (aggExtra hk ++ (karyRefinementPrim h2 :: ext'''))) (tmRiRecF flcRecIdx 14 8 1 gObjF) (tmGLPLabF (tmGLNeConc (flcLabIdx + 1) flSupIdx)) tmJFinF fcrE fcmE fitE fcrF fcmF (fitF itHvHvIF (fc23F fc23ObF (fc10PrF sojF)) (rcRepF fitRpIdx))) := by
   have hF : FlcFits (tmRiRecF flcRecIdx 14 8 1 gObjF)
       (tmGLPLabF (tmGLNeConc (flcLabIdx + 1) flSupIdx)) tmJFinF :=
     ⟨tmRi_recF_fits hgo, tmGLPLabF_fits items6_neF_room, tmJFinF_fits⟩

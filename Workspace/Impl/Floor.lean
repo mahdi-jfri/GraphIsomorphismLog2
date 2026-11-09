@@ -8,7 +8,7 @@ public import Workspace.Lang.Lib.Tabulate
 /-!
 # The floor reset of `Continue`
 
-Algorithm 5: "if the active column floor has been entered then clear the row record and floor
+Algorithm 3: "if the active column floor has been entered then clear the row record and floor
 mode; set `h ← 2`", and continue with the general dispatcher on the same core. In the recursion
 this is `Run.floorReset`: one `Continue` child on `S.floorCleared`, the state with the same core,
 hierarchy and phase size, no row record, floor mode off and `h = 2`.

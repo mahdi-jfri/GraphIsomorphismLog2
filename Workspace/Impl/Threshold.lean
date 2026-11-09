@@ -7,7 +7,7 @@ public import Workspace.Impl.Cases
 /-!
 # The threshold step of `Continue`
 
-Algorithm 5: "if `|Ω| ≤ N^γ` then return `Solve(Ω, G, x, y)`". The step function calls the
+Algorithm 3: "if `|Ω| ≤ N^γ` then return `Solve(Ω, G, x, y)`". The step function calls the
 function of `Solve` on its own input value: a canonical value of the state is a state value, so
 it is a valid input of `Solve`. The result is the answer of `Run.threshold`.
 

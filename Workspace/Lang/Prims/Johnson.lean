@@ -40,6 +40,17 @@ theorem johnsonPrim_spec (h : JohnsonIdentification) {n m k : ℕ} {gv : Val}
     obtain rfl := encGroup_injective hg
     rfl)
 
+/-- A primitive that does Johnson identification on the inputs whose numbers `m, k` satisfy `Q`. -/
+def JohnPrimOK (p : Prim) (Q : ℕ → ℕ → Prop) : Prop :=
+  ∀ {n m k : ℕ} {gv : Val} {G : Subgroup (Perm (Fin n))}, GroupVal n gv G → Q m k →
+    (∃ ι : Fin n ≃ {A : Finset (Fin m) // A.card = k}, IsJohnsonId G ι) →
+    PrimSpec p (.list [gv, .nat m, .nat k]) (JohnsonOut G m k)
+
+/-- `johnsonPrim` does Johnson identification when `5 ≤ m`, `1 ≤ k` and `(k + 1)² < m + 2`. -/
+theorem johnsonPrim_ok (h : JohnsonIdentification) :
+    JohnPrimOK (johnsonPrim h) (fun m k => 5 ≤ m ∧ 1 ≤ k ∧ (k + 1) ^ 2 < m + 2) :=
+  fun hG hQ hJ => johnsonPrim_spec h hG hQ.1 hQ.2.1 hQ.2.2 hJ
+
 theorem johnson_call (h : JohnsonIdentification) {P : Program} {env : List Val}
     {j : ℕ} {a : Expr} {ca n m k : ℕ} {gv : Val} {G : Subgroup (Perm (Fin n))}
     (hj : P.prims[j]? = some (johnsonPrim h)) (ha : Det P env a (.list [gv, .nat m, .nat k]) ca)

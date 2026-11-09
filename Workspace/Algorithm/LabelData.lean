@@ -10,13 +10,13 @@ public import Workspace.Algorithm.HierInv
 
 `GiantLabels S` is only a surjection `π : G ↠ Alt(q)`. The labels that the recursion actually
 supplies to `GiantStep` come from the normalization of a single alternating factor of a primitive
-quotient of the domain action (Algorithm 5: "Normalize the single alternating factor"). The paper
+quotient of the domain action (Algorithm 3: "Normalize the single alternating factor"). The paper
 attaches more to them:
 
 * the labels are read on the domain (Section 3: "Every fresh call uses the faithful permutation
   image on its own active domain"; the primitive quotient is a quotient of the domain action), so
   `π` kills every element that fixes the domain pointwise (`GiantLabels.OnDomain`);
-* the labels lie above the retained columns (Algorithm 5: "Expose the next primitive quotient
+* the labels lie above the retained columns (Algorithm 3: "Expose the next primitive quotient
   above any retained column partition"), so every element of `G` that fixes every retained
   column has trivial label image (`GiantLabels.Constituent.kills`);
 * the block map of the selected Cameron constituent, `p : dom → binom(Γ, h)` with
@@ -45,7 +45,7 @@ structure GiantLabels.Constituent {S : State Ω C} (L : GiantLabels S) : Type wh
   onDomain : L.OnDomain
   /-- The Johnson block map `p : dom → binom(Γ, h)`, `1 ≤ h ≤ q/2`, of the constituent. -/
   blocks : JohnsonBlocks S L
-  /-- The labels lie above the retained columns (Algorithm 5: "Expose the next primitive
+  /-- The labels lie above the retained columns (Algorithm 3: "Expose the next primitive
   quotient above any retained column partition"): an element that fixes every retained column
   has trivial label image. -/
   kills : ∀ R c, S.rows = some R → R.cols = some c → ∀ g : S.G, FixesCols c S.dom g → L.π g = 1
@@ -55,7 +55,7 @@ theorem GiantLabels.kills_of_none {S : State Ω C} (L : GiantLabels S) (h : S.ro
     ∀ R c, S.rows = some R → R.cols = some c → ∀ g : S.G, FixesCols c S.dom g → L.π g = 1 :=
   fun _ _ hR => absurd (h.symm.trans hR) (by simp)
 
-/-- **The supplied alternating labels of a giant step** (Algorithm 5, `GiantStep(S, Γ)`, with
+/-- **The supplied alternating labels of a giant step** (Algorithm 3, `GiantStep(S, Γ)`, with
 `Γ` from the single-factor normalization): a label map with the data of its Cameron
 constituent. -/
 structure SuppliedLabels (S : State Ω C) extends GiantLabels S where
@@ -78,7 +78,7 @@ def Normalization.labels {S : State Ω C} (I : Normalization S) (x y : Ω → C)
     (hier : List (Interval Ω)) : GiantLabels (S.restrict I.G' I.le x y hier) :=
   ⟨I.q, I.π, I.π_surj⟩
 
-/-- **The single-factor normalization as the recursion uses it** (Algorithm 5: "Normalize the
+/-- **The single-factor normalization as the recursion uses it** (Algorithm 3: "Normalize the
 single alternating factor, with at most two cosets"): its degree is above `q₀` (Section A.3:
 "When `m ≤ q₀`, enumerate the alternating quotient"), and on every child state (the group `G'`
 on the parent domain) its labels carry the data of the Cameron constituent. -/

@@ -98,7 +98,8 @@ theorem final_modulo_glueObj
     (gObjF : List Expr) (hgo : gObjF.length ≤ flcLabOff - flcRecOff - tmRiGlueOff)
     {Kg Dg : ℕ}
     (hgl : Iface.TermGlueObjSpec (cProg gObjF fc11SojF) Kg Dg (flcRecIdx + tmRiGlueOff)) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
+    SolvedR
+      (cProg gObjF fc11SojF) :=
   final_modulo_contracts gObjF hgo fc11SojF fc11SojF_length fc11Xs hgl
     (fun Kj Dj => (fc11_sojSpec (cIface Kj Dj Kg Dg fc11Xs) asmF hgo).1)
     (fc11_sojSpec (cIface 0 0 Kg Dg fc11Xs) asmF hgo).2

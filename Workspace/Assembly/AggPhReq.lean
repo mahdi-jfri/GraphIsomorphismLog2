@@ -64,7 +64,8 @@ theorem final_modulo_aggph (hst : PointwiseStab)
       (fagProg hst hm hpre hfac hmb hO hC hder hni hnc ext recF labF jF crE cmE
         itE crF cmF itF) asmF asHandImpl Xi (asb 4))
     (hXc : PBU fun _ W _ => Xc W) (hXm : PBU fun _ W _ => Xm W) (hXi : PBU fun _ W _ => Xi W) :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime :=
+    SolvedQ (fagProg hst hm hpre hfac hmb hO hC hder hni hnc ext recF labF jF crE cmE itE crF cmF itF)
+      (· = fagIface hst hm hpre hfac hmb hO hC hder hni hnc Kl Dl Kj Dj Kc Dc (fagX hpre Xc Xm Xi)) :=
   final_modulo_cos hst hm hpre hfac hmb hO hC hAb hTr hder hni hnc
     dixon ext recF labF jF hF asHandImpl (fagX hpre Xc Xm Xi) (rdF fagRdIdx) crE cmE itE
     (fagRest crF cmF itF) hrec hlab hjj

@@ -10,7 +10,7 @@ public import Mathlib.Tactic.Ring
 namespace GI
 
 /-- A recurrence solver including the `1 + F(child)` term. All size reduction and
-runtime-recurrence obligations are explicit hypotheses, not assertions about Algorithm 4. -/
+runtime-recurrence obligations are explicit hypotheses, not assertions about the algorithm. -/
 theorem contracting_recurrence_bound
     (F score : ℕ → ℝ) (child : ℕ → ℕ) (base : ℕ) (C D r : ℝ)
     (hD : 0 ≤ D) (hscore : ∀ n, 0 ≤ score n)

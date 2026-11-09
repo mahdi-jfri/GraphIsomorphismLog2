@@ -44,7 +44,7 @@ final one (`GI.Paper.endpoint_at_most_n_updates`). Its group and window are
 `finalGrp` and `finalWin = W(x, T)`, and the full certificate is
 `K(T) = fullCert = (A_final)_{(Ω \ W_final)}`.
 
-## Deferred algorithmic clauses
+## Algorithmic clauses
 
 The paper's polynomial-time clauses ("Generators ... can be obtained in
 polynomial time" in Proposition A.1; "can be computed with polynomial

@@ -8,7 +8,7 @@ public import Workspace.Impl.DirectCoset
 /-!
 # The direct step of `Solve`
 
-Algorithm 5, `Solve` with `|dom| ≤ N₀`: "return the answer by direct enumeration". In the
+Algorithm 3, `Solve` with `|dom| ≤ N₀`: "return the answer by direct enumeration". In the
 recursion this is `Run.direct`, with the exact answer `S.answer` and no children.
 
 The step function `directBody` on a state value `v`:

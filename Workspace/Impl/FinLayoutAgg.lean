@@ -26,7 +26,7 @@ adapter is needed.
 
 **The layout.** The list of the round is `fagAgg crE cmE itE crF cmF itF`, that is
 `asAgg (rdF fagRdIdx) crE cmE itE (fagRest crF cmF itF)`. The entries `asb 2`, `asb 3`,
-`asb 4` of the three unfinished phases are the parameters `crE`, `cmE`, `itE`; their helper
+`asb 4` of the three remaining phases are the parameters `crE`, `cmE`, `itE`; their helper
 functions are the lists `crF`, `cmF`, `itF`. Offsets in `rest` (which starts at `asb 1000`):
 
 | offset in `rest` | index | content | room |

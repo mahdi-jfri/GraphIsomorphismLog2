@@ -7,7 +7,7 @@ public import Workspace.Impl.AggImg
 /-!
 # The window increment from orders of images
 
-Rules 1 to 4 of Algorithm 2 choose the increment `V_t` (`increment`). Each rule asks about the
+Rules 1 to 4 of Algorithm 1 choose the increment `V_t` (`increment`). Each rule asks about the
 image under `φ_T` of a pointwise stabilizer `A_{(U)}`: is it all of `Alt(T)`, or is it trivial?
 Both questions are about the order `|φ_T(A_{(U)})|` (`full_iff_card`, `bot_iff_card`), and
 `imgCardFuns` computes that order. This file rewrites `increment` with these orders, for a list

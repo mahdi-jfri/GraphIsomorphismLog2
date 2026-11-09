@@ -15,8 +15,8 @@ This file assembles the main results of the paper for the abstract recursion
   `F(N) ≤ exp(C (log(N+2))²) (1 + F(⌈N^γ⌉))`, for the worst-case cost
   `F = GI.Algorithm.worstCost` (Section 7.4).
 * `GI.Paper.main_recurrence_solved`: `F(N) ≤ exp(C' (log(N+2))²)`.
-* `GI.Paper.thm_main_string_stage1`: Theorem 1.2 at stage 1.
-* `GI.Paper.thm_main_graph_stage1`: Theorem 1.1 at stage 1.
+* `GI.Paper.thm_main_string_stage1`: Theorem 1.3 at stage 1.
+* `GI.Paper.thm_main_graph_stage1`: Corollary 1.2 at stage 1.
 
 ## What the theorems assume
 
@@ -137,9 +137,9 @@ theorem main_recurrence_solved (hP : P.Terminating) (hc : Compat P cc) (hαγ : 
 
 end Recurrence
 
-/-! ### Theorem 1.2 -/
+/-! ### Theorem 1.3 -/
 
-/-- **Theorem 1.2 at stage 1** (`thm:main-string`, String isomorphism). There is a constant
+/-- **Theorem 1.3 at stage 1** (`thm:main-string`, String isomorphism). There is a constant
 `C'` such that for every state `S` on a finite position set:
 
 * `Solve` has a run on `S`;
@@ -171,7 +171,7 @@ theorem thm_main_string_stage1 (hP : P.Terminating) (hM : GI.Cited.MarotiPrimiti
   · intro hok
     exact (total_le_worstCost (h S.size).1 r le_rfl hok).trans (h S.size).2
 
-/-! ### Theorem 1.1 -/
+/-! ### Corollary 1.2 -/
 
 section Graph
 
@@ -196,7 +196,7 @@ theorem graph_isos_eq_coset (X Y : SimpleGraph (Fin n)) (σ : X ≃g Y) :
     rw [σ.map_adj_iff]
     exact (ha u v).symm
 
-/-- The pair state of Algorithm 1 has `n²` positions. -/
+/-- The pair state of the graph wrapper has `n²` positions. -/
 theorem graphState_size (X Y : SimpleGraph (Fin n)) [DecidableRel X.Adj]
     [DecidableRel Y.Adj] : (graphState X Y).size = n * n := by
   simp [State.size, graphState]
@@ -211,9 +211,9 @@ theorem log_sq_add_two_le (n : ℕ) :
   rw [show ((n : ℝ) + 2) ^ (2 : ℝ) = ((n : ℝ) + 2) ^ (2 : ℕ) by norm_cast]
   nlinarith
 
-/-- **Theorem 1.1 at stage 1** (`thm:main-graph`, Graph isomorphism). There is a constant
+/-- **Corollary 1.2 at stage 1** (`cor:main-general`, Graph isomorphism). There is a constant
 `C'` such that for all graphs `X, Y` on `n` vertices, `Solve` has a run on the pair state
-of Algorithm 1 (`GI.Paper.graphState`, `n²` positions), and every run `r` with answer
+of the graph wrapper (`GI.Paper.graphState`, `n²` positions), and every run `r` with answer
 `A` satisfies:
 
 * the vertex permutations induced by `A` are exactly the isomorphisms from `X` to `Y`;

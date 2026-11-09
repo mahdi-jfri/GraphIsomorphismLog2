@@ -12,9 +12,9 @@ public import Mathlib.GroupTheory.SpecificGroups.Alternating
 
 Several subroutines first ask recursive questions and then compute their output
 from the answers: `CheckNewWindow` and the lockstep comparisons ask `Continue` on
-kernel orbits (Section 4, Algorithm 2), the row terminal asks `Solve` on rows
+kernel orbits (Section 4, Algorithm 1), the row terminal asks `Solve` on rows
 (Theorem A.23), and `AuxiliaryReduction` asks `Continue` on a rectangle orbit `Δ` or
-`Solve` on a small configuration (Algorithm 3). Later questions may depend on
+`Solve` on a small configuration (Algorithm 2). Later questions may depend on
 earlier answers. A `Script α` records this: it is either finished with a value of
 type `α`, or it asks one recursive call (a state together with the procedure that
 solves it) and continues with a function of the returned answer.
@@ -30,7 +30,7 @@ calls are exact, the script returns `evalExact`.
 Each structure below states exactly what one paper result gives the recursion.
 
 * `Reduction` and `Normalization`: the standard primitive-group reduction and
-  the single-factor normalization of Section 3.3 and Algorithm 5. The dispatcher step
+  the single-factor normalization of Section 3.3 and Algorithm 3. The dispatcher step
   `DispatchStep` of the recursion (`Workspace/Algorithm/Dispatch.lean`) computes its
   `Reduction` from the primitive quotient of the state.
 * `GiantLabels`, `NaturalRows`: the supplied alternating map and the one-label
@@ -48,7 +48,7 @@ open Equiv Equiv.Perm
 open scoped Pointwise
 
 /-- The procedure that solves a recursive call: `Solve` (a fresh call), `Continue`
-(an inherited call), or `GiantStep` (Algorithm 5). -/
+(an inherited call), or `GiantStep` (Algorithm 3). -/
 inductive Mode
   | solve
   | cont
@@ -174,7 +174,7 @@ def orb (G : Subgroup (Perm Ω)) (v : Ω) : Set Ω := {w | ∃ g ∈ G, g v = w}
 /-- The output of an aggregation round, before the parent continuation: exact
 pieces of the parent answer (the large-symmetry branch of Lemma A.11) and
 overcosets `τ H` of the original parent action (balanced partitions, Lemma 5.1,
-Algorithm 3). -/
+Algorithm 2). -/
 structure Branches (Ω : Type) where
   pieces : List (Set (Perm Ω))
   overs : List (Perm Ω × Subgroup (Perm Ω))
@@ -222,7 +222,7 @@ def DispatchFacts (P : Params) (S : State Ω C) (K : Subgroup (Perm Ω)) (n : �
 /-- **A dispatcher reduction** (Section 3.3, "The standard primitive-group
 reduction either enumerates a group of order `d^{O(log d)}` on an actual `d`-block
 quotient, or exposes a large alternating action"; "Product actions refine the
-actual hierarchy"; Algorithm 5, "if enumeration or a product refinement applies
+actual hierarchy"; Algorithm 3, "if enumeration or a product refinement applies
 then apply that reduction and solve its children with `Continue`").
 
 The reduction acts on an actual invariant block system of the current action. Its
@@ -260,7 +260,7 @@ structure Reduction (P : Params) (S : State Ω C) where
   /-- The facts of the table of Section 7.2 for this reduction. -/
   facts : DispatchFacts P S K n hier' kind
 
-/-- **The single-factor normalization** (Algorithm 5: "Normalize the single
+/-- **The single-factor normalization** (Algorithm 3: "Normalize the single
 alternating factor, with at most two cosets"; Section 6.1: "The single-factor
 normalization has index at most two above the bounded exceptional degrees. Its
 preimage is normal."). The normalized preimage `G'` maps onto `Alt(q)`. -/
@@ -288,7 +288,7 @@ structure Normalization (S : State Ω C) where
     (hier'.map Interval.cap).sum ≤ (S.hier.map Interval.cap).sum
 
 /-- The supplied alternating label set of a giant step: `π : G ↠ Alt(Γ)` with
-`Γ = Fin q` (Algorithm 5, `GiantStep(S, Γ)`: "Put `q ← |Γ|` for the supplied
+`Γ = Fin q` (Algorithm 3, `GiantStep(S, Γ)`: "Put `q ← |Γ|` for the supplied
 alternating label set"). -/
 structure GiantLabels (S : State Ω C) where
   q : ℕ
@@ -297,7 +297,7 @@ structure GiantLabels (S : State Ω C) where
 
 /-- The physical kernel orbits are indexed by single labels: a natural map
 `label : dom → Γ` that is equivariant, onto, and whose fibers are exactly the
-kernel orbits (Corollary A.25, the one-label case; Algorithm 5: "Recover the
+kernel orbits (Corollary A.25, the one-label case; Algorithm 3: "Recover the
 one-label or two-label map for the physical kernel orbits"; "this map is
 natural"). -/
 structure NaturalRows (S : State Ω C) (L : GiantLabels S) (label : Ω → Fin L.q) : Prop where
@@ -306,7 +306,7 @@ structure NaturalRows (S : State Ω C) (L : GiantLabels S) (label : Ω → Fin L
   fibers : ∀ v ∈ S.dom, ∀ w ∈ S.dom,
     label v = label w ↔ ∃ k : S.G, L.π k = 1 ∧ k.val v = w
 
-/-- The row case of `GiantStep` (Algorithm 5): `q > λ`, the kernel-orbit map is
+/-- The row case of `GiantStep` (Algorithm 3): `q > λ`, the kernel-orbit map is
 natural, and no retained rows have degree at least `q`. -/
 def RowCase (α : ℝ) (S : State Ω C) (L : GiantLabels S) : Prop :=
   (S.N : ℝ) ^ α < L.q ∧ (∃ label, NaturalRows S L label) ∧
@@ -342,7 +342,7 @@ def AggCall (P : Params) (S : State Ω C) {Ω' C' : Type} (m : Mode) (T : State 
     (m = .cont ∧ ∃ e : Ω' = Ω, ChargedCall P S (e ▸ T))
 
 /-- The cap update of a configuration or rectangle continuation (Section 5.1, "`H`
-then shrinks the hierarchy cap from at least `q` to `βq`"; Algorithm 3,
+then shrinks the hierarchy cap from at least `q` to `βq`"; Algorithm 2,
 `LiftAndContinue`: the selected interval bound becomes `min{c, βq}`; Section 7.2: "A
 configuration or rectangle answer changes the selected interval bound from at least
 `q` to at most `βq`. … The old cap is at least `q` because the selected alternating

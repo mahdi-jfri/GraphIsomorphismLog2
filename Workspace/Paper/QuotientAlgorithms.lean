@@ -50,9 +50,9 @@ mathematical results:
   cosets of `R'`, and rebasing the objects into `R'` in Corollary A.22 (the mathematics of
   these paragraphs is in `Workspace/Paper/RadicalFreeOrder.lean`).
 
-Deferred to stage 2 (machine): "computable deterministically in `exp(O(log(b+M+2) log(b+2)))`
-time" (A.20: the per-call polynomial work `P(b, M)` and the bit bounds of the abelian
-coordinates); "has deterministic running time ..." (A.22: the per-coset overhead).
+Handled at stage 2, by the machine programs: "computable deterministically in
+`exp(O(log(b+M+2) log(b+2)))` time" (A.20: the per-call polynomial work `P(b, M)` and the bit
+bounds of the abelian coordinates); "has deterministic running time ..." (A.22: the per-coset overhead).
 -/
 
 namespace GI.Paper
@@ -218,7 +218,7 @@ Claims:
    and the degree-`b` string calls number `2m² + m ≤ 3(m+1)²`.
 
 The index bound `hidx` stands for [GMP, Theorem 1.4] and Lemma A.21; it is where the
-transitivity of `N` is used. Deferred to stage 2: the polynomial-time affine label transport
+transitivity of `N` is used. Handled at stage 2: the polynomial-time affine label transport
 inside each coset of `R'` (Theorem A.20's affine step over `D/N` with the offsets
 `∑_a m_a [t_a(h)] + ∑_i [d_i(h)]`), the lifts and corrections from stored tables, and the
 final running-time total `poly(n) F(b) + exp(O(log²(n+2)))`. Here the label step is

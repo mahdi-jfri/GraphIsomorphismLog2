@@ -13,7 +13,7 @@ public import Mathlib.Data.List.ReduceOption
 # The aggregation round as a procedure on its structural data
 
 This file defines the interface `Aggregation` of the aggregation path of `GiantStep`
-(Algorithm 5, after "Freeze `S_0 ← S`"), and the query script that the recursion runs for
+(Algorithm 3, after "Freeze `S_0 ← S`"), and the query script that the recursion runs for
 it. The script is not a field. It is computed from the structural data of the paper's
 aggregation step by the paper's procedure, and the facts that the recursion needs
 (`covers`, `calls`, `calls_count`, `overs_count`, `capUpdate`) are theorems.

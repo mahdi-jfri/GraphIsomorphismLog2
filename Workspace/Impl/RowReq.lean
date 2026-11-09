@@ -29,7 +29,7 @@ namespace GI.Impl
 open GI.Algorithm GI.Assembly GI.Lang Equiv Equiv.Perm
 open GI.Cited (Val PointwiseStab Preimage NormalizedFactor Membership)
 
-/-! ### Raising the constant of the open hypotheses -/
+/-! ### Raising the constant of the hypotheses -/
 
 private theorem rq_exp_mono {a b : ℝ} (h : a ≤ b) (N : ℕ) : expLogSq a N ≤ expLogSq b N := by
   unfold expLogSq

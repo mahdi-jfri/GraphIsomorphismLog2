@@ -42,7 +42,7 @@ theorem cam_six (hk1 : 1 ≤ k) (hk : 2 * k < m) (hb : (k + 1) ^ 2 < m + 2) : m 
 /-- **Putting the coordinates together.** -/
 theorem cam_assemble {G : Subgroup (Perm (Fin n))}
     {e : Fin n ≃ (Fin r → {A : Finset (Fin m) // A.card = k})} (hM : MarotiStructure G e)
-    (hm : 5 ≤ m) (hk1 : 1 ≤ k) (hk : 2 * k < m) (hb : (k + 1) ^ 2 < m + 2) (x₀ : Fin n)
+    (hm : 5 ≤ m) (hk1 : 1 ≤ k) (hk : 2 * k < m) (hsix : m = 6 → k = 1) (x₀ : Fin n)
     (L : List (Fin r)) (hL : L.Nodup) (hl : L.length = r) (cols : List Val)
     (hcols : List.Forall₂ (fun i v => CamFacOut e i x₀ v) L cols) :
     ∃ e' : Fin n ≃ (Fin r → {A : Finset (Fin m) // A.card = k}), MarotiStructure G e' ∧
@@ -71,7 +71,7 @@ theorem cam_assemble {G : Subgroup (Perm (Fin n))}
     intro j g
     rw [hH j g, he₀, camProd_reindex, Finset.map_singleton]
     rfl
-  obtain ⟨e', he', hM'⟩ := cam_combine (cam_maroti_reindex τ hM) hm hk1 hk (cam_six hk1 hk hb) x₀
+  obtain ⟨e', he', hM'⟩ := cam_combine (cam_maroti_reindex τ hM) hm hk1 hk hsix x₀
     (fun j => (O j).length) (fun j => (O j).get) hinj hν' (fun j => gens (ts' j)) hH' ι hι
     (fun x j => F j x) (fun x j w h => hF j x w (by simpa [he₀] using h))
   refine ⟨e', hM', (List.finRange r).map fun j x => kVal (F j x), ?_, ?_⟩

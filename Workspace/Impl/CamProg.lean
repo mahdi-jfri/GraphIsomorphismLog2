@@ -35,8 +35,14 @@ def camN : Expr := .get (.var 0) (.nat 0)
 /-- The first factor. -/
 def camT0 : Expr := .get (.get (.var 4) (.nat 1)) (.nat 0)
 
-/-- Steps 2–7 (at `b + 1`). -/
-def camTailBody (b jo : ℕ) : Expr :=
+/-- The test of step 5: with `tb = true`, whether `m + 1 < (k + 1)²`; with `tb = false`, never. -/
+def camTest : Bool → Expr
+  | true => .arith .lt (.arith .add (.var 6) (.nat 1))
+      (.arith .mul (.arith .add (.var 8) (.nat 1)) (.arith .add (.var 8) (.nat 1)))
+  | false => .nat 0
+
+/-- Steps 2–7 (at `b + 1`), with the test `camTest tb` at step 5. -/
+def camTailBodyG (b jo : ℕ) (tb : Bool) : Expr :=
   .letE (.call (b + 231) (.var 0)) <|
   .letE (.call (b + 2) (mk2 camN (.var 1))) <|
   .letE (.call (b + 2) (mk2 camN .nil)) <|
@@ -45,32 +51,36 @@ def camTailBody (b jo : ℕ) : Expr :=
   .letE (.call (b + 83) (mk2 (.var 5) camN)) <|
   .letE (.call (b + 20) (mk2 .nil camT0)) <|
   .letE (.call (b + 88) (mk2 (.var 6) (.length (.get (.var 7) (.nat 0))))) <|
-  .ite (.arith .lt (.arith .add (.var 6) (.nat 1))
-      (.arith .mul (.arith .add (.var 8) (.nat 1)) (.arith .add (.var 8) (.nat 1))))
-    (.snoc .nil (.nat 2)) <|
+  .ite (camTest tb) (.snoc .nil (.nat 2)) <|
   .letE (.call (b + 100) (mk2 (mk4 (.var 2) (.var 3) (.var 6) (.var 8)) (.get (.var 4) (.nat 1)))) <|
   .letE (.call (b + 219) (mk2 camN (.var 9))) <|
   .snoc (mk4 (.nat 1) (.var 6) (.var 8) (.length (.get (.var 4) (.nat 1)))) (.var 10)
+
+/-- Steps 2–7 (at `b + 1`). -/
+def camTailBody (b jo : ℕ) : Expr := camTailBodyG b jo true
 
 /-- Step 1 (at `b`). -/
 def camMainBody (b jo : ℕ) : Expr :=
   .letE (.prim jo (.var 0))
     (.ite (.call (b + 93) (mk2 (.var 1) camN)) (.snoc .nil (.nat 0)) (.call (b + 1) (.var 0)))
 
-/-- All functions of the program, at base `b` (343 functions). -/
-def camFuns (b jo jp jn jd jq jj : ℕ) : List Expr :=
-  [camMainBody b jo] ++ [camTailBody b jo] ++ mkGroupFuns (b + 2) ++
+/-- All functions of the program, at base `b` (343 functions), with the test `camTest tb`. -/
+def camFunsG (b jo jp jn jd jq jj : ℕ) (tb : Bool) : List Expr :=
+  [camMainBody b jo] ++ [camTailBodyG b jo tb] ++ mkGroupFuns (b + 2) ++
     camLoopFuns (b + 9) (b + 289) jo jq ++
     camRestrFuns (b + 20) ++ camMFuns (b + 83) ++ camKFuns (b + 88) ++ camSmallFuns (b + 93) ++
     mapFuns (b + 100) (b + 103) ++ camFacFuns (b + 103) jj jq ++ camTrFuns (b + 219) ++
     camSocleFuns (b + 231) jo jp jn jd ++ camFactorFuns (b + 289) jo jp jn
 
+/-- All functions of the program, at base `b` (343 functions). -/
+def camFuns (b jo jp jn jd jq jj : ℕ) : List Expr := camFunsG b jo jp jn jd jq jj true
+
 /-- Where the parts of the program sit. -/
 structure CamAt (P : Program) (b jo jp jn jd jq jj : ℕ) (ho : GroupOrder)
     (hp : PointwiseStab) (hncl : NormalClosure) (hd : DerivedSubgroup)
-    (hqc : GMPNormalCentralizer) (hj : JohnsonIdentification) : Prop where
+    (hqc : GMPNormalCentralizer) (pJ : Prim) (tb : Bool) : Prop where
   main : P.funs[b]? = some (camMainBody b jo)
-  tail : P.funs[b + 1]? = some (camTailBody b jo)
+  tail : P.funs[b + 1]? = some (camTailBodyG b jo tb)
   mg : P.HasAt (b + 2) (mkGroupFuns (b + 2))
   loop : CamLoopAt P (b + 9) (b + 289) jo jp jn jq ho hp hncl hqc
   iter : P.HasAt (b + 17) (iterFuns (b + 17) (b + 9))
@@ -79,23 +89,23 @@ structure CamAt (P : Program) (b jo jp jn jd jq jj : ℕ) (ho : GroupOrder)
   ck : P.HasAt (b + 88) (camKFuns (b + 88))
   small : P.HasAt (b + 93) (camSmallFuns (b + 93))
   mp : P.HasAt (b + 100) (mapFuns (b + 100) (b + 103))
-  fac : CamFacAt P (b + 103) jj jq hj hqc
+  fac : CamFacAt P (b + 103) jj jq pJ hqc
   tr : P.HasAt (b + 219) (camTrFuns (b + 219))
   soc : CamSocleAt P (b + 231) jo jp jn jd ho hp hncl hd
   po : P.prims[jo]? = some (groupOrderPrim ho)
 
 theorem camAt_of {P : Program} {b jo jp jn jd jq jj : ℕ} {ho : GroupOrder}
     {hp : PointwiseStab} {hncl : NormalClosure} {hd : DerivedSubgroup}
-    {hqc : GMPNormalCentralizer} {hj : JohnsonIdentification}
-    (h : P.HasAt b (camFuns b jo jp jn jd jq jj))
+    {hqc : GMPNormalCentralizer} {pJ : Prim} {tb : Bool}
+    (h : P.HasAt b (camFunsG b jo jp jn jd jq jj tb))
     (po : P.prims[jo]? = some (groupOrderPrim ho))
     (pp : P.prims[jp]? = some (pointwiseStabPrim hp))
     (pn : P.prims[jn]? = some (normalClosurePrim hncl))
     (pd : P.prims[jd]? = some (derivedSubgroupPrim hd))
     (pq : P.prims[jq]? = some (gmpNormalCentralizerPrim hqc))
-    (pj : P.prims[jj]? = some (johnsonPrim hj)) :
-    CamAt P b jo jp jn jd jq jj ho hp hncl hd hqc hj := by
-  simp only [camFuns] at h
+    (pj : P.prims[jj]? = some pJ) :
+    CamAt P b jo jp jn jd jq jj ho hp hncl hd hqc pJ tb := by
+  simp only [camFunsG] at h
   have h0 := h.left.left
   have hdfac := camFactorAt_of (by simpa [mkGroupFuns, rangeFuns, appendFuns, loopFuns, camLoopFuns, iterFuns, length_camRestrFuns, camMFuns, camKFuns, advFuns, camSmallFuns, log2Funs, powFuns, mapFuns, Nat.add_assoc, camFacFuns, camColFuns, gatherFuns, camIdxFuns, findEqFuns, findFuns, length_orbitFuns, camTrFuns, length_camSocleFuns] using h.right) po pp pn
   have hsoc := camSocleAt_of (by simpa [mkGroupFuns, rangeFuns, appendFuns, loopFuns, camLoopFuns, iterFuns, length_camRestrFuns, camMFuns, camKFuns, advFuns, camSmallFuns, log2Funs, powFuns, mapFuns, Nat.add_assoc, camFacFuns, camColFuns, gatherFuns, camIdxFuns, findEqFuns, findFuns, length_orbitFuns, camTrFuns] using h.left.right) po pp pn pd

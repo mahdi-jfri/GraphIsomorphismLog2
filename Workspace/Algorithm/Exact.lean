@@ -38,7 +38,7 @@ The lemmas here are the exact-combination rules used in the proof of Lemma 6.1:
   Section 3.2;
 * `answer_cover`: an exhaustive family of overcosets `τ_j H_j`, each continued
   under `H_j` on `(x, y ∘ τ_j)`, gives the exact answer (`LiftAndContinue` and
-  `CombineExact` of Algorithms 3 and 5, and every coset enumeration);
+  `CombineExact` of Algorithms 2 and 3, and every coset enumeration);
 * `answer_combine`: the same with some branches supplying exact pieces directly;
 * `answer_recolor`: joint color compression does not change the answer.
 -/
@@ -222,7 +222,7 @@ theorem answer_combine {ι κ : Type*} {G : Subgroup (Perm Ω)} {D : Set Ω} {x 
 /-- **Coset enumeration.** If `G` is covered by the cosets `τ_j K` of a subgroup
 `K ≤ G` with `τ_j ∈ G`, the answer is the union of `τ_j · answer(K, D, x, y ∘ τ_j)`.
 This is the enumeration of an actual quotient, the product refinement, and the
-single-factor normalization of Algorithm 5. -/
+single-factor normalization of Algorithm 3. -/
 theorem answer_cosets {ι : Type*} {G K : Subgroup (Perm Ω)} {D : Set Ω} {x y : Ω → C}
     (τ : ι → Perm Ω) (hτ : ∀ j, τ j ∈ G) (hK : K ≤ G)
     (hcov : (G : Set (Perm Ω)) ⊆ ⋃ j, τ j • (K : Set (Perm Ω))) :

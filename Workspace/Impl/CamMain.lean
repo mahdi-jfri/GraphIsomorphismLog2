@@ -24,8 +24,8 @@ variable {n : ℕ}
 /-- The cost bound of the main function. -/
 noncomputable def camMainCost (ho : GroupOrder) (hp : PointwiseStab) (hncl : NormalClosure)
     (hd : DerivedSubgroup) (hqc : GMPNormalCentralizer)
-    (hj : JohnsonIdentification) (X : ℕ) : ℕ :=
-  5 * camTailCost ho hp hncl hd hqc hj X + camS4 ho hp hncl hd hqc hj X + 10 ^ 10 * X ^ 4
+    (pJ : Prim) (X : ℕ) : ℕ :=
+  5 * camTailCost ho hp hncl hd hqc pJ X + camS4 ho hp hncl hd hqc pJ X + 10 ^ 10 * X ^ 4
 
 /-- The cost of the order test. -/
 theorem cam_test_cost {X o c t a : ℕ} (ht : t ≤ 3) (ha : a ≤ X) (hX : 26 ≤ X) (hn2 : n ^ 2 ≤ X ^ 2) (hnX : n + 1 ≤ X)
@@ -54,10 +54,10 @@ theorem camMain_spec (hMa : MarotiPrimitive) {ho : GroupOrder} {hp : PointwiseSt
     {hncl : NormalClosure} {hd : DerivedSubgroup}
     {hqc : GMPNormalCentralizer} {hj : JohnsonIdentification}
     {P : Program} {b jo jp jn jd jq jj : ℕ}
-    (hP : CamAt P b jo jp jn jd jq jj ho hp hncl hd hqc hj) (gs : List (Perm (Fin n))) (hn : 25 ≤ n)
+    (hP : CamAt P b jo jp jn jd jq jj ho hp hncl hd hqc (johnsonPrim hj) true) (gs : List (Perm (Fin n))) (hn : 25 ≤ n)
     (hprim : MulAction.IsPreprimitive (gens gs) (Fin n)) :
     FunAll P b (encGroup gs) (fun v c => CameronOut (gens gs) v ∧
-      c ≤ camMainCost ho hp hncl hd hqc hj ((encGroup gs).wt + 1)) := by
+      c ≤ camMainCost ho hp hncl hd hqc (johnsonPrim hj) ((encGroup gs).wt + 1)) := by
   set x := encGroup gs with hx
   set X := x.wt + 1 with hX
   have hxS : (gs.length + 2) * (n + 1) ≤ x.wt := S_le_wt_encGroup gs
@@ -90,7 +90,7 @@ theorem camMain_spec (hMa : MarotiPrimitive) {ho : GroupOrder} {hp : PointwiseSt
   have dT := Det.call (Det.mk2 (Det.var' (P := P) (env := E) (i := 1) rfl) dn)
     (camSmall_spec hP.small o n)
   have hwo := wt_card_le (gens gs)
-  have hS4 : (groupOrderPrim ho).boundSize (camPB X) ≤ camS4 ho hp hncl hd hqc hj X := by
+  have hS4 : (groupOrderPrim ho).boundSize (camPB X) ≤ camS4 ho hp hncl hd hqc (johnsonPrim hj) X := by
     unfold camS4; omega
   by_cases hs : o < n ^ (1 + Nat.log 2 n)
   · -- the group is small: the answer `[0]`

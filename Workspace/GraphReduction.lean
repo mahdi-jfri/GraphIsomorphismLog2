@@ -29,7 +29,7 @@ theorem graph_transport_iff (G H : SimpleGraph V)
     simp only [decide_eq_decide]
     exact (h uv.1 uv.2).symm
 
-/-- The exact graph-isomorphism reduction in Section 3 / Algorithm 1. -/
+/-- The exact reduction of graph isomorphism to string isomorphism on ordered vertex pairs. -/
 theorem graph_iso_iff_string_iso (G H : SimpleGraph V)
     [DecidableRel G.Adj] [DecidableRel H.Adj] :
     Nonempty (G ≃g H) ↔ ∃ p : Equiv.Perm V,

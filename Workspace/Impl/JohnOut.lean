@@ -13,6 +13,8 @@ numbers `t` below the length of `Λ` by the test `Λ[t][x] = 1`.
 
 namespace GI.Impl
 
+variable {P : GI.Lang.Program} [JohnAt P]
+
 open GI.Lang GI.Cited GI.Proved Equiv
 open GI.Machine (BinOp)
 
@@ -28,27 +30,27 @@ def johnOutRow (lam : List (List ℕ)) (x : ℕ) : List ℕ :=
 
 /-- **The test `Λ[t][x] = 1`.** -/
 theorem john_outP_spec (ha : JohnAccOK n lam) {x t : ℕ} (hx : x < n) (ht : t < lam.length) :
-    FunDet johnProgram 105 (.list [.list [.list (lam.map natList), .nat x], .nat t])
+    FunDet P 105 (.list [.list [.list (lam.map natList), .nat x], .nat t])
       (boolVal (johnQO lam x (.nat t))) (2000 * (n + 1) ^ 2) := by
   set c := Val.list [.list (lam.map natList), .nat x]
   set a := Val.list [c, .nat t]
-  have hc : Det johnProgram [a] (arg 0) c (2 * a.wt + 5) := Det.arg' rfl
+  have hc : Det P [a] (arg 0) c (2 * a.wt + 5) := Det.arg' rfl
   have hL := Det.get' hc (Det.nat 0)
     (show [Val.list (lam.map natList), .nat x][0]? = some (.list (lam.map natList)) from rfl)
   have hX := Det.get' hc (Det.nat 1)
     (show [Val.list (lam.map natList), .nat x][1]? = some (.nat x) from rfl)
-  have hT : Det johnProgram [a] (arg 1) (.nat t) (2 * a.wt + 6) := Det.arg' rfl
+  have hT : Det P [a] (arg 1) (.nat t) (2 * a.wt + 6) := Det.arg' rfl
   have hent := ha.ent lam[t] (List.getElem_mem ht)
   have hxl : x < lam[t].length := by rw [hent.1]; exact hx
   have g1 := Det.get' hL hT (show (lam.map natList)[t]? = some (natList lam[t]) by simp [ht])
   have g2 := Det.get' g1 hX (show (lam[t].map Val.nat)[x]? = some (.nat lam[t][x]) by simp [hxl])
-  have h := Det.arith (op := .eq) g2 (Det.nat (P := johnProgram) (env := [a]) 1)
+  have h := Det.arith (op := .eq) g2 (Det.nat (P := P) (env := [a]) 1)
   have hv : Val.nat (BinOp.eval .eq lam[t][x] 1) = boolVal (johnQO lam x (.nat t)) := by
     simp only [boolVal, johnQO, johnNatOf, BinOp.eval, List.getD_eq_getElem?_getD,
       List.getElem?_eq_getElem ht, List.getElem?_eq_getElem hxl, Option.getD_some]
     by_cases e : lam[t][x] = 1 <;> simp [e]
   rw [hv] at h
-  refine FunDet.intro john_at_outP.single (h.mono ?_)
+  refine FunDet.intro (john_at_outP (P := P)).single (h.mono ?_)
   have wa := john_wt_acc ha
   have wt1 : (natList lam[t]).wt < (Val.list (lam.map natList)).wt :=
     wt_le_wt_list (List.mem_map_of_mem (List.getElem_mem ht))
@@ -66,10 +68,10 @@ theorem john_outP_spec (ha : JohnAccOK n lam) {x t : ℕ} (hx : x < n) (ht : t <
 
 /-- **The filter of the output for the point `x`.** -/
 theorem john_filterOut_spec (ha : JohnAccOK n lam) {x : ℕ} (hx : x < n) :
-    FunDet johnProgram 102
+    FunDet P 102
       (.list [.list [.list (lam.map natList), .nat x], natList (List.range lam.length)])
       (natList (johnOutRow lam x)) (1000000 * (n + 1) ^ 3) := by
-  have hF := filter_spec john_at_filterOut (c := .list [.list (lam.map natList), .nat x])
+  have hF := filter_spec (john_at_filterOut (P := P)) (c := .list [.list (lam.map natList), .nat x])
     (xs := (List.range lam.length).map Val.nat) (q := johnQO lam x)
     (B := fun _ => 2000 * (n + 1) ^ 2) (by
       intro v hv
@@ -122,21 +124,21 @@ theorem john_filterOut_spec (ha : JohnAccOK n lam) {x : ℕ} (hx : x < n) :
 
 /-- **The output for the point `x`.** -/
 theorem john_outF_spec (ha : JohnAccOK n lam) {x : ℕ} (hx : x < n) :
-    FunDet johnProgram 101
+    FunDet P 101
       (.list [.list [.list (lam.map natList), natList (List.range lam.length)], .nat x])
       (natList (johnOutRow lam x)) (2000000 * (n + 1) ^ 3) := by
   set c := Val.list [.list (lam.map natList), natList (List.range lam.length)]
   set a := Val.list [c, .nat x]
-  have hc : Det johnProgram [a] (arg 0) c (2 * a.wt + 5) := Det.arg' rfl
+  have hc : Det P [a] (arg 0) c (2 * a.wt + 5) := Det.arg' rfl
   have hL := Det.get' hc (Det.nat 0)
     (show [Val.list (lam.map natList), natList (List.range lam.length)][0]? =
       some (.list (lam.map natList)) from rfl)
   have hR := Det.get' hc (Det.nat 1)
     (show [Val.list (lam.map natList), natList (List.range lam.length)][1]? =
       some (natList (List.range lam.length)) from rfl)
-  have hX : Det johnProgram [a] (arg 1) (.nat x) (2 * a.wt + 6) := Det.arg' rfl
+  have hX : Det P [a] (arg 1) (.nat x) (2 * a.wt + 6) := Det.arg' rfl
   have hcall := Det.call (Det.mk2 (Det.mk2 hL hX) hR) (john_filterOut_spec ha hx)
-  refine FunDet.intro john_at_outF.single (hcall.mono ?_)
+  refine FunDet.intro (john_at_outF (P := P)).single (hcall.mono ?_)
   have hlen := ha.len
   have wa := john_wt_acc ha
   have wR : (natList (List.range lam.length)).wt ≤ 5 * (n + 1) ^ 2 :=
@@ -158,11 +160,11 @@ theorem john_outF_spec (ha : JohnAccOK n lam) {x : ℕ} (hx : x < n) :
 
 /-- **The output.** -/
 theorem john_mapOut_spec (ha : JohnAccOK n lam) :
-    FunDet johnProgram 98
+    FunDet P 98
       (.list [.list [.list (lam.map natList), natList (List.range lam.length)],
         natList (List.range n)])
       (.list ((johnOut n lam).map natList)) (10000000 * (n + 1) ^ 4) := by
-  have hT := john_tab john_at_mapOut
+  have hT := john_tab (john_at_mapOut (P := P))
     (c := .list [.list (lam.map natList), natList (List.range lam.length)])
     (n := n) (B := 2000000 * (n + 1) ^ 3) (G := fun x => natList (johnOutRow lam x))
     fun x hx => john_outF_spec ha hx
