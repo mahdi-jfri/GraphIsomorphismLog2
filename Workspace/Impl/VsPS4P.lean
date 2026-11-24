@@ -217,7 +217,8 @@ theorem vsPS4_spec [Fact I.p.Prime] {P : Program} {hn : NormalClosure} {f : ℕ}
     intro y hy
     apply vsPDsStepF_mem hy
     intro z hz
-    exact ((Subgroup.closure_le _).2 (hdimC y hy)) (vsPEnum_mem _ z hz)
+    exact ((Subgroup.closure_le _).2 (show {x | x ∈ vsPDim I s.ws' (vsQCs s) Zp gs cap (1 :: s.hs)
+      cap r y} ⊆ gens ccs from hdimC y hy)) (vsPEnum_mem _ z hz)
   have hx0C : x0 ∈ gens ccs := by
     have hi : ∀ k, step^[k] x2 ∈ gens ccs := by
       intro k

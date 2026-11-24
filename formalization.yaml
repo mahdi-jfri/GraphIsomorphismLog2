@@ -8,15 +8,16 @@ project:
   description: >-
     A Lean 4 proof that a deterministic algorithm decides isomorphism of graphs with n vertices
     and maximum degree d in time n^O(log d), and so graph isomorphism in time n^O(log n). The
-    algorithm is one program for a log-cost RAM with procedure calls. The proof shows that for
-    all graphs G and H on n vertices in which every vertex has at most d neighbours, the program
-    returns a correct answer at a cost of at most exp(C * log(n + 2) * log(d + 2)) for one
-    constant C. The program is not given d. A second program does the same for all graphs at a
-    cost of at most exp(C * (log(n + 2))^2). If G and H are isomorphic, the answer includes one
-    isomorphism and generators of the automorphism group of G. The three cited results that rest
-    on the classification of finite simple groups (the classification, Schreier's conjecture for
-    the groups on the list, and Maróti's bound on the orders of primitive groups) are proved
-    with AxiomMath/CFSG and MarotiOrdersOfPrimitiveGroups.
+    statement is about Mathlib's multitape Turing machines (Turing.FinTM2), and time is the
+    number of steps. The proof gives one Turing machine and one constant C such that for all
+    graphs G and H on n vertices in which every vertex has at most d neighbours, the machine,
+    started on the adjacency matrices of G and H as bits, halts with a correct answer within
+    exp(C * log(n + 2) * log(d + 2)) steps. The machine is not given d. Taking d = n gives the
+    bound exp(C * (log(n + 2))^2) for all graphs. If G and H are isomorphic, the answer includes
+    one isomorphism and generators of the automorphism group of G. The three cited results that
+    rest on the classification of finite simple groups (the classification, Schreier's
+    conjecture for the groups on the list, and Maróti's bound on the orders of primitive groups)
+    are proved with AxiomMath/CFSG and MarotiOrdersOfPrimitiveGroups.
   authors: ["Mahdi JafariRaviz"]
   responsible_maintainers: ["Mahdi JafariRaviz"]
   license: "Apache-2.0"
@@ -54,12 +55,12 @@ status:
   sorry_in_definitions: 0
   axioms: ["propext", "Classical.choice", "Quot.sound"]
   main_results:
-    - declaration: "GI.graphIsomorphismInDegreeTime"
-      file: "SolutionDegree.lean"
+    - declaration: "GI.turingGraphIsomorphismInDegreeTime"
+      file: "Solution.lean"
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "comparator-degree.json"
-    - declaration: "GI.graphIsomorphismInQuasipolynomialTime"
+      comparator_config: "comparator.json"
+    - declaration: "GI.turingGraphIsomorphismInQuasipolynomialTime"
       file: "Solution.lean"
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
@@ -71,10 +72,13 @@ automation:
 
 fidelity:
   divergences: >-
-    The paper does not fix a machine model. The Lean statement fixes one: a log-cost RAM with
-    procedure calls (Workspace/Statement/Machine.lean), where every operation costs one plus the
-    number of binary digits of each number it reads or writes. The time bounds and the output
-    are those of the paper's Theorem 1.1 and Corollary 1.2. Some steps of the proof differ from
+    The paper does not fix a machine model. The Lean statement fixes one: Mathlib's multitape
+    Turing machines (Workspace/Statement/Turing.lean), with time the number of steps. The proof
+    first runs the algorithm on a log-cost RAM with procedure calls
+    (Workspace/Statement/Machine.lean), where every operation costs one plus the number of binary
+    digits of each number it reads or writes, and then simulates that machine on Turing machines
+    with a polynomial slowdown. The time bounds and the output are those of the paper's
+    Theorem 1.1 and Corollary 1.2. Some steps of the proof differ from
     the paper without changing the statement. For example, Bochert's bound replaces Maróti's
     bound in Lemmas A.12 and A.24, and Theorem A.20 uses Dixon's derived length bound with the
     constant 5 in place of 5/2, which changes only constants inside the proof. In the proof of
@@ -89,10 +93,10 @@ alignment:
   namespace: "GI"
   statements:
     - source: "Theorem 1.1"
-      lean: "GI.graphIsomorphismInDegreeTime"
-      module: "SolutionDegree.lean"
+      lean: "GI.turingGraphIsomorphismInDegreeTime"
+      module: "Solution.lean"
       status: "proved"
     - source: "Corollary 1.2"
-      lean: "GI.graphIsomorphismInQuasipolynomialTime"
+      lean: "GI.turingGraphIsomorphismInQuasipolynomialTime"
       module: "Solution.lean"
       status: "proved"

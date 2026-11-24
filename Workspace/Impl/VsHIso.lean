@@ -274,7 +274,6 @@ theorem vsHIT_test (hs : VsQStOK s) {as : List (Perm (Fin I.n))} (has : gens as 
     push Not
     exact forall₂_congr fun e he => vsH_loc_comm_iff hs hy.1 (hk e he).1
   rw [hc, and_assoc]
-  rfl
 
 end Meaning
 

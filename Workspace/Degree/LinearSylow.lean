@@ -85,7 +85,7 @@ theorem sylow_cube_le [Finite K] [Finite V] [Nontrivial V] (G : Subgroup (Module
   have hcard : Nat.card P' = Nat.card (P : Subgroup G) :=
     (Nat.card_congr ((P : Subgroup G).equivMapOfInjective _ G.subtype_injective).toEquiv).symm
   have hgrp : IsPGroup r P' := by
-    have := P.isPGroup'
+    have := P.isPGroup
     exact this.map G.subtype
   have hs : Group.IsSolvable P' := by
     have : Finite P' := inferInstance

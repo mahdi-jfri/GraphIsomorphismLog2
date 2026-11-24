@@ -123,7 +123,9 @@ theorem vsB_orb_le (hab : s.Ab) (hD : 1 ≤ vsQD s) (hdom : VsBDom s) {q : ℕ} 
   have hcomm : ({X | ∃ g ∈ s.hs, vsQLam s g = X} : Set _).Pairwise Commute := by
     rintro _ ⟨g, hg, rfl⟩ _ ⟨h, hh, rfl⟩ _
     exact vsB_comm hs hab (Subgroup.subset_closure hg) (Subgroup.subset_closure hh)
-  letI : CommRing (vsBLamA s) := Algebra.adjoinCommRingOfComm (ZMod I.p) hcomm
+  letI : CommRing (vsBLamA s) :=
+    { (inferInstance : Ring (vsBLamA s)) with
+      mul_comm := @mul_comm' _ _ (Algebra.isMulCommutative_adjoin (ZMod I.p) hcomm) }
   haveI : Nontrivial (vsBLamA s) := by
     haveI : Fact I.p.Prime := ⟨I.prime⟩
     refine ⟨⟨0, 1, fun h => ?_⟩⟩

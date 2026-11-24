@@ -8,43 +8,65 @@ This repository is a Lean 4 formalization of the main results, Theorem 1.1 and C
 
 Theorem 1.1 says that a deterministic algorithm decides isomorphism of graphs with n vertices and
 maximum degree d in time n<sup>O(log d)</sup>. Corollary 1.2 is the case of all graphs: since
-d < n, graph isomorphism is decided in time n<sup>O(log n)</sup>. The Lean proof covers the whole
-algorithm. It writes the algorithm as one program for a simple machine, and it proves that the
-program gives correct answers within the time bound.
+d < n, graph isomorphism is decided in time n<sup>O(log n)</sup>. The Lean statement is about
+Mathlib's multitape Turing machines. The proof covers the whole algorithm: it builds one Turing
+machine and proves that it gives correct answers within the time bound.
 
 ## The statements
 
-Each theorem is stated in a challenge file and proved in a solution file.
+[`Challenge.lean`](Challenge.lean) states the two theorems with `sorry`, and
+[`Solution.lean`](Solution.lean) proves them.
 
 ```lean
--- Theorem 1.1: ChallengeDegree.lean, SolutionDegree.lean
-theorem GI.graphIsomorphismInDegreeTime :
-    GI.Statement.GraphIsomorphismInDegreeTime
+-- Theorem 1.1
+theorem GI.turingGraphIsomorphismInDegreeTime :
+    GI.Statement.TuringGraphIsomorphismInDegreeTime
 
--- Corollary 1.2: Challenge.lean, Solution.lean
-theorem GI.graphIsomorphismInQuasipolynomialTime :
-    GI.Statement.GraphIsomorphismInQuasipolynomialTime
+-- Corollary 1.2
+theorem GI.turingGraphIsomorphismInQuasipolynomialTime :
+    GI.Statement.TuringGraphIsomorphismInQuasipolynomialTime
 ```
 
-Three short files define them. A reader must check only these files to know what is claimed.
+One short file, [`Workspace/Statement/Turing.lean`](Workspace/Statement/Turing.lean), defines
+both statements, and it imports only Mathlib. A reader must check only this file to know what is
+claimed. `Challenge.lean` repeats its definitions word for word.
 
-* [`Workspace/Statement/Machine.lean`](Workspace/Statement/Machine.lean) defines the machine. It
-  is a log-cost RAM with procedure calls. Every operation costs one plus the number of binary
-  digits of each number it reads or writes.
-* [`Workspace/Statement/Main.lean`](Workspace/Statement/Main.lean) defines the claim for all
-  graphs. There are one program `p` and one constant `C` with the following property. For every
-  `n` and all graphs `G` and `H` on `n` vertices, the run of `p` on the adjacency matrices of `G`
-  and `H` finishes with a correct output, at a cost of at most `exp (C * (log (n + 2)) ^ 2)`. A
-  correct output says whether `G` and `H` are isomorphic. If they are, it also gives one
-  isomorphism and generators of the automorphism group of `G`.
-* [`Workspace/Statement/Degree.lean`](Workspace/Statement/Degree.lean) defines the claim for
-  graphs of maximum degree `d`. The input and the correct output are the same. The cost is at most
-  `exp (C * log (n + 2) * log (d + 2))` for every `d` such that every vertex of `G` and of `H` has
-  at most `d` neighbours. The program is not given `d`. The file also proves that this claim
-  implies the claim for all graphs, by taking `d = n`.
+* The machine is Mathlib's `Turing.FinTM2`. It has finitely many stacks, a finite set of labels
+  and a finite internal state. Its input stack and its output stack hold bits. Time is the
+  number of steps of `Turing.FinTM2.step`.
+* The input is the adjacency matrix of a graph `G` on `n` vertices, row by row, followed by that
+  of a graph `H`, so it has `2 * n * n` bits.
+* The output is a correct answer. It is the bit `false` if `G` and `H` are not isomorphic.
+  Otherwise it is the bit `true`, one isomorphism from `G` to `H`, and a list of generators of
+  the automorphism group of `G`. Each number is written in binary in a code where no code word
+  is a prefix of another.
+* Theorem 1.1 says that there are one machine `M` and one constant `C` with the following
+  property. For all `n` and `d` and all graphs `G` and `H` on `n` vertices in which every vertex
+  has at most `d` neighbours, `M` started on the input for `G` and `H` halts with a correct
+  answer within `exp (C * log (n + 2) * log (d + 2))` steps. The machine is not given `d`.
+* Corollary 1.2 says the same for all graphs, with the bound `exp (C * (log (n + 2)) ^ 2)`. The
+  statement file proves that it follows from Theorem 1.1 by taking `d = n`.
+
+[`Workspace/Turing/Checks/`](Workspace/Turing/Checks) proves facts about the statement: no two
+answers have the same output, inputs of different graphs differ, and every pair of graphs has a
+correct answer.
 
 Both proofs are complete. They use only Lean's standard axioms `propext`, `Classical.choice` and
 `Quot.sound`.
+
+## The proof
+
+The proof has two steps.
+
+1. The algorithm is first written as one program for a log-cost RAM with procedure calls
+   ([`Workspace/Statement/Machine.lean`](Workspace/Statement/Machine.lean)). Every operation of
+   this machine costs one plus the number of binary digits of each number it reads or writes.
+   [`Workspace/Statement/Degree.lean`](Workspace/Statement/Degree.lean) states Theorem 1.1 for
+   this machine, and `Workspace/Degree/` proves it.
+2. [`Workspace/Turing/`](Workspace/Turing) runs every program of this machine on a Turing machine
+   with a polynomial slowdown. It goes through a stack machine
+   ([`Workspace/Turing/SM.lean`](Workspace/Turing/SM.lean)). A polynomial of
+   `exp (C * log (n + 2) * log (d + 2))` is again of that form, with a larger `C`.
 
 ## Dependencies
 
@@ -65,7 +87,7 @@ and [TauCeti](https://github.com/TauCetiProject/TauCeti), at the revisions that 
 
 ## Building
 
-The project uses Lean `v4.35.0-rc3`. CFSG publishes its build files for Linux x86_64. To download
+The project uses Lean `v4.35.0`. CFSG publishes its build files for Linux x86_64. To download
 them, along with those of Mathlib and TauCeti, and build, run from the repository root:
 
 ```sh
@@ -76,7 +98,7 @@ LAKE_CACHE_MAX_REVS=1 bash .lake/packages/MarotiOrdersOfPrimitiveGroups/tools/la
 lake build
 ```
 
-`lake build` builds the library and the four challenge and solution files. One file,
+`lake build` builds the library and the challenge and solution files. One file,
 `Workspace/Cited/Facts.lean`, imports CFSG's proof of the classification, about 75,000 modules.
 Lean maps each imported file into memory, so on Linux systems where `vm.max_map_count` is still the
 old default of 65,530, this file fails to load. Raise the limit before the build, for example with
@@ -85,17 +107,21 @@ import it see only the three statements it proves, so they load much less.
 
 ## Checking with comparator
 
-[Comparator](https://github.com/leanprover/comparator) checks that a solution file proves exactly
-the statement of a challenge file. [`comparator.json`](comparator.json) sets this up for
-`Challenge.lean` and `Solution.lean`, and [`comparator-degree.json`](comparator-degree.json) for
-`ChallengeDegree.lean` and `SolutionDegree.lean`. This version has not yet been checked with
+[Comparator](https://github.com/leanprover/comparator), which Lean `v4.35.0` includes as
+`lake comparator`, checks that a solution file proves exactly the statement of a challenge file.
+[`comparator.json`](comparator.json) sets this up for `Challenge.lean` and `Solution.lean`. Since
+`Challenge.lean` imports only Mathlib, comparator checks that the definitions that
+`Solution.lean` uses are the ones of `Challenge.lean`. This version has not yet been checked with
 comparator. Its kernel check would have to replay all of CFSG.
 
 ## Layout
 
 All Lean files of the library are in [`Workspace/`](Workspace).
 
-* `Statement/`: the statements of the two theorems.
+* `Statement/`: `Turing.lean` states the two theorems. `Machine.lean`, `Main.lean` and
+  `Degree.lean` state them for the log-cost machine, the first step of the proof.
+* `Turing/`: the simulation of the log-cost machine on Turing machines (the second step of the
+  proof), and in `Turing/Checks/` the checks of the statement.
 * `Machine/` and `Lang/`: a small programming language, its compiler to the machine, and
   facts for proving programs correct and bounding their cost.
 * `Paper/`, `Algorithm/` and the files at the top of `Workspace/`: the mathematics of the
@@ -112,7 +138,8 @@ All Lean files of the library are in [`Workspace/`](Workspace).
   Miyazaki.
 * `Cited/`: the statements of the results that the paper cites. `Cited/Facts.lean` proves the
   three that rest on the classification.
-* `Assembly/`: the final proof of Corollary 1.2, which puts the parts together.
+* `Assembly/`: Corollary 1.2 for the log-cost machine, from the general procedure as one
+  program. The proof of Theorem 1.1 uses it.
 
 ## License
 

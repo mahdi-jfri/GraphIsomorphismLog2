@@ -164,8 +164,9 @@ theorem itci_mg_closure (X : PairCfg q) {A : List (Perm (Fin X.fiber.card))}
       refine (Subgroup.closure_mono ?_) hm
       rintro _ ⟨b, hb, rfl⟩
       exact List.mem_append_left _ (List.mem_map_of_mem hb)
-    have hT := (Subgroup.closure_mono (fun s (hs : s ∈ itciCsw X) =>
-      (List.mem_append_right _ hs : s ∈ A.map (itciLift X) ++ itciCsw X))) (itci_fix_mem hfix hcol)
+    have hT := (Subgroup.closure_mono
+      (show {s | s ∈ itciCsw X} ⊆ {s | s ∈ A.map (itciLift X) ++ itciCsw X} from
+        fun s hs => List.mem_append_right _ hs)) (itci_fix_mem hfix hcol)
     have := Subgroup.mul_mem _ hL hT
     rwa [mul_inv_cancel_left] at this
 

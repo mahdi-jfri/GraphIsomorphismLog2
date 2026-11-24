@@ -308,7 +308,7 @@ theorem gens_flatMap {ι : Type} (l : List ι) (f : ι → List (Perm (Fin k)))
     obtain ⟨i, hi, hm⟩ := hm
     have : m ∈ Subgroup.closure (X i) := by rw [← h i hi]; exact Subgroup.subset_closure hm
     refine Subgroup.closure_mono ?_ this
-    exact Set.subset_biUnion_of_mem (u := X) hi
+    exact fun x hx => Set.mem_iUnion₂.2 ⟨i, hi, hx⟩
   · rw [Subgroup.closure_le]
     intro m hm
     simp only [Set.mem_iUnion] at hm

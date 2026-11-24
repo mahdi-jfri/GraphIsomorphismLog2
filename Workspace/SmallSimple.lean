@@ -190,7 +190,7 @@ theorem thirtyfour_le_card [IsSimpleGroup T] (hT : ¬ ∀ x y : T, x * y = y * x
     rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal (P : Subgroup T) with h | h
     · exact P.ne_bot_of_dvd_card hpn h
     · have hPg : IsPGroup p T := by
-        have := P.isPGroup'
+        have := P.isPGroup
         rw [h] at this
         exact this.of_equiv Subgroup.topEquiv
       haveI := hPg.isNilpotent

@@ -156,7 +156,7 @@ theorem solvAFac_le_solvable_aux : ∀ (n : ℕ) (X : Type u) [Group X] [Finite 
           ((Subgroup.map_eq_bot_iff_of_injective _ N.subtype_injective).mp hb)
       have hP'eq : P' = N := (hN.2.2 P' inferInstance hP'N).resolve_left hP'b
       haveI : Group.IsSolvable (P : Subgroup N) := by
-        haveI := P.isPGroup'.isNilpotent
+        haveI := P.isPGroup.isNilpotent
         infer_instance
       have hP's : IsSolvable P' :=
         solvable_of_surjective (f := ((P : Subgroup N).equivMapOfInjective N.subtype

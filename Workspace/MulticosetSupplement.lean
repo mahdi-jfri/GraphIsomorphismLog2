@@ -51,7 +51,7 @@ theorem frattini_step [Finite G] {N S : Subgroup G} (hn : Normalizes S N)
     change ((s : G) * k * (s : G)⁻¹) ∈ N
     exact hn s s.2 k hk⟩
   -- a nonnormal Sylow subgroup `P` of `K`
-  have htfae := (isNilpotent_of_finite_tfae (G := K)).out 1 4
+  have htfae := (Group.isNilpotent_of_finite_tfae (G := K)).out 1 4
   obtain ⟨p, hp, P, hP⟩ : ∃ (p : ℕ) (_ : Fact p.Prime) (P : Sylow p K),
       ¬ (P : Subgroup K).Normal := by
     by_contra h

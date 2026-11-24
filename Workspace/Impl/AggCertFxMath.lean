@@ -137,18 +137,18 @@ theorem cp_gens_flatten {ι : Type} (l : List ι) (f : ι → List (Perm (Fin k)
     gens (l.map f).flatten = ⨆ i ∈ l, gens (f i) := by
   induction l with
   | nil =>
-    simp only [List.map_nil, List.flatten_nil, List.not_mem_nil, iSup_of_empty', iSup_bot]
+    simp only [List.map_nil, List.flatten_nil, List.not_mem_nil, iSup_of_empty']
     unfold gens
     simp
   | cons a l ih =>
     rw [List.map_cons, List.flatten_cons, cp_gens_append, ih]
     apply le_antisymm
-    · refine sup_le (le_biSup (fun i => gens (f i)) (List.mem_cons_self ..)) ?_
-      exact iSup₂_le fun i hi => le_biSup (fun i => gens (f i)) (List.mem_cons_of_mem _ hi)
+    · refine sup_le (le_iSup₂_of_le a (List.mem_cons_self ..) le_rfl) ?_
+      exact iSup₂_le fun i hi => le_iSup₂_of_le i (List.mem_cons_of_mem _ hi) le_rfl
     · refine iSup₂_le fun i hi => ?_
       rcases List.mem_cons.1 hi with rfl | hi
       · exact le_sup_left
-      · exact le_sup_of_le_right (le_biSup (fun i => gens (f i)) hi)
+      · exact le_sup_of_le_right (le_iSup₂_of_le i hi le_rfl)
 
 end Gens
 

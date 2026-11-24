@@ -103,7 +103,8 @@ theorem blkHom_homVal {r : Fin n → Fin n} (hr : IsRepr r) {gs : List (Perm (Fi
     refine List.Forall₂.cons ⟨Subgroup.subset_closure (by simp), rfl⟩ ?_
     refine List.Forall₂.imp (fun a b hab => ?_) (ih fun h hh => hgs h (by simp [hh]))
     obtain ⟨ha, rfl⟩ := hab
-    exact ⟨Subgroup.closure_mono (fun x (hx : x ∈ gs) => List.mem_cons_of_mem g hx) ha, rfl⟩
+    exact ⟨Subgroup.closure_mono (show {x | x ∈ gs} ⊆ {x | x ∈ g :: gs} from
+      fun x hx => List.mem_cons_of_mem g hx) ha, rfl⟩
 
 /-! ### The program -/
 

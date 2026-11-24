@@ -9,34 +9,26 @@ package «graphIsomorphismLog2» where
 -- Pinned to the revisions that AxiomMath/CFSG uses, so that `TauCeti.ClassificationStatement`
 -- here is the statement CFSG proves, and so that CFSG's published build files apply.
 require mathlib from git
-  "https://github.com/leanprover-community/mathlib4.git" @ "b63f6e8a68d220e3b3bc4f3792bb53650d375f24"
+  "https://github.com/leanprover-community/mathlib4.git" @ "074063781836922cb02701cd12943c9f51731afa"
 require TauCeti from git
-  "https://github.com/TauCetiProject/TauCeti" @ "6e0c6acab5f4c6f42e5f5bab9bd5e4e84f74c380"
+  "https://github.com/TauCetiProject/TauCeti" @ "1f9b4414105d86e487a4ac4c3d3397076a44d0d2"
 
 -- The proofs of the classification of finite simple groups and of Maróti's theorem on the orders
 -- of primitive groups. `Workspace/Cited/Facts.lean` imports them.
 require cfsg from git
-  "https://github.com/AxiomMath/CFSG" @ "69cb972f587a3ecc035e092253167ff2e303c962"
+  "https://github.com/AxiomMath/CFSG" @ "965a0775e82217494217503621b843e1b0e1e337"
 require MarotiOrdersOfPrimitiveGroups from git
-  "https://github.com/mahdi-jfri/MarotiOrdersOfPrimitiveGroups.git" @ "826d2d7a58fb538ca10ccdb649a4a333b5aedadd"
+  "https://github.com/mahdi-jfri/MarotiOrdersOfPrimitiveGroups.git" @ "631aba5d4bdd9bbbbdc6659fd404f0263ab64c76"
 
 /-- The formalization. -/
 @[default_target]
 lean_lib «Workspace» where
   globs := #[.andSubmodules `Workspace]
 
-/-- The statement of the theorem for all graphs, with `sorry`, for comparator. -/
+/-- The statements of the two theorems for Turing machines, with `sorry`, for comparator. -/
 @[default_target]
 lean_lib «Challenge»
 
-/-- The theorem for all graphs, proved. -/
+/-- The two theorems for Turing machines, proved. -/
 @[default_target]
 lean_lib «Solution»
-
-/-- The statement of the theorem for graphs of maximum degree `d`, with `sorry`, for comparator. -/
-@[default_target]
-lean_lib «ChallengeDegree»
-
-/-- The theorem for graphs of maximum degree `d`, proved. -/
-@[default_target]
-lean_lib «SolutionDegree»

@@ -55,7 +55,6 @@ def linWreathNumberRep (ρ : H →* ((Fin d → R) ≃ₗ[R] (Fin d → R))) :
     linWreathNumberRep ρ a x (linWreathNumber d (i, q)) =
       ρ (a.left q) (fun j => x (linWreathNumber d (j, a.right⁻¹ * q))) i := by
   simp [linWreathNumberRep, linWreathNumberLinear]
-  rfl
 
 /-- The actual dense invertible matrices supplied to VectorStabilizer. -/
 def linWreathMatrixRep (φ : H →* Matrix.GeneralLinearGroup (Fin d) R) :
@@ -147,6 +146,5 @@ theorem linWreathMatrixRep_range_solvable
   change (φ (a.left q)).val.mulVec (fun j => x (linWreathNumber d (j, a.right⁻¹ * q))) i =
     x (linWreathNumber d (i, q))
   simp [hal q, har]
-  rcases linTwo_cases q with rfl | rfl <;> rfl
 
 end GI.Impl

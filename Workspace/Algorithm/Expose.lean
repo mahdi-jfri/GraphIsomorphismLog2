@@ -575,8 +575,9 @@ theorem exists_primitiveQuotient_of_cand [Finite Ω] {C : Type} (S : State Ω C)
       S.dom_inv hfinv' hJinv ?_
     · have huw : u w ∈ S.dom := (S.dom_inv u hu w).2 hw.1
       exact (hfM _ huw w hw.1).2 (hMc.le _ huw w hw.1 (hfix w hw))
-    · rw [classCount_congr (f' := M) fun v hv w hw => hfM v hv.1 w hw.1]
-      exact (classCount_mono M (fun w hw => hw.1)).trans hdM.symm.le
+    · rw [classCount_congr (f' := M)
+        fun v (hv : v ∈ classIn _ _ _ _) w (hw : w ∈ classIn _ _ _ _) => hfM v hv.1 w hw.1]
+      exact (classCount_mono M (fun w (hw : w ∈ classIn _ _ _ _) => hw.1)).trans hdM.symm.le
   have hlist : pre ++ [mid] ++ top :: post = pre ++ [mid, top] ++ post := by simp
   have hlist' : pre ++ J :: post = pre ++ [J] ++ post := by simp
   have hlist1 : pre ++ top :: post = pre ++ [top] ++ post := by simp
@@ -692,7 +693,7 @@ theorem exists_primitiveQuotient_of_cand [Finite Ω] {C : Type} (S : State Ω C)
         · rw [hpre', if_neg h1]
           exact chain_append.2 ⟨hchpre, hMc.inv, hMc.le, fun a ha => (hind a ha).le,
             min_le_right _ _, trivial⟩
-      · exact (classCount_mono M (fun w hw => hw.1)).trans hdM.symm.le
+      · exact (classCount_mono M (fun w (hw : w ∈ classIn _ _ _ _) => hw.1)).trans hdM.symm.le
     · have htop := hinv.top
       rw [fineEnd_append] at htop ⊢
       exact htop

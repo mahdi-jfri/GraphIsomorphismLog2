@@ -117,7 +117,6 @@ theorem vsQAb_of_comm (hs : VsQStOK s) {K : Subgroup (Perm (Fin I.n))} (hK : K â
   convert this using 1
   simp only [mulVec_add]
   abel
-  rfl
 
 /-- The test of the program: the stored local matrices of `gh` and `hg` agree. -/
 theorem vsQ_comm_of_test (hs : VsQStOK s) {ks : List (Perm (Fin I.n))} (hK : gens ks â‰¤ gens s.hs)

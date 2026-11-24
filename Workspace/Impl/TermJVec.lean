@@ -223,7 +223,8 @@ theorem tmJV_vec_spec (hm : ConstructiveMembership) {P : Program} {b jm n : ℕ}
   have wtab : tab.wt ≤ tmJVAssignCost W := hA'.wt_lt.le
   -- the witness step
   have hmem : I.x ∈ gens I.gs :=
-    Subgroup.closure_mono (fun y (hy : y ∈ as) => List.mem_append_right ns hy) hx
+    Subgroup.closure_mono (show {y | y ∈ as} ⊆ {y | y ∈ ns ++ as} from
+      fun y hy => List.mem_append_right ns hy) hx
   have hlen : I.gs.length = vecs.length := by
     simp [I, vecs, linPrefixVectors, t, s]
   have hw := linCoordinateWitness_spec hm h.wit.entry h.wit.member h.wit.prim h.wit.exponent

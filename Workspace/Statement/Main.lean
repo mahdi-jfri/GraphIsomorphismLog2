@@ -1,9 +1,9 @@
 /-
-The theorem for all graphs as a statement. This file, `Workspace.Statement.Degree` and
-`Workspace.Statement.Machine` are the trusted statement: a reader must check all three to know
-what is claimed. Everything else in the project is proof, checked by Lean.
+The theorem for all graphs, on the log-cost machine of `Workspace.Statement.Machine`. This file
+is a step of the proof, not part of the statement: the claim is the Turing machine version in
+`Workspace.Statement.Turing`, which `Workspace.Turing` derives from `Workspace.Statement.Degree`.
 
-The claim is Corollary 1.2 of the paper (Hajiaghayi and JafariRaviz, "Deterministic `n^{O(log n)}`
+The theorem is Corollary 1.2 of the paper (Hajiaghayi and JafariRaviz, "Deterministic `n^{O(log n)}`
 Graph Isomorphism Algorithm via Inherited Decompositions"). There is a deterministic algorithm
 that, given two graphs on `n` vertices, decides whether they are isomorphic in time
 `exp (O ((log (n + 2)) ^ 2))`. If they are, it also returns one isomorphism and generators for
@@ -13,9 +13,7 @@ of `Workspace.Statement.Machine`, and time is the cost of its run.
 module
 
 public import Workspace.Statement.Machine
-public import Mathlib.Combinatorics.SimpleGraph.Maps
-public import Mathlib.Algebra.Group.Subgroup.Lattice
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Workspace.Statement.Turing
 
 @[expose] public section
 
@@ -24,20 +22,6 @@ namespace GI.Statement
 open GI.Machine
 
 variable {n : ℕ}
-
-/-- The automorphism group of a graph on `Fin n`, as a group of permutations of the vertices:
-the permutations `σ` such that `σ u` and `σ v` are adjacent exactly when `u` and `v` are.
-These are exactly the graph isomorphisms from `G` to itself. -/
-def autGroup (G : SimpleGraph (Fin n)) : Subgroup (Equiv.Perm (Fin n)) where
-  carrier := {σ | ∀ u v, G.Adj (σ u) (σ v) ↔ G.Adj u v}
-  mul_mem' {σ τ} hσ hτ u v := by
-    simp only [Set.mem_setOf_eq] at hσ hτ
-    rw [Equiv.Perm.mul_apply, Equiv.Perm.mul_apply, hσ, hτ]
-  one_mem' u v := Iff.rfl
-  inv_mem' {σ} hσ u v := by
-    simp only [Set.mem_setOf_eq] at hσ
-    rw [← hσ]
-    simp
 
 open Classical in
 /-- The input: two graphs `G` and `H` on `Fin n`, laid out in memory as their adjacency

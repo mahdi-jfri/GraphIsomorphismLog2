@@ -372,7 +372,8 @@ noncomputable def strY (t : Fin I.ℓ → Fin L.q) : Canon L.q P.κ I.ℓ :=
   structY I.fin S L I.πd I.hK P.κ I.num t
 
 /-- The parent isomorphisms of the branch of the target tuple `b`. -/
-def isoSet (b : Fin I.ℓ → Fin L.q) : Set (Perm Ω) := isoSetOf I.fin S L I.πd I.hK P.κ I.num I.src b
+noncomputable def isoSet (b : Fin I.ℓ → Fin L.q) : Set (Perm Ω) :=
+  isoSetOf I.fin S L I.πd I.hK P.κ I.num I.src b
 
 /-- **The Johnson block map of the selected constituent** (Lemma A.11: "the supplied map of a
 selected Cameron constituent"), carried by the labels. -/

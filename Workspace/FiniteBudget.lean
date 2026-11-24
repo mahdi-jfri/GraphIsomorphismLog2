@@ -88,7 +88,7 @@ theorem marked_weights_bounded {cutoff : ℕ} (hcutoff : 5 ≤ cutoff)
 theorem sigma_achieved {cutoff : ℕ} (hcutoff : 5 ≤ cutoff)
     (a : V) (H : Subgroup (Equiv.Perm V)) :
     MarkedChain cutoff a H (sigma cutoff a H) :=
-  Nat.sSup_mem ⟨0, .stop H⟩ (marked_weights_bounded hcutoff a H)
+  Nat.sSup_mem ⟨0, MarkedChain.stop H⟩ (marked_weights_bounded hcutoff a H)
 
 theorem sigma_bounds_chain {cutoff w : ℕ} (hcutoff : 5 ≤ cutoff)
     {a : V} {H : Subgroup (Equiv.Perm V)} (hw : MarkedChain cutoff a H w) :

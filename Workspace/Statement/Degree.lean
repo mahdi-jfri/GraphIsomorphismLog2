@@ -1,11 +1,11 @@
 /-
-The main theorem as a statement. This file, `Workspace.Statement.Main` and
-`Workspace.Statement.Machine` are the trusted statement: a reader must check all three to know
-what is claimed.
+The main theorem on the log-cost machine of `Workspace.Statement.Machine`. This file is a step of
+the proof, not part of the statement: `Workspace.Turing` turns a program with the bound below into
+a Turing machine with the bound of `Workspace.Statement.Turing`, which is the claim.
 
-The claim is Theorem 1.1 of the paper (Hajiaghayi and JafariRaviz, "Deterministic
-`n^{O(log n)}` Graph Isomorphism Algorithm via Inherited Decompositions"). The claim of
-`Workspace.Statement.Main` is its Corollary 1.2. There is a deterministic algorithm that, given
+The theorem is Theorem 1.1 of the paper (Hajiaghayi and JafariRaviz, "Deterministic
+`n^{O(log n)}` Graph Isomorphism Algorithm via Inherited Decompositions"). 
+`Workspace.Statement.Main` states its Corollary 1.2. There is a deterministic algorithm that, given
 two graphs on `n` vertices in which every vertex has at most `d` neighbours, decides whether they
 are isomorphic in time `n ^ O(log (d + 2))`. If they are, it also returns one isomorphism and
 generators for the full automorphism group of the first graph. The algorithm is not given `d`. It
@@ -22,14 +22,6 @@ namespace GI.Statement
 open GI.Machine
 
 variable {n : ℕ}
-
-/-- Every vertex of `G` has at most `d` neighbours. -/
-def DegreeAtMost (G : SimpleGraph (Fin n)) (d : ℕ) : Prop :=
-  ∀ v, (G.neighborSet v).ncard ≤ d
-
-/-- Every graph on `n` vertices has degree at most `n`. -/
-theorem degreeAtMost_self (G : SimpleGraph (Fin n)) : DegreeAtMost G n := fun v => by
-  simpa using Set.ncard_le_card (G.neighborSet v)
 
 /-- **Theorem 1.1 of the paper, as a statement.** There are one program `p` and one constant
 `C` such that the following holds for all `n` and `d`, and all graphs `G` and `H` on `Fin n` in

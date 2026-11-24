@@ -1,6 +1,7 @@
 /-
-The machine model behind the running-time claim. This file is part of the trusted statement:
-a reader must check it to know what the main theorem says.
+The log-cost machine on which the proof first runs the algorithm. This file is a step of the
+proof, not part of the statement: the claim (`Workspace.Statement.Turing`) is about Mathlib's
+Turing machines, and `Workspace.Turing` simulates this machine on them.
 
 A program is a list of procedures, and procedure 0 is the entry point. The machine has one
 global memory `ℕ → ℕ`, and each running procedure has its own registers `ℕ → ℕ`. This is the
